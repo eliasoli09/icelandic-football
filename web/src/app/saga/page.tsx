@@ -14,10 +14,9 @@ export default async function SagaPage() {
   const nm = (id: number) => names.get(id) ?? `#${id}`
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1">All-time tafla efstu deildar</h1>
+      <h1 className="text-xl font-bold mb-1">All-time tafla efstu deildar (1985–)</h1>
       <p className="text-sm muted mb-4">
-        Öll Íslandsmót frá 1912 — deildarleikir og úrslitaleikir. Stig reiknuð samræmt
-        (3 fyrir sigur öll tímabil, þó eldri mót hafi notað 2).
+        Öll tímabil sem KSÍ á fullar markatölur fyrir (1985 og áfram), deildarleikir og úrslitaleikir. Stig reiknuð samræmt með 3 fyrir sigur.
       </p>
       <div className="card p-4 overflow-x-auto">
         <table className="w-full text-sm">

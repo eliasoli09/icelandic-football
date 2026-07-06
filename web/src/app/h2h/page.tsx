@@ -39,8 +39,8 @@ export default async function H2HPage({
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-xl font-bold mb-1">Innbyrðis viðureignir frá 1912</h1>
-      <p className="text-sm muted mb-4">Veldu tvö lið til að sjá alla söguna í efstu deild.</p>
+      <h1 className="text-xl font-bold mb-1">Innbyrðis viðureignir frá 1985</h1>
+      <p className="text-sm muted mb-4">Veldu tvö lið til að sjá söguna í efstu deild. KSÍ á markatölur frá 1985; eldri leikir eru til sem leikjaskrár án úrslita.</p>
       <form className="flex gap-3 mb-6" method="get">
         <select name="a" defaultValue={a ?? ''} className="card px-3 py-2 text-sm flex-1" style={{ color: 'var(--text)' }}>
           <option value="">— Lið A —</option>

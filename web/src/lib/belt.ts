@@ -1,10 +1,12 @@
 /**
  * Konungur kastalans — UFWC-style unofficial championship lineage for the
- * Icelandic top flight, traced from the first Íslandsmót match in 1912.
+ * Icelandic top flight. KSÍ's website only carries real scorelines from the
+ * 1985 season onwards (older fixtures are 0-0 placeholders), so the lineage
+ * starts at the first match of 1985.
  *
  * Rules (mirroring the Unofficial Football World Championships):
- *  - The winner of the very first match becomes the first holder; if it is
- *    drawn, the title waits for the first match with a winner.
+ *  - The winner of the first match (of the earliest fully-scored season)
+ *    becomes the first holder; drawn matches leave it waiting.
  *  - The holder defends the title in every top-flight match they play
  *    (including championship playoff games).
  *  - Win or draw → holder keeps the title. Loss → opponent takes it.
