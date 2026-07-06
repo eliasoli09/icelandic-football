@@ -1,4 +1,5 @@
 import { teams, alltime, champions } from '@/lib/queries'
+import { ShareButton } from '@/components/ShareButton'
 
 export const revalidate = 3600
 
@@ -17,7 +18,10 @@ export default async function SagaPage() {
   for (const teamId of champs.values()) titles.set(teamId, (titles.get(teamId) ?? 0) + 1)
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1">All-time tafla efstu deildar frá 1912</h1>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-xl font-bold">All-time tafla efstu deildar frá 1912</h1>
+        <ShareButton title="All-time tafla efstu deildar" text="All-time tafla íslensku efstu deildarinnar frá 1912:" path="/saga" />
+      </div>
       <p className="text-sm muted mb-4">
         Byggt á opinberum stöðutöflum KSÍ 1912–1984 og öllum leikjaúrslitum frá 1985. Stig reiknuð samræmt með 3 fyrir sigur öll tímabil. Töflur vantar hjá KSÍ fyrir 1913, 1914, 1923, 1949 og 1981 — þau tímabil telja í titlum en ekki í leikjatölum.
       </p>

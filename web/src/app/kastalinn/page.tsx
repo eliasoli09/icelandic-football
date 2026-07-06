@@ -1,6 +1,12 @@
 import { teams, beltHistory, upcomingWithPredictions } from '@/lib/queries'
+import { ShareButton } from '@/components/ShareButton'
 
 export const revalidate = 300
+
+export const metadata = {
+  openGraph: { images: ['/api/og/kastalinn'] },
+  twitter: { card: 'summary_large_image', images: ['/api/og/kastalinn'] },
+}
 
 export default async function KastalinnPage() {
   let names = new Map<number, string>()
@@ -66,6 +72,14 @@ export default async function KastalinnPage() {
               ` · líkur á að beltið haldist: ${Math.round(((nextDefense.home_team === holder ? nextDefense.prediction.p_home : nextDefense.prediction.p_away) + nextDefense.prediction.p_draw) * 100)}%`}
           </p>
         )}
+        <div className="mt-4">
+          <ShareButton
+            title="Konungur kastalans"
+            text={`👑 ${nm(holder)} eru konungar kastalans — ${defenses} ${defenses === 1 ? 'vörn' : 'varnir'} í röð!`}
+            path="/kastalinn"
+            imagePath="/api/og/kastalinn"
+          />
+        </div>
         <p className="text-[11px] muted mt-4 max-w-xl mx-auto">
           Óopinber meistaratign íslenska boltans, að hætti UFWC, með óslitna línu frá 1912: á tímabilinu 1912–1984 gekk beltið milli Íslandsmeistara
           (KSÍ á ekki einstök leikjaúrslit frá þeim tíma), og frá 1985 er það varið í hverjum einasta deildarleik

@@ -1,7 +1,13 @@
 import { EloChart, type EloSeriesPoint } from '@/components/EloChart'
+import { ShareButton } from '@/components/ShareButton'
 import { teams, eloHistory } from '@/lib/queries'
 
 export const revalidate = 300
+
+export const metadata = {
+  openGraph: { images: ['/api/og/elo'] },
+  twitter: { card: 'summary_large_image', images: ['/api/og/elo'] },
+}
 
 export default async function EloPage() {
   let names = new Map<number, string>()
@@ -41,7 +47,10 @@ export default async function EloPage() {
   return (
     <div className="grid gap-8">
       <section>
-        <h1 className="text-xl font-bold mb-4">Elo-stig liða</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold">Elo-stig liða</h1>
+          <ShareButton title="Elo-stig liða" text="Elo-stig íslensku liðanna:" path="/elo" imagePath="/api/og/elo" />
+        </div>
         <div className="card p-4 mb-6 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

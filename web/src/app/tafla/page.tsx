@@ -1,8 +1,14 @@
 import { PosHeatmap } from '@/components/PosHeatmap'
+import { ShareButton } from '@/components/ShareButton'
 import { FormBadges } from '@/components/FormBadges'
 import { teams, standings, seasonSim } from '@/lib/queries'
 
 export const revalidate = 300
+
+export const metadata = {
+  openGraph: { images: ['/api/og/tafla'] },
+  twitter: { card: 'summary_large_image', images: ['/api/og/tafla'] },
+}
 
 export default async function TaflaPage() {
   let names = new Map<number, string>()
@@ -27,7 +33,10 @@ export default async function TaflaPage() {
   return (
     <div className="grid gap-8">
       <section>
-        <h1 className="text-xl font-bold mb-4">Besta deild karla 2026</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold">Besta deild karla 2026</h1>
+          <ShareButton title="Besta deild karla 2026" text="Staðan og meistaralíkur í Bestu deildinni:" path="/tafla" imagePath="/api/og/tafla" />
+        </div>
         <div className="card p-4 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

@@ -1,9 +1,18 @@
 import { ProbBar } from '@/components/ProbBar'
+import { ShareButton } from '@/components/ShareButton'
 import { FormBadges } from '@/components/FormBadges'
 import { teams, matchDetail } from '@/lib/queries'
 import type { PredictionFactors } from '@/lib/types'
 
 export const revalidate = 300
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  return {
+    openGraph: { images: [`/api/og/leikur/${id}`] },
+    twitter: { card: 'summary_large_image', images: [`/api/og/leikur/${id}`] },
+  }
+}
 
 const fmtDate = (d: string | null) =>
   d ? new Date(d).toLocaleString('is-IS', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) : ''
@@ -40,6 +49,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         {prediction && match.status === 'upcoming' && (
           <ProbBar pHome={prediction.p_home} pDraw={prediction.p_draw} pAway={prediction.p_away} />
         )}
+        <div className="mt-4">
+          <ShareButton
+            title={`${nm(match.home_team)} – ${nm(match.away_team)}`}
+            text={match.status === 'played'
+              ? `${nm(match.home_team)} ${match.home_goals} – ${match.away_goals} ${nm(match.away_team)}`
+              : `Spá: ${nm(match.home_team)} ${Math.round((prediction?.p_home ?? 0) * 100)}% – jafntefli ${Math.round((prediction?.p_draw ?? 0) * 100)}% – ${nm(match.away_team)} ${Math.round((prediction?.p_away ?? 0) * 100)}%`}
+            path={`/leikir/${match.id}`}
+            imagePath={`/api/og/leikur/${match.id}`}
+          />
+        </div>
       </section>
 
       {factors && match.status === 'upcoming' && (

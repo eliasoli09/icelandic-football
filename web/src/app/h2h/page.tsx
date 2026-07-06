@@ -1,4 +1,5 @@
 import { teams, h2hAll } from '@/lib/queries'
+import { ShareButton } from '@/components/ShareButton'
 
 export const revalidate = 3600
 
@@ -60,6 +61,13 @@ export default async function H2HPage({
       )}
       {pair && stats && aId && bId && (
         <div className="card p-6">
+          <div className="flex justify-end mb-2">
+            <ShareButton
+              title={`${nm(aId)} gegn ${nm(bId)}`}
+              text={`${nm(aId)} ${w1}–${stats.draws}–${w2} ${nm(bId)} í efstu deild frá 1985:`}
+              path={`/h2h?a=${aId}&b=${bId}`}
+            />
+          </div>
           <div className="grid grid-cols-3 items-center text-center mb-4">
             <h2 className="text-lg font-bold">{nm(aId)}</h2>
             <span className="text-3xl font-black num">{w1}–{stats.draws}–{w2}</span>
