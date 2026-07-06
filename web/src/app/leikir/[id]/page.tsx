@@ -1,0 +1,110 @@
+import { ProbBar } from '@/components/ProbBar'
+import { FormBadges } from '@/components/FormBadges'
+import { teams, matchDetail } from '@/lib/queries'
+import type { PredictionFactors } from '@/lib/types'
+
+export const revalidate = 300
+
+const fmtDate = (d: string | null) =>
+  d ? new Date(d).toLocaleString('is-IS', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) : ''
+
+export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  let names = new Map<number, string>()
+  let detail: Awaited<ReturnType<typeof matchDetail>> = null
+  try {
+    ;[names, detail] = await Promise.all([teams(), matchDetail(Number(id))])
+  } catch {
+    return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
+  }
+  if (!detail) return <p className="muted">Leikur fannst ekki.</p>
+  const { match, prediction, events } = detail
+  const nm = (tid: number) => names.get(tid) ?? `#${tid}`
+  const factors = (prediction?.factors ?? null) as
+    | (PredictionFactors & { topScorelines?: { home: number; away: number; p: number }[] })
+    | null
+
+  return (
+    <div className="max-w-2xl mx-auto grid gap-6">
+      <section className="card p-6 text-center">
+        <p className="text-xs muted mb-3">
+          {fmtDate(match.date)} · {match.venue ?? ''} · {match.league === 'besta' ? 'Besta deildin' : 'Lengjudeildin'} {match.season}
+        </p>
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <h1 className="text-lg font-bold flex-1 text-right">{nm(match.home_team)}</h1>
+          <div className="text-3xl font-black num px-4">
+            {match.status === 'played' ? `${match.home_goals} – ${match.away_goals}` : 'gegn'}
+          </div>
+          <h1 className="text-lg font-bold flex-1 text-left">{nm(match.away_team)}</h1>
+        </div>
+        {prediction && match.status === 'upcoming' && (
+          <ProbBar pHome={prediction.p_home} pDraw={prediction.p_draw} pAway={prediction.p_away} />
+        )}
+      </section>
+
+      {factors && match.status === 'upcoming' && (
+        <section className="card p-5">
+          <h2 className="font-bold mb-3">Af hverju? — rökin á bak við spána</h2>
+          <div className="grid gap-2.5 text-sm">
+            <Row label="Elo-stig">
+              <span className="num">{factors.eloHome} gegn {factors.eloAway} <span className="muted">(munur {factors.eloDiff > 0 ? '+' : ''}{factors.eloDiff})</span></span>
+            </Row>
+            <Row label="Form (nýjast fyrst)">
+              <span className="flex gap-3 justify-end">
+                <FormBadges form={factors.formHome} />
+                <FormBadges form={factors.formAway} />
+              </span>
+            </Row>
+            <Row label="Mörk skoruð/fengin í leik">
+              <span className="num">{factors.gfHome}/{factors.gaHome} gegn {factors.gfAway}/{factors.gaAway}</span>
+            </Row>
+            <Row label="Innbyrðis frá 2019">
+              <span className="num">{factors.h2h.homeWins} sigrar – {factors.h2h.draws} jafntefli – {factors.h2h.awayWins} tap</span>
+            </Row>
+            <Row label="Heimavallaráhrif deildar">
+              <span className="num">×{factors.homeAdvantage}</span>
+            </Row>
+          </div>
+          {factors.topScorelines && (
+            <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+              <p className="text-xs muted mb-2">Líklegustu úrslit</p>
+              <div className="flex gap-2 flex-wrap">
+                {factors.topScorelines.slice(0, 5).map((s, i) => (
+                  <span key={i} className="px-2.5 py-1 rounded-lg text-xs num font-semibold" style={{ background: 'var(--surface-2)' }}>
+                    {s.home}–{s.away} <span className="muted">{Math.round(s.p * 100)}%</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {events.length > 0 && (
+        <section className="card p-5">
+          <h2 className="font-bold mb-3">Atburðir</h2>
+          <div className="grid gap-1.5 text-sm">
+            {events.map((e) => (
+              <div key={`${e.event_id}-${e.type}-${e.player_name}`} className="flex items-center gap-3">
+                <span className="muted num w-8 text-right">{e.minute}&rsquo;</span>
+                <span className="w-5 text-center">
+                  {e.type === 'goal' ? '⚽' : e.type === 'penalty' ? '⚽ (v)' : e.type === 'owngoal' ? '⚽ (sj)' : e.type === 'yellow' ? '🟨' : e.type === 'red' ? '🟥' : e.type === 'sub_in' ? '▲' : '▼'}
+                </span>
+                <span className={e.side === 'home' ? '' : 'muted'}>{e.player_name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  )
+}
+
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span className="muted">{label}</span>
+      {children}
+    </div>
+  )
+}
