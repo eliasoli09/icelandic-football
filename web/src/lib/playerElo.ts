@@ -1,10 +1,13 @@
-import type { MatchEvent } from './types'
+import type { MatchEvent, League } from './types'
 
-export const PLAYER_BASE = 1500
+export const PLAYER_BASE: Record<League, number> = { besta: 1500, lengjudeild: 1400 }
+/** goals and results in the second tier move the needle less */
+export const LEAGUE_WEIGHT: Record<League, number> = { besta: 1, lengjudeild: 0.6 }
 
 export interface PlayerMatchInput {
   matchId: number
   order: number
+  league: League
   homeGoals: number
   awayGoals: number
   events: MatchEvent[]
@@ -14,6 +17,7 @@ export interface PlayerEloRecord {
   playerKsiId: number
   playerName: string
   matchId: number
+  league: League
   eloBefore: number
   eloAfter: number
 }
@@ -21,7 +25,10 @@ export interface PlayerEloRecord {
 /**
  * Event-observable player Elo. KSÍ exposes scorers, cards and substitutions
  * (not full lineups), so ratings cover players who appear in events.
- * Per appearance: team-result term + per-event terms, capped at ±60.
+ * Per appearance: team-result term + per-event terms, capped at ±60,
+ * scaled by division weight (a Lengjudeild goal counts 60% of a Besta one).
+ * Players first seen in Lengjudeildin start at a lower baseline and carry
+ * their rating with them when promoted.
  */
 export function runPlayerElo(matches: PlayerMatchInput[]): PlayerEloRecord[] {
   const rating = new Map<number, number>()
@@ -64,14 +71,16 @@ export function runPlayerElo(matches: PlayerMatchInput[]): PlayerEloRecord[] {
     for (const [pid, eventDelta] of perPlayer) {
       const side = seenSide.get(pid)!
       const result = side === 'home' ? Math.sign(gd) : -Math.sign(gd)
-      const delta = clamp(eventDelta + 8 * result, -60, 60)
-      const before = rating.get(pid) ?? PLAYER_BASE
+      const weight = LEAGUE_WEIGHT[m.league]
+      const delta = clamp((eventDelta + 8 * result) * weight, -60, 60)
+      const before = rating.get(pid) ?? PLAYER_BASE[m.league]
       const after = before + delta
       rating.set(pid, after)
       out.push({
         playerKsiId: pid,
         playerName: names.get(pid)!,
         matchId: m.matchId,
+        league: m.league,
         eloBefore: before,
         eloAfter: after,
       })

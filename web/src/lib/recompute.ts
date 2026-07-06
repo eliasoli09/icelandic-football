@@ -292,6 +292,7 @@ export async function recomputeAll() {
     .map((m, i) => ({
       matchId: m.id,
       order: i,
+      league: m.league,
       homeGoals: m.home_goals!,
       awayGoals: m.away_goals!,
       events: evByMatch.get(m.id)!,

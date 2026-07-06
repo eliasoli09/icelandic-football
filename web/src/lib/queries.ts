@@ -195,18 +195,29 @@ export async function playerEloTable(limit = 60) {
     data.push(...page)
     if (page.length < 1000) break
   }
-  const latest = new Map<number, { elo: number; apps: number }>()
+  const { data: leagueRows } = await db()
+    .from('matches')
+    .select('id, league, date')
+    .in('id', [...new Set(data.map((r) => r.match_id))])
+  const matchInfo = new Map(
+    (leagueRows ?? []).map((m) => [m.id, { league: m.league as League, date: m.date as string | null }]),
+  )
+  const latest = new Map<number, { elo: number; apps: number; league: League; lastDate: string }>()
   for (const r of data ?? []) {
+    const info = matchInfo.get(r.match_id)
     const prev = latest.get(r.player_ksi_id)
+    const d = info?.date ?? ''
     latest.set(r.player_ksi_id, {
       elo: r.elo_after,
       apps: (prev?.apps ?? 0) + 1,
+      league: !prev || d >= prev.lastDate ? (info?.league ?? 'besta') : prev.league,
+      lastDate: !prev || d >= prev.lastDate ? d : prev.lastDate,
     })
   }
   const { data: players } = await db().from('players').select('ksi_id, name')
   const names = new Map((players ?? []).map((p) => [p.ksi_id, p.name]))
   return [...latest]
-    .map(([id, v]) => ({ id, name: names.get(id) ?? `#${id}`, ...v }))
+    .map(([id, v]) => ({ id, name: names.get(id) ?? `#${id}`, elo: v.elo, apps: v.apps, league: v.league }))
     .sort((a, b) => b.elo - a.elo)
     .slice(0, limit)
 }

@@ -77,6 +77,7 @@ describe('runPlayerElo', () => {
       {
         matchId: 1,
         order: 1,
+        league: 'besta',
         homeGoals: 2,
         awayGoals: 0,
         events: [ev('goal', 1, 'home'), ev('yellow', 2, 'away')],
@@ -91,11 +92,27 @@ describe('runPlayerElo', () => {
     )
   })
 
+  it('a Lengjudeild goal is worth less than a Besta deild goal, from a lower base', () => {
+    const besta = runPlayerElo([
+      { matchId: 1, order: 1, league: 'besta', homeGoals: 1, awayGoals: 0,
+        events: [ev('goal', 1, 'home')] },
+    ])
+    const lengju = runPlayerElo([
+      { matchId: 1, order: 1, league: 'lengjudeild', homeGoals: 1, awayGoals: 0,
+        events: [ev('goal', 1, 'home')] },
+    ])
+    const b = besta[0], l = lengju[0]
+    expect(b.eloBefore).toBe(1500)
+    expect(l.eloBefore).toBe(1400)
+    expect(b.eloAfter - b.eloBefore).toBeGreaterThan(l.eloAfter - l.eloBefore)
+  })
+
   it('red card is net negative even in a win', () => {
     const recs = runPlayerElo([
       {
         matchId: 1,
         order: 1,
+        league: 'besta',
         homeGoals: 3,
         awayGoals: 0,
         events: [ev('red', 5, 'home')],
