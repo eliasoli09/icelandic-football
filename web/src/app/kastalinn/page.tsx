@@ -70,7 +70,7 @@ export default async function KastalinnPage() {
       >
         <p className="text-xs muted uppercase tracking-wide mb-2">Konungur kastalans 👑</p>
         <div className="flex justify-center mb-2"><TeamBadge info={infos.get(holder)} size={64} /></div>
-        <h1 className="text-3xl font-black mb-2" style={{ color: displayColor(infos.get(holder)) }}>{nm(holder)}</h1>
+        <h1 className="display text-4xl sm:text-5xl font-black mb-2" style={{ color: displayColor(infos.get(holder)) }}>{nm(holder)}</h1>
         <p className="text-sm muted">
           Hefur haldið beltinu síðan {reignStart.date ? new Date(reignStart.date).toLocaleDateString('is-IS', { timeZone: 'UTC' }) : reignStart.season}
           {' '}· {defenses} {defenses === 1 ? 'vörn' : 'varnir'} í röð
@@ -101,7 +101,7 @@ export default async function KastalinnPage() {
 
       <div className="grid gap-8 lg:grid-cols-2">
         <section>
-          <h2 className="text-lg font-bold mb-3">Konungaröðin — flestar valdatíðir</h2>
+          <h2 className="display text-lg font-extrabold mb-4">Konungaröðin — flestar valdatíðir</h2>
           <div className="card p-4">
             <table className="w-full text-sm">
               <thead>
@@ -114,10 +114,10 @@ export default async function KastalinnPage() {
               </thead>
               <tbody>
                 {ranking.slice(0, 20).map((r, i) => (
-                  <tr key={r.team} style={{ borderTop: '1px solid var(--border)' }}>
+                  <tr key={r.team} className="trow">
                     <td className="py-1.5 muted num">{i + 1}</td>
                     <td className="font-medium">{r.team}{r.team === nm(holder) ? ' 👑' : ''}</td>
-                    <td className="text-right num font-semibold">{r.reigns}</td>
+                    <td className="text-right stat">{r.reigns}</td>
                     <td className="text-right num muted">{r.titleMatches}</td>
                   </tr>
                 ))}
@@ -126,7 +126,7 @@ export default async function KastalinnPage() {
           </div>
         </section>
         <section>
-          <h2 className="text-lg font-bold mb-3">Síðustu hallarbyltingar</h2>
+          <h2 className="display text-lg font-extrabold mb-4">Síðustu hallarbyltingar</h2>
           <div className="card p-4">
             <div className="grid gap-2 text-sm">
               {recent.map((h) => (

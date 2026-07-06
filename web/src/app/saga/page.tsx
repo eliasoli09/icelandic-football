@@ -21,13 +21,14 @@ export default async function SagaPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-xl font-bold">All-time tafla efstu deildar frá 1912</h1>
+        <h1 className="display text-2xl font-black">All-time tafla efstu deildar frá 1912</h1>
         <ShareButton title="All-time tafla efstu deildar" text="All-time tafla íslensku efstu deildarinnar frá 1912:" path="/saga" />
       </div>
       <p className="text-sm muted mb-4">
         Byggt á opinberum stöðutöflum KSÍ 1912–1984 og öllum leikjaúrslitum frá 1985. Stig reiknuð samræmt með 3 fyrir sigur öll tímabil. Töflur vantar hjá KSÍ fyrir 1913, 1914, 1923, 1949 og 1981 — þau tímabil telja í titlum en ekki í leikjatölum.
       </p>
-      <div className="card p-4 overflow-x-auto">
+      <div className="card p-4">
+        <div className="table-wrap">
         <table className="w-full text-sm">
           <thead>
             <tr className="muted text-xs text-left">
@@ -46,8 +47,8 @@ export default async function SagaPage() {
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={r.teamId} style={{ borderTop: '1px solid var(--border)' }}>
-                <td className="py-1.5 muted num">{i + 1}</td>
+              <tr key={r.teamId} className="trow">
+                <td className={`py-2 num w-8 ${i < 3 ? 'rank-top stat' : 'muted'}`}>{i + 1}</td>
                 <td className="font-medium whitespace-nowrap"><TeamBadge info={infos.get(r.teamId)} /> {nm(r.teamId)}</td>
                 <td className="text-right num font-semibold" style={{ color: 'var(--accent)' }}>{titles.get(r.teamId) ?? ''}</td>
                 <td className="text-right num">{r.seasons}</td>
@@ -57,12 +58,13 @@ export default async function SagaPage() {
                 <td className="text-right num">{r.lost}</td>
                 <td className="text-right num whitespace-nowrap">{r.gf}–{r.ga}</td>
                 <td className="text-right num">{r.gf - r.ga > 0 ? '+' : ''}{r.gf - r.ga}</td>
-                <td className="text-right num font-bold">{r.points3}</td>
+                <td className="text-right stat">{r.points3}</td>
                 <td className="text-right num muted pl-2 whitespace-nowrap">{r.firstSeason}–{r.lastSeason}</td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

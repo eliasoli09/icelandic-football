@@ -2,55 +2,164 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ─── Design tokens: premium Nordic football analytics ─────────────── */
 :root {
-  --bg: #f5f6f8;
+  /* light: overcast matchday paper */
+  --bg: #f3f5f2;
   --surface: #ffffff;
-  --surface-2: #eef0f4;
-  --border: #e2e5ea;
-  --text: #10192b;
-  --text-2: #5a6577;
-  --accent: #1d63d8;
-  --accent-2: #0ea86f;
-  --win: #0ea86f;
-  --draw: #98a1b3;
-  --loss: #d84a45;
+  --surface-2: #e9ede8;
+  --border: rgba(10, 20, 12, 0.10);
+  --border-strong: rgba(10, 20, 12, 0.18);
+  --text: #101510;
+  --text-2: #5a655c;
+  --accent: #3e7d1f;
+  --accent-ink: #ffffff;
+  --ice: #1f6bb8;
+  --win: #1e9e57;
+  --draw: #8a948c;
+  --loss: #d13f3a;
+  --glow: rgba(62, 125, 31, 0.10);
 }
 
 .dark {
-  --bg: #0c1220;
-  --surface: #141c2e;
-  --surface-2: #1c2639;
-  --border: #253045;
-  --text: #e8ecf4;
-  --text-2: #8b96ab;
-  --accent: #4d8dff;
-  --accent-2: #22c58b;
-  --win: #22c58b;
-  --draw: #5a6577;
-  --loss: #f0605b;
+  /* dark: pitch under floodlights */
+  --bg: #0a0e0b;
+  --surface: #10151166;
+  --surface-solid: #101511;
+  --surface-2: #171e18;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #f2f5f0;
+  --text-2: #94a096;
+  --accent: #b8f04a;
+  --accent-ink: #101504;
+  --ice: #6fb7ff;
+  --win: #4ade80;
+  --draw: #5b665d;
+  --loss: #f87171;
+  --glow: rgba(184, 240, 74, 0.07);
 }
+
+:root { --surface-solid: var(--surface); }
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-archivo);
 }
 
+/* ─── Base ──────────────────────────────────────────────────────────── */
 body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans), system-ui, sans-serif;
+  background-image:
+    radial-gradient(1200px 500px at 50% -220px, var(--glow), transparent 70%);
+  background-repeat: no-repeat;
 }
 
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+h1, h2, h3, .display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.num { font-variant-numeric: tabular-nums lining-nums; }
+.muted { color: var(--text-2); }
+
+/* scoreboard numerals */
+.stat {
+  font-family: var(--font-display), sans-serif;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ─── Surfaces ──────────────────────────────────────────────────────── */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
 }
 
-.num {
+/* broadcast lower-third strip */
+.strip {
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(90deg, var(--glow), transparent 55%);
+}
+
+/* pitch-line texture for heroes */
+.pitch {
+  position: relative;
+  overflow: hidden;
+}
+.pitch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.05' stroke-width='2'%3E%3Ccircle cx='400' cy='200' r='90'/%3E%3Cline x1='400' y1='0' x2='400' y2='400'/%3E%3Crect x='0' y='80' width='110' height='240'/%3E%3Crect x='690' y='80' width='110' height='240'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+}
+:root:not(.dark) .pitch::before { filter: invert(1); opacity: 0.7; }
+
+/* ─── Tables ────────────────────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%);
+}
+.table-wrap table { min-width: 100%; }
+.table-wrap thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-solid);
+  z-index: 1;
+}
+.trow { transition: background 0.15s ease; border-top: 1px solid var(--border); }
+.trow:hover { background: var(--surface-2); }
+
+/* ─── Pills & badges ────────────────────────────────────────────────── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+.pill-win { background: color-mix(in srgb, var(--win) 16%, transparent); color: var(--win); }
+.pill-loss { background: color-mix(in srgb, var(--loss) 16%, transparent); color: var(--loss); }
+.pill-flat { background: var(--surface-2); color: var(--text-2); }
 
-.muted {
-  color: var(--text-2);
+/* top-3 rank medal */
+.rank-top {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+/* ─── Focus & motion ───────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

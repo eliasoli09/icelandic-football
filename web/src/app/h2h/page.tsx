@@ -40,7 +40,7 @@ export default async function H2HPage({
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-xl font-bold mb-1">Innbyrðis viðureignir frá 1985</h1>
+      <h1 className="display text-2xl font-black mb-1">Innbyrðis viðureignir frá 1985</h1>
       <p className="text-sm muted mb-4">Veldu tvö lið til að sjá söguna í efstu deild. KSÍ á markatölur frá 1985; eldri leikir eru til sem leikjaskrár án úrslita.</p>
       <form className="flex gap-3 mb-6" method="get">
         <select name="a" defaultValue={a ?? ''} className="card px-3 py-2 text-sm flex-1" style={{ color: 'var(--text)' }}>
@@ -69,9 +69,9 @@ export default async function H2HPage({
             />
           </div>
           <div className="grid grid-cols-3 items-center text-center mb-4">
-            <h2 className="text-lg font-bold">{nm(aId)}</h2>
-            <span className="text-3xl font-black num">{w1}–{stats.draws}–{w2}</span>
-            <h2 className="text-lg font-bold">{nm(bId)}</h2>
+            <h2 className="display text-lg font-extrabold">{nm(aId)}</h2>
+            <span className="stat text-4xl">{w1}–{stats.draws}–{w2}</span>
+            <h2 className="display text-lg font-extrabold">{nm(bId)}</h2>
           </div>
           <div className="grid gap-2 text-sm max-w-md mx-auto">
             <div className="flex justify-between"><span className="muted">Leikir alls</span><span className="num">{w1 + w2 + stats.draws}</span></div>

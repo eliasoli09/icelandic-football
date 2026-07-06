@@ -3,6 +3,7 @@ import { ShareButton } from '@/components/ShareButton'
 import { teams, eloHistory, teamInfo } from '@/lib/queries'
 import { TeamBadge } from '@/components/TeamBadge'
 import { displayColor } from '@/lib/teamColors'
+import { Reveal, CountUp } from '@/components/motion'
 
 export const revalidate = 300
 
@@ -50,39 +51,48 @@ export default async function EloPage() {
   return (
     <div className="grid gap-8">
       <section>
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold">Elo-stig liða</h1>
+        <div className="flex items-center justify-between mb-5">
+          <h1 className="display text-2xl font-black">Elo-stig liða</h1>
           <ShareButton title="Elo-stig liða" text="Elo-stig íslensku liðanna:" path="/elo" imagePath="/api/og/elo" />
         </div>
-        <div className="card p-4 mb-6 overflow-x-auto">
+        <div className="card p-4 mb-8">
+          <div className="table-wrap">
           <table className="w-full text-sm">
             <thead>
               <tr className="muted text-xs text-left">
-                <th className="py-1 font-medium">#</th>
-                <th className="font-medium">Lið</th>
-                <th className="text-right font-medium">Elo</th>
-                <th className="text-right font-medium">± síðustu 5</th>
+                <th className="py-2 font-semibold">#</th>
+                <th className="font-semibold">Lið</th>
+                <th className="text-right font-semibold">Elo</th>
+                <th className="text-right font-semibold pr-1">± síðustu 5</th>
               </tr>
             </thead>
             <tbody>
               {table.map((t, i) => (
-                <tr key={t.id} style={{ borderTop: '1px solid var(--border)' }}>
-                  <td className="py-1.5 muted num">{i + 1}</td>
-                  <td className="font-medium"><TeamBadge info={[...infos.values()].find((i) => i.name === t.name)} /> {t.name}</td>
-                  <td className="text-right num font-semibold">{Math.round(t.elo)}</td>
-                  <td className="text-right num" style={{ color: t.change >= 0 ? 'var(--win)' : 'var(--loss)' }}>
-                    {t.change >= 0 ? '+' : ''}{Math.round(t.change)}
+                <tr key={t.id} className="trow">
+                  <td className={`py-2 num w-10 ${i < 3 ? 'rank-top stat' : 'muted'}`}>{i + 1}</td>
+                  <td className="font-semibold">
+                    <TeamBadge info={[...infos.values()].find((x) => x.name === t.name)} /> {t.name}
+                  </td>
+                  <td className="text-right stat text-base">
+                    <CountUp value={Math.round(t.elo)} />
+                  </td>
+                  <td className="text-right pr-1">
+                    <span className={`pill ${t.change > 1 ? 'pill-win' : t.change < -1 ? 'pill-loss' : 'pill-flat'}`}>
+                      <span aria-hidden>{t.change > 1 ? '▲' : t.change < -1 ? '▼' : '–'}</span>
+                      {t.change >= 0 ? '+' : ''}{Math.round(t.change)}
+                    </span>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p className="text-[11px] muted mt-2">
+          </div>
+          <p className="text-[11px] muted mt-3">
             Elo nær yfir efstu deild frá 1985 og báðar efstu deildir frá 2019 — stig fylgja liðum milli deilda og tímabila. Byrjunarstig: 1500 (efsta deild), 1400 (Lengjudeildin). Grafið sýnir þróunina frá 2019.
           </p>
         </div>
-        <h2 className="text-lg font-bold mb-3">Þróun Elo-stiga</h2>
-        <div className="card p-4">
+        <h2 className="display text-lg font-extrabold mb-4">Þróun Elo-stiga</h2>
+        <div className="card p-4 sm:p-5">
           <EloChart
             data={points}
             teamNames={table.map((t) => t.name)}

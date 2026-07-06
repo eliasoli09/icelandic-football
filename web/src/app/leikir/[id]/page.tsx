@@ -52,7 +52,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             <span style={{ color: displayColor(infos.get(match.home_team)) }}>{nm(match.home_team)}</span>
             <TeamBadge info={infos.get(match.home_team)} size={34} />
           </h1>
-          <div className="text-3xl font-black num px-4">
+          <div className="stat text-4xl sm:text-5xl px-4">
             {match.status === 'played' ? `${match.home_goals} – ${match.away_goals}` : 'gegn'}
           </div>
           <h1 className="text-lg font-bold flex-1 text-left inline-flex items-center gap-2">
@@ -77,7 +77,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
       {factors && match.status === 'upcoming' && (
         <section className="card p-5">
-          <h2 className="font-bold mb-3">Af hverju? — rökin á bak við spána</h2>
+          <h2 className="display font-extrabold mb-4">Af hverju? — rökin á bak við spána</h2>
           <div className="grid gap-2.5 text-sm">
             <Row label="Elo-stig">
               <span className="num">{factors.eloHome} gegn {factors.eloAway} <span className="muted">(munur {factors.eloDiff > 0 ? '+' : ''}{factors.eloDiff})</span></span>
@@ -115,7 +115,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
       {events.length > 0 && (
         <section className="card p-5">
-          <h2 className="font-bold mb-3">Atburðir</h2>
+          <h2 className="display font-extrabold mb-4">Atburðir</h2>
           <div className="grid gap-1.5 text-sm">
             {events.map((e) => (
               <div key={`${e.event_id}-${e.type}-${e.player_name}`} className="flex items-center gap-3">

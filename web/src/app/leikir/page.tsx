@@ -23,19 +23,19 @@ export default async function LeikirPage() {
   }
   return (
     <div>
-      <h1 className="text-xl font-bold mb-4">Leikir — Besta deildin 2026</h1>
+      <h1 className="display text-2xl font-black mb-5">Leikir — Besta deildin 2026</h1>
       <div className="grid gap-6">
         {[...byMonth].map(([month, ms]) => (
           <section key={month}>
-            <h2 className="text-sm font-bold muted uppercase tracking-wide mb-2">
+            <h2 className="text-[11px] font-bold muted uppercase tracking-[0.18em] mb-2.5">
               {month === 'óráðið' ? 'Dagsetning óráðin' : new Date(month + '-01').toLocaleString('is-IS', { month: 'long', year: 'numeric', timeZone: 'UTC' })}
             </h2>
             <div className="grid gap-1.5">
               {ms.map((m) => (
-                <Link key={m.id} href={`/leikir/${m.id}`} className="card px-4 py-2 flex items-center gap-3 text-sm hover:opacity-90">
+                <Link key={m.id} href={`/leikir/${m.id}`} className="card card-hover px-4 py-2.5 flex items-center gap-3 text-sm">
                   <span className="muted text-xs w-24 shrink-0">{fmtDate(m.date)}</span>
                   <span className="flex-1 text-right">{nm(m.home_team)}</span>
-                  <span className="font-bold num w-14 text-center">
+                  <span className="stat w-14 text-center">
                     {m.status === 'played' ? `${m.home_goals} – ${m.away_goals}` : '–'}
                   </span>
                   <span className="flex-1">{nm(m.away_team)}</span>

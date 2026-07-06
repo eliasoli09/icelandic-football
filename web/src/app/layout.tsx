@@ -1,12 +1,16 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Archivo } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
-import Link from 'next/link'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { Nav } from '@/components/Nav'
 import './globals.css'
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
+const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin', 'latin-ext'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
+const archivo = Archivo({
+  variable: '--font-archivo',
+  subsets: ['latin', 'latin-ext'],
+  weight: ['600', '700', '800', '900'],
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://islensk-fotbolti.vercel.app'),
@@ -15,43 +19,23 @@ export const metadata: Metadata = {
     'Elo-stig, leikjaspár og líkindahermun fyrir Bestu deild karla. Uppfærist sjálfkrafa eftir hvern leik.',
 }
 
-const NAV = [
-  { href: '/', label: 'Yfirlit' },
-  { href: '/elo', label: 'Elo' },
-  { href: '/tafla', label: 'Tafla' },
-  { href: '/leikir', label: 'Leikir' },
-  { href: '/leikmenn', label: 'Leikmenn' },
-  { href: '/kastalinn', label: 'Kastalinn' },
-  { href: '/saga', label: 'Saga' },
-  { href: '/h2h', label: 'H2H' },
-]
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="is" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <header
-            className="sticky top-0 z-10 border-b backdrop-blur"
-            style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--bg) 85%, transparent)' }}
-          >
-            <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
-              <Link href="/" className="font-bold tracking-tight text-lg whitespace-nowrap">
-                ⚽ Besta spáin
-              </Link>
-              <nav className="flex gap-1 text-sm font-medium overflow-x-auto">
-                {NAV.map((n) => (
-                  <Link key={n.href} href={n.href} className="px-3 py-1.5 rounded-lg opacity-80 hover:opacity-100">
-                    {n.label}
-                  </Link>
-                ))}
-              </nav>
-              <ThemeToggle />
-            </div>
-          </header>
+          <Nav />
           <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
-          <footer className="max-w-5xl mx-auto px-4 py-10 text-xs muted">
-            Gögn: KSÍ (ksi.is) + SofaScore-innslög. Spár eru tölfræðilegar — engin ábyrgð tekin á úrslitum.
+          <footer
+            className="border-t mt-16"
+            style={{ borderColor: 'var(--border)' }}
+          >
+            <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <p className="text-xs muted">
+                Gögn: KSÍ (ksi.is) + SofaScore-innslög · Spár eru tölfræðilegar — engin ábyrgð tekin á úrslitum.
+              </p>
+              <p className="text-xs muted display font-bold">⚽ Besta spáin</p>
+            </div>
           </footer>
         </ThemeProvider>
       </body>

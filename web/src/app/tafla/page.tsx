@@ -36,10 +36,11 @@ export default async function TaflaPage() {
     <div className="grid gap-8">
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold">Besta deild karla 2026</h1>
+          <h1 className="display text-2xl font-black">Besta deild karla 2026</h1>
           <ShareButton title="Besta deild karla 2026" text="Staðan og meistaralíkur í Bestu deildinni:" path="/tafla" imagePath="/api/og/tafla" />
         </div>
-        <div className="card p-4 overflow-x-auto">
+        <div className="card p-4">
+          <div className="table-wrap">
           <table className="w-full text-sm">
             <thead>
               <tr className="muted text-xs text-left">
@@ -57,8 +58,8 @@ export default async function TaflaPage() {
             </thead>
             <tbody>
               {table.map((r, i) => (
-                <tr key={r.teamId} style={{ borderTop: '1px solid var(--border)' }}>
-                  <td className="py-1.5 muted num">{i + 1}</td>
+                <tr key={r.teamId} className="trow">
+                  <td className={`py-2 num w-8 ${i < 3 ? 'rank-top stat' : 'muted'}`}>{i + 1}</td>
                   <td className="font-medium whitespace-nowrap"><TeamBadge info={infos.get(r.teamId)} /> {nm(r.teamId)}</td>
                   <td className="text-right num">{r.played}</td>
                   <td className="text-right num">{r.won}</td>
@@ -66,16 +67,17 @@ export default async function TaflaPage() {
                   <td className="text-right num">{r.lost}</td>
                   <td className="text-right num whitespace-nowrap">{r.gf}–{r.ga}</td>
                   <td className="text-right num">{r.gf - r.ga > 0 ? '+' : ''}{r.gf - r.ga}</td>
-                  <td className="text-right num font-bold">{r.points}</td>
+                  <td className="text-right stat text-base">{r.points}</td>
                   <td className="text-right pl-3"><FormBadges form={r.form} /></td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </section>
       <section>
-        <h2 className="text-lg font-bold mb-3">Sætalíkur — 10.000 hermanir</h2>
+        <h2 className="display text-lg font-extrabold mb-4">Sætalíkur — 10.000 hermanir</h2>
         <div className="card p-4">
           {simRows.length ? (
             <>

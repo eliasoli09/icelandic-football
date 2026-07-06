@@ -1,3 +1,9 @@
+'use client'
+
+import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { useRef } from 'react'
+
+/** Animated three-segment probability bar — fills on scroll-into-view. */
 export function ProbBar({
   pHome,
   pDraw,
@@ -9,32 +15,44 @@ export function ProbBar({
   pAway: number
   compact?: boolean
 }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-30px' })
+  const reduce = useReducedMotion()
   const pct = (n: number) => `${Math.round(n * 100)}%`
-  const h = compact ? 'h-6' : 'h-8'
+  const h = compact ? 'h-6' : 'h-9'
+
+  const seg = (
+    p: number,
+    bg: string,
+    color: string,
+    delay: number,
+    label: string,
+  ) => (
+    <motion.div
+      className={`flex items-center justify-center overflow-hidden whitespace-nowrap`}
+      style={{ background: bg, color, minWidth: 0 }}
+      initial={reduce ? { flexGrow: p } : { flexGrow: 0.0001 }}
+      animate={inView ? { flexGrow: Math.max(p, 0.001) } : undefined}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay }}
+      aria-label={`${label} ${pct(p)}`}
+    >
+      <span className={`stat ${compact ? 'text-[11px]' : 'text-sm'} px-1`}>{pct(p)}</span>
+    </motion.div>
+  )
+
   return (
-    <div>
-      <div className={`flex w-full ${h} rounded-lg overflow-hidden text-xs font-semibold num`}>
-        <div
-          className="flex items-center justify-center text-white"
-          style={{ width: pct(pHome), background: 'var(--accent)', minWidth: 34 }}
-        >
-          {pct(pHome)}
-        </div>
-        <div
-          className="flex items-center justify-center"
-          style={{ width: pct(pDraw), background: 'var(--surface-2)', color: 'var(--text-2)', minWidth: 34 }}
-        >
-          {pct(pDraw)}
-        </div>
-        <div
-          className="flex items-center justify-center text-white"
-          style={{ width: pct(pAway), background: 'var(--accent-2)', minWidth: 34 }}
-        >
-          {pct(pAway)}
-        </div>
+    <div ref={ref}>
+      <div
+        className={`flex w-full ${h} rounded-lg overflow-hidden num`}
+        role="img"
+        aria-label={`Sigurlíkur: heimasigur ${pct(pHome)}, jafntefli ${pct(pDraw)}, útisigur ${pct(pAway)}`}
+      >
+        {seg(pHome, 'var(--accent)', 'var(--accent-ink)', 0, 'Heimasigur')}
+        {seg(pDraw, 'var(--surface-2)', 'var(--text-2)', 0.08, 'Jafntefli')}
+        {seg(pAway, 'var(--ice)', '#0a1220', 0.16, 'Útisigur')}
       </div>
       {!compact && (
-        <div className="flex justify-between text-[11px] mt-1 muted">
+        <div className="flex justify-between text-[11px] mt-1.5 muted font-medium">
           <span>Heimasigur</span>
           <span>Jafntefli</span>
           <span>Útisigur</span>
