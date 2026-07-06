@@ -229,3 +229,50 @@ export async function lastIngest() {
     .maybeSingle()
   return data
 }
+
+export interface BeltRow {
+  match_id: number
+  season: number
+  date: string | null
+  holder_before: number
+  challenger: number
+  holder_after: number
+  taken: boolean
+}
+
+export async function beltHistory(): Promise<BeltRow[]> {
+  const out: BeltRow[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db()
+      .from('belt_history')
+      .select('*')
+      .order('season')
+      .order('date', { nullsFirst: false })
+      .order('match_id')
+      .range(from, from + 999)
+    if (!data?.length) break
+    out.push(...(data as BeltRow[]))
+    if (data.length < 1000) break
+  }
+  return out
+}
+
+export async function h2hAll() {
+  const out: { team_a: number; team_b: number; stats: Record<string, unknown> }[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db().from('h2h_cache').select('*').range(from, from + 999)
+    if (!data?.length) break
+    out.push(...data)
+    if (data.length < 1000) break
+  }
+  return out
+}
+
+export async function alltime() {
+  const { data } = await db().from('alltime_cache').select('*')
+  return (data ?? []).map((r) => r.stats) as {
+    teamId: number; played: number; won: number; drawn: number; lost: number
+    gf: number; ga: number; points3: number; seasons: number
+    firstSeason: number; lastSeason: number
+  }[]
+}

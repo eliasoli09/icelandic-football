@@ -12,6 +12,7 @@ import {
   type ScorerState,
 } from './simulate'
 import type { League, Phase, MatchEvent } from './types'
+import { runBelt, computeH2H, computeAllTime, type BeltMatch } from './belt'
 
 export const CURRENT_SEASON = 2026
 export const TOURNAMENTS_2026: { id: number; league: League; phase: Phase }[] = [
@@ -464,11 +465,68 @@ export async function recomputeAll() {
   }))
   await replaceTable('scorer_sim', [...scorerRows, ...assistRows])
 
+  // --- history: belt lineage, all-time H2H and all-time table (top flight) ---
+  const bestaPlayed: BeltMatch[] = played
+    .filter((m) => m.league === 'besta')
+    .map((m) => ({
+      matchId: m.id,
+      season: m.season,
+      date: m.date,
+      order: 0,
+      homeTeam: m.home_team,
+      awayTeam: m.away_team,
+      homeGoals: m.home_goals!,
+      awayGoals: m.away_goals!,
+    }))
+    .sort(
+      (a, b) =>
+        a.season - b.season ||
+        (a.date ?? '~').localeCompare(b.date ?? '~') || // undated last within season
+        a.matchId - b.matchId,
+    )
+    .map((m, i) => ({ ...m, order: i }))
+
+  const belt = runBelt(bestaPlayed)
+  await replaceHistoryTable(
+    'belt_history',
+    belt.history.map((h) => ({
+      match_id: h.matchId,
+      season: h.season,
+      date: h.date,
+      holder_before: h.holderBefore,
+      challenger: h.challenger,
+      holder_after: h.holderAfter,
+      taken: h.taken,
+    })),
+  )
+  await replaceHistoryTable(
+    'h2h_cache',
+    computeH2H(bestaPlayed).map((p) => ({
+      team_a: p.teamA,
+      team_b: p.teamB,
+      stats: p,
+    })),
+  )
+  await replaceHistoryTable(
+    'alltime_cache',
+    computeAllTime(bestaPlayed).map((r) => ({ team_id: r.teamId, stats: r })),
+  )
+
   return {
     eloRecords: eloRecords.length,
     playerRecords: playerRecords.length,
     predictions: predRows.length,
+    beltEvents: belt.history.length,
   }
+}
+
+async function replaceHistoryTable(table: string, rows: Record<string, unknown>[]) {
+  const { error } = await db().rpc('rpc_replace_history', {
+    p_secret: SECRET(),
+    p_table: table,
+    p_rows: rows,
+  })
+  if (error) throw error
 }
 
 async function fetchAll<T>(table: string, select: string): Promise<T[]> {

@@ -1,0 +1,2 @@
+-- see applied migration 'history_belt_tables' (2026-07-06): belt_history,
+-- h2h_cache, alltime_cache + rpc_replace_history(text,text,jsonb)
