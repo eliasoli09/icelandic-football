@@ -1,4 +1,6 @@
-import { teams, beltHistory, upcomingWithPredictions } from '@/lib/queries'
+import { teams, beltHistory, upcomingWithPredictions, teamInfo } from '@/lib/queries'
+import { TeamBadge } from '@/components/TeamBadge'
+import { displayColor, tint } from '@/lib/teamColors'
 import { ShareButton } from '@/components/ShareButton'
 
 export const revalidate = 300
@@ -10,11 +12,12 @@ export const metadata = {
 
 export default async function KastalinnPage() {
   let names = new Map<number, string>()
+  let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let history: Awaited<ReturnType<typeof beltHistory>> = []
   let upcoming: Awaited<ReturnType<typeof upcomingWithPredictions>> = []
   try {
-    ;[names, history, upcoming] = await Promise.all([
-      teams(), beltHistory(), upcomingWithPredictions(60),
+    ;[names, infos, history, upcoming] = await Promise.all([
+      teams(), teamInfo(), beltHistory(), upcomingWithPredictions(60),
     ])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
@@ -57,9 +60,17 @@ export default async function KastalinnPage() {
 
   return (
     <div className="grid gap-8">
-      <section className="card p-6 text-center" style={{ borderColor: 'var(--accent)', borderWidth: 2 }}>
+      <section
+        className="card p-6 text-center"
+        style={{
+          borderColor: displayColor(infos.get(holder)),
+          borderWidth: 2,
+          background: `linear-gradient(180deg, ${tint(infos.get(holder), 0.25)} 0%, var(--surface) 70%)`,
+        }}
+      >
         <p className="text-xs muted uppercase tracking-wide mb-2">Konungur kastalans 👑</p>
-        <h1 className="text-3xl font-black mb-2">{nm(holder)}</h1>
+        <div className="flex justify-center mb-2"><TeamBadge info={infos.get(holder)} size={64} /></div>
+        <h1 className="text-3xl font-black mb-2" style={{ color: displayColor(infos.get(holder)) }}>{nm(holder)}</h1>
         <p className="text-sm muted">
           Hefur haldið beltinu síðan {reignStart.date ? new Date(reignStart.date).toLocaleDateString('is-IS', { timeZone: 'UTC' }) : reignStart.season}
           {' '}· {defenses} {defenses === 1 ? 'vörn' : 'varnir'} í röð

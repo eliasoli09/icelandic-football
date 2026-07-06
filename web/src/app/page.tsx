@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { ProbBar } from '@/components/ProbBar'
 import {
-  teams, upcomingWithPredictions, recentResults, scorerSim, lastIngest,
+  teams, upcomingWithPredictions, recentResults, scorerSim, lastIngest, teamInfo,
 } from '@/lib/queries'
+import { TeamBadge } from '@/components/TeamBadge'
 
 export const revalidate = 300
 
@@ -11,13 +12,14 @@ const fmtDate = (d: string | null) =>
 
 export default async function Home() {
   let names = new Map<number, string>()
+  let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let upcoming: Awaited<ReturnType<typeof upcomingWithPredictions>> = []
   let results: Awaited<ReturnType<typeof recentResults>> = []
   let scorers: Awaited<ReturnType<typeof scorerSim>> = []
   let ingest: Awaited<ReturnType<typeof lastIngest>> = null
   try {
-    ;[names, upcoming, results, scorers, ingest] = await Promise.all([
-      teams(), upcomingWithPredictions(8), recentResults(6), scorerSim('goals'), lastIngest(),
+    ;[names, infos, upcoming, results, scorers, ingest] = await Promise.all([
+      teams(), teamInfo(), upcomingWithPredictions(8), recentResults(6), scorerSim('goals'), lastIngest(),
     ])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn — keyrðu fyrst innhleðslu.</p>
@@ -35,9 +37,9 @@ export default async function Home() {
                 <span>{m.league === 'besta' ? 'Besta deildin' : 'Lengjudeildin'}</span>
               </div>
               <div className="flex items-center justify-between font-semibold mb-3">
-                <span>{nm(m.home_team)}</span>
+                <span className="inline-flex items-center gap-2"><TeamBadge info={infos.get(m.home_team)} size={22} /> {nm(m.home_team)}</span>
                 <span className="muted text-sm">gegn</span>
-                <span>{nm(m.away_team)}</span>
+                <span className="inline-flex items-center gap-2">{nm(m.away_team)} <TeamBadge info={infos.get(m.away_team)} size={22} /></span>
               </div>
               {m.prediction ? (
                 <ProbBar pHome={m.prediction.p_home} pDraw={m.prediction.p_draw} pAway={m.prediction.p_away} compact />
@@ -52,9 +54,9 @@ export default async function Home() {
         <div className="grid gap-2">
           {results.map((m) => (
             <Link key={m.id} href={`/leikir/${m.id}`} className="card px-4 py-2.5 flex items-center justify-between text-sm hover:opacity-90">
-              <span className="w-2/5">{nm(m.home_team)}</span>
+              <span className="w-2/5 inline-flex items-center gap-2"><TeamBadge info={infos.get(m.home_team)} /> {nm(m.home_team)}</span>
               <span className="font-bold num">{m.home_goals} – {m.away_goals}</span>
-              <span className="w-2/5 text-right">{nm(m.away_team)}</span>
+              <span className="w-2/5 justify-end inline-flex items-center gap-2">{nm(m.away_team)} <TeamBadge info={infos.get(m.away_team)} /></span>
             </Link>
           ))}
         </div>

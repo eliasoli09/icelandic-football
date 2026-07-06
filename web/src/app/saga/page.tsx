@@ -1,14 +1,16 @@
-import { teams, alltime, champions } from '@/lib/queries'
+import { teams, alltime, champions, teamInfo } from '@/lib/queries'
+import { TeamBadge } from '@/components/TeamBadge'
 import { ShareButton } from '@/components/ShareButton'
 
 export const revalidate = 3600
 
 export default async function SagaPage() {
   let names = new Map<number, string>()
+  let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let rows: Awaited<ReturnType<typeof alltime>> = []
   let champs = new Map<number, number>()
   try {
-    ;[names, rows, champs] = await Promise.all([teams(), alltime(), champions()])
+    ;[names, infos, rows, champs] = await Promise.all([teams(), teamInfo(), alltime(), champions()])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -46,7 +48,7 @@ export default async function SagaPage() {
             {rows.map((r, i) => (
               <tr key={r.teamId} style={{ borderTop: '1px solid var(--border)' }}>
                 <td className="py-1.5 muted num">{i + 1}</td>
-                <td className="font-medium whitespace-nowrap">{nm(r.teamId)}</td>
+                <td className="font-medium whitespace-nowrap"><TeamBadge info={infos.get(r.teamId)} /> {nm(r.teamId)}</td>
                 <td className="text-right num font-semibold" style={{ color: 'var(--accent)' }}>{titles.get(r.teamId) ?? ''}</td>
                 <td className="text-right num">{r.seasons}</td>
                 <td className="text-right num">{r.played}</td>

@@ -1,7 +1,9 @@
 import { ProbBar } from '@/components/ProbBar'
 import { ShareButton } from '@/components/ShareButton'
 import { FormBadges } from '@/components/FormBadges'
-import { teams, matchDetail } from '@/lib/queries'
+import { teams, matchDetail, teamInfo } from '@/lib/queries'
+import { TeamBadge } from '@/components/TeamBadge'
+import { displayColor, tint } from '@/lib/teamColors'
 import type { PredictionFactors } from '@/lib/types'
 
 export const revalidate = 300
@@ -20,9 +22,10 @@ const fmtDate = (d: string | null) =>
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   let names = new Map<number, string>()
+  let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let detail: Awaited<ReturnType<typeof matchDetail>> = null
   try {
-    ;[names, detail] = await Promise.all([teams(), matchDetail(Number(id))])
+    ;[names, infos, detail] = await Promise.all([teams(), teamInfo(), matchDetail(Number(id))])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -35,16 +38,27 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="max-w-2xl mx-auto grid gap-6">
-      <section className="card p-6 text-center">
+      <section
+        className="card p-6 text-center"
+        style={{
+          background: `linear-gradient(120deg, ${tint(infos.get(match.home_team), 0.22)} 0%, var(--surface) 42%, var(--surface) 58%, ${tint(infos.get(match.away_team), 0.22)} 100%)`,
+        }}
+      >
         <p className="text-xs muted mb-3">
           {fmtDate(match.date)} · {match.venue ?? ''} · {match.league === 'besta' ? 'Besta deildin' : 'Lengjudeildin'} {match.season}
         </p>
         <div className="flex items-center justify-between gap-4 mb-4">
-          <h1 className="text-lg font-bold flex-1 text-right">{nm(match.home_team)}</h1>
+          <h1 className="text-lg font-bold flex-1 text-right inline-flex items-center justify-end gap-2">
+            <span style={{ color: displayColor(infos.get(match.home_team)) }}>{nm(match.home_team)}</span>
+            <TeamBadge info={infos.get(match.home_team)} size={34} />
+          </h1>
           <div className="text-3xl font-black num px-4">
             {match.status === 'played' ? `${match.home_goals} – ${match.away_goals}` : 'gegn'}
           </div>
-          <h1 className="text-lg font-bold flex-1 text-left">{nm(match.away_team)}</h1>
+          <h1 className="text-lg font-bold flex-1 text-left inline-flex items-center gap-2">
+            <TeamBadge info={infos.get(match.away_team)} size={34} />
+            <span style={{ color: displayColor(infos.get(match.away_team)) }}>{nm(match.away_team)}</span>
+          </h1>
         </div>
         {prediction && match.status === 'upcoming' && (
           <ProbBar pHome={prediction.p_home} pDraw={prediction.p_draw} pAway={prediction.p_away} />

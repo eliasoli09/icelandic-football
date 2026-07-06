@@ -1,11 +1,12 @@
 import { ImageResponse } from 'next/og'
-import { teams, eloHistory } from '@/lib/queries'
+import { teams, eloHistory, teamInfo } from '@/lib/queries'
 import { Frame, C, OG_SIZE, ogFonts } from '@/lib/og'
+import { displayColor } from '@/lib/teamColors'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const [names, history] = await Promise.all([teams(), eloHistory()])
+  const [names, infos, history] = await Promise.all([teams(), teamInfo(), eloHistory()])
   const nm = (t: number) => names.get(t) ?? '?'
   const latest = new Map<number, number>()
   for (const r of history) latest.set(r.team_id, r.elo_after)
@@ -19,9 +20,14 @@ export async function GET() {
           {rows.map(([teamId, elo], i) => (
             <div key={teamId} style={{ display: 'flex', alignItems: 'center', padding: '7px 0', fontSize: 28 }}>
               <div style={{ display: 'flex', width: 44, color: C.muted }}>{i + 1}</div>
-              <div style={{ display: 'flex', width: 250, fontWeight: 700 }}>{nm(teamId)}</div>
+              {infos.get(teamId)?.crest ? (
+                <img src={infos.get(teamId)!.crest!} width={30} height={30} style={{ objectFit: 'contain', marginRight: 12 }} />
+              ) : (
+                <div style={{ display: 'flex', width: 30, marginRight: 12 }} />
+              )}
+              <div style={{ display: 'flex', width: 220, fontWeight: 700 }}>{nm(teamId)}</div>
               <div style={{ display: 'flex', flex: 1, height: 26, borderRadius: 8, overflow: 'hidden', background: '#1a2438' }}>
-                <div style={{ display: 'flex', width: `${Math.max(8, ((elo - 1300) / (max - 1300)) * 100)}%`, background: C.accent, borderRadius: 8 }} />
+                <div style={{ display: 'flex', width: `${Math.max(8, ((elo - 1300) / (max - 1300)) * 100)}%`, background: displayColor(infos.get(teamId)), borderRadius: 8 }} />
               </div>
               <div style={{ display: 'flex', width: 110, justifyContent: 'flex-end', fontWeight: 700 }}>{Math.round(elo)}</div>
             </div>

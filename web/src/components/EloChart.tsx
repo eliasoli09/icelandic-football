@@ -20,10 +20,12 @@ export function EloChart({
   data,
   teamNames,
   defaultSelected,
+  teamColors = {},
 }: {
   data: EloSeriesPoint[]
   teamNames: string[]
   defaultSelected: string[]
+  teamColors?: Record<string, string>
 }) {
   const [selected, setSelected] = useState<Set<string>>(new Set(defaultSelected))
   const toggle = (t: string) => {
@@ -35,8 +37,8 @@ export function EloChart({
     })
   }
   const colorOf = useMemo(
-    () => new Map(teamNames.map((t, i) => [t, PALETTE[i % PALETTE.length]])),
-    [teamNames],
+    () => new Map(teamNames.map((t, i) => [t, teamColors[t] ?? PALETTE[i % PALETTE.length]])),
+    [teamNames, teamColors],
   )
   return (
     <div>

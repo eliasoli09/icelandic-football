@@ -292,3 +292,15 @@ export async function champions(): Promise<Map<number, number>> {
   const { data } = await db().from('champions').select('season, team_id')
   return new Map((data ?? []).map((c) => [c.season, c.team_id]))
 }
+
+import type { TeamInfo as TeamColorInfo } from './teamColors'
+
+export async function teamInfo(): Promise<Map<number, TeamColorInfo>> {
+  const { data } = await db().from('teams').select('id, name, crest_url, color')
+  return new Map(
+    (data ?? []).map((t) => [
+      t.id,
+      { name: t.name, crest: t.crest_url, color: t.color },
+    ]),
+  )
+}

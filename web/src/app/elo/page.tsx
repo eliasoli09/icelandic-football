@@ -1,6 +1,8 @@
 import { EloChart, type EloSeriesPoint } from '@/components/EloChart'
 import { ShareButton } from '@/components/ShareButton'
-import { teams, eloHistory } from '@/lib/queries'
+import { teams, eloHistory, teamInfo } from '@/lib/queries'
+import { TeamBadge } from '@/components/TeamBadge'
+import { displayColor } from '@/lib/teamColors'
 
 export const revalidate = 300
 
@@ -11,9 +13,10 @@ export const metadata = {
 
 export default async function EloPage() {
   let names = new Map<number, string>()
+  let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let history: Awaited<ReturnType<typeof eloHistory>> = []
   try {
-    ;[names, history] = await Promise.all([teams(), eloHistory()])
+    ;[names, infos, history] = await Promise.all([teams(), teamInfo(), eloHistory()])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -65,7 +68,7 @@ export default async function EloPage() {
               {table.map((t, i) => (
                 <tr key={t.id} style={{ borderTop: '1px solid var(--border)' }}>
                   <td className="py-1.5 muted num">{i + 1}</td>
-                  <td className="font-medium">{t.name}</td>
+                  <td className="font-medium"><TeamBadge info={[...infos.values()].find((i) => i.name === t.name)} /> {t.name}</td>
                   <td className="text-right num font-semibold">{Math.round(t.elo)}</td>
                   <td className="text-right num" style={{ color: t.change >= 0 ? 'var(--win)' : 'var(--loss)' }}>
                     {t.change >= 0 ? '+' : ''}{Math.round(t.change)}
@@ -80,7 +83,12 @@ export default async function EloPage() {
         </div>
         <h2 className="text-lg font-bold mb-3">Þróun Elo-stiga</h2>
         <div className="card p-4">
-          <EloChart data={points} teamNames={table.map((t) => t.name)} defaultSelected={top12.slice(0, 4)} />
+          <EloChart
+            data={points}
+            teamNames={table.map((t) => t.name)}
+            defaultSelected={top12.slice(0, 4)}
+            teamColors={Object.fromEntries([...infos.values()].map((i) => [i.name, displayColor(i)]))}
+          />
         </div>
       </section>
     </div>

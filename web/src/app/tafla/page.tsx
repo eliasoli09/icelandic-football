@@ -1,7 +1,8 @@
 import { PosHeatmap } from '@/components/PosHeatmap'
 import { ShareButton } from '@/components/ShareButton'
 import { FormBadges } from '@/components/FormBadges'
-import { teams, standings, seasonSim } from '@/lib/queries'
+import { teams, standings, seasonSim, teamInfo } from '@/lib/queries'
+import { TeamBadge } from '@/components/TeamBadge'
 
 export const revalidate = 300
 
@@ -12,10 +13,11 @@ export const metadata = {
 
 export default async function TaflaPage() {
   let names = new Map<number, string>()
+  let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let table: Awaited<ReturnType<typeof standings>> = []
   let sim: Awaited<ReturnType<typeof seasonSim>> = []
   try {
-    ;[names, table, sim] = await Promise.all([teams(), standings(), seasonSim()])
+    ;[names, infos, table, sim] = await Promise.all([teams(), teamInfo(), standings(), seasonSim()])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -57,7 +59,7 @@ export default async function TaflaPage() {
               {table.map((r, i) => (
                 <tr key={r.teamId} style={{ borderTop: '1px solid var(--border)' }}>
                   <td className="py-1.5 muted num">{i + 1}</td>
-                  <td className="font-medium whitespace-nowrap">{nm(r.teamId)}</td>
+                  <td className="font-medium whitespace-nowrap"><TeamBadge info={infos.get(r.teamId)} /> {nm(r.teamId)}</td>
                   <td className="text-right num">{r.played}</td>
                   <td className="text-right num">{r.won}</td>
                   <td className="text-right num">{r.drawn}</td>
