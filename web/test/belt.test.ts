@@ -70,3 +70,28 @@ describe('computeAllTime', () => {
     expect(res[0].teamId).toBe(1) // sorted by points
   })
 })
+
+describe('runBelt — relegation handover', () => {
+  it('passes the belt to the reigning champions when the holder drops out', () => {
+    const ctx = {
+      seasonTeams: new Map([
+        [1998, new Set([1, 2, 3])],
+        [1999, new Set([2, 3])], // team 1 relegated
+      ]),
+      champions: new Map([[1998, 2]]),
+    }
+    const res = runBelt(
+      [
+        m(1, 1, 2, 2, 0, 1998), // team 1 claims the belt in 1998
+        m(2, 2, 3, 1, 0, 1999), // first match of 1999 — holder 1 is gone
+      ],
+      undefined,
+      ctx,
+    )
+    const handover = res.history.find((h) => h.matchId < 0)!
+    expect(handover).toBeDefined()
+    expect(handover.holderBefore).toBe(1)
+    expect(handover.holderAfter).toBe(2) // reigning champions
+    expect(res.currentHolder).toBe(2) // champ then defended in match 2
+  })
+})

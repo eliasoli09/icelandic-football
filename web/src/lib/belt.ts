@@ -10,8 +10,9 @@
  *  - The holder defends the title in every top-flight match they play
  *    (including championship playoff games).
  *  - Win or draw → holder keeps the title. Loss → opponent takes it.
- *  - If the holder leaves the top flight (relegation), the title freezes
- *    with them until they return.
+ *  - If the holder leaves the top flight (relegation), the belt passes to
+ *    the reigning Íslandsmeistarar (recorded as a synthetic handover event
+ *    with a negative match id).
  */
 
 export interface BeltMatch {
@@ -47,9 +48,20 @@ export interface BeltStats {
   longestReign: { holder: number; matches: number; fromSeason: number; toSeason: number } | null
 }
 
+export interface BeltContext {
+  /** which teams appear in the top flight each season */
+  seasonTeams: Map<number, Set<number>>
+  /** Íslandsmeistarar by season */
+  champions: Map<number, number>
+}
+
 /** @param initialHolder team holding the belt before the first match
  *  (the 1984 Íslandsmeistarar carry it into the match-play era). */
-export function runBelt(matches: BeltMatch[], initialHolder?: number): BeltStats {
+export function runBelt(
+  matches: BeltMatch[],
+  initialHolder?: number,
+  ctx?: BeltContext,
+): BeltStats {
   const sorted = [...matches].sort((a, b) => a.order - b.order)
   const history: BeltEvent[] = []
   const titleWins = new Map<number, number>()
@@ -76,7 +88,30 @@ export function runBelt(matches: BeltMatch[], initialHolder?: number): BeltStats
     }
   }
 
+  let currentSeason = sorted[0]?.season ?? 0
   for (const m of sorted) {
+    // season rollover: a relegated holder hands the belt to the champions
+    if (ctx && holder !== null && m.season > currentSeason) {
+      const participates = ctx.seasonTeams.get(m.season)?.has(holder)
+      if (participates === false) {
+        const champ = ctx.champions.get(currentSeason)
+        if (champ !== undefined && champ !== holder) {
+          closeReign(holder, currentSeason)
+          history.push({
+            matchId: -m.season, season: m.season, date: null,
+            holderBefore: holder, challenger: champ,
+            holderAfter: champ, taken: true,
+          })
+          holder = champ
+          bump(reigns, holder)
+          reignStart = { date: null, season: m.season }
+          reignDefenses = 0
+          reignMatchCount = 0
+          reignFromSeason = m.season
+        }
+      }
+    }
+    currentSeason = m.season
     const winner =
       m.homeGoals > m.awayGoals ? m.homeTeam : m.homeGoals < m.awayGoals ? m.awayTeam : null
 

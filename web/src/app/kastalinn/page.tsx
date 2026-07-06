@@ -109,8 +109,14 @@ export default async function KastalinnPage() {
                   <span className="muted num text-xs w-20">{h.date ? new Date(h.date).toLocaleDateString('is-IS', { timeZone: 'UTC' }) : h.season}</span>
                   <span className="flex-1">
                     <strong>{nm(h.holder_after)}</strong>
-                    <span className="muted"> tók beltið af </span>
-                    {nm(h.holder_before)}
+                    {h.match_id < 0 ? (
+                      <span className="muted"> fengu beltið sem Íslandsmeistarar þegar {nm(h.holder_before)} féllu úr deild</span>
+                    ) : (
+                      <>
+                        <span className="muted"> tók beltið af </span>
+                        {nm(h.holder_before)}
+                      </>
+                    )}
                   </span>
                 </div>
               ))}

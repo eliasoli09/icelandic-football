@@ -12,7 +12,7 @@ import {
   type ScorerState,
 } from './simulate'
 import type { League, Phase, MatchEvent } from './types'
-import { runBelt, computeH2H, computeAllTime, type BeltMatch } from './belt'
+import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext } from './belt'
 
 export const CURRENT_SEASON = 2026
 export const TOURNAMENTS_2026: { id: number; league: League; phase: Phase }[] = [
@@ -497,7 +497,20 @@ export async function recomputeAll() {
       .maybeSingle()
     initialHolder = champ?.team_id
   }
-  const belt = runBelt(bestaPlayed, initialHolder)
+  const { data: champRows } = await db().from('champions').select('season, team_id')
+  const beltCtx: BeltContext = {
+    seasonTeams: (() => {
+      const st = new Map<number, Set<number>>()
+      for (const m of bestaPlayed) {
+        if (!st.has(m.season)) st.set(m.season, new Set())
+        st.get(m.season)!.add(m.homeTeam)
+        st.get(m.season)!.add(m.awayTeam)
+      }
+      return st
+    })(),
+    champions: new Map((champRows ?? []).map((c) => [c.season, c.team_id])),
+  }
+  const belt = runBelt(bestaPlayed, initialHolder, beltCtx)
   await replaceHistoryTable(
     'belt_history',
     belt.history.map((h) => ({
