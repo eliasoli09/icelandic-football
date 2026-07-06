@@ -20,6 +20,7 @@ export interface SofaPlayerInput {
   name: string
   appearances: number | null
   assists: number | null
+  goals?: number | null
   extra: Record<string, unknown> | null
 }
 

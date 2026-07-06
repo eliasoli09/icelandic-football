@@ -1,5 +1,6 @@
 import { playerEloTable, scorerSim, sofascorePlayers } from '@/lib/queries'
 import { computeComposite, type CompositeBreakdown } from '@/lib/playerComposite'
+import { inferPositions, normalizeName, POSITION_LABELS, type Position } from '@/lib/positions'
 
 export const revalidate = 300
 
@@ -18,13 +19,34 @@ export default async function LeikmennPage() {
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
-  const sofaByName = new Map(sofa.map((p) => [p.name, p]))
+  const sofaByName = new Map(sofa.map((p) => [normalizeName(p.name), p]))
   const composite = computeComposite(sofa)
+  const compositeByNorm = new Map(
+    [...composite].map(([name, v]) => [normalizeName(name), v]),
+  )
   const withTotal = (p: EloRow) => ({
     ...p,
-    framlag: composite.get(p.name) ?? null,
-    heild: p.elo + (composite.get(p.name)?.total ?? 0),
+    framlag: compositeByNorm.get(normalizeName(p.name)) ?? null,
+    heild: p.elo + (compositeByNorm.get(normalizeName(p.name))?.total ?? 0),
   })
+  // position lists: SofaScore pool + Elo matched by normalized name
+  const positions = inferPositions(sofa)
+  const eloByNorm = new Map(
+    elo.filter((p) => p.league === 'besta').map((p) => [normalizeName(p.name), p.elo]),
+  )
+  const positionLists = (['GK', 'DF', 'MF', 'FW'] as Position[]).map((posKey) => ({
+    pos: posKey,
+    label: POSITION_LABELS[posKey],
+    rows: sofa
+      .filter((p) => positions.get(p.name) === posKey)
+      .map((p) => {
+        const framlag = composite.get(p.name)?.total ?? 0
+        const eloVal = eloByNorm.get(normalizeName(p.name)) ?? 1500
+        return { name: p.name, team: p.team, rating: p.rating, heild: Math.round(eloVal + framlag) }
+      })
+      .sort((a, b) => b.heild - a.heild)
+      .slice(0, 10),
+  }))
   const besta = elo
     .filter((p) => p.league === 'besta')
     .map(withTotal)
@@ -50,6 +72,34 @@ export default async function LeikmennPage() {
         </p>
       </section>
       <section className="grid gap-8 content-start">
+        <div>
+          <h2 className="text-xl font-bold mb-4">Topp 10 eftir stöðum</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {positionLists.map((pl) => (
+              <div key={pl.pos} className="card p-4">
+                <h3 className="font-bold text-sm mb-2">{pl.label}</h3>
+                <table className="w-full text-sm">
+                  <tbody>
+                    {pl.rows.map((r, i) => (
+                      <tr key={r.name} style={i ? { borderTop: '1px solid var(--border)' } : {}}>
+                        <td className="py-1 muted num w-6">{i + 1}</td>
+                        <td className="font-medium truncate max-w-[160px]" title={`${r.name} · ${r.team ?? ''}`}>{r.name}</td>
+                        <td className="text-right num font-semibold">{r.heild}</td>
+                      </tr>
+                    ))}
+                    {!pl.rows.length && (
+                      <tr><td className="muted text-xs py-1" colSpan={3}>Engin gögn.</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] muted mt-2">
+            Staða er áætluð út frá tölfræðiprófíl (SofaScore hefur ekki stöðudálk í útflutningi):
+            markmenn af vörðum skotum, útileikmenn af varnar-/sköpunar-/sóknarhlutfalli. Talan er Heild (Elo + framlag).
+          </p>
+        </div>
         <div>
           <h2 className="text-xl font-bold mb-4">Markakóngar</h2>
           <RaceTable rows={goals} unit="mörk" />
