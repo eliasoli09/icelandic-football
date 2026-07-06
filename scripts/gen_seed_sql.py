@@ -43,7 +43,7 @@ def main():
         f.write('insert into matches (id, season, league, phase, home_team, away_team, home_goals, away_goals, status, corrected) values\n')
         vals = [
             f"({r['ksi_id']}, {r['season']}, {q(r['league'])}, {q(r['phase'])}, "
-            f"{tid[r['home']]}, {tid[r['away']]}, {r['hg']}, {r['ag']}, 'played', {bool(int(r['corrected']))})"
+            f"{tid[r['home']]}, {tid[r['away']]}, {r['hg']}, {r['ag']}, 'played', {str(bool(int(r['corrected']))).lower()})"
             for r in rows
         ]
         f.write(',\n'.join(vals) + '\non conflict (id) do nothing;\n')
