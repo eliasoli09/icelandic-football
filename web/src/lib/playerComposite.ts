@@ -6,6 +6,9 @@
  *  - sköpun:  big chances created + key passes + assists + dribbles
  *  - vörn:    tackles + interceptions + clearances + duels won
  *  - sendingar: accurate-pass % weighted by passing volume
+ *  - framsækni: accurate long balls + crosses + passes into final third
+ *    (progressive-passing proxies — activates only when the SofaScore drop
+ *    includes those columns; otherwise neutral for everyone)
  *  - markvarsla: saves + clean sheets + penalty saves (goalkeepers only)
  *
  * The index is expressed in Elo-points (capped ±80) and added to the
@@ -24,6 +27,7 @@ export interface CompositeBreakdown {
   creation: number
   defense: number
   passing: number
+  progression: number
   goalkeeping: number
   total: number
 }
@@ -44,6 +48,7 @@ function zScores(values: number[]): (v: number) => number {
 const W_CREATION = 14
 const W_DEFENSE = 12
 const W_PASSING = 7
+const W_PROGRESSION = 8
 const W_GK = 18
 const CAP = 80
 const MIN_APPS = 4
@@ -68,17 +73,23 @@ export function computeComposite(
           0.25 * num(e['Total Duels Won'])) / apps
       const passVolume = num(e['Accurate Passes']) / apps
       const passing = num(e['Accurate Passes %']) * Math.min(1, passVolume / 30)
+      const progression =
+        (num(e['Accurate Long Balls']) +
+          num(e['Accurate Crosses']) +
+          num(e['Passes into Final Third'])) / apps
       const isGk = num(e['Saves']) > 0
       const goalkeeping = isGk
         ? (num(e['Saves']) + 2 * num(e['Penalty Saves'])) / apps +
           2 * (num(e['Clean Sheets']) / apps)
         : 0
-      return { name: p.name, creation, defense, passing, goalkeeping, isGk }
+      return { name: p.name, creation, defense, passing, progression, goalkeeping, isGk }
     })
 
   const zc = zScores(rows.map((r) => r.creation))
   const zd = zScores(rows.map((r) => r.defense))
   const zp = zScores(rows.map((r) => r.passing))
+  const zpr = zScores(rows.map((r) => r.progression))
+  const anyProgression = rows.some((r) => r.progression > 0)
   const gks = rows.filter((r) => r.isGk)
   const zg = zScores(gks.map((r) => r.goalkeeping))
 
@@ -87,12 +98,14 @@ export function computeComposite(
     const creation = W_CREATION * zc(r.creation)
     const defense = W_DEFENSE * zd(r.defense)
     const passing = W_PASSING * zp(r.passing)
+    const progression = anyProgression ? W_PROGRESSION * zpr(r.progression) : 0
     const goalkeeping = r.isGk ? W_GK * zg(r.goalkeeping) : 0
-    const raw = creation + defense + passing + goalkeeping
+    const raw = creation + defense + passing + progression + goalkeeping
     out.set(r.name, {
       creation: Math.round(creation),
       defense: Math.round(defense),
       passing: Math.round(passing),
+      progression: Math.round(progression),
       goalkeeping: Math.round(goalkeeping),
       total: Math.round(Math.max(-CAP, Math.min(CAP, raw))),
     })

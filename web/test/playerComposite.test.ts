@@ -51,3 +51,20 @@ describe('computeComposite', () => {
     expect(comp.get('Skapari')!.goalkeeping).toBe(0)
   })
 })
+
+describe('progression category', () => {
+  it('activates only when progression columns are present in the drop', () => {
+    const without = computeComposite([
+      player('A', BASE), player('B', BASE), player('C', BASE),
+    ])
+    expect(without.get('A')!.progression).toBe(0)
+
+    const withProg = computeComposite([
+      player('Djúpspilari', { ...BASE, 'Accurate Long Balls': 80, 'Passes into Final Third': 120 }),
+      player('B', BASE),
+      player('C', BASE),
+    ])
+    expect(withProg.get('Djúpspilari')!.progression).toBeGreaterThan(4)
+    expect(withProg.get('Djúpspilari')!.total).toBeGreaterThan(withProg.get('B')!.total)
+  })
+})

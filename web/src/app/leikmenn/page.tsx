@@ -39,7 +39,7 @@ export default async function LeikmennPage() {
         <p className="text-[11px] muted mt-2 mb-8">
           Heild = Elo (atburðir KSÍ: mörk, spjöld, úrslit liðs, leik fyrir leik) + framlag
           (SofaScore-tímabilsgögn: stórsénsar skapaðir, lykilsendingar, stoðsendingar, rispur,
-          tæklingar, hindranir, brottspyrnur, einvígi, sendingahlutfall — og markvarsla hjá markvörðum).
+          tæklingar, hindranir, brottspyrnur, einvígi, sendingahlutfall — og markvarsla hjá markvörðum; framsækni-flokkur (langsendingar, fyrirgjafir, sendingar á lokaþriðjung) kviknar sjálfkrafa fylgi þeir dálkar með í næsta SofaScore-innslagi).
           Framlagið er z-skorað miðað við hina leikmennina og fest við ±80 Elo-stig.
         </p>
         <h2 className="text-lg font-bold mb-4">Elo-stig leikmanna — Lengjudeildin</h2>
@@ -94,6 +94,7 @@ function BestaTable({
                 className="text-right num"
                 title={p.framlag
                   ? `Sköpun ${p.framlag.creation} · Vörn ${p.framlag.defense} · Sendingar ${p.framlag.passing}` +
+                    (p.framlag.progression ? ` · Framsækni ${p.framlag.progression}` : '') +
                     (p.framlag.goalkeeping ? ` · Markvarsla ${p.framlag.goalkeeping}` : '')
                   : 'Utan topp-150 SofaScore listans'}
                 style={{ color: (p.framlag?.total ?? 0) >= 0 ? 'var(--win)' : 'var(--loss)' }}
