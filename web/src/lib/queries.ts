@@ -225,7 +225,7 @@ export async function playerEloTable(limit = 60) {
 export async function sofascorePlayers() {
   const { data } = await db()
     .from('sofascore_players')
-    .select('name, team, rating, appearances, goals, assists, rank')
+    .select('name, team, rating, appearances, goals, assists, rank, extra')
     .eq('season', CURRENT_SEASON)
     .order('rank')
   return data ?? []
