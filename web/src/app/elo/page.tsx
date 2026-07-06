@@ -31,7 +31,7 @@ export default async function EloPage() {
   const points: EloSeriesPoint[] = []
   const counter = new Map<number, number>()
   for (const r of history) {
-    if (!r.date) continue
+    if (!r.date || r.date < '2019') continue // chart shows 2019+; table covers all-time
     const idx = (counter.get(r.team_id) ?? 0) + 1
     counter.set(r.team_id, idx)
     points.push({ idx: points.length, date: r.date, [nm(r.team_id)]: r.elo_after })
@@ -66,7 +66,7 @@ export default async function EloPage() {
             </tbody>
           </table>
           <p className="text-[11px] muted mt-2">
-            Elo nær yfir báðar efstu deildir frá 2019 — stig fylgja liðum milli deilda. Byrjunarstig: 1500 (Besta), 1400 (Lengjudeildin).
+            Elo nær yfir efstu deild frá 1985 og báðar efstu deildir frá 2019 — stig fylgja liðum milli deilda og tímabila. Byrjunarstig: 1500 (efsta deild), 1400 (Lengjudeildin). Grafið sýnir þróunina frá 2019.
           </p>
         </div>
         <h2 className="text-lg font-bold mb-3">Þróun Elo-stiga</h2>
