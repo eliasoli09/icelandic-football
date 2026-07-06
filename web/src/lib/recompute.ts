@@ -486,7 +486,18 @@ export async function recomputeAll() {
     )
     .map((m, i) => ({ ...m, order: i }))
 
-  const belt = runBelt(bestaPlayed)
+  // the champion of the last table-only season carries the belt into match play
+  const firstMatchSeason = bestaPlayed[0]?.season
+  let initialHolder: number | undefined
+  if (firstMatchSeason) {
+    const { data: champ } = await db()
+      .from('champions')
+      .select('team_id')
+      .eq('season', firstMatchSeason - 1)
+      .maybeSingle()
+    initialHolder = champ?.team_id
+  }
+  const belt = runBelt(bestaPlayed, initialHolder)
   await replaceHistoryTable(
     'belt_history',
     belt.history.map((h) => ({
@@ -507,9 +518,33 @@ export async function recomputeAll() {
       stats: p,
     })),
   )
+  // all-time table: official season standings for the table-only era
+  // (pre-1985) + per-match data from 1985 onwards
+  const alltimeRows = computeAllTime(bestaPlayed)
+  const { data: oldStandings } = await db()
+    .from('season_standings')
+    .select('season, team_id, played, won, drawn, lost, gf, ga')
+    .lt('season', firstMatchSeason ?? 1985)
+  const byTeam = new Map(alltimeRows.map((r) => [r.teamId, r]))
+  for (const s of oldStandings ?? []) {
+    let r = byTeam.get(s.team_id)
+    if (!r) {
+      r = { teamId: s.team_id, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0,
+            points3: 0, seasons: 0, firstSeason: s.season, lastSeason: s.season }
+      byTeam.set(s.team_id, r)
+      alltimeRows.push(r)
+    }
+    r.played += s.played; r.won += s.won; r.drawn += s.drawn; r.lost += s.lost
+    r.gf += s.gf; r.ga += s.ga
+    r.points3 += 3 * s.won + s.drawn
+    r.seasons += 1
+    r.firstSeason = Math.min(r.firstSeason, s.season)
+    r.lastSeason = Math.max(r.lastSeason, s.season)
+  }
+  alltimeRows.sort((a, b) => b.points3 - a.points3)
   await replaceHistoryTable(
     'alltime_cache',
-    computeAllTime(bestaPlayed).map((r) => ({ team_id: r.teamId, stats: r })),
+    alltimeRows.map((r) => ({ team_id: r.teamId, stats: r })),
   )
 
   return {

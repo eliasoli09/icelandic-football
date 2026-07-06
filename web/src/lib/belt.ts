@@ -47,7 +47,9 @@ export interface BeltStats {
   longestReign: { holder: number; matches: number; fromSeason: number; toSeason: number } | null
 }
 
-export function runBelt(matches: BeltMatch[]): BeltStats {
+/** @param initialHolder team holding the belt before the first match
+ *  (the 1984 Íslandsmeistarar carry it into the match-play era). */
+export function runBelt(matches: BeltMatch[], initialHolder?: number): BeltStats {
   const sorted = [...matches].sort((a, b) => a.order - b.order)
   const history: BeltEvent[] = []
   const titleWins = new Map<number, number>()
@@ -55,12 +57,16 @@ export function runBelt(matches: BeltMatch[]): BeltStats {
   const reigns = new Map<number, number>()
   const defenses = new Map<number, number>()
 
-  let holder: number | null = null
-  let reignStart: { date: string | null; season: number } | null = null
+  let holder: number | null = initialHolder ?? null
+  let reignStart: { date: string | null; season: number } | null =
+    initialHolder !== undefined && matches.length
+      ? { date: null, season: matches[0]?.season ?? 0 }
+      : null
   let reignDefenses = 0
   let longest: BeltStats['longestReign'] = null
   let reignMatchCount = 0
-  let reignFromSeason = 0
+  let reignFromSeason = matches.length ? matches[0].season : 0
+  if (initialHolder !== undefined) reigns.set(initialHolder, 1)
 
   const bump = (m: Map<number, number>, k: number) => m.set(k, (m.get(k) ?? 0) + 1)
 

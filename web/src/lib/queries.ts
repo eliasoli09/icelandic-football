@@ -276,3 +276,8 @@ export async function alltime() {
     firstSeason: number; lastSeason: number
   }[]
 }
+
+export async function champions(): Promise<Map<number, number>> {
+  const { data } = await db().from('champions').select('season, team_id')
+  return new Map((data ?? []).map((c) => [c.season, c.team_id]))
+}
