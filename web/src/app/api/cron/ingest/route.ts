@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, ingest, recompute })
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: String(err) },
+      { ok: false, error: err instanceof Error ? err.message : JSON.stringify(err) },
       { status: 500 },
     )
   }

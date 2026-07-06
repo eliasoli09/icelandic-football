@@ -41,5 +41,13 @@ describe('parseMatchCards — fixtures page (upcoming)', () => {
     expect(m.homeGoals).toBeNull()
     expect(m.date).toBe('2026-07-06T19:15:00Z')
     expect(m.venue).toBe('HS Orku völlurinn')
+    expect(m.ksiId).toBe(7041404) // imminent match already has its link
+  })
+
+  it('far-future fixtures have no KSÍ id yet and never steal a neighbour card link', () => {
+    const ka = cards.find((c) => c.home === 'KA' && c.away === 'ÍA')!
+    expect(ka.ksiId).toBeNull()
+    expect(ka.status).toBe('upcoming')
+    expect(cards.filter((c) => c.ksiId === 7041404)).toHaveLength(1)
   })
 })

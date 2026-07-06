@@ -61,14 +61,15 @@ export function parseMatchCards(html: string, season: number): ParsedMatch[] {
     const away = card.match(
       /<span class="body-4 group-hover:underline">\s*([^<]+?)\s*<\/span>/,
     )
-    const link = (card + header).match(/leikur\?id=(\d+)/)
-    if (!home || !away || !link) continue
+    const link = card.match(/leikur\?id=(\d+)/)
+    if (!home || !away) continue
     const score = card.match(
       /<span class="body-4 whitespace-nowrap">\s*(\d+)\s*-\s*(\d+)\s*</,
     )
+    if (!link && score) continue // played matches always have a link
     const { date, venue } = parseHeader(header, season)
     out.push({
-      ksiId: Number(link[1]),
+      ksiId: link ? Number(link[1]) : null,
       home: cleanTeam(home[1]),
       away: cleanTeam(away[1]),
       homeGoals: score ? Number(score[1]) : null,
@@ -95,7 +96,9 @@ export async function fetchTournamentMatches(
   tournamentId: number,
   season: number,
 ): Promise<ParsedMatch[]> {
-  const seen = new Map<number, ParsedMatch>()
+  const seen = new Map<string, ParsedMatch>()
+  const keyOf = (c: ParsedMatch) =>
+    c.ksiId !== null ? `id:${c.ksiId}` : `fx:${c.home}|${c.away}`
   for (const toggle of ['&toggle=results', '']) {
     for (let page = 1; page <= 30; page++) {
       const url = `https://www.ksi.is/oll-mot/mot?id=${tournamentId}&banner-tab=matches-and-results${toggle}&page=${page}`
@@ -103,12 +106,12 @@ export async function fetchTournamentMatches(
       let fresh = 0
       for (const c of cards) {
         // played cards win over upcoming duplicates
-        const prev = seen.get(c.ksiId)
+        const prev = seen.get(keyOf(c))
         if (!prev) {
-          seen.set(c.ksiId, c)
+          seen.set(keyOf(c), c)
           fresh++
         } else if (prev.status === 'upcoming' && c.status === 'played') {
-          seen.set(c.ksiId, c)
+          seen.set(keyOf(c), c)
         }
       }
       if (fresh === 0) break

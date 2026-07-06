@@ -22,6 +22,22 @@ export const TOURNAMENTS_2026: { id: number; league: League; phase: Phase }[] = 
   { id: 7025545, league: 'lengjudeild', phase: 'umspil' },
 ]
 
+const SECRET = () => process.env.CRON_SECRET!
+
+/** Stable negative id for future fixtures KSÍ hasn't assigned a match id yet. */
+export function syntheticId(
+  season: number,
+  league: string,
+  phase: string,
+  homeTeam: number,
+  awayTeam: number,
+) {
+  const s = `${season}|${league}|${phase}|${homeTeam}|${awayTeam}`
+  let h = 5381
+  for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0
+  return -(h + 1000)
+}
+
 async function teamIdMap() {
   const { data, error } = await db().from('teams').select('id, name')
   if (error) throw error
@@ -30,14 +46,13 @@ async function teamIdMap() {
 
 async function ensureTeam(name: string, ids: Map<string, number>) {
   if (ids.has(name)) return ids.get(name)!
-  const { data, error } = await db()
-    .from('teams')
-    .insert({ name })
-    .select('id')
-    .single()
+  const { data, error } = await db().rpc('rpc_ensure_team', {
+    p_secret: SECRET(),
+    p_name: name,
+  })
   if (error) throw error
-  ids.set(name, data.id)
-  return data.id
+  ids.set(name, data as number)
+  return data as number
 }
 
 /** Scrape KSÍ for the current season and upsert matches + events. */
@@ -54,37 +69,41 @@ export async function ingestSeason(season = CURRENT_SEASON) {
   if (exErr) throw exErr
   const known = new Map(existing.map((m) => [m.id, m.status]))
 
-  const { data: withEvents, error: evErr } = await db()
-    .from('match_events')
-    .select('match_id')
-  if (evErr) throw evErr
+  const withEvents = await fetchAll<{ match_id: number }>(
+    'match_events',
+    'match_id',
+  )
   const hasEvents = new Set(withEvents.map((e) => e.match_id))
 
   for (const t of TOURNAMENTS_2026) {
     const cards = await fetchTournamentMatches(t.id, season)
+    const rows = []
+    const playerRows = new Map<number, string>()
+    const eventRows: Record<string, unknown>[] = []
     for (const c of cards) {
-      const row = {
-        id: c.ksiId,
-        season,
-        league: t.league,
-        phase: t.phase,
-        date: c.date,
-        venue: c.venue,
-        home_team: await ensureTeam(c.home, ids),
-        away_team: await ensureTeam(c.away, ids),
-        home_goals: c.homeGoals,
-        away_goals: c.awayGoals,
-        status: c.status,
-        updated_at: new Date().toISOString(),
-      }
-      const prev = known.get(c.ksiId)
-      if (prev === undefined || (prev === 'upcoming' && c.status === 'played')) {
-        const { error } = await db().from('matches').upsert(row)
-        if (error) throw error
+      const homeId = await ensureTeam(c.home, ids)
+      const awayId = await ensureTeam(c.away, ids)
+      const matchId =
+        c.ksiId ?? syntheticId(season, t.league, t.phase, homeId, awayId)
+      const prev = known.get(matchId)
+      if (prev === undefined || prev === 'upcoming') {
+        rows.push({
+          id: matchId,
+          season,
+          league: t.league,
+          phase: t.phase,
+          date: c.date,
+          venue: c.venue,
+          home_team: homeId,
+          away_team: awayId,
+          home_goals: c.homeGoals,
+          away_goals: c.awayGoals,
+          status: c.status,
+        })
         if (prev === undefined) newMatches++
       }
 
-      if (c.status === 'played' && !hasEvents.has(c.ksiId)) {
+      if (c.status === 'played' && c.ksiId !== null && !hasEvents.has(c.ksiId)) {
         try {
           const events = await fetchMatchEvents(c.ksiId)
           const evWarnings = validateEvents(events, {
@@ -92,34 +111,55 @@ export async function ingestSeason(season = CURRENT_SEASON) {
             awayGoals: c.awayGoals!,
           })
           warnings.push(...evWarnings.map((w) => `match ${c.ksiId}: ${w}`))
-          if (events.length) {
-            const { error } = await db().from('match_events').upsert(
-              events.map((e) => ({
-                event_id: e.eventId,
-                match_id: c.ksiId,
-                minute: e.minute,
-                type: e.type,
-                player_ksi_id: e.playerKsiId,
-                player_name: e.playerName,
-                side: e.side,
-              })),
-            )
-            if (error) throw error
-            newEvents += events.length
+          for (const e of events) {
+            eventRows.push({
+              event_id: e.eventId,
+              match_id: c.ksiId,
+              minute: e.minute,
+              type: e.type,
+              player_ksi_id: e.playerKsiId,
+              player_name: e.playerName,
+              side: e.side,
+            })
+            if (e.playerKsiId) playerRows.set(e.playerKsiId, e.playerName)
           }
+          newEvents += events.length
           await new Promise((r) => setTimeout(r, 400))
         } catch (err) {
           warnings.push(`match ${c.ksiId}: events failed: ${String(err)}`)
         }
       }
     }
+    if (rows.length) {
+      const { error } = await db().rpc('rpc_upsert_matches', {
+        p_secret: SECRET(),
+        p_rows: rows,
+      })
+      if (error) throw error
+    }
+    if (playerRows.size) {
+      const { error } = await db().rpc('rpc_upsert_players', {
+        p_secret: SECRET(),
+        p_rows: [...playerRows].map(([ksi_id, name]) => ({ ksi_id, name })),
+      })
+      if (error) throw error
+    }
+    if (eventRows.length) {
+      const { error } = await db().rpc('rpc_upsert_events', {
+        p_secret: SECRET(),
+        p_rows: eventRows,
+      })
+      if (error) throw error
+    }
   }
 
-  await db().from('ingest_log').insert({
-    new_matches: newMatches,
-    new_events: newEvents,
-    warnings: warnings.length ? warnings : null,
+  const { error: logErr } = await db().rpc('rpc_log_ingest', {
+    p_secret: SECRET(),
+    p_new_matches: newMatches,
+    p_new_events: newEvents,
+    p_warnings: warnings.length ? warnings : null,
   })
+  if (logErr) throw logErr
   return { newMatches, newEvents, warnings }
 }
 
@@ -224,10 +264,15 @@ export async function recomputeAll() {
   const ratings = currentRatings(eloRecords)
 
   // --- player Elo (current season, event-observable) ---
-  const { data: evRows, error: evErr } = await db()
-    .from('match_events')
-    .select('event_id, match_id, minute, type, player_ksi_id, player_name, side')
-  if (evErr) throw evErr
+  const evRows = await fetchAll<{
+    event_id: number
+    match_id: number
+    minute: number
+    type: MatchEvent['type']
+    player_ksi_id: number | null
+    player_name: string
+    side: 'home' | 'away'
+  }>('match_events', 'event_id, match_id, minute, type, player_ksi_id, player_name, side')
   const evByMatch = new Map<number, MatchEvent[]>()
   for (const e of evRows) {
     const list = evByMatch.get(e.match_id) ?? []
@@ -260,14 +305,6 @@ export async function recomputeAll() {
       elo_after: r.eloAfter,
     })),
   )
-  // upsert players registry
-  const playerNames = new Map<number, string>()
-  for (const e of evRows) if (e.player_ksi_id) playerNames.set(e.player_ksi_id, e.player_name)
-  if (playerNames.size) {
-    await db().from('players').upsert(
-      [...playerNames].map(([ksi_id, name]) => ({ ksi_id, name })),
-    )
-  }
 
   // --- predictions for upcoming current-season matches ---
   const rates = {
@@ -434,21 +471,25 @@ export async function recomputeAll() {
   }
 }
 
-async function replaceTable(table: string, rows: Record<string, unknown>[]) {
-  const keyCol: Record<string, string> = {
-    team_elo: 'match_id',
-    player_elo: 'match_id',
-    predictions: 'match_id',
-    season_sim: 'season',
-    scorer_sim: 'season',
-  }
-  const { error: delErr } = await db()
-    .from(table)
-    .delete()
-    .gte(keyCol[table] ?? 'id', 0)
-  if (delErr) throw delErr
-  for (let i = 0; i < rows.length; i += 500) {
-    const { error } = await db().from(table).insert(rows.slice(i, i + 500))
+async function fetchAll<T>(table: string, select: string): Promise<T[]> {
+  const out: T[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db()
+      .from(table)
+      .select(select)
+      .range(from, from + 999)
     if (error) throw error
+    out.push(...(data as T[]))
+    if (data.length < 1000) break
   }
+  return out
+}
+
+async function replaceTable(table: string, rows: Record<string, unknown>[]) {
+  const { error } = await db().rpc('rpc_replace', {
+    p_secret: SECRET(),
+    p_table: table,
+    p_rows: rows,
+  })
+  if (error) throw error
 }

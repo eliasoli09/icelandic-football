@@ -184,10 +184,17 @@ export async function scorerSim(kind: 'goals' | 'assists') {
 }
 
 export async function playerEloTable(limit = 60) {
-  const { data } = await db()
-    .from('player_elo')
-    .select('player_ksi_id, match_id, elo_after')
-    .order('match_id')
+  const data: { player_ksi_id: number; match_id: number; elo_after: number }[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data: page } = await db()
+      .from('player_elo')
+      .select('player_ksi_id, match_id, elo_after')
+      .order('match_id')
+      .range(from, from + 999)
+    if (!page?.length) break
+    data.push(...page)
+    if (page.length < 1000) break
+  }
   const latest = new Map<number, { elo: number; apps: number }>()
   for (const r of data ?? []) {
     const prev = latest.get(r.player_ksi_id)

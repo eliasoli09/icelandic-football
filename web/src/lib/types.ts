@@ -2,7 +2,8 @@ export type League = 'besta' | 'lengjudeild'
 export type Phase = 'main' | 'efri' | 'nedri' | 'umspil'
 
 export interface ParsedMatch {
-  ksiId: number
+  /** KSÍ leikur id; null for future fixtures KSÍ hasn't linked yet */
+  ksiId: number | null
   home: string
   away: string
   homeGoals: number | null
