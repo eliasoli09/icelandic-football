@@ -339,6 +339,19 @@ export async function editorialBonus(): Promise<Record<string, { bonus: number; 
   )
 }
 
+import type { TransferItem } from './transfers'
+
+/** Transfer news + rumors curated from fotbolti.net (transfer_news table). */
+export async function transferNews(limit = 200): Promise<TransferItem[]> {
+  const { data } = await db()
+    .from('transfer_news')
+    .select('*')
+    .order('published_at', { ascending: false })
+    .order('id', { ascending: false })
+    .limit(limit)
+  return (data ?? []) as TransferItem[]
+}
+
 export async function matchReport(matchId: number) {
   const { data } = await db()
     .from('match_reports')

@@ -14,6 +14,7 @@ const NAV = [
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
   { href: '/leikmenn', label: 'Leikmenn' },
+  { href: '/sludur', label: 'Slúður' },
   { href: '/kastalinn', label: 'Kastalinn' },
   { href: '/saga', label: 'Saga' },
   { href: '/h2h', label: 'H2H' },
