@@ -1,4 +1,4 @@
-import { playerEloTable, scorerSim, sofascorePlayers } from '@/lib/queries'
+import { playerEloTable, scorerSim, sofascorePlayers, editorialBonus } from '@/lib/queries'
 import { computeComposite, type CompositeBreakdown } from '@/lib/playerComposite'
 import { inferPositions, normalizeName, POSITION_LABELS, type Position } from '@/lib/positions'
 
@@ -13,9 +13,10 @@ export default async function LeikmennPage() {
   let assists: Awaited<ReturnType<typeof scorerSim>> = []
   let goalsLengju: Awaited<ReturnType<typeof scorerSim>> = []
   let sofa: SofaRow[] = []
+  let editorial: Record<string, { bonus: number; detail: string }> = {}
   try {
-    ;[elo, goals, assists, goalsLengju, sofa] = await Promise.all([
-      playerEloTable(200), scorerSim('goals'), scorerSim('assists'), scorerSim('goals', 'lengjudeild'), sofascorePlayers(),
+    ;[elo, goals, assists, goalsLengju, sofa, editorial] = await Promise.all([
+      playerEloTable(200), scorerSim('goals'), scorerSim('assists'), scorerSim('goals', 'lengjudeild'), sofascorePlayers(), editorialBonus(),
     ])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
@@ -25,11 +26,19 @@ export default async function LeikmennPage() {
   const compositeByNorm = new Map(
     [...composite].map(([name, v]) => [normalizeName(name), v]),
   )
-  const withTotal = (p: EloRow) => ({
-    ...p,
-    framlag: compositeByNorm.get(normalizeName(p.name)) ?? null,
-    heild: p.elo + (compositeByNorm.get(normalizeName(p.name))?.total ?? 0),
-  })
+  const editorialByNorm = new Map(
+    Object.entries(editorial).map(([name, v]) => [normalizeName(name), v]),
+  )
+  const withTotal = (p: EloRow) => {
+    const norm = normalizeName(p.name)
+    const vidurkenning = editorialByNorm.get(norm) ?? null
+    return {
+      ...p,
+      framlag: compositeByNorm.get(norm) ?? null,
+      vidurkenning,
+      heild: p.elo + (compositeByNorm.get(norm)?.total ?? 0) + (vidurkenning?.bonus ?? 0),
+    }
+  }
   // position lists: SofaScore pool + Elo matched by normalized name
   const positions = inferPositions(sofa)
   const eloByNorm = new Map(
@@ -64,6 +73,7 @@ export default async function LeikmennPage() {
           (SofaScore-tímabilsgögn: stórsénsar skapaðir, lykilsendingar, stoðsendingar, rispur,
           tæklingar, hindranir, brottspyrnur, einvígi, sendingahlutfall — og markvarsla hjá markvörðum; framsækni-flokkur (langsendingar, fyrirgjafir, sendingar á lokaþriðjung) kviknar sjálfkrafa fylgi þeir dálkar með í næsta SofaScore-innslagi).
           Framlagið er z-skorað miðað við hina leikmennina og fest við ±80 Elo-stig.
+          Stjörnumerkt (*) heild inniheldur viðurkenningabónus: val í lið umferðar hjá fótbolta.net gefur +6 og leikmaður umferðar +10 (hámark +40).
         </p>
         <h2 className="display text-lg font-extrabold mb-4">Elo-stig leikmanna — Lengjudeildin</h2>
         <EloTable rows={lengju} sofaByName={sofaByName} />
@@ -123,7 +133,7 @@ function BestaTable({
   rows,
   sofaByName,
 }: {
-  rows: (EloRow & { framlag: CompositeBreakdown | null; heild: number })[]
+  rows: (EloRow & { framlag: CompositeBreakdown | null; vidurkenning: { bonus: number; detail: string } | null; heild: number })[]
   sofaByName: Map<string, SofaRow>
 }) {
   return (
@@ -156,7 +166,9 @@ function BestaTable({
               >
                 {p.framlag ? (p.framlag.total >= 0 ? '+' : '') + p.framlag.total : '—'}
               </td>
-              <td className="text-right stat text-base">{Math.round(p.heild)}</td>
+              <td className="text-right stat text-base" title={p.vidurkenning ? `Viðurkenningar fótbolta.net: ${p.vidurkenning.detail}` : undefined}>
+                {Math.round(p.heild)}{p.vidurkenning ? <span aria-hidden style={{ color: 'var(--accent)' }}>*</span> : ''}
+              </td>
               <td className="text-right num muted">{sofaByName.get(p.name)?.rating ?? '—'}</td>
             </tr>
           ))}

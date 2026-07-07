@@ -1,7 +1,7 @@
 import { ProbBar } from '@/components/ProbBar'
 import { ShareButton } from '@/components/ShareButton'
 import { FormBadges } from '@/components/FormBadges'
-import { teams, matchDetail, teamInfo } from '@/lib/queries'
+import { teams, matchDetail, teamInfo, matchReport } from '@/lib/queries'
 import { TeamBadge } from '@/components/TeamBadge'
 import { displayColor, tint } from '@/lib/teamColors'
 import type { PredictionFactors } from '@/lib/types'
@@ -24,8 +24,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   let names = new Map<number, string>()
   let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let detail: Awaited<ReturnType<typeof matchDetail>> = null
+  let report: Awaited<ReturnType<typeof matchReport>> = null
   try {
-    ;[names, infos, detail] = await Promise.all([teams(), teamInfo(), matchDetail(Number(id))])
+    ;[names, infos, detail, report] = await Promise.all([teams(), teamInfo(), matchDetail(Number(id)), matchReport(Number(id))])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -65,6 +66,13 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         </div>
         {prediction && match.status === 'upcoming' && (
           <ProbBar pHome={prediction.p_home} pDraw={prediction.p_draw} pAway={prediction.p_away} />
+        )}
+        {report && (
+          <p className="mt-4 text-sm">
+            <a href={report.url} target="_blank" rel="noopener" className="font-semibold underline underline-offset-4" style={{ color: 'var(--accent)' }}>
+              Lesa leikskýrslu á fótbolta.net ↗
+            </a>
+          </p>
         )}
         <div className="mt-4">
           <ShareButton

@@ -310,3 +310,40 @@ export async function teamAnalyses(): Promise<Record<number, string>> {
   const { data } = await db().from('team_analysis').select('team_id, analysis')
   return Object.fromEntries((data ?? []).map((r) => [r.team_id, r.analysis]))
 }
+
+/** Editorial recognitions from fotbolti.net (lið/leikmaður umferðar) → small
+ * visible bonus in the combined player rating. */
+export async function editorialBonus(): Promise<Record<string, { bonus: number; detail: string }>> {
+  const { data } = await db()
+    .from('editorial_mentions')
+    .select('player_name, kind')
+    .eq('season', CURRENT_SEASON)
+  const agg = new Map<string, { lid: number; leikmadur: number }>()
+  for (const m of data ?? []) {
+    const cur = agg.get(m.player_name) ?? { lid: 0, leikmadur: 0 }
+    if (m.kind === 'lid_umferdar') cur.lid++
+    else cur.leikmadur++
+    agg.set(m.player_name, cur)
+  }
+  return Object.fromEntries(
+    [...agg].map(([name, c]) => [
+      name,
+      {
+        bonus: Math.min(40, c.lid * 6 + c.leikmadur * 10),
+        detail: [
+          c.lid ? `${c.lid}× lið umferðar (+${c.lid * 6})` : '',
+          c.leikmadur ? `${c.leikmadur}× leikmaður umferðar (+${c.leikmadur * 10})` : '',
+        ].filter(Boolean).join(' · '),
+      },
+    ]),
+  )
+}
+
+export async function matchReport(matchId: number) {
+  const { data } = await db()
+    .from('match_reports')
+    .select('url, title')
+    .eq('match_id', matchId)
+    .maybeSingle()
+  return data
+}
