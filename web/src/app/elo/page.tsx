@@ -88,7 +88,7 @@ export default async function EloPage() {
           </table>
           </div>
           <p className="text-[11px] muted mt-3">
-            Elo nær yfir efstu deild frá 1985 og báðar efstu deildir frá 2019 — stig fylgja liðum milli deilda og tímabila. Byrjunarstig: 1500 (efsta deild), 1400 (Lengjudeildin). Grafið sýnir þróunina frá 2019.
+            Elo nær yfir síðustu 26 ár — efstu deild frá 2000 og Lengjudeildina frá 2019. Stig fylgja liðum milli deilda og tímabila; byrjunarstig 1500 (efsta deild) og 1400 (Lengjudeildin). Grafið sýnir þróunina frá 2019.
           </p>
         </div>
         <h2 className="display text-lg font-extrabold mb-4">Þróun Elo-stiga</h2>

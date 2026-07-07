@@ -122,3 +122,29 @@ describe('runPlayerElo', () => {
     expect(r.eloAfter).toBeLessThan(r.eloBefore)
   })
 })
+
+  it('clean sheet rewards the back line: GK gains more than a forward on the same shutout side', () => {
+    const positions = new Map([
+      ['markvordur x', 'GK' as const],
+      ['framherji y', 'FW' as const],
+    ])
+    const recs = runPlayerElo(
+      [
+        {
+          matchId: 1, order: 1, league: 'besta', homeGoals: 1, awayGoals: 0,
+          events: [
+            { eventId: 1, minute: 80, type: 'sub_out', playerKsiId: 10, playerName: 'Markvörður X', side: 'home' },
+            { eventId: 2, minute: 80, type: 'sub_out', playerKsiId: 11, playerName: 'Framherji Y', side: 'home' },
+            { eventId: 3, minute: 30, type: 'yellow', playerKsiId: 12, playerName: 'Andstæðingur', side: 'away' },
+          ],
+        },
+      ],
+      positions,
+    )
+    const gk = recs.find((r) => r.playerKsiId === 10)!
+    const fw = recs.find((r) => r.playerKsiId === 11)!
+    const opp = recs.find((r) => r.playerKsiId === 12)!
+    expect(gk.eloAfter - gk.eloBefore).toBeGreaterThan(fw.eloAfter - fw.eloBefore)
+    expect(gk.eloAfter - gk.eloBefore).toBe(8 + 18) // result + GK clean sheet
+    expect(opp.eloAfter - opp.eloBefore).toBeLessThan(0) // conceding side, card, loss
+  })

@@ -3,6 +3,7 @@ import { fetchTournamentMatches } from './ksi'
 import { fetchMatchEvents, validateEvents } from './ksiEvents'
 import { runElo, currentRatings, type EloMatch } from './elo'
 import { runPlayerElo, type PlayerMatchInput } from './playerElo'
+import { inferPositions, normalizeName } from './positions'
 import { predictMatch, type TeamSeasonRates } from './predict'
 import {
   simulateSeason,
@@ -15,6 +16,8 @@ import type { League, Phase, MatchEvent } from './types'
 import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext } from './belt'
 
 export const CURRENT_SEASON = 2026
+/** Team Elo covers the modern era only — last 26 years, from 2000. */
+export const ELO_START_SEASON = 2000
 export const TOURNAMENTS_2026: { id: number; league: League; phase: Phase }[] = [
   { id: 7025510, league: 'besta', phase: 'main' },
   { id: 7025527, league: 'besta', phase: 'efri' },
@@ -240,8 +243,10 @@ export async function recomputeAll() {
   const matches = await allMatches()
   const played = matches.filter((m) => m.status === 'played' && m.home_goals !== null)
 
-  // --- team Elo ---
-  const eloInput: EloMatch[] = played.map((m, i) => ({
+  // --- team Elo (modern era: from ELO_START_SEASON) ---
+  const eloInput: EloMatch[] = played
+    .filter((m) => m.season >= ELO_START_SEASON)
+    .map((m, i) => ({
     matchId: m.id,
     order: i, // allMatches is season+date ordered
     date: m.date,
@@ -297,7 +302,14 @@ export async function recomputeAll() {
       awayGoals: m.away_goals!,
       events: evByMatch.get(m.id)!,
     }))
-  const playerRecords = runPlayerElo(playerInput)
+  const { data: sofaForPos } = await db()
+    .from('sofascore_players')
+    .select('name, appearances, assists, goals, extra')
+    .eq('season', CURRENT_SEASON)
+  const positionByNorm = new Map(
+    [...inferPositions(sofaForPos ?? [])].map(([name, pos]) => [normalizeName(name), pos]),
+  )
+  const playerRecords = runPlayerElo(playerInput, positionByNorm)
   await replaceTable(
     'player_elo',
     playerRecords.map((r) => ({

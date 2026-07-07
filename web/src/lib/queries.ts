@@ -305,3 +305,8 @@ export async function teamInfo(): Promise<Map<number, TeamColorInfo>> {
     ]),
   )
 }
+
+export async function teamAnalyses(): Promise<Record<number, string>> {
+  const { data } = await db().from('team_analysis').select('team_id, analysis')
+  return Object.fromEntries((data ?? []).map((r) => [r.team_id, r.analysis]))
+}
