@@ -33,7 +33,10 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const { match, prediction, events } = detail
   const nm = (tid: number) => names.get(tid) ?? `#${tid}`
   const factors = (prediction?.factors ?? null) as
-    | (PredictionFactors & { topScorelines?: { home: number; away: number; p: number }[] })
+    | (PredictionFactors & {
+        topScorelines?: { home: number; away: number; p: number }[]
+        newsAdjustments?: { home: string[]; away: string[] }
+      })
     | null
 
   return (
@@ -98,6 +101,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               <span className="num">×{factors.homeAdvantage}</span>
             </Row>
           </div>
+          {factors.newsAdjustments && (
+            <div className="mt-4 pt-3 grid gap-1.5" style={{ borderTop: '1px solid var(--border)' }}>
+              <p className="text-xs font-bold muted uppercase tracking-wide">Fréttastuðlar</p>
+              {[...factors.newsAdjustments.home.map((r) => `${nm(match.home_team)} ${r}`),
+                ...factors.newsAdjustments.away.map((r) => `${nm(match.away_team)} ${r}`)].map((r) => (
+                <p key={r} className="text-xs" style={{ color: 'var(--accent)' }}>{r}</p>
+              ))}
+              <p className="text-[10px] muted">Handskráð atvik úr fréttum (t.d. sölur, meiðsli, Evrópuálag) — lögð ofan á Elo í spánni.</p>
+            </div>
+          )}
           {factors.topScorelines && (
             <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
               <p className="text-xs muted mb-2">Líklegustu úrslit</p>

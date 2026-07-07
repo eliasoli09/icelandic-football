@@ -269,6 +269,23 @@ export async function recomputeAll() {
   )
   const ratings = currentRatings(eloRecords)
 
+  // news-based adjustments (transfers, injuries, Europe congestion) — applied
+  // transparently on top of Elo at prediction time, never to stored history
+  const { data: adjRows } = await db()
+    .from('news_adjustments')
+    .select('team_id, delta, reason')
+    .eq('active', true)
+    .gte('expires_at', new Date().toISOString())
+  const newsAdj = new Map<number, { delta: number; reasons: string[] }>()
+  for (const a of adjRows ?? []) {
+    const cur = newsAdj.get(a.team_id) ?? { delta: 0, reasons: [] }
+    cur.delta += a.delta
+    cur.reasons.push(`${a.delta > 0 ? '+' : ''}${a.delta}: ${a.reason}`)
+    newsAdj.set(a.team_id, cur)
+  }
+  const adjustedRating = (teamId: number) =>
+    (ratings.get(String(teamId)) ?? 1500) + (newsAdj.get(teamId)?.delta ?? 0)
+
   // --- player Elo (current season, event-observable) ---
   const evRows = await fetchAll<{
     event_id: number
@@ -345,12 +362,14 @@ export async function recomputeAll() {
   )
   const predRows = upcoming.map((m) => {
     const p = predictMatch({
-      eloHome: ratings.get(String(m.home_team)) ?? 1500,
-      eloAway: ratings.get(String(m.away_team)) ?? 1500,
+      eloHome: adjustedRating(m.home_team),
+      eloAway: adjustedRating(m.away_team),
       home: rates[m.league].get(m.home_team) ?? null,
       away: rates[m.league].get(m.away_team) ?? null,
       h2h: h2hOf(m.home_team, m.away_team),
     })
+    const homeAdj = newsAdj.get(m.home_team)
+    const awayAdj = newsAdj.get(m.away_team)
     return {
       match_id: m.id,
       p_home: p.pHome,
@@ -358,7 +377,13 @@ export async function recomputeAll() {
       p_away: p.pAway,
       lambda_home: p.lambdaHome,
       lambda_away: p.lambdaAway,
-      factors: { ...p.factors, topScorelines: p.topScorelines },
+      factors: {
+        ...p.factors,
+        topScorelines: p.topScorelines,
+        newsAdjustments: homeAdj || awayAdj
+          ? { home: homeAdj?.reasons ?? [], away: awayAdj?.reasons ?? [] }
+          : undefined,
+      },
       computed_at: new Date().toISOString(),
     }
   })
@@ -384,7 +409,7 @@ export async function recomputeAll() {
     }
     const simTeams: SimTeamState[] = [...standings].map(([teamId, s]) => ({
       team: String(teamId),
-      elo: ratings.get(String(teamId)) ?? 1500,
+      elo: adjustedRating(teamId),
       rates: rates[simLeague].get(teamId) ?? null,
       points: s.pts,
       goalsFor: s.gf,
