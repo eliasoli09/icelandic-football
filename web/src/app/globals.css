@@ -192,6 +192,135 @@ h1, h2, h3, .display {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
+/* ─── 3D depth layer ────────────────────────────────────────────────
+   Broadcast-graphics depth: layered key+ambient shadows, glossy top
+   highlight, slight perspective tilt on hover, extruded score plates. */
+.tilt-wrap { perspective: 1100px; }
+
+.card-3d {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0) 42%),
+    var(--surface);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    0 12px 26px -14px rgba(0, 0, 0, 0.55);
+  transform-style: preserve-3d;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+:root:not(.dark) .card-3d {
+  background: linear-gradient(180deg, #ffffff, #fafcf9 60%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 2px rgba(10, 20, 12, 0.07),
+    0 12px 26px -14px rgba(10, 20, 12, 0.2);
+}
+.card-3d-hover:hover {
+  border-color: var(--border-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    0 2px 4px rgba(0, 0, 0, 0.28),
+    0 24px 46px -18px rgba(0, 0, 0, 0.6),
+    0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
+    0 16px 40px -18px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card-3d-hover:hover { transform: translateY(-3px) rotateX(1.4deg); }
+}
+
+/* extruded scoreboard module (score / points) */
+.plate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.4rem;
+  padding: 3px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border-strong);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface-2) 86%, #ffffff 9%),
+    color-mix(in srgb, var(--surface-2) 88%, #000000 12%)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.26),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  transform: translateZ(16px);
+}
+:root:not(.dark) .plate {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -2px 3px rgba(10, 20, 12, 0.1),
+    0 2px 4px rgba(10, 20, 12, 0.12);
+}
+.plate-mini { min-width: 2.5rem; padding: 1px 8px; border-radius: 7px; }
+.plate-accent {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border-strong));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.26),
+    0 2px 6px rgba(0, 0, 0, 0.3),
+    0 0 14px -2px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* 2.5D podium (tafla top-3) — front + skewed top/side faces in club colors */
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(14px, 4vw, 34px);
+  padding: 10px 18px 0;
+}
+.podium-step { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; max-width: 30%; }
+.podium-box { position: relative; width: clamp(76px, 17vw, 132px); max-width: calc(100% - 12px); margin-top: 12px; }
+.podium-front {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(180deg, var(--pf-hi), var(--pf-lo));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 18px 34px -14px rgba(0, 0, 0, 0.55);
+}
+.podium-top {
+  position: absolute;
+  left: 0;
+  top: -12px;
+  width: 100%;
+  height: 12px;
+  transform: skewX(-45deg);
+  transform-origin: bottom left;
+  background: var(--pf-top);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: none;
+}
+.podium-side {
+  position: absolute;
+  top: 0;
+  right: -12px;
+  width: 12px;
+  height: 100%;
+  transform: skewY(-45deg);
+  transform-origin: top left;
+  background: var(--pf-side);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-left: none;
+}
+.podium-floor {
+  height: 14px;
+  margin-top: -2px;
+  background: radial-gradient(60% 100% at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 75%);
+}
+
 /* standings zone markers */
 .zone { position: relative; }
 .zone::before {

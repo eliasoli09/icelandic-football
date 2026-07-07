@@ -42,15 +42,15 @@ export function LeikirView({
                 ? 'Dagsetning óráðin'
                 : new Date(month + '-01').toLocaleString('is-IS', { month: 'long', year: 'numeric', timeZone: 'UTC' })}
             </h2>
-            <div className="grid gap-1.5">
+            <div className="tilt-wrap grid gap-2">
               {ms.map((m) => (
-                <Link key={m.id} href={`/leikir/${m.id}`} className="card card-hover px-4 py-2.5 flex items-center gap-3 text-sm min-h-[44px]">
+                <Link key={m.id} href={`/leikir/${m.id}`} className="card-3d card-3d-hover px-4 py-2.5 flex items-center gap-3 text-sm min-h-[44px]">
                   <span className="muted text-xs w-24 shrink-0 num">{fmtDate(m.date)}</span>
                   <span className="flex-1 text-right inline-flex items-center justify-end gap-2 min-w-0">
                     <span className="truncate">{nm(m.home_team)}</span>
                     <TeamBadge info={teams[m.home_team]} size={16} />
                   </span>
-                  <span className="stat w-14 text-center">
+                  <span className={`plate stat text-sm shrink-0 ${m.status === 'played' ? '' : 'opacity-55'}`}>
                     {m.status === 'played' ? `${m.home_goals} – ${m.away_goals}` : '–'}
                   </span>
                   <span className="flex-1 inline-flex items-center gap-2 min-w-0">
