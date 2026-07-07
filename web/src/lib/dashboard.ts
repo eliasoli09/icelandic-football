@@ -84,9 +84,9 @@ export async function dashboardData(league: League): Promise<DashboardBundle> {
     standings(CURRENT_SEASON, league),
     seasonMatches(CURRENT_SEASON),
     eloHistory(),
-    league === 'besta' ? seasonSim() : Promise.resolve([]),
+    seasonSim(league),
     leagueScorers(league),
-    league === 'besta' ? scorerSim('goals') : Promise.resolve([]),
+    scorerSim('goals', league),
   ])
 
   const leagueMatches = matches.filter((m) => m.league === league)

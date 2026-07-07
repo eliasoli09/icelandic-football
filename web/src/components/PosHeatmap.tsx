@@ -1,7 +1,9 @@
 export function PosHeatmap({
   rows,
+  middleLabel = 'Evrópa',
 }: {
   rows: { team: string; posProbs: number[]; pTitle: number; pEurope: number; pRelegation: number }[]
+  middleLabel?: string
 }) {
   const n = rows[0]?.posProbs.length ?? 12
   const cell = (p: number) => {
@@ -28,7 +30,7 @@ export function PosHeatmap({
               <th key={i} className="font-medium px-0.5">{i + 1}</th>
             ))}
             <th className="px-1.5 font-medium">Meistari</th>
-            <th className="px-1.5 font-medium">Evrópa</th>
+            <th className="px-1.5 font-medium">{middleLabel}</th>
             <th className="px-1.5 font-medium">Fall</th>
           </tr>
         </thead>

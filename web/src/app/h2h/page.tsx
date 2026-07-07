@@ -40,8 +40,8 @@ export default async function H2HPage({
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="display text-2xl font-black mb-1">Innbyrðis viðureignir frá 1985</h1>
-      <p className="text-sm muted mb-4">Veldu tvö lið til að sjá söguna í efstu deild. KSÍ á markatölur frá 1985; eldri leikir eru til sem leikjaskrár án úrslita.</p>
+      <h1 className="display text-2xl font-black mb-1">Innbyrðis viðureignir</h1>
+      <p className="text-sm muted mb-4">Veldu tvö lið — efsta deild frá 1985 og Lengjudeildin frá 2019 (KSÍ á ekki leikjaúrslit eldri leikja).</p>
       <form className="flex gap-3 mb-6" method="get">
         <select name="a" defaultValue={a ?? ''} className="card px-3 py-2 text-sm flex-1" style={{ color: 'var(--text)' }}>
           <option value="">— Lið A —</option>
@@ -64,7 +64,7 @@ export default async function H2HPage({
           <div className="flex justify-end mb-2">
             <ShareButton
               title={`${nm(aId)} gegn ${nm(bId)}`}
-              text={`${nm(aId)} ${w1}–${stats.draws}–${w2} ${nm(bId)} í efstu deild frá 1985:`}
+              text={`${nm(aId)} ${w1}–${stats.draws}–${w2} ${nm(bId)}:`}
               path={`/h2h?a=${aId}&b=${bId}`}
             />
           </div>

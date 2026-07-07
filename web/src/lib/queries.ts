@@ -164,20 +164,21 @@ export async function standings(
     .sort((x, y) => y.points - x.points || y.gf - y.ga - (x.gf - x.ga) || y.gf - x.gf)
 }
 
-export async function seasonSim() {
+export async function seasonSim(league: League = 'besta') {
   const { data } = await db()
     .from('season_sim')
     .select('*')
     .eq('season', CURRENT_SEASON)
-    .eq('league', 'besta')
+    .eq('league', league)
   return data ?? []
 }
 
-export async function scorerSim(kind: 'goals' | 'assists') {
+export async function scorerSim(kind: 'goals' | 'assists', league: League = 'besta') {
   const { data } = await db()
     .from('scorer_sim')
     .select('*')
     .eq('season', CURRENT_SEASON)
+    .eq('league', league)
     .eq('kind', kind)
     .order('p_win', { ascending: false })
   return data ?? []

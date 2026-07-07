@@ -1,3 +1,4 @@
+import { Trophy, Crown, Target, CalendarRange } from 'lucide-react'
 import { teams, alltime, champions, teamInfo } from '@/lib/queries'
 import { TeamBadge } from '@/components/TeamBadge'
 import { ShareButton } from '@/components/ShareButton'
@@ -18,53 +19,100 @@ export default async function SagaPage() {
   const nm = (id: number) => names.get(id) ?? `#${id}`
   const titles = new Map<number, number>()
   for (const teamId of champs.values()) titles.set(teamId, (titles.get(teamId) ?? 0) + 1)
+
+  const mostTitles = [...titles.entries()].sort((a, b) => b[1] - a[1])[0]
+  const mostPoints = rows[0]
+  const mostGoals = [...rows].sort((a, b) => b.gf - a.gf)[0]
+  const mostSeasons = [...rows].sort((a, b) => b.seasons - a.seasons)[0]
+  const records = [
+    { icon: Crown, label: 'Flestir titlar', team: mostTitles[0], value: String(mostTitles[1]) },
+    { icon: Trophy, label: 'Flest stig', team: mostPoints.teamId, value: mostPoints.points3.toLocaleString('is-IS') },
+    { icon: Target, label: 'Flest mörk', team: mostGoals.teamId, value: mostGoals.gf.toLocaleString('is-IS') },
+    { icon: CalendarRange, label: 'Flest tímabil', team: mostSeasons.teamId, value: String(mostSeasons.seasons) },
+  ]
+
   return (
-    <div>
-      <div className="flex items-center justify-between mb-1">
-        <h1 className="display text-2xl font-black">All-time tafla efstu deildar frá 1912</h1>
-        <ShareButton title="All-time tafla efstu deildar" text="All-time tafla íslensku efstu deildarinnar frá 1912:" path="/saga" />
+    <div className="grid gap-8">
+      <div>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
+          <h1 className="display text-2xl font-black">Saga efstu deildar frá 1912</h1>
+          <ShareButton title="Saga efstu deildar" text="All-time tafla íslensku efstu deildarinnar frá 1912:" path="/saga" />
+        </div>
+        <p className="text-sm muted max-w-2xl">
+          Opinberar stöðutöflur KSÍ 1912–1984 og öll leikjaúrslit frá 1985 — hvert einasta tímabil
+          er með (1913 og 1914 féll mótið niður og Fram fékk titilinn án keppni).
+        </p>
       </div>
-      <p className="text-sm muted mb-4">
-        Byggt á opinberum stöðutöflum KSÍ 1912–1984 og öllum leikjaúrslitum frá 1985. Stig reiknuð samræmt með 3 fyrir sigur öll tímabil. Töflur vantar hjá KSÍ fyrir 1913, 1914, 1923, 1949 og 1981 — þau tímabil telja í titlum en ekki í leikjatölum.
-      </p>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {records.map((r) => (
+          <div key={r.label} className="card p-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] muted mb-2 inline-flex items-center gap-1.5">
+              <r.icon size={13} aria-hidden style={{ color: 'var(--accent)' }} />
+              {r.label}
+            </p>
+            <p className="flex items-center gap-2 font-bold">
+              <TeamBadge info={infos.get(r.team)} size={22} />
+              {nm(r.team)}
+              <span className="stat text-2xl ml-auto" style={{ color: 'var(--accent)' }}>{r.value}</span>
+            </p>
+          </div>
+        ))}
+      </div>
+
       <div className="card p-4">
         <div className="table-wrap">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="muted text-xs text-left">
-              <th className="py-1 font-medium">#</th>
-              <th className="font-medium">Lið</th>
-              <th className="text-right font-medium">Tímabil</th>
-              <th className="text-right font-medium">L</th>
-              <th className="text-right font-medium">U</th>
-              <th className="text-right font-medium">J</th>
-              <th className="text-right font-medium">T</th>
-              <th className="text-right font-medium">Mörk</th>
-              <th className="text-right font-medium">+/−</th>
-              <th className="text-right font-medium">Stig</th>
-              <th className="text-right font-medium pl-2">Fyrst–síðast</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r, i) => (
-              <tr key={r.teamId} className="trow">
-                <td className={`py-2 num w-8 ${i < 3 ? 'rank-top stat' : 'muted'}`}>{i + 1}</td>
-                <td className="font-medium whitespace-nowrap"><TeamBadge info={infos.get(r.teamId)} /> {nm(r.teamId)}</td>
-                <td className="text-right num font-semibold" style={{ color: 'var(--accent)' }}>{titles.get(r.teamId) ?? ''}</td>
-                <td className="text-right num">{r.seasons}</td>
-                <td className="text-right num">{r.played}</td>
-                <td className="text-right num">{r.won}</td>
-                <td className="text-right num">{r.drawn}</td>
-                <td className="text-right num">{r.lost}</td>
-                <td className="text-right num whitespace-nowrap">{r.gf}–{r.ga}</td>
-                <td className="text-right num">{r.gf - r.ga > 0 ? '+' : ''}{r.gf - r.ga}</td>
-                <td className="text-right stat">{r.points3}</td>
-                <td className="text-right num muted pl-2 whitespace-nowrap">{r.firstSeason}–{r.lastSeason}</td>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="muted text-xs text-left">
+                <th className="py-2 font-semibold w-8">#</th>
+                <th className="font-semibold">Lið</th>
+                <th className="text-right font-semibold">Titlar</th>
+                <th className="text-right font-semibold">Tímabil</th>
+                <th className="text-right font-semibold">Leikir</th>
+                <th className="text-right font-semibold hidden sm:table-cell">U–J–T</th>
+                <th className="text-right font-semibold">Sigur%</th>
+                <th className="text-right font-semibold hidden md:table-cell">Mörk</th>
+                <th className="text-right font-semibold">Stig</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => {
+                const t = titles.get(r.teamId) ?? 0
+                return (
+                  <tr key={r.teamId} className="trow">
+                    <td className={`py-2.5 num w-8 ${i < 3 ? 'rank-top stat' : 'muted'}`}>{i + 1}</td>
+                    <td className="font-semibold whitespace-nowrap">
+                      <TeamBadge info={infos.get(r.teamId)} /> {nm(r.teamId)}
+                      <span className="block sm:inline text-[10px] muted font-normal sm:ml-2">{r.firstSeason}–{r.lastSeason}</span>
+                    </td>
+                    <td className="text-right">
+                      {t > 0 ? (
+                        <span className="pill" style={{ background: 'color-mix(in srgb, var(--accent) 16%, transparent)', color: 'var(--accent)' }}>
+                          <Crown size={10} aria-hidden /> {t}
+                        </span>
+                      ) : (
+                        <span className="muted text-xs">—</span>
+                      )}
+                    </td>
+                    <td className="text-right num">{r.seasons}</td>
+                    <td className="text-right num">{r.played.toLocaleString('is-IS')}</td>
+                    <td className="text-right num muted hidden sm:table-cell whitespace-nowrap">
+                      {r.won}–{r.drawn}–{r.lost}
+                    </td>
+                    <td className="text-right num">{Math.round((r.won / Math.max(1, r.played)) * 100)}%</td>
+                    <td className="text-right num muted hidden md:table-cell whitespace-nowrap">{r.gf.toLocaleString('is-IS')}:{r.ga.toLocaleString('is-IS')}</td>
+                    <td className="text-right stat text-base">{r.points3.toLocaleString('is-IS')}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
+        <p className="text-[11px] muted mt-3">
+          Stig reiknuð samræmt með 3 fyrir sigur öll tímabil (eldri mót notuðu 2 fyrir sigur).
+          Úrslitaleikir um titilinn teljast með frá 1985; fyrir 1985 telja deildarleikirnir samkvæmt töflum KSÍ og Wikipediu (1923, 1949 og 1981 sótt af Wikipediu).
+        </p>
       </div>
     </div>
   )

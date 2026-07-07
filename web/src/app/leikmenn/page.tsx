@@ -11,10 +11,11 @@ export default async function LeikmennPage() {
   let elo: EloRow[] = []
   let goals: Awaited<ReturnType<typeof scorerSim>> = []
   let assists: Awaited<ReturnType<typeof scorerSim>> = []
+  let goalsLengju: Awaited<ReturnType<typeof scorerSim>> = []
   let sofa: SofaRow[] = []
   try {
-    ;[elo, goals, assists, sofa] = await Promise.all([
-      playerEloTable(200), scorerSim('goals'), scorerSim('assists'), sofascorePlayers(),
+    ;[elo, goals, assists, goalsLengju, sofa] = await Promise.all([
+      playerEloTable(200), scorerSim('goals'), scorerSim('assists'), scorerSim('goals', 'lengjudeild'), sofascorePlayers(),
     ])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
@@ -108,6 +109,10 @@ export default async function LeikmennPage() {
           <h2 className="display text-lg font-extrabold mb-4">Stoðsendingakóngar</h2>
           <RaceTable rows={assists} unit="stoðsendingar" />
           <p className="text-[11px] muted mt-2">Stoðsendingar: SofaScore-innslag (uppfærist þegar nýtt skjal er hlaðið inn).</p>
+        </div>
+        <div>
+          <h2 className="display text-lg font-extrabold mb-4">Markakóngar — Lengjudeildin</h2>
+          <RaceTable rows={goalsLengju} unit="mörk" />
         </div>
       </section>
     </div>

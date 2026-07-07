@@ -49,7 +49,9 @@ export function simulateSeason(
   remainingRegular: SimFixture[],
   runs = 10000,
   seed = 20260706,
+  opts: { split?: boolean; upSlots?: number } = {},
 ): SeasonSimResult[] {
+  const { split = true, upSlots = 3 } = opts
   const rand = mulberry32(seed)
   const n = teams.length
   const posCounts = new Map<string, number[]>()
@@ -94,8 +96,8 @@ export function simulateSeason(
           (rand() < 0.5 ? -1 : 1),
       )
 
-    // Split phase if regular season not already complete in input state
-    const needsSplit = [...state.values()].some(
+    // Split phase (Besta deild only) if not already complete in input state
+    const needsSplit = split && [...state.values()].some(
       (s) => s.played < REGULAR_ROUNDS_GAMES + 5,
     )
     if (needsSplit && n === 12) {
@@ -124,7 +126,7 @@ export function simulateSeason(
       team: t.team,
       posProbs,
       pTitle: posProbs[0],
-      pEurope: posProbs.slice(0, 3).reduce((a, b) => a + b, 0),
+      pEurope: posProbs.slice(0, upSlots).reduce((a, b) => a + b, 0),
       pRelegation: posProbs.slice(n - 2).reduce((a, b) => a + b, 0),
     }
   })
