@@ -12,7 +12,7 @@
   --border-strong: rgba(10, 20, 12, 0.18);
   --text: #101510;
   --text-2: #5a655c;
-  --accent: #3e7d1f;
+  --accent: #8a6410;
   --accent-ink: #ffffff;
   --ice: #1f6bb8;
   --win: #1e9e57;
@@ -23,22 +23,38 @@
 
 .dark {
   /* dark: pitch under floodlights */
-  --bg: #0a0e0b;
-  --surface: #10151166;
-  --surface-solid: #101511;
-  --surface-2: #171e18;
+  --bg: #0a0d0b;
+  --surface: #10141166;
+  --surface-solid: #101411;
+  --surface-2: #171c18;
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
   --text: #f2f5f0;
   --text-2: #94a096;
-  --accent: #b8f04a;
-  --accent-ink: #101504;
+  --accent: #e8b93c;
+  --accent-ink: #171104;
   --ice: #6fb7ff;
   --win: #4ade80;
   --draw: #5b665d;
   --loss: #f87171;
-  --glow: rgba(184, 240, 74, 0.07);
+  --glow: rgba(232, 185, 60, 0.06);
 }
+
+/* ── League themes: Besta = gold (default), Lengjudeildin = electric blue ── */
+[data-league='lengjudeild'] {
+  --accent: #2f9df4;
+  --accent-ink: #051220;
+  --glow: rgba(47, 157, 244, 0.07);
+}
+:root:not(.dark) [data-league='lengjudeild'], :root:not(.dark)[data-league='lengjudeild'] {
+  --accent: #1a6fc0;
+  --accent-ink: #ffffff;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.25s ease-out; }
 
 :root { --surface-solid: var(--surface); }
 
@@ -163,3 +179,32 @@ h1, h2, h3, .display {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* live indicator */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 999px;
+  background: var(--win);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* standings zone markers */
+.zone { position: relative; }
+.zone::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 3px; bottom: 3px;
+  width: 3px; border-radius: 2px;
+}
+.zone-up::before { background: var(--accent); }
+.zone-playoff::before {
+  background: repeating-linear-gradient(180deg, var(--accent) 0 4px, transparent 4px 8px);
+}
+.zone-down::before {
+  background: repeating-linear-gradient(180deg, var(--loss) 0 4px, transparent 4px 8px);
+}
+.zone-champ::before { background: var(--win); }
