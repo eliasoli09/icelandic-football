@@ -352,6 +352,23 @@ export async function transferNews(limit = 200): Promise<TransferItem[]> {
   return (data ?? []) as TransferItem[]
 }
 
+export type MatchOddsRow = {
+  bookmaker: string
+  home: number
+  draw: number
+  away: number
+  fetched_at: string
+}
+
+/** Bookmaker 1X2 odds for one match (display layer, scraped near kickoff). */
+export async function matchOdds(matchId: number): Promise<MatchOddsRow[]> {
+  const { data } = await db()
+    .from('match_odds')
+    .select('bookmaker, home, draw, away, fetched_at')
+    .eq('match_id', matchId)
+  return (data ?? []) as MatchOddsRow[]
+}
+
 export async function matchReport(matchId: number) {
   const { data } = await db()
     .from('match_reports')

@@ -1,7 +1,8 @@
 import { ProbBar } from '@/components/ProbBar'
 import { ShareButton } from '@/components/ShareButton'
 import { FormBadges } from '@/components/FormBadges'
-import { teams, matchDetail, teamInfo, matchReport } from '@/lib/queries'
+import { teams, matchDetail, teamInfo, matchReport, matchOdds } from '@/lib/queries'
+import { OddsTable } from '@/components/OddsTable'
 import { TeamBadge } from '@/components/TeamBadge'
 import { displayColor, tint } from '@/lib/teamColors'
 import type { PredictionFactors } from '@/lib/types'
@@ -25,8 +26,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let detail: Awaited<ReturnType<typeof matchDetail>> = null
   let report: Awaited<ReturnType<typeof matchReport>> = null
+  let odds: Awaited<ReturnType<typeof matchOdds>> = []
   try {
-    ;[names, infos, detail, report] = await Promise.all([teams(), teamInfo(), matchDetail(Number(id)), matchReport(Number(id))])
+    ;[names, infos, detail, report, odds] = await Promise.all([teams(), teamInfo(), matchDetail(Number(id)), matchReport(Number(id)), matchOdds(Number(id))])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -85,6 +87,23 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           />
         </div>
       </section>
+
+      {match.status === 'upcoming' && odds.length > 0 && (
+        <OddsTable
+          odds={odds}
+          favored={
+            prediction
+              ? ((['home', 'draw', 'away'] as const)[
+                  [prediction.p_home, prediction.p_draw, prediction.p_away].indexOf(
+                    Math.max(prediction.p_home, prediction.p_draw, prediction.p_away),
+                  )
+                ] ?? 'home')
+              : 'home'
+          }
+          homeName={nm(match.home_team)}
+          awayName={nm(match.away_team)}
+        />
+      )}
 
       {factors && match.status === 'upcoming' && (
         <section className="card p-5">
