@@ -131,8 +131,8 @@ export function TaflaView({
               </thead>
               <tbody>
                 {d.standings.map((r, i) => (
-                  <tr key={r.teamId} className={`trow zone ${r.zone ? `zone-${r.zone}` : ''}`}>
-                    <td className="py-2 pl-2 num muted">{i + 1}</td>
+                  <tr key={r.teamId} className="trow">
+                    <td className={`py-2 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
                     <td className="font-semibold whitespace-nowrap">
                       <TeamBadge info={teams[r.teamId]} /> {nm(r.teamId)}
                     </td>

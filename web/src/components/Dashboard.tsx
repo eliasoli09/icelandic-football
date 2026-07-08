@@ -141,8 +141,8 @@ export function Dashboard({
               </thead>
               <tbody>
                 {d.standings.map((r, i) => (
-                  <tr key={r.teamId} className={`trow zone ${r.zone ? `zone-${r.zone}` : ''}`}>
-                    <td className="py-1.5 pl-2 num muted">{i + 1}</td>
+                  <tr key={r.teamId} className="trow">
+                    <td className={`py-1.5 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
                     <td className="font-semibold whitespace-nowrap">
                       <TeamBadge info={info(r.teamId)} size={16} /> {nm(r.teamId)}
                     </td>
