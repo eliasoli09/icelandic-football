@@ -42,7 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <p className="text-xs muted inline-flex items-center gap-1.5">
                   <Database size={12} aria-hidden />
-                  Gögn: KSÍ (ksi.is) + SofaScore-innslög
+                  Gögn: KSÍ (ksi.is) + tölfræðiinnslög
                 </p>
                 <p className="text-xs muted">Greiningar byggðar á gögnum og líkanaspám — engin ábyrgð tekin á úrslitum.</p>
                 {updatedAt && (

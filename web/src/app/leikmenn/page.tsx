@@ -70,8 +70,8 @@ export default async function LeikmennPage() {
         <BestaTable rows={besta} sofaByName={sofaByName} />
         <p className="text-[11px] muted mt-2 mb-8">
           Heild = Elo (atburðir KSÍ: mörk, spjöld, úrslit liðs, leik fyrir leik) + framlag
-          (SofaScore-tímabilsgögn: stórsénsar skapaðir, lykilsendingar, stoðsendingar, rispur,
-          tæklingar, hindranir, brottspyrnur, einvígi, sendingahlutfall — og markvarsla hjá markvörðum; framsækni-flokkur (langsendingar, fyrirgjafir, sendingar á lokaþriðjung) kviknar sjálfkrafa fylgi þeir dálkar með í næsta SofaScore-innslagi).
+          (tímabilstölfræði: stórsénsar skapaðir, lykilsendingar, stoðsendingar, rispur,
+          tæklingar, hindranir, brottspyrnur, einvígi, sendingahlutfall — og markvarsla hjá markvörðum; framsækni-flokkur (langsendingar, fyrirgjafir, sendingar á lokaþriðjung) kviknar sjálfkrafa fylgi þeir dálkar með í næsta tölfræðiinnslagi).
           Framlagið er z-skorað miðað við hina leikmennina og fest við ±80 Elo-stig.
           Stjörnumerkt (*) heild inniheldur viðurkenningabónus: val í lið umferðar hjá fótbolta.net gefur +6 og leikmaður umferðar +10 (hámark +40).
         </p>
@@ -107,7 +107,7 @@ export default async function LeikmennPage() {
             ))}
           </div>
           <p className="text-[11px] muted mt-2">
-            Staða er áætluð út frá tölfræðiprófíl (SofaScore hefur ekki stöðudálk í útflutningi):
+            Staða er áætluð út frá tölfræðiprófíl (gögnin hafa ekki stöðudálk):
             markmenn af vörðum skotum, útileikmenn af varnar-/sköpunar-/sóknarhlutfalli. Talan er Heild (Elo + framlag).
           </p>
         </div>
@@ -118,7 +118,7 @@ export default async function LeikmennPage() {
         <div>
           <h2 className="display text-lg font-extrabold mb-4">Stoðsendingakóngar</h2>
           <RaceTable rows={assists} unit="stoðsendingar" />
-          <p className="text-[11px] muted mt-2">Stoðsendingar: SofaScore-innslag (uppfærist þegar nýtt skjal er hlaðið inn).</p>
+          <p className="text-[11px] muted mt-2">Stoðsendingar: tölfræðiinnslag (uppfærist þegar nýtt skjal er hlaðið inn).</p>
         </div>
         <div>
           <h2 className="display text-lg font-extrabold mb-4">Markakóngar — Lengjudeildin</h2>
@@ -144,9 +144,9 @@ function BestaTable({
             <th className="py-1 font-medium">#</th>
             <th className="font-medium">Leikmaður</th>
             <th className="text-right font-medium">Elo</th>
-            <th className="text-right font-medium" title="Sköpun + vörn + sendingar + markvarsla úr SofaScore">Framlag</th>
+            <th className="text-right font-medium" title="Sköpun + vörn + sendingar + markvarsla úr tímabilstölfræði">Framlag</th>
             <th className="text-right font-medium">Heild</th>
-            <th className="text-right font-medium">SofaScore</th>
+            <th className="text-right font-medium">Einkunn</th>
           </tr>
         </thead>
         <tbody>
@@ -161,7 +161,7 @@ function BestaTable({
                   ? `Sköpun ${p.framlag.creation} · Vörn ${p.framlag.defense} · Sendingar ${p.framlag.passing}` +
                     (p.framlag.progression ? ` · Framsækni ${p.framlag.progression}` : '') +
                     (p.framlag.goalkeeping ? ` · Markvarsla ${p.framlag.goalkeeping}` : '')
-                  : 'Utan topp-150 SofaScore listans'}
+                  : 'Utan topp-150 tölfræðilistans'}
                 style={{ color: (p.framlag?.total ?? 0) >= 0 ? 'var(--win)' : 'var(--loss)' }}
               >
                 {p.framlag ? (p.framlag.total >= 0 ? '+' : '') + p.framlag.total : '—'}
@@ -196,7 +196,7 @@ function EloTable({
             <th className="font-medium">Leikmaður</th>
             <th className="text-right font-medium">Elo</th>
             <th className="text-right font-medium">Atburðaleikir</th>
-            {showSofa && <th className="text-right font-medium">SofaScore</th>}
+            {showSofa && <th className="text-right font-medium">Einkunn</th>}
           </tr>
         </thead>
         <tbody>
