@@ -7,62 +7,8 @@ import { TeamBadge } from './TeamBadge'
 import { FormBadges } from './FormBadges'
 import { PosHeatmap } from './PosHeatmap'
 import { ShareButton } from './ShareButton'
-import { displayColor } from '@/lib/teamColors'
 import type { DashboardBundle, DashboardTeam } from '@/lib/dashboard'
 import type { League } from '@/lib/types'
-
-/** 2.5D podium for the current top three. */
-function Podium({
-  top3,
-  teams,
-}: {
-  top3: { teamId: number; points: number }[]
-  teams: Record<number, DashboardTeam>
-}) {
-  if (top3.length < 3) return null
-  const steps = [
-    { rank: 2, row: top3[1], h: 58 },
-    { rank: 1, row: top3[0], h: 80 },
-    { rank: 3, row: top3[2], h: 44 },
-  ]
-  return (
-    <div aria-label="Efstu þrjú lið">
-      <div className="podium">
-        {steps.map(({ rank, row, h }) => {
-          const info = teams[row.teamId]
-          const c = displayColor(info)
-          return (
-            <div key={row.teamId} className="podium-step">
-              <TeamBadge info={info} size={rank === 1 ? 44 : 34} />
-              <p className="text-xs font-bold truncate max-w-full">{info?.name ?? `#${row.teamId}`}</p>
-              <div
-                className="podium-box"
-                style={{
-                  '--pf-hi': `color-mix(in srgb, ${c} 86%, #fff 14%)`,
-                  '--pf-lo': `color-mix(in srgb, ${c} 68%, #000 32%)`,
-                  '--pf-top': `color-mix(in srgb, ${c} 62%, #fff 38%)`,
-                  '--pf-side': `color-mix(in srgb, ${c} 52%, #000 48%)`,
-                } as React.CSSProperties}
-              >
-                <span className="podium-top" aria-hidden />
-                <span className="podium-side" aria-hidden />
-                <div className="podium-front" style={{ height: h }}>
-                  <span className="stat text-2xl" style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,.45)' }}>
-                    {rank}
-                  </span>
-                  <span className="text-[10px] font-bold" style={{ color: 'rgba(255,255,255,.85)' }}>
-                    {row.points} stig
-                  </span>
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-      <div className="podium-floor" aria-hidden />
-    </div>
-  )
-}
 
 export interface SimRow {
   team_id: number
@@ -100,9 +46,9 @@ export function TaflaView({
     .sort((a, b) => b.pTitle - a.pTitle || b.pEurope - a.pEurope || a.pRelegation - b.pRelegation)
 
   return (
-    <div key={league} className="fade-up grid gap-5">
+    <div key={league} className="fade-up grid gap-8">
       <section className="min-w-0">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
           <h1 className="display text-2xl font-black" style={{ color: 'var(--accent)' }}>
             {d.title} 2026
           </h1>
@@ -111,8 +57,7 @@ export function TaflaView({
             <ShareButton title={`${d.title} 2026`} text={`Staðan í ${d.title}:`} path="/tafla" imagePath={league === 'besta' ? '/api/og/tafla' : undefined} />
           </div>
         </div>
-        <Podium top3={d.standings.slice(0, 3)} teams={teams} />
-        <div className="card-3d p-3 mt-2">
+        <div className="card p-4">
           <div className="table-wrap">
             <table className="text-sm [&_td]:px-1.5 [&_th]:px-1.5">
               <thead>
@@ -132,7 +77,7 @@ export function TaflaView({
               <tbody>
                 {d.standings.map((r, i) => (
                   <tr key={r.teamId} className="trow">
-                    <td className={`py-1 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
+                    <td className={`py-2 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
                     <td className="font-semibold whitespace-nowrap">
                       <TeamBadge info={teams[r.teamId]} /> {nm(r.teamId)}
                     </td>
@@ -142,9 +87,7 @@ export function TaflaView({
                     <td className="text-right num">{r.lost}</td>
                     <td className="text-right num whitespace-nowrap">{r.gf}–{r.ga}</td>
                     <td className="text-right num">{r.gf - r.ga > 0 ? '+' : ''}{r.gf - r.ga}</td>
-                    <td className="text-right">
-                      <span className={`plate plate-mini stat text-sm ${i === 0 ? 'plate-accent' : ''}`}>{r.points}</span>
-                    </td>
+                    <td className="text-right stat text-base">{r.points}</td>
                     <td className="text-right pl-3"><FormBadges form={r.form} /></td>
                   </tr>
                 ))}
@@ -167,7 +110,7 @@ export function TaflaView({
           <Trophy size={16} aria-hidden style={{ color: 'var(--accent)' }} />
           Sætalíkur — 10.000 hermanir
         </h2>
-        <div className="card-3d p-4">
+        <div className="card p-4">
           {simRows.length ? (
             <>
               <PosHeatmap rows={simRows} middleLabel={league === 'besta' ? 'Evrópa' : 'Upp'} />
