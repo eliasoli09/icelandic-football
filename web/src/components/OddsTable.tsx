@@ -1,18 +1,21 @@
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Shield } from 'lucide-react'
 import { BOOKMAKER_URLS } from '@/lib/odds'
 import type { MatchOddsRow } from '@/lib/queries'
 
 /**
  * Bookmaker 1X2 odds under a match, sorted best→worst on the outcome the
  * model considers most likely. Best price per column is highlighted.
+ * The model's own margin-free odds sit pinned on top as "Boltavaktinn".
  */
 export function OddsTable({
   odds,
+  fair,
   favored,
   homeName,
   awayName,
 }: {
   odds: MatchOddsRow[]
+  fair?: { home: number; draw: number; away: number } | null
   favored: 'home' | 'draw' | 'away'
   homeName: string
   awayName: string
@@ -52,6 +55,20 @@ export function OddsTable({
             </tr>
           </thead>
           <tbody>
+            {fair && (
+              <tr className="trow" style={{ background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}>
+                <td className="py-1.5 font-bold whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1.5" style={{ color: 'var(--accent)' }}>
+                    <Shield size={13} aria-hidden />
+                    Boltavaktinn
+                    <span className="text-[9px] font-semibold muted uppercase tracking-wide">spáin okkar</span>
+                  </span>
+                </td>
+                <td className="text-right num py-1.5 font-bold">{fair.home.toFixed(2)}</td>
+                <td className="text-right num py-1.5 font-bold">{fair.draw.toFixed(2)}</td>
+                <td className="text-right num py-1.5 font-bold">{fair.away.toFixed(2)}</td>
+              </tr>
+            )}
             {rows.map((o) => (
               <tr key={o.bookmaker} className="trow">
                 <td className="py-1 font-semibold whitespace-nowrap">
@@ -78,6 +95,7 @@ export function OddsTable({
         </table>
       </div>
       <p className="text-[10px] muted mt-3">
+        Boltavaktar-stuðlarnir eru hreinar líkur spálíkansins (1/líkur, engin álagning) — ekki veðmálstilboð.
         Uppfært {updated.toLocaleDateString('is-IS', { day: 'numeric', month: 'short', timeZone: 'UTC' })} · Stuðlar geta breyst · 18 ára aldurstakmark — spilaðu ábyrgt
       </p>
     </section>

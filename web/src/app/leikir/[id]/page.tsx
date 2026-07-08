@@ -91,6 +91,11 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
       {match.status === 'upcoming' && odds.length > 0 && (
         <OddsTable
           odds={odds}
+          fair={
+            prediction && prediction.p_home > 0 && prediction.p_draw > 0 && prediction.p_away > 0
+              ? { home: 1 / prediction.p_home, draw: 1 / prediction.p_draw, away: 1 / prediction.p_away }
+              : null
+          }
           favored={
             prediction
               ? ((['home', 'draw', 'away'] as const)[
