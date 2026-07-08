@@ -21,9 +21,9 @@ function Podium({
 }) {
   if (top3.length < 3) return null
   const steps = [
-    { rank: 2, row: top3[1], h: 72 },
-    { rank: 1, row: top3[0], h: 100 },
-    { rank: 3, row: top3[2], h: 54 },
+    { rank: 2, row: top3[1], h: 58 },
+    { rank: 1, row: top3[0], h: 80 },
+    { rank: 3, row: top3[2], h: 44 },
   ]
   return (
     <div aria-label="Efstu þrjú lið">
@@ -100,9 +100,9 @@ export function TaflaView({
     .sort((a, b) => b.pTitle - a.pTitle || b.pEurope - a.pEurope || a.pRelegation - b.pRelegation)
 
   return (
-    <div key={league} className="fade-up grid gap-8">
+    <div key={league} className="fade-up grid gap-5">
       <section className="min-w-0">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <h1 className="display text-2xl font-black" style={{ color: 'var(--accent)' }}>
             {d.title} 2026
           </h1>
@@ -112,7 +112,7 @@ export function TaflaView({
           </div>
         </div>
         <Podium top3={d.standings.slice(0, 3)} teams={teams} />
-        <div className="card-3d p-4 mt-4">
+        <div className="card-3d p-3 mt-2">
           <div className="table-wrap">
             <table className="text-sm [&_td]:px-1.5 [&_th]:px-1.5">
               <thead>
@@ -132,7 +132,7 @@ export function TaflaView({
               <tbody>
                 {d.standings.map((r, i) => (
                   <tr key={r.teamId} className="trow">
-                    <td className={`py-2 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
+                    <td className={`py-1 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
                     <td className="font-semibold whitespace-nowrap">
                       <TeamBadge info={teams[r.teamId]} /> {nm(r.teamId)}
                     </td>

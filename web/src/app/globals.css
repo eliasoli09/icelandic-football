@@ -237,8 +237,8 @@ h1, h2, h3, .display {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 3.4rem;
-  padding: 3px 10px;
+  min-width: 3.1rem;
+  padding: 2px 8px;
   border-radius: 9px;
   border: 1px solid var(--border-strong);
   background: linear-gradient(
@@ -273,11 +273,11 @@ h1, h2, h3, .display {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: clamp(14px, 4vw, 34px);
-  padding: 10px 18px 0;
+  gap: clamp(12px, 3vw, 24px);
+  padding: 4px 18px 0;
 }
-.podium-step { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; max-width: 30%; }
-.podium-box { position: relative; width: clamp(76px, 17vw, 132px); max-width: calc(100% - 12px); margin-top: 12px; }
+.podium-step { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0; max-width: 30%; }
+.podium-box { position: relative; width: clamp(76px, 15vw, 116px); max-width: calc(100% - 12px); margin-top: 12px; }
 .podium-front {
   position: relative;
   display: flex;
@@ -316,7 +316,7 @@ h1, h2, h3, .display {
   border-left: none;
 }
 .podium-floor {
-  height: 14px;
+  height: 10px;
   margin-top: -2px;
   background: radial-gradient(60% 100% at 50% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 75%);
 }

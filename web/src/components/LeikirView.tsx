@@ -28,23 +28,23 @@ export function LeikirView({
   }
   return (
     <div key={league} className="fade-up">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <h1 className="display text-2xl font-black" style={{ color: 'var(--accent)' }}>
           Leikir — {title} 2026
         </h1>
         <LeagueSwitcher size="sm" />
       </div>
-      <div className="grid gap-6">
+      <div className="grid gap-4">
         {[...byMonth].map(([month, ms]) => (
           <section key={month}>
-            <h2 className="text-[11px] font-bold muted uppercase tracking-[0.18em] mb-2.5">
+            <h2 className="text-[11px] font-bold muted uppercase tracking-[0.18em] mb-1.5">
               {month === 'óráðið'
                 ? 'Dagsetning óráðin'
                 : new Date(month + '-01').toLocaleString('is-IS', { month: 'long', year: 'numeric', timeZone: 'UTC' })}
             </h2>
-            <div className="tilt-wrap grid gap-2">
+            <div className="tilt-wrap grid gap-1.5">
               {ms.map((m) => (
-                <Link key={m.id} href={`/leikir/${m.id}`} className="card-3d card-3d-hover px-4 py-2.5 flex items-center gap-3 text-sm min-h-[44px]">
+                <Link key={m.id} href={`/leikir/${m.id}`} className="card-3d card-3d-hover px-3 py-1.5 flex items-center gap-3 text-sm min-h-[42px]">
                   <span className="muted text-xs w-24 shrink-0 num">{fmtDate(m.date)}</span>
                   <span className="flex-1 text-right inline-flex items-center justify-end gap-2 min-w-0">
                     <span className="truncate">{nm(m.home_team)}</span>
