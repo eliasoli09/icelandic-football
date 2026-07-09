@@ -8,8 +8,17 @@ describe('splitFixtureSlug', () => {
     expect(splitFixtureSlug('fram-thor-akureyri')).toEqual(['Fram', 'Þór'])
     expect(splitFixtureSlug('hafnarfjordur-valur')).toEqual(['FH', 'Valur'])
   })
+  it('splits lengjudeild slugs (division-1)', () => {
+    expect(splitFixtureSlug('leiknir-reykjavik-grotta')).toEqual(['Leiknir R.', 'Grótta'])
+    expect(splitFixtureSlug('ir-reykjavik-throttur')).toEqual(['ÍR', 'Þróttur R.'])
+    expect(splitFixtureSlug('kopavogur-vestri')).toEqual(['HK', 'Vestri'])
+  })
   it('returns null for unknown teams', () => {
     expect(splitFixtureSlug('arsenal-chelsea')).toBeNull()
+  })
+  it('parses division-1 fixture links with the league slug', () => {
+    const html = '<tr data-dt="10,7,2026,19,15"><td><a href="/football/iceland/division-1/aegir-kopavogur/AbCdEfGh/">Ægir</a></td></tr>'
+    expect(parseFixtures(html, 'division-1')[0]).toMatchObject({ homeName: 'Ægir', awayName: 'HK' })
   })
 })
 

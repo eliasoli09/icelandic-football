@@ -11,7 +11,9 @@ const db = () =>
 const SECRET = () => process.env.CRON_SECRET!
 
 const BASE = 'https://www.betexplorer.com'
-const FIXTURES_URL = `${BASE}/football/iceland/besta-deild-karla/fixtures/`
+/** BetExplorer league slugs we track (current-season URLs). */
+const LEAGUE_SLUGS = ['besta-deild-karla', 'division-1']
+const fixturesUrl = (leagueSlug: string) => `${BASE}/football/iceland/${leagueSlug}/fixtures/`
 const UA = 'Mozilla/5.0 (compatible; islensk-fotbolti.vercel.app; odds display)'
 /** Only ask for odds this close to kickoff — books price this league late. */
 const HORIZON_DAYS = 12
@@ -30,6 +32,19 @@ const SLUGS: Record<string, string> = {
   'akranes': 'ÍA',
   'stjarnan': 'Stjarnan',
   'vikingur-reykjavik': 'Víkingur R.',
+  // Lengjudeildin (BetExplorer: division-1)
+  'aegir': 'Ægir',
+  'afturelding': 'Afturelding',
+  'fylkir': 'Fylkir',
+  'grindavik': 'Grindavík',
+  'grotta': 'Grótta',
+  'ir-reykjavik': 'ÍR',
+  'kopavogur': 'HK',
+  'leiknir-reykjavik': 'Leiknir R.',
+  'njardvik': 'Njarðvík',
+  'throttur': 'Þróttur R.',
+  'vestri': 'Vestri',
+  'volsungur': 'Völsungur',
 }
 
 export interface BexFixture {
@@ -51,7 +66,7 @@ export function splitFixtureSlug(slug: string): [string, string] | null {
 }
 
 /** Parse the fixtures page into fixtures with our team names and kickoff dates. */
-export function parseFixtures(html: string): BexFixture[] {
+export function parseFixtures(html: string, leagueSlug = 'besta-deild-karla'): BexFixture[] {
   const out: BexFixture[] = []
   const seen = new Set<string>()
   // rows sharing a kickoff time only carry the datetime cell on the first row
@@ -59,7 +74,7 @@ export function parseFixtures(html: string): BexFixture[] {
   const rowRe = /<tr([^>]*)>([\s\S]*?)<\/tr>/g
   for (const [, attrs, row] of html.matchAll(rowRe)) {
     const dt = attrs.match(/data-dt="(\d+,\d+,\d+,\d+,\d+)"/)?.[1]
-    const link = row.match(/href="\/football\/iceland\/besta-deild-karla\/([a-z0-9-]+)\/([A-Za-z0-9]{8})\//)
+    const link = row.match(new RegExp(`href="/football/iceland/${leagueSlug}/([a-z0-9-]+)/([A-Za-z0-9]{8})/`))
     if (!link) continue
     const [, slug, bexId] = link
     if (seen.has(bexId)) continue
@@ -148,7 +163,15 @@ export async function refreshOdds(): Promise<{
   let matchesUpdated = 0
   let rowsWritten = 0
   try {
-    const fixtures = parseFixtures(await fetchText(FIXTURES_URL))
+    const fixtures: BexFixture[] = []
+    for (const slug of LEAGUE_SLUGS) {
+      try {
+        fixtures.push(...parseFixtures(await fetchText(fixturesUrl(slug)), slug))
+      } catch (err) {
+        warnings.push(`${slug}: ${String(err)}`)
+      }
+      await new Promise((r) => setTimeout(r, 300))
+    }
     fixturesSeen = fixtures.length
 
     const { data: teamRows, error: tErr } = await db().from('teams').select('id, name')
@@ -159,7 +182,7 @@ export async function refreshOdds(): Promise<{
       .from('matches')
       .select('id, date, home_team, away_team')
       .eq('status', 'upcoming')
-      .eq('league', 'besta')
+      .in('league', ['besta', 'lengjudeild'])
     if (mErr) throw mErr
 
     const now = Date.now()
@@ -181,7 +204,7 @@ export async function refreshOdds(): Promise<{
         const payload = JSON.parse(
           await fetchText(
             `${BASE}/match-odds/${f.bexId}/1/1x2/odds/?lang=en`,
-            `${BASE}/football/iceland/besta-deild-karla/x/${f.bexId}/`,
+            `${BASE}/football/iceland/x/${f.bexId}/`,
           ),
         ) as { odds?: string }
         const odds = parseMatchOdds(payload.odds ?? '')
