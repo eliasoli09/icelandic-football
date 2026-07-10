@@ -71,3 +71,21 @@ describe('evaluateSlip', () => {
     expect(s.alive).toBe(false)
   })
 })
+
+describe('live in-play evaluation', () => {
+  const liveMatch = mkMatch({ date: PAST, home_score: 1, away_score: 0, live: true })
+  it('does not settle úrslit while live', () => {
+    expect(evaluateLeg(leg({ pick: '1' }), liveMatch).status).toBe('i_gangi')
+  })
+  it('secures over early but never under while live', () => {
+    expect(evaluateLeg(leg({ market: 'mork_yfir', line: 0.5 }), liveMatch).status).toBe('vann')
+    expect(evaluateLeg(leg({ market: 'mork_undir', line: 2.5 }), liveMatch).status).toBe('i_gangi')
+  })
+  it('settles scorer live from events, loses only at final whistle', () => {
+    const ev = [{ type: 'Goal', detail: 'Normal Goal', player: { name: 'Pedri' }, team: { name: 'Spain' } }]
+    expect(evaluateLeg(leg({ market: 'markaskorari', player: 'Pedri' }), liveMatch, ev).status).toBe('vann')
+    expect(evaluateLeg(leg({ market: 'markaskorari', player: 'Olise' }), liveMatch, ev).status).toBe('i_gangi')
+    const done = mkMatch({ date: PAST, home_score: 1, away_score: 0 })
+    expect(evaluateLeg(leg({ market: 'markaskorari', player: 'Olise' }), done, ev).status).toBe('tapad')
+  })
+})

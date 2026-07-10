@@ -13,3 +13,5 @@ for (const line of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')
 }
 const { refreshWorldCup } = await import(join(webDir, 'src/lib/worldcup.ts'))
 console.log(JSON.stringify(await refreshWorldCup(), null, 1))
+const { mapWcApifIds } = await import(join(webDir, 'src/lib/worldcup.ts'))
+console.log('apif mapping:', JSON.stringify(await mapWcApifIds()))

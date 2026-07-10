@@ -380,6 +380,9 @@ export interface WcMatchRow {
   home_score: number | null
   away_score: number | null
   winner: string | null
+  apif_fixture_id?: number | null
+  /** set at evaluation time when in-play data overrides the stored score */
+  live?: boolean
 }
 
 export interface WcPredictionRow {

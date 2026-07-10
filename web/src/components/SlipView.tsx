@@ -119,7 +119,7 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
       </div>
 
       <p className="text-[11px] muted">
-        Úrslitaleggirnir uppfærast sjálfkrafa {updated ? `· síðast ${updated.toLocaleTimeString('is-IS')}` : ''} · Leikmannaleggir verða sjálfvirkir með API-uppfærslunni — þangað til má merkja þá handvirkt · 18 ára aldurstakmark — spilaðu ábyrgt
+        Staðan og markaskorarar uppfærast sjálfkrafa í rauntíma meðan leikir eru í gangi {updated ? `· síðast ${updated.toLocaleTimeString('is-IS')}` : ''} · Handvirku hólfin (horn o.þ.h.) tikkarðu sjálf/ur · 18 ára aldurstakmark — spilaðu ábyrgt
       </p>
     </div>
   )

@@ -47,7 +47,7 @@ const norm = (s: string) =>
   s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 
 const started = (m: WcMatchRow) => new Date(m.date).getTime() < Date.now()
-const finished = (m: WcMatchRow) => m.home_score !== null && m.away_score !== null
+const finished = (m: WcMatchRow) => m.home_score !== null && m.away_score !== null && !m.live
 
 export function evaluateLeg(leg: SlipLeg, m: WcMatchRow | undefined, events?: ApifEvent[] | null): LegResult {
   if (!m) return { status: 'handvirkt', detail: 'Leikur fannst ekki — merktu handvirkt' }

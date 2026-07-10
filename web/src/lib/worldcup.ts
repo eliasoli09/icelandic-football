@@ -143,6 +143,31 @@ export async function refreshWorldCup(): Promise<{
   return { matches: matches.length, predictions: preds.length, missingElo: [...new Set(missingElo)] }
 }
 
+/** Map wc_matches to API-Football fixture ids (needs the paid plan). */
+export async function mapWcApifIds(): Promise<{ mapped: number; unmatched: string[] }> {
+  const { fetchWcFixtures, matchFixture } = await import('./apif')
+  const fixtures = await fetchWcFixtures()
+  if (!fixtures.length) return { mapped: 0, unmatched: ['API-Football svaraði ekki (lykill/plan?)'] }
+  const { data: matches, error } = await db()
+    .from('wc_matches')
+    .select('id, date, home, away, apif_fixture_id')
+    .is('apif_fixture_id', null)
+  if (error) throw error
+  const rows: { id: number; apif_fixture_id: number }[] = []
+  const unmatched: string[] = []
+  for (const m of matches ?? []) {
+    if (/to be announced/i.test(m.home + m.away)) continue
+    const fid = matchFixture(m.date, m.home, m.away, fixtures)
+    if (fid) rows.push({ id: m.id, apif_fixture_id: fid })
+    else unmatched.push(`${m.home}–${m.away}`)
+  }
+  if (rows.length) {
+    const { error: e2 } = await db().rpc('rpc_set_wc_apif', { p_secret: SECRET(), p_rows: rows })
+    if (e2) throw e2
+  }
+  return { mapped: rows.length, unmatched }
+}
+
 /** Scores-only refresh (no Elo/prediction fetch) — used by the live status route. */
 export async function refreshWcScores(): Promise<number> {
   const feed = (await (await fetch(FEED, { cache: 'no-store' })).json()) as WcFeedMatch[]

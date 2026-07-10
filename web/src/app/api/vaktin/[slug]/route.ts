@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { evaluateSlip, type SlipLeg } from '@/lib/vaktin'
+import { evaluateSlip, type ApifEvent, type SlipLeg } from '@/lib/vaktin'
 import { refreshWcScores } from '@/lib/worldcup'
+import { cachedLiveFixture } from '@/lib/apif'
 import type { WcMatchRow } from '@/lib/queries'
 
 export const dynamic = 'force-dynamic'
@@ -42,7 +43,30 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
     }
   }
 
-  const status = evaluateSlip(slip.legs, new Map(matches.map((m) => [m.id, m])))
+  // Live layer: in-play scores + goal events from API-Football for matches
+  // that have kicked off but aren't final in the result feed yet.
+  const eventsByMatch = new Map<number, ApifEvent[]>()
+  const scorerMatchIds = new Set(slip.legs.filter((l) => l.market === 'markaskorari').map((l) => l.match_id))
+  await Promise.all(
+    matches.map(async (m) => {
+      if (!m.apif_fixture_id) return
+      const kickoff = new Date(m.date).getTime()
+      if (kickoff > now) return
+      const inWindow = now - kickoff < 4 * 3600_000
+      // outside the live window, only scorer legs still need the event feed
+      if (!inWindow && m.home_score !== null && !scorerMatchIds.has(m.id)) return
+      const live = await cachedLiveFixture(m.apif_fixture_id)
+      if (!live) return
+      if (live.goalsHome !== null) {
+        m.home_score = live.goalsHome
+        m.away_score = live.goalsAway
+        m.live = !live.finished
+      }
+      if (live.events.length) eventsByMatch.set(m.id, live.events)
+    }),
+  )
+
+  const status = evaluateSlip(slip.legs, new Map(matches.map((m) => [m.id, m])), eventsByMatch)
   return NextResponse.json({
     ok: true,
     title: slip.title,
