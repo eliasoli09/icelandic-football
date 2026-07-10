@@ -41,7 +41,7 @@ const ICON: Record<LegStatus, { icon: typeof Circle; color: string; label: strin
   vann: { icon: CheckCircle2, color: 'var(--win)', label: 'Í höfn' },
   tapad: { icon: XCircle, color: 'var(--loss)', label: 'Dautt' },
   i_gangi: { icon: RefreshCw, color: 'var(--accent)', label: 'Í gangi' },
-  obyrjad: { icon: Clock, color: 'var(--text-2)', label: 'Óbyrjað' },
+  obyrjad: { icon: Clock, color: 'var(--text-2)', label: 'Ekki byrjað' },
   handvirkt: { icon: Hand, color: 'var(--ice)', label: 'Handvirkt' },
 }
 
@@ -56,7 +56,11 @@ function ScoreCard({ m, reduce }: { m: Scoreboard; reduce: boolean }) {
     <motion.div
       layout={!reduce}
       className="card px-4 py-3 flex-1 min-w-[240px]"
-      style={m.live ? { borderColor: 'var(--accent)' } : undefined}
+      style={m.live ? {
+        borderColor: 'var(--accent)',
+        background: 'linear-gradient(160deg, color-mix(in srgb, var(--accent) 12%, transparent), var(--surface) 60%)',
+        boxShadow: '0 0 28px -10px color-mix(in srgb, var(--accent) 60%, transparent)',
+      } : undefined}
       initial={reduce ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
     >
@@ -78,8 +82,8 @@ function ScoreCard({ m, reduce }: { m: Scoreboard; reduce: boolean }) {
           initial={reduce ? false : { scale: 1.35 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 400, damping: 18 }}
-          className="stat text-2xl px-2 shrink-0"
-          style={{ color: m.live ? 'var(--accent)' : 'var(--text)' }}
+          className="stat text-3xl px-2 shrink-0"
+          style={{ color: m.live ? 'var(--accent)' : 'var(--text)', textShadow: m.live ? '0 0 16px color-mix(in srgb, var(--accent) 70%, transparent)' : undefined }}
         >
           {played ? `${m.home_score}–${m.away_score}` : '–'}
         </motion.span>
@@ -184,7 +188,15 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
 
       <motion.div
         className="card p-5 text-center"
-        style={{ borderColor: s.alive ? 'var(--border)' : 'var(--loss)' }}
+        style={{
+          borderColor: s.alive ? 'color-mix(in srgb, var(--accent) 45%, var(--border))' : 'var(--loss)',
+          background: s.alive
+            ? 'linear-gradient(160deg, color-mix(in srgb, var(--accent) 14%, transparent) 0%, var(--surface) 55%)'
+            : 'linear-gradient(160deg, color-mix(in srgb, var(--loss) 14%, transparent) 0%, var(--surface) 55%)',
+          boxShadow: s.alive
+            ? '0 0 42px -14px color-mix(in srgb, var(--accent) 55%, transparent)'
+            : '0 0 42px -14px color-mix(in srgb, var(--loss) 55%, transparent)',
+        }}
         initial={reduce ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
       >
@@ -209,16 +221,19 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
                 key={pct}
                 initial={reduce ? false : { scale: 1.25 }}
                 animate={{ scale: 1 }}
-                className="stat text-xl"
-                style={{ color: probColor(s.totalProb!) }}
+                className="stat text-2xl"
+                style={{ color: probColor(s.totalProb!), textShadow: `0 0 18px color-mix(in srgb, ${probColor(s.totalProb!)} 65%, transparent)` }}
               >
                 {pct < 1 ? '<1' : pct}%
               </motion.span>
             </div>
-            <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--surface-2)' }}>
+            <div className="h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--surface-2)' }}>
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: probColor(s.totalProb!) }}
+                style={{
+                  background: `linear-gradient(90deg, ${probColor(s.totalProb!)}, color-mix(in srgb, ${probColor(s.totalProb!)} 55%, white))`,
+                  boxShadow: `0 0 14px color-mix(in srgb, ${probColor(s.totalProb!)} 80%, transparent)`,
+                }}
                 animate={{ width: `${Math.max(2, pct)}%` }}
                 transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 120, damping: 20 }}
               />
@@ -277,13 +292,13 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
                     key={legPct}
                     initial={reduce ? false : { scale: 1.2 }}
                     animate={{ scale: 1 }}
-                    className="stat text-base shrink-0"
-                    style={{ color: probColor(l.prob!) }}
+                    className="stat text-lg shrink-0"
+                    style={{ color: probColor(l.prob!), textShadow: `0 0 12px color-mix(in srgb, ${probColor(l.prob!)} 60%, transparent)` }}
                   >
                     {legPct < 1 ? '<1' : legPct}%
                   </motion.span>
                 )}
-                <span className="pill pill-flat shrink-0" style={{ color: c.color }}>{c.label}</span>
+                <span className="pill shrink-0 font-bold" style={{ color: c.color, background: `color-mix(in srgb, ${c.color} 16%, transparent)`, boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${c.color} 35%, transparent)` }}>{c.label}</span>
                 {(l.market === 'handvirkt' || (l.market === 'markaskorari' && (l.status === 'handvirkt' || l.status === 'i_gangi' || l.manualDone))) && (
                   <button onClick={() => toggle(l)} className="text-xs font-bold px-3 py-1.5 rounded-lg border shrink-0" style={{ borderColor: 'var(--border)', color: l.manualDone ? 'var(--win)' : 'var(--text-2)' }}>
                     {l.manualDone ? '✓ merkt' : 'merkja ✓'}
@@ -291,10 +306,13 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
                 )}
               </div>
               {legPct !== null && l.status !== 'vann' && l.status !== 'tapad' && (
-                <div className="h-1 rounded-full overflow-hidden mt-2" style={{ background: 'var(--surface-2)' }}>
+                <div className="h-1.5 rounded-full overflow-hidden mt-2" style={{ background: 'var(--surface-2)' }}>
                   <motion.div
                     className="h-full rounded-full"
-                    style={{ background: probColor(l.prob!) }}
+                    style={{
+                      background: `linear-gradient(90deg, ${probColor(l.prob!)}, color-mix(in srgb, ${probColor(l.prob!)} 55%, white))`,
+                      boxShadow: `0 0 10px color-mix(in srgb, ${probColor(l.prob!)} 70%, transparent)`,
+                    }}
                     animate={{ width: `${Math.max(2, legPct)}%` }}
                     transition={reduce ? { duration: 0 } : { type: 'spring', stiffness: 120, damping: 20 }}
                   />
