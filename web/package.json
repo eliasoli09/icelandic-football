@@ -9,6 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
     "@supabase/supabase-js": "^2.110.0",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.23.0",

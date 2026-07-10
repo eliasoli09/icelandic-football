@@ -38,7 +38,7 @@ export default async function HmPage() {
           style={{ background: 'var(--accent)', color: 'var(--accent-ink)' }}
         >
           <Ticket size={15} aria-hidden />
-          Miðavaktin — fylgstu með veðmálinu þínu
+          Seðlavaktin — fylgstu með seðlinum þínum
         </Link>
       </div>
       <p className="text-sm muted mb-6">

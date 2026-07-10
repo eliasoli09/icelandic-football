@@ -13,7 +13,7 @@ export default async function SlipPage({ params }: { params: Promise<{ slug: str
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
-  if (!slip) return <p className="muted">Þessi miði fannst ekki.</p>
+  if (!slip) return <p className="muted">Þessi seðill fannst ekki.</p>
   const legs = slip.legs as SlipLeg[]
   const status = evaluateSlip(legs, new Map(matches.map((m) => [m.id, m])))
   return (

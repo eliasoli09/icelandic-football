@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   const { error } = await db().rpc('rpc_save_slip', {
     p_secret: process.env.CRON_SECRET!,
     p_slug: slug,
-    p_title: (body.title ?? 'Miðinn minn').slice(0, 80),
+    p_title: (body.title ?? 'Seðillinn minn').slice(0, 80),
     p_legs: clean,
   })
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

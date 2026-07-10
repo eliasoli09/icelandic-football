@@ -59,7 +59,7 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
   const share = async () => {
     const url = `${location.origin}/vaktin/${slug}`
     try {
-      if (navigator.share) await navigator.share({ title: s.title ?? 'Miðinn minn', url })
+      if (navigator.share) await navigator.share({ title: s.title ?? 'Seðillinn minn', url })
       else {
         await navigator.clipboard.writeText(url)
         setCopied(true)
@@ -74,21 +74,21 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
   return (
     <div className="grid gap-5">
       <div className="card p-5 text-center" style={{ borderColor: s.alive ? 'var(--border)' : 'var(--loss)' }}>
-        <p className="text-xs muted uppercase tracking-wide mb-1">Miðavaktin</p>
-        <h1 className="display text-2xl font-black mb-2">{s.title ?? 'Miðinn minn'}</h1>
+        <p className="text-xs muted uppercase tracking-wide mb-1">Seðlavaktin</p>
+        <h1 className="display text-2xl font-black mb-2">{s.title ?? 'Seðillinn minn'}</h1>
         <p className="stat text-4xl mb-1" style={{ color: s.alive ? 'var(--accent)' : 'var(--loss)' }}>
           {done}/{total}
         </p>
         <p className="text-sm muted">
           {s.alive
             ? s.tapad === 0 && done === total
-              ? '🎉 Allir leggir í höfn — miðinn vann!'
-              : `${total - done} ${total - done === 1 ? 'leggur' : 'leggir'} eftir — miðinn lifir`
-            : `Miðinn datt — ${s.tapad} ${s.tapad === 1 ? 'leggur tapaðist' : 'leggir töpuðust'}`}
+              ? '🎉 Allir leggir í höfn — seðillinn vann!'
+              : `${total - done} ${total - done === 1 ? 'leggur' : 'leggir'} eftir — seðillinn lifir`
+            : `Seðillinn datt — ${s.tapad} ${s.tapad === 1 ? 'leggur tapaðist' : 'leggir töpuðust'}`}
         </p>
         <div className="mt-3 flex justify-center gap-2">
           <button onClick={share} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border" style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}>
-            <Share2 size={13} aria-hidden /> {copied ? 'Afritað!' : 'Deila miða'}
+            <Share2 size={13} aria-hidden /> {copied ? 'Afritað!' : 'Deila seðli'}
           </button>
           <button onClick={load} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border" style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}>
             <RefreshCw size={13} aria-hidden /> Uppfæra núna
