@@ -369,6 +369,43 @@ export async function matchOdds(matchId: number): Promise<MatchOddsRow[]> {
   return (data ?? []) as MatchOddsRow[]
 }
 
+export interface WcMatchRow {
+  id: number
+  round: number
+  date: string
+  venue: string | null
+  grp: string | null
+  home: string
+  away: string
+  home_score: number | null
+  away_score: number | null
+  winner: string | null
+}
+
+export interface WcPredictionRow {
+  match_id: number
+  p_home: number
+  p_draw: number
+  p_away: number
+  elo_home: number | null
+  elo_away: number | null
+}
+
+export async function wcMatches(): Promise<WcMatchRow[]> {
+  const { data } = await db().from('wc_matches').select('*').order('id')
+  return (data ?? []) as WcMatchRow[]
+}
+
+export async function wcPredictions(): Promise<Map<number, WcPredictionRow>> {
+  const { data } = await db().from('wc_predictions').select('*')
+  return new Map(((data ?? []) as WcPredictionRow[]).map((p) => [p.match_id, p]))
+}
+
+export async function betSlip(slug: string) {
+  const { data } = await db().from('bet_slips').select('*').eq('slug', slug).maybeSingle()
+  return data as { slug: string; title: string | null; legs: unknown[]; created_at: string } | null
+}
+
 export async function matchReport(matchId: number) {
   const { data } = await db()
     .from('match_reports')
