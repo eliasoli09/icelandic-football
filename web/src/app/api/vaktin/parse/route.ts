@@ -22,7 +22,7 @@ const LEG_SCHEMA = {
         properties: {
           match_id: { type: ['integer', 'null'], description: 'id úr leikjalistanum, eða null ef leikur fannst ekki' },
           market: { type: 'string', enum: ['urslit', 'mork_yfir', 'mork_undir', 'baedi_skora', 'markaskorari', 'handvirkt'] },
-          pick: { type: ['string', 'null'], enum: ['1', 'X', '2', null] },
+          pick: { type: ['string', 'null'], description: "'1' heimalið vinnur, 'X' jafntefli, '2' útilið vinnur — annars null" },
           line: { type: ['number', 'null'] },
           player: { type: ['string', 'null'] },
           label: { type: 'string', description: 'Stutt íslensk lýsing á leggnum eins og hann birtist á seðlinum' },
@@ -94,12 +94,15 @@ export async function POST(req: NextRequest) {
                 `Lestu alla leggi af þessum veðmálaseðli.\n\n` +
                 `Komandi HM-leikir (paraðu hvern legg við réttan leik með id):\n${matchList}\n\n` +
                 `Reglur:\n` +
+                `- Skráðu NÁKVÆMLEGA þá leggi sem sjást á myndinni — einn í svari fyrir hvern legg á seðlinum. ` +
+                `Aldrei bæta við legg sem ekki sést og aldrei sleppa legg.\n` +
                 `- market: 'urslit' (1X2/sigurvegari leiks — pick: '1' heimalið, 'X' jafntefli, '2' útilið), ` +
                 `'mork_yfir'/'mork_undir' (heildarmörk, line = talan), 'baedi_skora' (bæði lið skora), ` +
-                `'markaskorari' (leikmaður skorar — player = nafn), annars 'handvirkt' (t.d. horn, spjöld, skot, fjölþrautir).\n` +
-                `- Leggur sem tilheyrir leik utan listans (t.d. deildarleikur): match_id = null og market = 'handvirkt'.\n` +
+                `'markaskorari' (leikmaður skorar — þ.m.t. "skorar hvenær sem er"/"anytime goalscorer"; player = nafn leikmanns, match_id = leikurinn), ` +
+                `annars 'handvirkt' (t.d. horn, spjöld, skot leikmanns, fjölþrautir).\n` +
+                `- match_id = null AÐEINS þegar leikurinn sjálfur er ekki á listanum (t.d. deildarleikur).\n` +
                 `- label: stutt íslensk lýsing, hafðu liðin með (t.d. "Spain–Belgium: Yfir 2,5 mörk").\n` +
-                `- Skráðu HVERN legg, líka þá sem þú ert óviss um (settu óvissuna í notes).`,
+                `- Óvissa fer í notes, ekki í auka leggi.`,
             },
           ],
         },
