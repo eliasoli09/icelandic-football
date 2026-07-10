@@ -72,6 +72,7 @@ export function matchFixture(
 export interface LiveFixture {
   status: string
   finished: boolean
+  elapsed: number | null
   goalsHome: number | null
   goalsAway: number | null
   events: ApifEvent[]
@@ -82,7 +83,7 @@ export async function fetchLiveFixture(fixtureId: number): Promise<LiveFixture |
   const rows = await apifGet(`/fixtures?id=${fixtureId}`)
   const f = rows?.[0] as
     | {
-        fixture: { status: { short: string } }
+        fixture: { status: { short: string; elapsed: number | null } }
         goals: { home: number | null; away: number | null }
         events?: { type: string; detail: string; player: { name: string | null }; team: { name: string | null } }[]
       }
@@ -91,6 +92,7 @@ export async function fetchLiveFixture(fixtureId: number): Promise<LiveFixture |
   return {
     status: f.fixture.status.short,
     finished: FINAL.has(f.fixture.status.short),
+    elapsed: f.fixture.status.elapsed ?? null,
     goalsHome: f.goals.home,
     goalsAway: f.goals.away,
     events: (f.events ?? []).map((e) => ({

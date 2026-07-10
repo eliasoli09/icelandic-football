@@ -29,9 +29,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
     tapad: result.tapad,
     iGangi: result.iGangi,
     alive: result.alive,
-    matches: Object.fromEntries(
-      result.matches.map((m) => [m.id, { home: m.home, away: m.away, date: m.date, home_score: m.home_score, away_score: m.away_score }]),
-    ),
+    totalProb: result.totalProb,
+    scoreboard: result.scoreboard,
   })
 }
 

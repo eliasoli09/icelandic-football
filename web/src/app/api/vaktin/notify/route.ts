@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import webpush from 'web-push'
 import { type LegStatus, type SlipLeg } from '@/lib/vaktin'
-import { anyMatchActive, evaluateLegsLive } from '@/lib/vaktinLive'
+import { evaluateLegsLive } from '@/lib/vaktinLive'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -98,8 +98,6 @@ export async function POST(req: NextRequest) {
         p_statuses: current,
       })
     }
-    // skip quota when nothing on this slip can change (all matches idle)
-    void anyMatchActive
   }
 
   for (const endpoint of dead) {

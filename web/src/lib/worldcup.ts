@@ -17,7 +17,7 @@ const ELO_TSV = 'https://www.eloratings.net/World.tsv'
 const ELO_NAMES = 'https://www.eloratings.net/en.teams.tsv'
 
 /** WC 2026 hosts get real home advantage; every other venue is neutral. */
-const HOSTS = new Set(['USA', 'Mexico', 'Canada'])
+export const HOSTS = new Set(['USA', 'Mexico', 'Canada'])
 
 /** Feed team name → eloratings.net name where they differ. */
 const ELO_NAME_OVERRIDES: Record<string, string> = {
