@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { evaluateSlip, type ApifEvent, type SlipLeg } from '@/lib/vaktin'
-import { refreshWcScores } from '@/lib/worldcup'
-import { cachedLiveFixture } from '@/lib/apif'
-import type { WcMatchRow } from '@/lib/queries'
+import { type SlipLeg } from '@/lib/vaktin'
+import { evaluateLegsLive } from '@/lib/vaktinLive'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -16,62 +14,24 @@ async function loadSlip(slug: string) {
   return data as { slug: string; title: string | null; legs: SlipLeg[] } | null
 }
 
-/** Evaluate the slip. Refreshes WC scores when a leg's match is live and data is stale. */
+/** Evaluate the slip with the live overlay (viewer polling). */
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const slip = await loadSlip(slug)
   if (!slip) return NextResponse.json({ error: 'fannst ekki' }, { status: 404 })
 
-  const ids = [...new Set(slip.legs.map((l) => l.match_id))]
-  let { data: rows } = await db().from('wc_matches').select('*').in('id', ids)
-  let matches = (rows ?? []) as (WcMatchRow & { updated_at?: string })[]
-
-  const now = Date.now()
-  const needsFresh = matches.some(
-    (m) =>
-      new Date(m.date).getTime() < now &&
-      (m.home_score === null || now - new Date(m.date).getTime() < 3 * 3600_000) &&
-      now - new Date(m.updated_at ?? 0).getTime() > 4 * 60_000,
-  )
-  if (needsFresh) {
-    try {
-      await refreshWcScores()
-      const again = await db().from('wc_matches').select('*').in('id', ids)
-      matches = (again.data ?? []) as typeof matches
-    } catch {
-      // stale data is better than an error — evaluation continues
-    }
-  }
-
-  // Live layer: in-play scores + goal events from API-Football for matches
-  // that have kicked off but aren't final in the result feed yet.
-  const eventsByMatch = new Map<number, ApifEvent[]>()
-  const scorerMatchIds = new Set(slip.legs.filter((l) => l.market === 'markaskorari').map((l) => l.match_id))
-  await Promise.all(
-    matches.map(async (m) => {
-      if (!m.apif_fixture_id) return
-      const kickoff = new Date(m.date).getTime()
-      if (kickoff > now) return
-      const inWindow = now - kickoff < 4 * 3600_000
-      // outside the live window, only scorer legs still need the event feed
-      if (!inWindow && m.home_score !== null && !scorerMatchIds.has(m.id)) return
-      const live = await cachedLiveFixture(m.apif_fixture_id)
-      if (!live) return
-      if (live.goalsHome !== null) {
-        m.home_score = live.goalsHome
-        m.away_score = live.goalsAway
-        m.live = !live.finished
-      }
-      if (live.events.length) eventsByMatch.set(m.id, live.events)
-    }),
-  )
-
-  const status = evaluateSlip(slip.legs, new Map(matches.map((m) => [m.id, m])), eventsByMatch)
+  const result = await evaluateLegsLive(slip.legs, { refreshFeedIfStale: true })
   return NextResponse.json({
     ok: true,
     title: slip.title,
-    ...status,
-    matches: Object.fromEntries(matches.map((m) => [m.id, { home: m.home, away: m.away, date: m.date, home_score: m.home_score, away_score: m.away_score }])),
+    legs: result.legs,
+    vann: result.vann,
+    tapad: result.tapad,
+    iGangi: result.iGangi,
+    alive: result.alive,
+    matches: Object.fromEntries(
+      result.matches.map((m) => [m.id, { home: m.home, away: m.away, date: m.date, home_score: m.home_score, away_score: m.away_score }]),
+    ),
   })
 }
 

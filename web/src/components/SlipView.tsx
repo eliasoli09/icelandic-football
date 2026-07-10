@@ -1,8 +1,14 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { CheckCircle2, Circle, Clock, Hand, RefreshCw, Share2, XCircle } from 'lucide-react'
+import { Bell, BellRing, CheckCircle2, Circle, Clock, Hand, RefreshCw, Share2, XCircle } from 'lucide-react'
 import type { LegStatus, SlipLeg } from '@/lib/vaktin'
+
+const b64ToUint8 = (s: string) => {
+  const pad = '='.repeat((4 - (s.length % 4)) % 4)
+  const raw = atob((s + pad).replace(/-/g, '+').replace(/_/g, '/'))
+  return Uint8Array.from([...raw].map((c) => c.charCodeAt(0)))
+}
 
 type LegView = SlipLeg & { status: LegStatus; detail: string }
 
@@ -27,6 +33,37 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
   const [s, setS] = useState<Status>(initial)
   const [updated, setUpdated] = useState<Date | null>(null)
   const [copied, setCopied] = useState(false)
+  const [notif, setNotif] = useState<'unsupported' | 'off' | 'on' | 'denied' | 'busy'>('unsupported')
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return
+    if (Notification.permission === 'denied') return setNotif('denied')
+    navigator.serviceWorker.ready.then(async (reg) => {
+      const sub = await reg.pushManager.getSubscription()
+      setNotif(sub ? 'on' : 'off')
+    }).catch(() => setNotif('off'))
+  }, [])
+
+  const enableNotif = async () => {
+    setNotif('busy')
+    try {
+      const perm = await Notification.requestPermission()
+      if (perm !== 'granted') return setNotif(perm === 'denied' ? 'denied' : 'off')
+      const reg = await navigator.serviceWorker.ready
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: b64ToUint8(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!),
+      })
+      const res = await fetch(`/api/vaktin/${slug}/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub.toJSON()),
+      })
+      setNotif(res.ok ? 'on' : 'off')
+    } catch {
+      setNotif('off')
+    }
+  }
 
   const load = useCallback(async () => {
     try {
@@ -93,7 +130,23 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
           <button onClick={load} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border" style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}>
             <RefreshCw size={13} aria-hidden /> Uppfæra núna
           </button>
+          {(notif === 'off' || notif === 'busy') && (
+            <button onClick={enableNotif} disabled={notif === 'busy'} className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold" style={{ background: 'var(--accent)', color: 'var(--accent-ink)', opacity: notif === 'busy' ? 0.6 : 1 }}>
+              <Bell size={13} aria-hidden /> Kveikja á tilkynningum
+            </button>
+          )}
+          {notif === 'on' && (
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold border" style={{ borderColor: 'var(--win)', color: 'var(--win)' }}>
+              <BellRing size={13} aria-hidden /> Tilkynningar virkar
+            </span>
+          )}
         </div>
+        {notif === 'denied' && (
+          <p className="text-[11px] muted mt-2">Tilkynningum var hafnað — kveiktu á þeim í stillingum vafrans/símans.</p>
+        )}
+        {notif === 'unsupported' && (
+          <p className="text-[11px] muted mt-2">📲 Á iPhone: Deila → „Add to Home Screen" — þá er hægt að kveikja á tilkynningum þegar seðillinn er opnaður þaðan.</p>
+        )}
       </div>
 
       <div className="grid gap-1.5">

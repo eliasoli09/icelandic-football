@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Archivo } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { Database } from 'lucide-react'
 import { Nav } from '@/components/Nav'
+import { SwRegister } from '@/components/SwRegister'
 import { LeagueProvider } from '@/components/LeagueContext'
 import { lastIngest } from '@/lib/queries'
 import './globals.css'
@@ -20,7 +21,12 @@ export const metadata: Metadata = {
   title: 'Besta spáin — íslensk knattspyrnugreining',
   description:
     'Elo-stig, leikjaspár og líkindahermun fyrir Bestu deild karla. Uppfærist sjálfkrafa eftir hvern leik.',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'Seðlavaktin' },
+  icons: { apple: '/icons/apple-touch-icon.png' },
 }
+
+export const viewport = { themeColor: '#0a0d0b' }
 
 export const revalidate = 300
 
@@ -36,6 +42,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <LeagueProvider>
+            <SwRegister />
             <Nav updatedAt={updatedAt} />
             <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
             <footer className="border-t mt-16" style={{ borderColor: 'var(--border)' }}>
