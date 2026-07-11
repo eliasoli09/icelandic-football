@@ -286,6 +286,21 @@ export async function recomputeAll() {
   const adjustedRating = (teamId: number) =>
     (ratings.get(String(teamId)) ?? 1500) + (newsAdj.get(teamId)?.delta ?? 0)
 
+  // players confirmed out (injury/ban) — excluded from remaining games in the
+  // scorer races; their current tally still counts, so a lead can still hold
+  const { data: outRows } = await db()
+    .from('player_out')
+    .select('name, league, until')
+    .eq('active', true)
+  const today = new Date().toISOString().slice(0, 10)
+  const playerIsOut = (name: string, league: League) =>
+    (outRows ?? []).some(
+      (r) =>
+        r.league === league &&
+        (!r.until || r.until >= today) &&
+        normalizeName(r.name) === normalizeName(name),
+    )
+
   // --- player Elo (current season, event-observable) ---
   const evRows = await fetchAll<{
     event_id: number
@@ -470,7 +485,9 @@ export async function recomputeAll() {
         team: String(g.teamId),
         current: g.goals,
         perGame: g.goals / Math.max(1, teamGamesPlayed.get(g.teamId) ?? 13),
-        remainingTeamGames: teamGamesLeft.get(g.teamId) ?? avgLeft,
+        remainingTeamGames: playerIsOut(name, simLeague)
+          ? 0
+          : teamGamesLeft.get(g.teamId) ?? avgLeft,
       }))
     scorerRows.push(
       ...simulateScorerRace(goalRace).map((r) => ({
@@ -508,7 +525,7 @@ export async function recomputeAll() {
       team: '',
       current: p.assists,
       perGame: p.assists / p.appearances,
-      remainingTeamGames: avgLeftBesta,
+      remainingTeamGames: playerIsOut(p.name, 'besta') ? 0 : avgLeftBesta,
     }))
   const assistRows = simulateScorerRace(assistRace).map((r) => ({
     season: CURRENT_SEASON,

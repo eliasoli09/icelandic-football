@@ -56,6 +56,21 @@ describe('simulateScorerRace', () => {
     expect(leader.pWin).toBeGreaterThan(0.8)
     expect(leader.projected).toBeGreaterThan(19)
   })
+
+  it('a player out for the season (0 remaining games) is frozen on his current tally', () => {
+    const res = simulateScorerRace(
+      [
+        { name: 'Meiddur', team: 'X', current: 12, perGame: 0.9, remainingTeamGames: 0 },
+        { name: 'Heill', team: 'Y', current: 12, perGame: 0.9, remainingTeamGames: 12 },
+      ],
+      4000,
+    )
+    const injured = res.find((r) => r.name === 'Meiddur')!
+    const healthy = res.find((r) => r.name === 'Heill')!
+    expect(injured.projected).toBe(12)
+    expect(healthy.pWin).toBeGreaterThan(injured.pWin)
+    expect(injured.pWin).toBeLessThan(0.05)
+  })
 })
 
 describe('runPlayerElo', () => {
