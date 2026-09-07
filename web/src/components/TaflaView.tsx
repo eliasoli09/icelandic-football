@@ -142,7 +142,11 @@ export function TaflaView({
               <PosHeatmap rows={simRows} middleLabel={league === 'besta' ? 'Evrópa' : 'Upp'} />
               <p className="text-[11px] muted mt-3">
                 {league === 'besta'
-                  ? 'Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo + markatölfræði. Deildarskiptingin (efri/neðri hluti) er hermd eftir 22 umferðir. Meistari = 1. sæti, Evrópa = 3 efstu (nálgun), fall = 2 neðstu.'
+                  ? `Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo + markatölfræði. ${
+                      d.standings.some((r) => r.group)
+                        ? 'Efri og neðri hluti eru hermdir hvor í sínu lagi — hóparnir mætast ekki aftur, svo neðri hlutinn getur ekki endað ofar en í 7. sæti.'
+                        : 'Deildarskiptingin (efri/neðri hluti) er hermd eftir 22 umferðir.'
+                    } Meistari = 1. sæti, Evrópa = 3 efstu (nálgun), fall = 2 neðstu.`
                   : 'Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo + markatölfræði. Meistari = 1. sæti, upp = 2 efstu (beint), fall = 2 neðstu. Umspilssæti sjást í sætadreifingunni (3.–4. sæti).'}
               </p>
             </>
