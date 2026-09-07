@@ -1,6 +1,8 @@
 import type { ParsedMatch } from './types'
 
 const CARD_SPLIT = 'grid-cols-[1fr_auto_1fr]'
+const TEAM_SPAN =
+  /<span class="(body-4 group-hover:underline[^"]*)">\s*([^<]+?)\s*<\/span>/g
 const MONTHS: Record<string, number> = {
   janúar: 1, febrúar: 2, mars: 3, apríl: 4, maí: 5, júní: 6,
   júlí: 7, ágúst: 8, september: 9, október: 10, nóvember: 11, desember: 12,
@@ -55,12 +57,12 @@ export function parseMatchCards(html: string, season: number): ParsedMatch[] {
   for (let i = 1; i < chunks.length; i++) {
     const card = chunks[i]
     const header = chunks[i - 1]
-    const home = card.match(
-      /<span class="body-4 group-hover:underline text-right">\s*([^<]+?)\s*<\/span>/,
-    )
-    const away = card.match(
-      /<span class="body-4 group-hover:underline">\s*([^<]+?)\s*<\/span>/,
-    )
+    // KSÍ keeps appending layout utilities to these spans, so match only the
+    // stable head of the class list and tell the sides apart by `text-right`
+    // (home) instead of requiring an exact class string.
+    const sides = [...card.matchAll(TEAM_SPAN)].slice(0, 2)
+    const home = sides.find((s) => s[1].includes('text-right'))
+    const away = sides.find((s) => !s[1].includes('text-right'))
     const link = card.match(/leikur\?id=(\d+)/)
     if (!home || !away) continue
     const score = card.match(
@@ -70,8 +72,8 @@ export function parseMatchCards(html: string, season: number): ParsedMatch[] {
     const { date, venue } = parseHeader(header, season)
     out.push({
       ksiId: link ? Number(link[1]) : null,
-      home: cleanTeam(home[1]),
-      away: cleanTeam(away[1]),
+      home: cleanTeam(home[2]),
+      away: cleanTeam(away[2]),
       homeGoals: score ? Number(score[1]) : null,
       awayGoals: score ? Number(score[2]) : null,
       status: score ? 'played' : 'upcoming',

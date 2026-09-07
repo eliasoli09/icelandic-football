@@ -51,3 +51,35 @@ describe('parseMatchCards — fixtures page (upcoming)', () => {
     expect(cards.filter((c) => c.ksiId === 7041404)).toHaveLength(1)
   })
 })
+
+// KSÍ added Tailwind utility classes to the team-name spans (seen Sept 2026:
+// `max-w-[125rem] l:max-w-[160rem] wrap-break-word`). The old exact-class
+// regexes matched nothing, so the nightly ingest silently scraped zero cards
+// for six weeks. Parse on the stable part of the class list instead.
+describe('parseMatchCards — KSÍ markup with extra utility classes', () => {
+  const cards = parseMatchCards(fx('results_page_v2.html'), 2026)
+
+  it('still finds all 15 cards', () => {
+    expect(cards).toHaveLength(15)
+  })
+
+  it('keeps home and away on their own sides of the score', () => {
+    const m = cards.find((c) => c.ksiId === 7041453)!
+    expect(m.home).toBe('ÍA')
+    expect(m.away).toBe('KR')
+    expect(m.homeGoals).toBe(3)
+    expect(m.awayGoals).toBe(1)
+    expect(m.status).toBe('played')
+    expect(m.venue).toBe('ELKEM völlurinn')
+  })
+
+  it('never reads the same club on both sides of a card', () => {
+    for (const c of cards) expect(c.home).not.toBe(c.away)
+  })
+
+  it('parses upcoming split-round cards too', () => {
+    const up = parseMatchCards(fx('fixtures_page_v2.html'), 2026)
+    expect(up.length).toBeGreaterThan(0)
+    expect(up.every((c) => c.home && c.away)).toBe(true)
+  })
+})
