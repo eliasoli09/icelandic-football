@@ -83,3 +83,20 @@ describe('parseMatchCards — KSÍ markup with extra utility classes', () => {
     expect(up.every((c) => c.home && c.away)).toBe(true)
   })
 })
+
+// KSÍ publishes placeholder cards for stages whose participants aren't decided
+// ("Úrslitaleikur" / "23. Umferð" vs a team literally named "."). They look
+// like real cards — team links, crest slots — so they were ingested as matches
+// and even created clubs named "23. Umferð" in the teams table.
+describe('parseMatchCards — undecided-stage placeholders', () => {
+  const cards = parseMatchCards(fx('playoff_placeholder_page.html'), 2026)
+
+  it('keeps the real playoff ties', () => {
+    expect(cards).toHaveLength(4)
+    expect(cards.map((c) => `${c.home}-${c.away}`)).toContain('Njarðvík-Þróttur R.')
+  })
+
+  it('drops the undecided final rather than inventing clubs for it', () => {
+    expect(cards.some((c) => c.home === 'Úrslitaleikur' || c.away === '.')).toBe(false)
+  })
+})
