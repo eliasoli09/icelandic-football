@@ -153,7 +153,7 @@ export function TaflaView({
                 <br />
               </>
             )}
-            <strong>Spá</strong> = líklegustu lokastig í mót lokum (meðaltal 10.000 hermana).
+            <strong>Spá</strong> = líkleg lokastig í lok tímabils (meðaltal 10.000 hermana).
           </p>
         </div>
       </section>
