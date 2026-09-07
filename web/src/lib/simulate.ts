@@ -1,4 +1,5 @@
 import { predictMatch, samplePoisson, type TeamSeasonRates } from './predict'
+import type { SplitGroup } from './split'
 
 /** Deterministic RNG (mulberry32) so simulations are reproducible/testable. */
 export function mulberry32(seed: number) {
@@ -49,9 +50,20 @@ export function simulateSeason(
   remainingRegular: SimFixture[],
   runs = 10000,
   seed = 20260706,
-  opts: { split?: boolean; upSlots?: number } = {},
+  opts: {
+    split?: boolean
+    upSlots?: number
+    /**
+     * Frozen split halves, once KSÍ has published them. The halves never meet
+     * again, so they are ranked separately — the upper half takes places 1–6
+     * and the lower half 7–12 however the points fall. When this is set the
+     * caller is expected to pass the real split fixtures in `remainingRegular`,
+     * so no synthetic split round is generated.
+     */
+    groups?: Map<string, SplitGroup> | null
+  } = {},
 ): SeasonSimResult[] {
-  const { split = true, upSlots = 3 } = opts
+  const { split = true, upSlots = 3, groups = null } = opts
   const rand = mulberry32(seed)
   const n = teams.length
   const posCounts = new Map<string, number[]>()
@@ -87,17 +99,23 @@ export function simulateSeason(
 
     for (const f of remainingRegular) playFixture(f.home, f.away)
 
-    const rank = () =>
+    type Entry = [string, { pts: number; gf: number; ga: number; played: number }]
+    const byTable = (x: Entry, y: Entry) =>
+      y[1].pts - x[1].pts ||
+      y[1].gf - y[1].ga - (x[1].gf - x[1].ga) ||
+      y[1].gf - x[1].gf ||
+      (rand() < 0.5 ? -1 : 1)
+    const rank = () => [...state.entries()].sort(byTable)
+    // upper half first, each half ordered on its own table
+    const rankHalves = () =>
       [...state.entries()].sort(
         (x, y) =>
-          y[1].pts - x[1].pts ||
-          y[1].gf - y[1].ga - (x[1].gf - x[1].ga) ||
-          y[1].gf - x[1].gf ||
-          (rand() < 0.5 ? -1 : 1),
+          (groups!.get(x[0]) === 'nedri' ? 1 : 0) - (groups!.get(y[0]) === 'nedri' ? 1 : 0) ||
+          byTable(x, y),
       )
 
     // Split phase (Besta deild only) if not already complete in input state
-    const needsSplit = split && [...state.values()].some(
+    const needsSplit = !groups && split && [...state.values()].some(
       (s) => s.played < REGULAR_ROUNDS_GAMES + 5,
     )
     if (needsSplit && n === 12) {
@@ -114,7 +132,7 @@ export function simulateSeason(
       }
     }
 
-    rank().forEach(([team], idx) => {
+    ;(groups ? rankHalves() : rank()).forEach(([team], idx) => {
       posCounts.get(team)![idx]++
     })
   }

@@ -163,3 +163,52 @@ describe('runPlayerElo', () => {
     expect(gk.eloAfter - gk.eloBefore).toBe(8 + 18) // result + GK clean sheet
     expect(opp.eloAfter - opp.eloBefore).toBeLessThan(0) // conceding side, card, loss
   })
+
+// After round 22 Besta deild freezes into a top 6 and a bottom 6. The halves
+// play on for points but never meet again, so a lower-half club cannot reach
+// the top six and an upper-half club cannot be relegated — no matter what the
+// remaining results are.
+describe('simulateSeason — frozen split halves', () => {
+  const upper = ['A', 'B', 'C', 'D', 'E', 'F']
+  const lower = ['G', 'H', 'I', 'J', 'K', 'L']
+  const groups = new Map<string, 'efri' | 'nedri'>([
+    ...upper.map((n) => [n, 'efri'] as const),
+    ...lower.map((n) => [n, 'nedri'] as const),
+  ])
+  // single round robin inside each half — the real shape of the split rounds
+  const halfFixtures = (g: string[]) =>
+    g.flatMap((h, i) => g.slice(i + 1).map((a) => ({ home: h, away: a })))
+  const fixtures = [...halfFixtures(upper), ...halfFixtures(lower)]
+
+  // G is a runaway lower-half side: more points and a far better team than
+  // anyone above it. Ranking on points alone would float it into the top six.
+  const teams = [
+    ...upper.map((n, i) => team(n, 1450, 30 - i * 2, 22)),
+    team('G', 1900, 60, 22),
+    ...lower.slice(1).map((n, i) => team(n, 1350, 20 - i * 2, 22)),
+  ]
+  const res = simulateSeason(teams, fixtures, 600, 42, { split: true, upSlots: 3, groups })
+
+  it('never lets a lower-half club finish in the top six', () => {
+    for (const n of lower) {
+      const r = res.find((x) => x.team === n)!
+      const topSix = r.posProbs.slice(0, 6).reduce((a, b) => a + b, 0)
+      expect(topSix).toBe(0)
+    }
+    const g = res.find((x) => x.team === 'G')!
+    expect(g.posProbs[6]).toBeGreaterThan(0.9) // runaway still wins its half → 7th
+  })
+
+  it('gives every upper-half club a top-six finish and no relegation risk', () => {
+    for (const n of upper) {
+      const r = res.find((x) => x.team === n)!
+      expect(r.posProbs.slice(0, 6).reduce((a, b) => a + b, 0)).toBeCloseTo(1, 5)
+      expect(r.pRelegation).toBe(0)
+    }
+  })
+
+  it('keeps relegation inside the lower half', () => {
+    const total = lower.reduce((s, n) => s + res.find((x) => x.team === n)!.pRelegation, 0)
+    expect(total).toBeCloseTo(2, 5)
+  })
+})

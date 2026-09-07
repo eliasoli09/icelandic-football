@@ -12,6 +12,7 @@ import {
   type SimFixture,
   type ScorerState,
 } from './simulate'
+import { splitGroups } from './split'
 import type { League, Phase, MatchEvent } from './types'
 import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext } from './belt'
 
@@ -431,13 +432,26 @@ export async function recomputeAll() {
       goalsAgainst: s.ga,
       played: s.p,
     }))
+    // Once the split is published its fixtures are real, so simulate those
+    // rather than inventing a round robin. `umspil` is a knockout, not part of
+    // the league table, so it stays out.
     const remaining: SimFixture[] = upcoming
-      .filter((m) => m.league === simLeague && m.phase === 'main')
+      .filter(
+        (m) =>
+          m.league === simLeague &&
+          (m.phase === 'main' || m.phase === 'efri' || m.phase === 'nedri'),
+      )
       .map((m) => ({ home: String(m.home_team), away: String(m.away_team) }))
+    const teamGroups = splitGroups(
+      matches.filter((m) => m.season === CURRENT_SEASON && m.league === simLeague),
+    )
     if (simTeams.length === 12) {
       const sim = simulateSeason(simTeams, remaining, 10000, 20260706, {
         split: simLeague === 'besta',
         upSlots: simLeague === 'besta' ? 3 : 2,
+        groups: teamGroups
+          ? new Map([...teamGroups].map(([id, g]) => [String(id), g]))
+          : null,
       })
       simRows.push(
         ...sim.map((r) => ({
