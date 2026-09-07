@@ -1,5 +1,7 @@
 'use client'
 
+import { Fragment } from 'react'
+
 import Link from 'next/link'
 import {
   Trophy, CalendarDays, MapPin, TrendingUp, TrendingDown, Minus,
@@ -141,7 +143,19 @@ export function Dashboard({
               </thead>
               <tbody>
                 {d.standings.map((r, i) => (
-                  <tr key={r.teamId} className="trow">
+                  <Fragment key={r.teamId}>
+                    {r.group && r.group !== d.standings[i - 1]?.group && (
+                      <tr>
+                        <td
+                          colSpan={5}
+                          className={`text-[10px] uppercase tracking-wider font-bold ${i === 0 ? 'pb-0.5' : 'pt-3 pb-0.5'}`}
+                          style={{ color: 'var(--accent)' }}
+                        >
+                          {r.group === 'efri' ? 'Efri hluti' : 'Neðri hluti'}
+                        </td>
+                      </tr>
+                    )}
+                  <tr className="trow">
                     <td className={`py-1.5 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
                     <td className="font-semibold whitespace-nowrap">
                       <TeamBadge info={info(r.teamId)} size={16} /> {nm(r.teamId)}
@@ -150,6 +164,7 @@ export function Dashboard({
                     <td className="text-right num muted whitespace-nowrap">{r.gf}:{r.ga}</td>
                     <td className="text-right stat">{r.points}</td>
                   </tr>
+                  </Fragment>
                 ))}
               </tbody>
             </table>

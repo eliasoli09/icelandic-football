@@ -1,5 +1,6 @@
 import { db } from './db'
 import { CURRENT_SEASON } from './recompute'
+import { splitGroups, applySplit, type SplitGroup } from './split'
 import {
   standings,
   seasonMatches,
@@ -41,6 +42,7 @@ export interface DashboardBundle {
   tagline: string
   standings: (StandingRow & {
     zone: 'champ' | 'up' | 'playoff' | 'down' | null
+    group: SplitGroup | null
   })[]
   zoneLegend: { cls: string; label: string }[]
   featured: DashboardFixture | null
@@ -134,9 +136,10 @@ export async function dashboardData(league: League): Promise<DashboardBundle> {
     }))
     .sort((a, b) => b.elo - a.elo)
 
-  // zones
-  const n = table.length
-  const zones = table.map((r, i) => ({
+  // zones — after the split the halves are frozen, so order by half first
+  const ordered = applySplit(table, splitGroups(leagueMatches))
+  const n = ordered.length
+  const zones = ordered.map((r, i) => ({
     ...r,
     zone:
       league === 'besta'

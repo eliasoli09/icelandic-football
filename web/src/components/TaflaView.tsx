@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment } from 'react'
 import { Trophy } from 'lucide-react'
 import { useLeague } from './LeagueContext'
 import { LeagueSwitcher } from './LeagueSwitcher'
@@ -76,7 +77,25 @@ export function TaflaView({
               </thead>
               <tbody>
                 {d.standings.map((r, i) => (
-                  <tr key={r.teamId} className="trow">
+                  <Fragment key={r.teamId}>
+                    {r.group && r.group !== d.standings[i - 1]?.group && (
+                      <tr>
+                        <td colSpan={10} className={i === 0 ? 'pb-1' : 'pt-5 pb-1'}>
+                          <span
+                            className="display text-xs font-extrabold uppercase tracking-wider"
+                            style={{ color: 'var(--accent)' }}
+                          >
+                            {r.group === 'efri' ? 'Efri hluti' : 'Neðri hluti'}
+                          </span>
+                          <span className="text-[10px] muted ml-2">
+                            {r.group === 'efri'
+                              ? 'titill og Evrópusæti'
+                              : 'fallbarátta'}
+                          </span>
+                        </td>
+                      </tr>
+                    )}
+                  <tr className="trow">
                     <td className={`py-2 pl-2 num muted zone ${r.zone ? `zone-${r.zone}` : ''}`}>{i + 1}</td>
                     <td className="font-semibold whitespace-nowrap">
                       <TeamBadge info={teams[r.teamId]} /> {nm(r.teamId)}
@@ -90,6 +109,7 @@ export function TaflaView({
                     <td className="text-right stat text-base">{r.points}</td>
                     <td className="text-right pl-3"><FormBadges form={r.form} /></td>
                   </tr>
+                  </Fragment>
                 ))}
               </tbody>
             </table>
@@ -102,6 +122,12 @@ export function TaflaView({
               </p>
             ))}
           </div>
+          {d.standings.some((r) => r.group) && (
+            <p className="text-[10px] muted mt-2 leading-relaxed">
+              Deildin skiptist í efri og neðri hluta eftir 22 umferðir. Stig færast með, en
+              hóparnir mætast ekki aftur — neðri hlutinn kemst því ekki ofar en í 7. sæti.
+            </p>
+          )}
         </div>
       </section>
 
