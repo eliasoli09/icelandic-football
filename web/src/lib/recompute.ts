@@ -462,6 +462,9 @@ export async function recomputeAll() {
           p_title: r.pTitle,
           p_europe: r.pEurope,
           p_relegation: r.pRelegation,
+          proj_points: r.projectedPoints,
+          proj_low: r.pointsLow,
+          proj_high: r.pointsHigh,
         })),
       )
     }

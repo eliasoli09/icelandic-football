@@ -17,6 +17,9 @@ export interface SimRow {
   p_title: number
   p_europe: number
   p_relegation: number
+  proj_points: number | null
+  proj_low: number | null
+  proj_high: number | null
 }
 
 export function TaflaView({
@@ -36,6 +39,7 @@ export function TaflaView({
   const sumRange = (probs: number[], from: number, to: number) =>
     probs.slice(from, to).reduce((a, b) => a + b, 0)
 
+  const projOf = new Map(sim.map((s) => [s.team_id, s]))
   const simRows = sim
     .map((s) => ({
       team: nm(s.team_id),
@@ -72,6 +76,7 @@ export function TaflaView({
                   <th className="text-right font-semibold">Mörk</th>
                   <th className="text-right font-semibold">+/−</th>
                   <th className="text-right font-semibold">Stig</th>
+                  <th className="text-right font-semibold whitespace-nowrap">Spá</th>
                   <th className="text-right font-semibold pl-3">Form</th>
                 </tr>
               </thead>
@@ -80,7 +85,7 @@ export function TaflaView({
                   <Fragment key={r.teamId}>
                     {r.group && r.group !== d.standings[i - 1]?.group && (
                       <tr>
-                        <td colSpan={10} className={i === 0 ? 'pb-1' : 'pt-5 pb-1'}>
+                        <td colSpan={11} className={i === 0 ? 'pb-1' : 'pt-5 pb-1'}>
                           <span
                             className="display text-xs font-extrabold uppercase tracking-wider"
                             style={{ color: 'var(--accent)' }}
@@ -107,6 +112,24 @@ export function TaflaView({
                     <td className="text-right num whitespace-nowrap">{r.gf}–{r.ga}</td>
                     <td className="text-right num">{r.gf - r.ga > 0 ? '+' : ''}{r.gf - r.ga}</td>
                     <td className="text-right stat text-base">{r.points}</td>
+                    <td className="text-right num whitespace-nowrap">
+                      {(() => {
+                        const s = projOf.get(r.teamId)
+                        if (s?.proj_points == null) return <span className="muted">—</span>
+                        return (
+                          <span
+                            className="muted"
+                            title={
+                              s.proj_low != null && s.proj_high != null
+                                ? `Líklegt bil: ${s.proj_low}–${s.proj_high} stig (8 af 10 hermunum)`
+                                : undefined
+                            }
+                          >
+                            {Math.round(s.proj_points)}
+                          </span>
+                        )
+                      })()}
+                    </td>
                     <td className="text-right pl-3"><FormBadges form={r.form} /></td>
                   </tr>
                   </Fragment>
@@ -122,12 +145,16 @@ export function TaflaView({
               </p>
             ))}
           </div>
-          {d.standings.some((r) => r.group) && (
-            <p className="text-[10px] muted mt-2 leading-relaxed">
-              Deildin skiptist í efri og neðri hluta eftir 22 umferðir. Stig færast með, en
-              hóparnir mætast ekki aftur — neðri hlutinn kemst því ekki ofar en í 7. sæti.
-            </p>
-          )}
+          <p className="text-[10px] muted mt-2 leading-relaxed">
+            {d.standings.some((r) => r.group) && (
+              <>
+                Deildin skiptist í efri og neðri hluta eftir 22 umferðir. Stig færast með, en
+                hóparnir mætast ekki aftur — neðri hlutinn kemst því ekki ofar en í 7. sæti.
+                <br />
+              </>
+            )}
+            <strong>Spá</strong> = líklegustu lokastig í mót lokum (meðaltal 10.000 hermana).
+          </p>
         </div>
       </section>
 

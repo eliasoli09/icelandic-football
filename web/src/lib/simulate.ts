@@ -34,6 +34,9 @@ export interface SeasonSimResult {
   pTitle: number
   pEurope: number // top 3 (approximation, documented)
   pRelegation: number // bottom 2
+  projectedPoints: number // mean final points across runs
+  pointsLow: number // 10th percentile — a bad run of results
+  pointsHigh: number // 90th percentile — a good one
 }
 
 const REGULAR_ROUNDS_GAMES = 22
@@ -67,7 +70,13 @@ export function simulateSeason(
   const rand = mulberry32(seed)
   const n = teams.length
   const posCounts = new Map<string, number[]>()
-  for (const t of teams) posCounts.set(t.team, Array(n).fill(0))
+  const ptsSum = new Map<string, number>()
+  const ptsHist = new Map<string, Map<number, number>>()
+  for (const t of teams) {
+    posCounts.set(t.team, Array(n).fill(0))
+    ptsSum.set(t.team, 0)
+    ptsHist.set(t.team, new Map())
+  }
 
   for (let run = 0; run < runs; run++) {
     const state = new Map(
@@ -132,20 +141,41 @@ export function simulateSeason(
       }
     }
 
+    for (const [t, st] of state) {
+      ptsSum.set(t, ptsSum.get(t)! + st.pts)
+      const hist = ptsHist.get(t)!
+      hist.set(st.pts, (hist.get(st.pts) ?? 0) + 1)
+    }
+
     ;(groups ? rankHalves() : rank()).forEach(([team], idx) => {
       posCounts.get(team)![idx]++
     })
   }
 
+  /** Lowest final points total reached in at least `q` of the runs. */
+  const percentile = (hist: Map<number, number>, q: number) => {
+    const target = q * runs
+    let cum = 0
+    for (const pts of [...hist.keys()].sort((a, b) => a - b)) {
+      cum += hist.get(pts)!
+      if (cum >= target) return pts
+    }
+    return 0
+  }
+
   return teams.map((t) => {
     const counts = posCounts.get(t.team)!
     const posProbs = counts.map((c) => c / runs)
+    const hist = ptsHist.get(t.team)!
     return {
       team: t.team,
       posProbs,
       pTitle: posProbs[0],
       pEurope: posProbs.slice(0, upSlots).reduce((a, b) => a + b, 0),
       pRelegation: posProbs.slice(n - 2).reduce((a, b) => a + b, 0),
+      projectedPoints: ptsSum.get(t.team)! / runs,
+      pointsLow: percentile(hist, 0.1),
+      pointsHigh: percentile(hist, 0.9),
     }
   })
 }

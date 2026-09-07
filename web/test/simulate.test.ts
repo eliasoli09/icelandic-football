@@ -212,3 +212,47 @@ describe('simulateSeason — frozen split halves', () => {
     expect(total).toBeCloseTo(2, 5)
   })
 })
+
+// "Stigaspá": where each club is expected to finish on points, with a range
+// so the number is not read as a certainty.
+describe('simulateSeason — points projection', () => {
+  const names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+
+  it('a finished season projects exactly the points already won', () => {
+    const teams = names.map((n, i) => team(n, 1500, 40 - i, 27))
+    const res = simulateSeason(teams, [], 200, 3, { split: false })
+    for (const r of res) {
+      const cur = teams.find((t) => t.team === r.team)!.points
+      expect(r.projectedPoints).toBe(cur)
+      expect(r.pointsLow).toBe(cur)
+      expect(r.pointsHigh).toBe(cur)
+    }
+  })
+
+  it('never projects fewer points than a club already has, nor more than a clean sweep', () => {
+    const teams = names.map((n, i) => team(n, 1500, 30 - i, 22))
+    const fixtures = [
+      { home: 'A', away: 'B' }, { home: 'C', away: 'D' }, { home: 'E', away: 'F' },
+      { home: 'G', away: 'H' }, { home: 'I', away: 'J' }, { home: 'K', away: 'L' },
+    ]
+    const res = simulateSeason(teams, fixtures, 500, 11, { split: false })
+    for (const r of res) {
+      const cur = teams.find((t) => t.team === r.team)!.points
+      expect(r.projectedPoints).toBeGreaterThanOrEqual(cur)
+      expect(r.projectedPoints).toBeLessThanOrEqual(cur + 3)
+      expect(r.pointsLow).toBeLessThanOrEqual(r.projectedPoints)
+      expect(r.pointsHigh).toBeGreaterThanOrEqual(r.projectedPoints)
+    }
+  })
+
+  it('projects more points for the stronger side from the same base', () => {
+    const teams = names.map((n) => team(n, n === 'A' ? 1900 : n === 'B' ? 1300 : 1500, 30, 22))
+    const fixtures = names.flatMap((h) =>
+      names.filter((a) => a !== h).slice(0, 1).map((a) => ({ home: h, away: a })),
+    )
+    const res = simulateSeason(teams, fixtures, 1000, 5, { split: false })
+    const a = res.find((r) => r.team === 'A')!
+    const b = res.find((r) => r.team === 'B')!
+    expect(a.projectedPoints).toBeGreaterThan(b.projectedPoints)
+  })
+})
