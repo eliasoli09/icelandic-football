@@ -18,7 +18,12 @@ export interface LeagueConfig {
   size: number | null
   /** Besta deild splits into halves after the regular rounds. */
   split: boolean
-  /** Places counted as continental qualification in the sim. */
+  /**
+   * Places counted as continental qualification in the sim. For England this
+   * is NOT fixed: the fifth place exists only while the association is in the
+   * top two of UEFA's seasonal coefficient. Kept as the current allocation
+   * until the coefficient tracker can supply it (scripts/uefa-coeff.mts).
+   */
   europeSlots: number
   /** Places relegated. */
   relegationSlots: number
