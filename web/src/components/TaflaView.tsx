@@ -27,14 +27,15 @@ export function TaflaView({
   sims,
   teams,
 }: {
-  bundles: Record<League, DashboardBundle>
-  sims: Record<League, SimRow[]>
+  bundles: Partial<Record<League, DashboardBundle>>
+  sims: Partial<Record<League, SimRow[]>>
   teams: Record<number, DashboardTeam>
 }) {
   const { league } = useLeague()
   const d = bundles[league]
-  const sim = sims[league]
+  const sim = sims[league] ?? []
   const nm = (id: number) => teams[id]?.name ?? `#${id}`
+  if (!d) return <p className="muted">Þessi deild er ekki komin inn enn.</p>
 
   const sumRange = (probs: number[], from: number, to: number) =>
     probs.slice(from, to).reduce((a, b) => a + b, 0)

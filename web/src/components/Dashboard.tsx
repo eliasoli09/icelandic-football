@@ -14,6 +14,7 @@ import { FormBadges } from './FormBadges'
 import { TeamBadge } from './TeamBadge'
 import { CountUp } from './motion'
 import type { DashboardBundle, DashboardTeam } from '@/lib/dashboard'
+import type { League } from '@/lib/types'
 import { displayColor, tint } from '@/lib/teamColors'
 
 const fmtKick = (d: string | null) =>
@@ -51,13 +52,14 @@ export function Dashboard({
   bundles,
   teams,
 }: {
-  bundles: Record<'besta' | 'lengjudeild', DashboardBundle>
+  bundles: Partial<Record<League, DashboardBundle>>
   teams: Record<number, DashboardTeam>
 }) {
   const { league } = useLeague()
   const d = bundles[league]
   const info = (id: number | null | undefined) => (id != null ? teams[id] : undefined)
   const nm = (id: number) => teams[id]?.name ?? `#${id}`
+  if (!d) return <p className="muted">Þessi deild er ekki komin inn enn.</p>
 
   const Pct = ({ v, best }: { v: number | null; best: boolean }) => (
     <span

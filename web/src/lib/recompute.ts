@@ -17,6 +17,8 @@ import type { League, Phase, MatchEvent } from './types'
 import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext } from './belt'
 
 export const CURRENT_SEASON = 2026
+/** recomputeAll covers the KSÍ leagues; API-Football competitions run their own pass. */
+const ICELANDIC: League[] = ['besta', 'lengjudeild']
 /** Team Elo covers the modern era only — last 26 years, from 2000. */
 export const ELO_START_SEASON = 2000
 export const TOURNAMENTS_2026: { id: number; league: League; phase: Phase }[] = [
@@ -354,7 +356,7 @@ export async function recomputeAll() {
   )
 
   // --- predictions for upcoming current-season matches ---
-  const rates = {
+  const rates: Record<string, Map<number, TeamSeasonRates>> = {
     besta: seasonRates(matches, CURRENT_SEASON, 'besta'),
     lengjudeild: seasonRates(matches, CURRENT_SEASON, 'lengjudeild'),
   }
@@ -408,7 +410,7 @@ export async function recomputeAll() {
   // --- season simulations + scorer races (both leagues) ---
   const scorerRows: Record<string, unknown>[] = []
   const simRows: Record<string, unknown>[] = []
-  for (const simLeague of ['besta', 'lengjudeild'] as League[]) {
+  for (const simLeague of ICELANDIC) {
     const standings = new Map<number, { pts: number; gf: number; ga: number; p: number }>()
     for (const m of played.filter(
       (m) => m.season === CURRENT_SEASON && m.league === simLeague,
