@@ -192,6 +192,9 @@ export async function standings(
     .eq('season', season)
     .eq('league', league)
     .eq('status', 'played')
+    // play-offs decide promotion after the table is settled — they are not
+    // table matches, and counting them gave four Lengjudeild clubs 23 games
+    .neq('phase', 'umspil')
     .order('date', { ascending: true, nullsFirst: true })
   const per = new Map<number, StandingRow & { res: string[] }>()
   const row = (t: number) => {

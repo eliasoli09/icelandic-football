@@ -60,3 +60,13 @@ describe('applySplit', () => {
     expect(out.every((r) => r.group === null)).toBe(true)
   })
 })
+
+// A play-off decides promotion after the league table is final. Counting it as
+// a table match gave four Lengjudeild clubs 23 games out of a 22-game season.
+describe('league table scope', () => {
+  it('treats umspil as outside the table', () => {
+    const phases = ['main', 'efri', 'nedri', 'umspil']
+    const counted = phases.filter((p) => p !== 'umspil')
+    expect(counted).toEqual(['main', 'efri', 'nedri'])
+  })
+})

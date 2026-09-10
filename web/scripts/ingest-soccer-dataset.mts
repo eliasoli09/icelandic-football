@@ -81,9 +81,46 @@ for (const line of readFileSync(join(DATA, 'bt_fixtures.csv'), 'utf-8').split('\
   })
 }
 
+/**
+ * The feed files a league's promotion and relegation play-offs under the same
+ * competition, which inflates the table — Ajax showed 36 games in a 34-game
+ * season and a second-tier club appeared with two. A club's regular season is
+ * the modal match count, so anything a club plays beyond that, in date order,
+ * is a play-off.
+ */
+function markPlayoffs(all: Record<string, unknown>[]) {
+  const bySeason = new Map<number, Record<string, unknown>[]>()
+  for (const r of all) {
+    const k = r.season as number
+    if (!bySeason.has(k)) bySeason.set(k, [])
+    bySeason.get(k)!.push(r)
+  }
+  let marked = 0
+  for (const season of bySeason.values()) {
+    const counts = new Map<number, number>()
+    for (const r of season) {
+      for (const t of [r.home_team, r.away_team] as number[]) counts.set(t, (counts.get(t) ?? 0) + 1)
+    }
+    const tally = new Map<number, number>()
+    for (const c of counts.values()) tally.set(c, (tally.get(c) ?? 0) + 1)
+    let rounds = 0, best = 0
+    for (const [c, n] of tally) if (n > best || (n === best && c > rounds)) { best = n; rounds = c }
+
+    const played = new Map<number, number>()
+    for (const r of [...season].sort((a, b) => String(a.date).localeCompare(String(b.date)))) {
+      const h = r.home_team as number, a = r.away_team as number
+      const hn = (played.get(h) ?? 0) + 1, an = (played.get(a) ?? 0) + 1
+      played.set(h, hn); played.set(a, an)
+      if (hn > rounds || an > rounds) { r.phase = 'umspil'; marked++ }
+    }
+  }
+  return marked
+}
+const playoffs = markPlayoffs(rows)
+
 for (let i = 0; i < rows.length; i += 500) {
   const { error } = await db().rpc('rpc_upsert_matches', { p_secret: SECRET, p_rows: rows.slice(i, i + 500) })
   if (error) throw error
 }
 const seasons = new Set(rows.map((r) => r.season)).size
-console.log(JSON.stringify({ league: key, matches: rows.length, seasons, skippedUnknownTeam: skipped }, null, 1))
+console.log(JSON.stringify({ league: key, matches: rows.length, seasons, playoffs, skippedUnknownTeam: skipped }, null, 1))
