@@ -1,5 +1,6 @@
 import { db } from './db'
 import { CURRENT_SEASON } from './recompute'
+import { LEAGUES } from './leagues'
 import { splitGroups, applySplit, type SplitGroup } from './split'
 import {
   standings,
@@ -141,39 +142,41 @@ export async function dashboardData(league: League, season = CURRENT_SEASON): Pr
     .sort((a, b) => b.elo - a.elo)
 
   // zones — after the split the halves are frozen, so order by half first
+  const cfg = LEAGUES[league]
   const ordered = applySplit(table, splitGroups(leagueMatches))
   const n = ordered.length
+  const up = cfg?.europeSlots ?? 3
+  const down = cfg?.relegationSlots ?? 2
+  const promo = cfg?.promotion ?? false
   const zones = ordered.map((r, i) => ({
     ...r,
-    zone:
-      league === 'besta'
-        ? i === 0
-          ? ('champ' as const)
-          : i < 3
-            ? ('up' as const)
-            : i >= n - 2
-              ? ('down' as const)
-              : null
-        : i < 2
+    zone: promo
+      ? i < up
+        ? ('up' as const)
+        : i < up + 2
+          ? ('playoff' as const)
+          : i >= n - down
+            ? ('down' as const)
+            : null
+      : i === 0
+        ? ('champ' as const)
+        : i < up
           ? ('up' as const)
-          : i < 4
-            ? ('playoff' as const)
-            : i >= n - 2
-              ? ('down' as const)
-              : null,
+          : i >= n - down
+            ? ('down' as const)
+            : null,
   }))
-  const zoneLegend =
-    league === 'besta'
-      ? [
-          { cls: 'zone-champ', label: 'Efsta sæti — Íslandsmeistarar' },
-          { cls: 'zone-up', label: 'Evrópusæti (nálgun: 3 efstu)' },
-          { cls: 'zone-down', label: 'Fallsæti' },
-        ]
-      : [
-          { cls: 'zone-up', label: 'Beint upp í Bestu deildina' },
-          { cls: 'zone-playoff', label: 'Umspilssæti' },
-          { cls: 'zone-down', label: 'Fallsæti' },
-        ]
+  const zoneLegend = promo
+    ? [
+        { cls: 'zone-up', label: `Beint upp (${up} efstu)` },
+        { cls: 'zone-playoff', label: 'Umspilssæti' },
+        { cls: 'zone-down', label: `Fallsæti (${down} neðstu)` },
+      ]
+    : [
+        { cls: 'zone-champ', label: league === 'besta' ? 'Efsta sæti — Íslandsmeistarar' : 'Meistarar' },
+        { cls: 'zone-up', label: `Evrópusæti (${up} efstu)` },
+        { cls: 'zone-down', label: `Fallsæti (${down} neðstu)` },
+      ]
 
   // scorers: live goals + (besta) title probability from scorer_sim
   const probOf = new Map(scorerProbs.map((s) => [s.name, s.p_win]))

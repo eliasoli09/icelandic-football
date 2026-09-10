@@ -27,6 +27,8 @@ export interface LeagueConfig {
   europeSlots: number
   /** Places relegated. */
   relegationSlots: number
+  /** A second tier: the top places win promotion rather than Europe. */
+  promotion?: boolean
   /**
    * Elo is only comparable inside a pool of clubs that actually play each
    * other. Icelandic and English clubs never meet, so they are rated apart.
@@ -44,7 +46,7 @@ export const LEAGUES: Record<League, LeagueConfig> = {
   },
   lengjudeild: {
     id: 'lengjudeild', name: 'Lengjudeildin', short: 'Lengju', source: 'ksi',
-    size: 12, split: false, europeSlots: 2, relegationSlots: 2, eloPool: 'is',
+    size: 12, split: false, europeSlots: 2, relegationSlots: 2, promotion: true, eloPool: 'is',
     goals: { home: 1.872, away: 1.525 },
   },
   premier: {
