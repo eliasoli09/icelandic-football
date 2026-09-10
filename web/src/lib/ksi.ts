@@ -20,8 +20,10 @@ const unescape = (s: string) =>
     .replace(/&#39;|&apos;/g, "'")
 
 /** A KSÍ side that stands in for an undecided team, not a real club. */
+const STAGE_WORD =
+  /^(?:\d+\.\s*)?(?:umferð|umspil|undanúrslit|úrslitaleikur|úrslit|fyrri leikur|seinni leikur|\d+-liða úrslit)$/iu
 const isPlaceholder = (name: string) =>
-  name === '.' || name === '' || /^\d+\.\s*Umferð$/u.test(name) || name === 'Úrslitaleikur'
+  name === '' || name === '.' || STAGE_WORD.test(name)
 
 export const cleanTeam = (name: string) =>
   unescape(name).trim().replace(/\s+Fullorðnir\s+(Karlar|Konur)$/u, '')
@@ -75,9 +77,9 @@ export function parseMatchCards(html: string, season: number): ParsedMatch[] {
     if (!link && score) continue // played matches always have a link
     const homeName = cleanTeam(home[2])
     const awayName = cleanTeam(away[2])
-    // KSÍ lists stages whose participants aren't decided yet as real-looking
-    // cards ("Úrslitaleikur" / "23. Umferð" against a club named "."). Ingesting
-    // those invents clubs and phantom fixtures, so drop them.
+    // Until a draw is made, KSÍ fills a card with the name of the STAGE rather
+    // than the clubs — "Undanúrslit" v "Fyrri leikur", "Úrslitaleikur" v ".",
+    // "23. Umferð" v ".". Ingesting those invents clubs and phantom fixtures.
     if (isPlaceholder(homeName) || isPlaceholder(awayName)) continue
     const { date, venue } = parseHeader(header, season)
     out.push({

@@ -100,3 +100,35 @@ describe('parseMatchCards — undecided-stage placeholders', () => {
     expect(cards.some((c) => c.home === 'Úrslitaleikur' || c.away === '.')).toBe(false)
   })
 })
+
+// The placeholder wording changes with the stage: a semi-final that has not
+// been drawn shows up as "Undanúrslit" against "Fyrri leikur". An earlier fix
+// only knew about "Úrslitaleikur" and "23. Umferð", so these still got in and
+// created three phantom clubs.
+describe('parseMatchCards — stage names used as clubs', () => {
+  const card = (home: string, away: string) => `
+    <div class="grid-cols-[1fr_auto_1fr] gap">
+      <a href="/oll-mot/mot/lid?id=1"><span class="body-4 group-hover:underline text-right max-w-[125rem] wrap-break-word">${home}</span></a>
+      <span class="body-4 whitespace-nowrap">-</span>
+      <a href="/oll-mot/mot/lid?id=2"><span class="body-4 group-hover:underline max-w-[125rem] wrap-break-word">${away}</span></a>
+    </div>`
+
+  it('drops every undrawn-stage card', () => {
+    for (const [h, a] of [
+      ['Undanúrslit', 'Fyrri leikur'],
+      ['Undanúrslit', 'Seinni leikur'],
+      ['Úrslitaleikur', '.'],
+      ['23. Umferð', '.'],
+      ['8-liða úrslit', '.'],
+    ]) {
+      expect(parseMatchCards(card(h, a), 2026)).toHaveLength(0)
+    }
+  })
+
+  it('still keeps a real tie', () => {
+    const cards = parseMatchCards(card('Þróttur R.', 'Njarðvík'), 2026)
+    expect(cards).toHaveLength(1)
+    expect(cards[0].home).toBe('Þróttur R.')
+    expect(cards[0].away).toBe('Njarðvík')
+  })
+})
