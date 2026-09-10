@@ -1,6 +1,6 @@
 import { EloChart, type EloSeriesPoint } from '@/components/EloChart'
 import { ShareButton } from '@/components/ShareButton'
-import { teams, eloHistory, teamInfo, leagueRegistry, type EloRow } from '@/lib/queries'
+import { teams, eloSeasonEnds, teamInfo, leagueRegistry, type EloRow } from '@/lib/queries'
 import { LEAGUES } from '@/lib/leagues'
 import { TeamBadge } from '@/components/TeamBadge'
 import { displayColor } from '@/lib/teamColors'
@@ -48,7 +48,6 @@ interface Row {
   id: number
   name: string
   elo: number
-  change: number
   moves: (number | null)[]
   pool: string
 }
@@ -60,7 +59,7 @@ export default async function EloPage() {
   let registry: Awaited<ReturnType<typeof leagueRegistry>> = []
   try {
     ;[names, infos, history, registry] = await Promise.all([
-      teams(), teamInfo(), eloHistory(CHART_FROM_SEASON), leagueRegistry(),
+      teams(), teamInfo(), eloSeasonEnds(CHART_FROM_SEASON), leagueRegistry(),
     ])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
@@ -86,8 +85,6 @@ export default async function EloPage() {
   }
   const rows: Row[] = [...byTeam].map(([id, rs]) => {
     const elo = rs[rs.length - 1].elo_after
-    const five = rs.slice(-6)
-    const change = five.length > 1 ? elo - five[0].elo_after : 0
     const pool = LEAGUES[rs[rs.length - 1].league]?.eloPool ?? 'is'
     const now = poolSeason.get(pool) ?? rs[rs.length - 1].season
     const moves = PERIODS.map((p) => {
@@ -101,7 +98,7 @@ export default async function EloPage() {
       for (const r of rs) if (r.season <= target) at = r.elo_after
       return at === null ? null : elo - at
     })
-    return { id, name: nm(id), elo, change, moves, pool }
+    return { id, name: nm(id), elo, moves, pool }
   })
 
   const infoFor = (name: string) => [...infos.values()].find((x) => x.name === name)
@@ -146,7 +143,6 @@ export default async function EloPage() {
                     <th className="py-2 font-semibold">#</th>
                     <th className="font-semibold">Lið</th>
                     <th className="text-right font-semibold">Elo</th>
-                    <th className="text-right font-semibold pr-1">± 5 leikir</th>
                     {PERIODS.map((p) => (
                       <th key={p.key} className="text-right font-semibold whitespace-nowrap pl-3">{p.label}</th>
                     ))}
@@ -161,12 +157,6 @@ export default async function EloPage() {
                       </td>
                       <td className="text-right stat text-base">
                         <CountUp value={Math.round(t.elo)} />
-                      </td>
-                      <td className="text-right pr-1">
-                        <span className={`pill ${t.change > 1 ? 'pill-win' : t.change < -1 ? 'pill-loss' : 'pill-flat'}`}>
-                          <span aria-hidden>{t.change > 1 ? '▲' : t.change < -1 ? '▼' : '–'}</span>
-                          {t.change >= 0 ? '+' : ''}{Math.round(t.change)}
-                        </span>
                       </td>
                       {t.moves.map((m, k) => (
                         <td key={PERIODS[k].key} className="text-right num pl-3 whitespace-nowrap">

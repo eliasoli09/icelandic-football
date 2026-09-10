@@ -174,6 +174,26 @@ export async function leagueRegistry(): Promise<LeagueRow[]> {
   return (data ?? []) as LeagueRow[]
 }
 
+/**
+ * One rating per club per season — enough for a trend chart and for movement
+ * columns, and small enough that adding leagues does not slow the page.
+ */
+export async function eloSeasonEnds(fromSeason: number): Promise<EloRow[]> {
+  const out: EloRow[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db()
+      .from('team_elo_season_end')
+      .select('team_id, season, league, elo_after, match_id')
+      .gte('season', fromSeason)
+      .order('season')
+      .range(from, from + 999)
+    if (!data?.length) break
+    out.push(...(data as EloRow[]).map((r) => ({ ...r, date: null })))
+    if (data.length < 1000) break
+  }
+  return out
+}
+
 export interface StandingRow {
   teamId: number
   played: number
