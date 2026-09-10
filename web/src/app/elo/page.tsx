@@ -18,6 +18,9 @@ export const metadata = {
  * for the 2019-2025 Icelandic seasons, so a "last 6 months" baseline would
  * silently fall back to 2018 and report nonsense. Season is always recorded.
  */
+/** The chart starts here, and it is also far enough back for the 5-season column. */
+const CHART_FROM_SEASON = 2019
+
 const PERIODS = [
   { key: 's1', label: '1 tímabil', back: 1 },
   { key: 's3', label: '3 tímabil', back: 3 },
@@ -57,7 +60,7 @@ export default async function EloPage() {
   let registry: Awaited<ReturnType<typeof leagueRegistry>> = []
   try {
     ;[names, infos, history, registry] = await Promise.all([
-      teams(), teamInfo(), eloHistory(), leagueRegistry(),
+      teams(), teamInfo(), eloHistory(CHART_FROM_SEASON), leagueRegistry(),
     ])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
@@ -108,7 +111,7 @@ export default async function EloPage() {
     const out: EloSeriesPoint[] = []
     for (const r of history) {
       if ((LEAGUES[r.league]?.eloPool ?? 'is') !== poolId) continue
-      if (r.season < 2019) continue
+      if (r.season < CHART_FROM_SEASON) continue
       out.push({ idx: out.length, date: r.date ?? String(r.season), [nm(r.team_id)]: r.elo_after })
     }
     return out

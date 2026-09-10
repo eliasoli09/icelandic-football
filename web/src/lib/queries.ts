@@ -127,15 +127,20 @@ export interface EloRow {
  * `date` is null for the 2019-2025 Icelandic seasons, so season is the only
  * time axis that covers the whole history.
  */
-export async function eloHistory(): Promise<EloRow[]> {
+/**
+ * @param fromSeason floor on how far back to read. The /elo page charts 2019
+ *   onward and looks back at most five seasons for its movement columns, so
+ *   it has no use for the 1990s — and reading every rating row for ten
+ *   leagues took the page 43 seconds.
+ */
+export async function eloHistory(fromSeason?: number): Promise<EloRow[]> {
   const out: EloRow[] = []
   for (let from = 0; ; from += 1000) {
-    const { data } = await db()
+    let q = db()
       .from('team_elo_seasons')
       .select('team_id, date, elo_after, match_id, season, league')
-      .order('season')
-      .order('match_id')
-      .range(from, from + 999)
+    if (fromSeason !== undefined) q = q.gte('season', fromSeason)
+    const { data } = await q.order('season').order('match_id').range(from, from + 999)
     if (!data?.length) break
     out.push(...(data as EloRow[]))
     if (data.length < 1000) break
