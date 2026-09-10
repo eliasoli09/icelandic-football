@@ -1,6 +1,7 @@
 import { db } from './db'
 import { CURRENT_SEASON } from './recompute'
 import type { League } from './types'
+import { LEAGUES } from './leagues'
 
 export interface TeamInfo {
   id: number
@@ -98,14 +99,22 @@ export interface EloRow {
   date: string | null
   elo_after: number
   match_id: number
+  season: number
+  league: League
 }
 
+/**
+ * Elo history with the season and competition of each match attached.
+ * `date` is null for the 2019-2025 Icelandic seasons, so season is the only
+ * time axis that covers the whole history.
+ */
 export async function eloHistory(): Promise<EloRow[]> {
   const out: EloRow[] = []
   for (let from = 0; ; from += 1000) {
     const { data } = await db()
-      .from('team_elo')
-      .select('team_id, date, elo_after, match_id')
+      .from('team_elo_seasons')
+      .select('team_id, date, elo_after, match_id, season, league')
+      .order('season')
       .order('match_id')
       .range(from, from + 999)
     if (!data?.length) break
@@ -113,6 +122,21 @@ export async function eloHistory(): Promise<EloRow[]> {
     if (data.length < 1000) break
   }
   return out
+}
+
+/**
+ * Elo pool per club. Ratings only compare inside a pool: English and Icelandic
+ * clubs never meet, so each pool drifts from its own 1500 anchor and a higher
+ * number across pools means nothing.
+ */
+export async function teamPools(): Promise<Map<number, string>> {
+  const { data } = await db().from('team_leagues').select('team_id, league')
+  const pools = new Map<number, string>()
+  for (const r of (data ?? []) as { team_id: number; league: string }[]) {
+    const cfg = LEAGUES[r.league as League]
+    if (cfg) pools.set(r.team_id, cfg.eloPool)
+  }
+  return pools
 }
 
 export interface StandingRow {
