@@ -132,6 +132,31 @@ h1, h2, h3, .display {
 }
 :root:not(.dark) .pitch::before { filter: invert(1); opacity: 0.7; }
 
+/* The light ribbons are scoped to the dashboard hero. Keep its foreground
+   legible on the near-black canvas in either of the site's colour modes. */
+.wave-hero {
+  --text: #f2f5f0;
+  --text-2: #adb5b8;
+  --surface: #101719;
+  --surface-solid: #101719;
+  --border: rgb(255 255 255 / 10%);
+  --border-strong: rgb(255 255 255 / 20%);
+  position: relative;
+  min-width: 0;
+  isolation: isolate;
+  background: #080c0f;
+  color: var(--text);
+}
+.wave-hero-content { min-height: 360px; z-index: 1; }
+.wave-hero-content > * { min-width: 0; }
+.wave-hero-match { backdrop-filter: blur(7px); }
+@media (min-width: 1024px) {
+  .wave-hero-match { width: 100%; max-width: 430px; }
+}
+@media (max-width: 767px) {
+  .wave-hero-content { min-height: 440px; }
+}
+
 /* ─── Tables ────────────────────────────────────────────────────────── */
 .table-wrap {
   overflow-x: auto;

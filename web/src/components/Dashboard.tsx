@@ -9,6 +9,8 @@ import {
 } from 'lucide-react'
 import { useLeague } from './LeagueContext'
 import { LeagueSwitcher } from './LeagueSwitcher'
+import { LightWaves } from './LightWaves/LightWaves'
+import { leagueTheme } from '@/lib/leagueTheme'
 import { ProbBar } from './ProbBar'
 import { FormBadges } from './FormBadges'
 import { TeamBadge } from './TeamBadge'
@@ -55,7 +57,8 @@ export function Dashboard({
   bundles: Partial<Record<League, DashboardBundle>>
   teams: Record<number, DashboardTeam>
 }) {
-  const { league } = useLeague()
+  const { league, current } = useLeague()
+  const theme = leagueTheme(league, current?.accent)
   const d = bundles[league]
   const info = (id: number | null | undefined) => (id != null ? teams[id] : undefined)
   const nm = (id: number) => teams[id]?.name ?? `#${id}`
@@ -71,10 +74,11 @@ export function Dashboard({
   )
 
   return (
-    <div key={league} className="fade-up grid gap-6">
+    <div className="fade-up grid grid-cols-1 gap-6">
         {/* ── Hero band ─────────────────────────────────────────── */}
-        <section className="pitch card overflow-hidden">
-          <div className="p-6 sm:p-8 grid gap-6 lg:grid-cols-[1.1fr_1fr] items-center relative">
+        <section className="wave-hero card" style={{ '--accent': theme.accent, '--accent-ink': theme.ink } as React.CSSProperties}>
+          <LightWaves color={theme.accent} />
+          <div className="wave-hero-content p-6 sm:p-8 grid grid-cols-1 gap-6 lg:grid-cols-[0.85fr_1.15fr] items-center relative">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] muted mb-2">
                 Íslensk knattspyrnugreining
@@ -89,9 +93,9 @@ export function Dashboard({
             {d.featured ? (
               <Link
                 href={`/leikir/${d.featured.id}`}
-                className="card card-hover block p-5"
+                className="wave-hero-match card card-hover block p-5"
                 style={{
-                  background: `linear-gradient(120deg, ${tint(info(d.featured.home), 0.18)} 0%, transparent 45%, transparent 55%, ${tint(info(d.featured.away), 0.18)} 100%)`,
+                  background: `linear-gradient(120deg, ${tint(info(d.featured.home), 0.12)} 0%, transparent 45%, transparent 55%, ${tint(info(d.featured.away), 0.12)} 100%), rgba(8, 12, 15, 0.82)`,
                 }}
               >
                 <p className="text-[11px] font-bold uppercase tracking-[0.15em] muted mb-4 inline-flex items-center gap-1.5">
@@ -101,14 +105,14 @@ export function Dashboard({
                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-4">
                   <span className="flex flex-col items-center gap-2 min-w-0">
                     <TeamBadge info={info(d.featured.home)} size={46} />
-                    <span className="font-bold text-sm truncate max-w-full" style={{ color: displayColor(info(d.featured.home)) }}>
+                    <span className="font-bold text-sm truncate max-w-full" style={{ color: `color-mix(in srgb, ${displayColor(info(d.featured.home))} 45%, var(--text))` }}>
                       {nm(d.featured.home)}
                     </span>
                   </span>
                   <span className="display text-base font-black muted">gegn</span>
                   <span className="flex flex-col items-center gap-2 min-w-0">
                     <TeamBadge info={info(d.featured.away)} size={46} />
-                    <span className="font-bold text-sm truncate max-w-full" style={{ color: displayColor(info(d.featured.away)) }}>
+                    <span className="font-bold text-sm truncate max-w-full" style={{ color: `color-mix(in srgb, ${displayColor(info(d.featured.away))} 45%, var(--text))` }}>
                       {nm(d.featured.away)}
                     </span>
                   </span>
@@ -129,7 +133,7 @@ export function Dashboard({
         </section>
 
         {/* ── Bento grid ────────────────────────────────────────── */}
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Standings */}
           <section className="card p-5 lg:row-span-2">
             <SectionHead icon={Trophy} title="Staðan" href="/tafla" hrefLabel="Sjá alla stöðu" />
