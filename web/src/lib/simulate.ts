@@ -64,9 +64,11 @@ export function simulateSeason(
      * so no synthetic split round is generated.
      */
     groups?: Map<string, SplitGroup> | null
+    /** league scoring rates, so a sim of one league is not run on another's */
+    goals?: { home: number; away: number }
   } = {},
 ): SeasonSimResult[] {
-  const { split = true, upSlots = 3, groups = null } = opts
+  const { split = true, upSlots = 3, groups = null, goals } = opts
   const rand = mulberry32(seed)
   const n = teams.length
   const posCounts = new Map<string, number[]>()
@@ -90,6 +92,7 @@ export function simulateSeason(
 
     const playFixture = (home: string, away: string) => {
       const p = predictMatch({
+        goals,
         eloHome: eloOf.get(home)!,
         eloAway: eloOf.get(away)!,
         home: ratesOf.get(home) ?? null,

@@ -32,20 +32,25 @@ export interface LeagueConfig {
    * other. Icelandic and English clubs never meet, so they are rated apart.
    */
   eloPool: string
+  /** Measured goals per game, home and away — feeds the Poisson model. */
+  goals: { home: number; away: number }
 }
 
 export const LEAGUES: Record<League, LeagueConfig> = {
   besta: {
     id: 'besta', name: 'Besta deildin', short: 'Besta', source: 'ksi',
     size: 12, split: true, europeSlots: 3, relegationSlots: 2, eloPool: 'is',
+    goals: { home: 1.751, away: 1.423 },
   },
   lengjudeild: {
     id: 'lengjudeild', name: 'Lengjudeildin', short: 'Lengju', source: 'ksi',
     size: 12, split: false, europeSlots: 2, relegationSlots: 2, eloPool: 'is',
+    goals: { home: 1.872, away: 1.525 },
   },
   premier: {
     id: 'premier', name: 'Enska úrvalsdeildin', short: 'Enska', source: 'apif',
     apifId: 39, size: 20, split: false, europeSlots: 5, relegationSlots: 3, eloPool: 'eng',
+    goals: { home: 1.550, away: 1.273 },
   },
 }
 

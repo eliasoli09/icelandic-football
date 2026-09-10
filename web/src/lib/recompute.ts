@@ -13,6 +13,7 @@ import {
   type ScorerState,
 } from './simulate'
 import { splitGroups } from './split'
+import { LEAGUES } from './leagues'
 import type { League, Phase, MatchEvent } from './types'
 import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext } from './belt'
 
@@ -380,6 +381,7 @@ export async function recomputeAll() {
   )
   const predRows = upcoming.map((m) => {
     const p = predictMatch({
+      goals: LEAGUES[m.league]?.goals,
       eloHome: adjustedRating(m.home_team),
       eloAway: adjustedRating(m.away_team),
       home: rates[m.league].get(m.home_team) ?? null,
@@ -449,6 +451,7 @@ export async function recomputeAll() {
     )
     if (simTeams.length === 12) {
       const sim = simulateSeason(simTeams, remaining, 10000, 20260706, {
+        goals: LEAGUES[simLeague]?.goals,
         split: simLeague === 'besta',
         upSlots: simLeague === 'besta' ? 3 : 2,
         groups: teamGroups

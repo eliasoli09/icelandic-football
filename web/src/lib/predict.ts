@@ -6,6 +6,16 @@ export const LEAGUE_HOME_AVG = 1.81
 export const LEAGUE_AWAY_AVG = 1.483
 export const LEAGUE_AVG = (LEAGUE_HOME_AVG + LEAGUE_AWAY_AVG) / 2
 
+/**
+ * How hard an Elo gap is pushed into the goal expectation. The original 800
+ * made the model badly overconfident — it priced outcomes at 94% that came in
+ * at 77%. Fitted out of sample (scripts/backtest.mts, scripts/calibrate.mts):
+ * 1225 on the Premier League against Pinnacle closing, 1400 on a 168k-match
+ * global mix. Iceland has no stored odds history to fit against, so it uses
+ * the same value.
+ */
+export const ELO_EDGE_DIVISOR = 1250
+
 export interface TeamSeasonRates {
   gfPerGame: number
   gaPerGame: number
@@ -19,6 +29,8 @@ export interface PredictInput {
   home: TeamSeasonRates | null // null → Elo-only (e.g. season start)
   away: TeamSeasonRates | null
   h2h?: { homeWins: number; draws: number; awayWins: number }
+  /** league scoring rates; defaults to the Icelandic top flight */
+  goals?: { home: number; away: number }
 }
 
 const poisson = (lambda: number, k: number): number => {
@@ -37,20 +49,26 @@ const MAX_GOALS = 9
  */
 export function predictMatch(input: PredictInput): Prediction {
   const { eloHome, eloAway, home, away } = input
-  const eloEdge = (eloHome + HFA - eloAway) / 800
+  // Scoring rates differ a lot by competition — 3.40 goals a game in the
+  // Lengjudeild against 2.82 in the Premier League — so a caller that knows
+  // its league passes its own, and only the default is Icelandic.
+  const homeAvg = input.goals?.home ?? LEAGUE_HOME_AVG
+  const awayAvg = input.goals?.away ?? LEAGUE_AWAY_AVG
+  const leagueAvg = (homeAvg + awayAvg) / 2
+  const eloEdge = (eloHome + HFA - eloAway) / ELO_EDGE_DIVISOR
   const eloFactorHome = 10 ** eloEdge
   const eloFactorAway = 10 ** -eloEdge
 
-  let lambdaHome = LEAGUE_HOME_AVG * eloFactorHome
-  let lambdaAway = LEAGUE_AWAY_AVG * eloFactorAway
+  let lambdaHome = homeAvg * eloFactorHome
+  let lambdaAway = awayAvg * eloFactorAway
 
   if (home && away && home.games >= MIN_GAMES && away.games >= MIN_GAMES) {
-    const attackHome = home.gfPerGame / LEAGUE_AVG
-    const defAway = away.gaPerGame / LEAGUE_AVG
-    const attackAway = away.gfPerGame / LEAGUE_AVG
-    const defHome = home.gaPerGame / LEAGUE_AVG
-    lambdaHome = LEAGUE_HOME_AVG * (0.5 * eloFactorHome + 0.5 * attackHome * defAway)
-    lambdaAway = LEAGUE_AWAY_AVG * (0.5 * eloFactorAway + 0.5 * attackAway * defHome)
+    const attackHome = home.gfPerGame / leagueAvg
+    const defAway = away.gaPerGame / leagueAvg
+    const attackAway = away.gfPerGame / leagueAvg
+    const defHome = home.gaPerGame / leagueAvg
+    lambdaHome = homeAvg * (0.5 * eloFactorHome + 0.5 * attackHome * defAway)
+    lambdaAway = awayAvg * (0.5 * eloFactorAway + 0.5 * attackAway * defHome)
   }
 
   lambdaHome = Math.min(Math.max(lambdaHome, 0.15), 6)
