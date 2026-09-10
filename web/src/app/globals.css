@@ -56,7 +56,11 @@
 }
 .fade-up { animation: fade-up 0.25s ease-out; }
 
-:root { --surface-solid: var(--surface); }
+/* Light mode has no translucent surface, so solid is the same colour. Scoped
+   away from .dark, which sets its own opaque value — an unscoped :root rule
+   here has equal specificity and, coming later, silently made every popover
+   see-through. */
+:root:not(.dark) { --surface-solid: var(--surface); }
 
 @theme inline {
   --font-sans: var(--font-geist-sans);

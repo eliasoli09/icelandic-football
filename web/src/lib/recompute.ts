@@ -184,14 +184,21 @@ interface MatchRow {
   status: 'played' | 'upcoming'
 }
 
-async function allMatches(): Promise<MatchRow[]> {
+/**
+ * @param leagues restrict to these competitions. The belt, head-to-head and
+ *   all-time tables are Icelandic-only, so pulling every league into memory
+ *   would not survive the multi-league registry.
+ */
+async function allMatches(leagues?: League[]): Promise<MatchRow[]> {
   const out: MatchRow[] = []
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await db()
+    let q = db()
       .from('matches')
       .select(
         'id, season, league, phase, date, home_team, away_team, home_goals, away_goals, status',
       )
+    if (leagues) q = q.in('league', leagues)
+    const { data, error } = await q
       .order('season')
       .order('date', { nullsFirst: true })
       .order('id')
@@ -311,7 +318,7 @@ export async function updateElo(full = false): Promise<Map<string, number>> {
 
 export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
   const ratings = await updateElo(opts.fullElo)
-  const matches = await allMatches()
+  const matches = await allMatches(ICELANDIC)
   const played = matches.filter((m) => m.status === 'played' && m.home_goals !== null)
 
   // news-based adjustments (transfers, injuries, Europe congestion) — applied

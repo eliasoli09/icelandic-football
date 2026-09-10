@@ -4,7 +4,7 @@ import { splitGroups, applySplit, type SplitGroup } from './split'
 import {
   standings,
   seasonMatches,
-  eloHistory,
+  eloHistoryFor,
   teamInfo,
   seasonSim,
   scorerSim,
@@ -88,8 +88,8 @@ async function leagueScorers(league: League): Promise<Map<string, { goals: numbe
 export async function dashboardData(league: League, season = CURRENT_SEASON): Promise<DashboardBundle> {
   const [table, matches, elo, sim, goalRace, scorerProbs] = await Promise.all([
     standings(season, league),
-    seasonMatches(season),
-    eloHistory(),
+    seasonMatches(season, league),
+    eloHistoryFor(league),
     seasonSim(league),
     leagueScorers(league),
     scorerSim('goals', league),

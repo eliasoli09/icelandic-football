@@ -65,13 +65,32 @@ export async function recentResults(limit = 12): Promise<MatchWithPrediction[]> 
 
 export async function seasonMatches(
   season = CURRENT_SEASON,
+  league?: League,
 ): Promise<MatchWithPrediction[]> {
-  const { data } = await db()
+  let q = db()
     .from('matches')
     .select('id, date, venue, league, phase, home_team, away_team, home_goals, away_goals, status')
     .eq('season', season)
-    .order('date', { ascending: true, nullsFirst: false })
+  if (league) q = q.eq('league', league)
+  const { data } = await q.order('date', { ascending: true, nullsFirst: false })
   return (data ?? []) as MatchWithPrediction[]
+}
+
+/**
+ * Just enough rating history for the dashboard: each club's last six rows in
+ * one competition, oldest first. Reading a league's full history to compute a
+ * last-five delta took the table page from seconds to minutes.
+ */
+export async function eloHistoryFor(league: League): Promise<EloRow[]> {
+  const { data } = await db()
+    .from('team_elo_recent')
+    .select('team_id, elo_after, match_id, season, league, rn')
+    .eq('league', league)
+  const rows = (data ?? []) as (EloRow & { rn: number })[]
+  // the view numbers newest first; the delta walk expects chronological
+  return rows
+    .sort((a, b) => a.team_id - b.team_id || b.rn - a.rn)
+    .map(({ rn: _rn, ...r }) => ({ ...r, date: null }))
 }
 
 export async function matchDetail(id: number) {

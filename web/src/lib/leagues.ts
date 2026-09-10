@@ -52,6 +52,26 @@ export const LEAGUES: Record<League, LeagueConfig> = {
     apifId: 39, size: 20, split: false, europeSlots: 5, relegationSlots: 3, eloPool: 'eng',
     goals: { home: 1.550, away: 1.273 },
   },
+  laliga: {
+    id: 'laliga', name: 'La Liga', short: 'La Liga', source: 'apif',
+    size: 20, split: false, europeSlots: 5, relegationSlots: 3, eloPool: 'esp',
+    goals: { home: 1.550, away: 1.112 },
+  },
+  seriea: {
+    id: 'seriea', name: 'Serie A', short: 'Serie A', source: 'apif',
+    size: 20, split: false, europeSlots: 5, relegationSlots: 3, eloPool: 'ita',
+    goals: { home: 1.511, away: 1.141 },
+  },
+  bundesliga: {
+    id: 'bundesliga', name: 'Bundesliga', short: 'Bundesliga', source: 'apif',
+    size: 18, split: false, europeSlots: 5, relegationSlots: 2, eloPool: 'ger',
+    goals: { home: 1.681, away: 1.264 },
+  },
+  ligue1: {
+    id: 'ligue1', name: 'Ligue 1', short: 'Ligue 1', source: 'apif',
+    size: 18, split: false, europeSlots: 4, relegationSlots: 2, eloPool: 'fra',
+    goals: { home: 1.445, away: 1.025 },
+  },
 }
 
 export const leagueConfig = (l: League) => LEAGUES[l]

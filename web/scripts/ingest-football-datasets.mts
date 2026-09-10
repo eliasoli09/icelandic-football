@@ -18,13 +18,17 @@ for (const l of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')) {
 }
 const REPO = '/Users/elias/FH leikmenn/football-datasets/datasets'
 /** folder in the feed -> our league key, and its slot in the id scheme */
-const MAP: Record<string, { league: string; idx: number }> = {
-  premier: { league: 'premier', idx: 0 },
+const MAP: Record<string, { league: string; idx: number; folder: string }> = {
+  premier: { league: 'premier', idx: 0, folder: 'premier-league' },
+  laliga: { league: 'laliga', idx: 1, folder: 'la-liga' },
+  seriea: { league: 'seriea', idx: 2, folder: 'serie-a' },
+  bundesliga: { league: 'bundesliga', idx: 3, folder: 'bundesliga' },
+  ligue1: { league: 'ligue1', idx: 4, folder: 'ligue-1' },
 }
 const which = process.argv[2] ?? 'premier'
 const cfg = MAP[which]
 if (!cfg) throw new Error(`óþekkt deild: ${which}`)
-const folder = join(REPO, 'premier-league')
+const folder = join(REPO, cfg.folder)
 
 const { db } = await import(join(webDir, 'src/lib/db.ts'))
 const { feedMatchId } = await import(join(webDir, 'src/lib/leagues.ts'))
