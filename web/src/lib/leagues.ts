@@ -56,6 +56,45 @@ export const LEAGUES: Record<League, LeagueConfig> = {
 
 export const leagueConfig = (l: League) => LEAGUES[l]
 
+/** A competition as stored in `league_registry`. */
+export interface LeagueRow {
+  key: string
+  name: string
+  short: string
+  country: string
+  source: string
+  feed_folder: string | null
+  apif_id: number | null
+  size: number | null
+  split: boolean
+  europe_slots: number
+  relegation_slots: number
+  elo_pool: string
+  goals_home: number
+  goals_away: number
+  accent: string | null
+  visible: boolean
+  sort_order: number
+  current_season: number | null
+}
+
+/** The registry shape the model needs, from a stored row. */
+export function configFromRow(r: LeagueRow): LeagueConfig {
+  return {
+    id: r.key as League,
+    name: r.name,
+    short: r.short,
+    source: (r.source === 'ksi' ? 'ksi' : 'apif') as LeagueConfig['source'],
+    apifId: r.apif_id ?? undefined,
+    size: r.size,
+    split: r.split,
+    europeSlots: r.europe_slots,
+    relegationSlots: r.relegation_slots,
+    eloPool: r.elo_pool,
+    goals: { home: r.goals_home, away: r.goals_away },
+  }
+}
+
 /**
  * API-Football fixture ids overlap the KSÍ id range (both run into the
  * millions), so they are stored shifted clear of it and can be shifted back.

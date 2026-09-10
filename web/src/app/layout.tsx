@@ -5,7 +5,7 @@ import { Database } from 'lucide-react'
 import { Nav } from '@/components/Nav'
 import { SwRegister } from '@/components/SwRegister'
 import { LeagueProvider } from '@/components/LeagueContext'
-import { lastIngest } from '@/lib/queries'
+import { lastIngest, leagueRegistry } from '@/lib/queries'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin', 'latin-ext'] })
@@ -32,16 +32,20 @@ export const revalidate = 300
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let updatedAt: string | null = null
+  let leagues: Awaited<ReturnType<typeof leagueRegistry>> = []
   try {
-    updatedAt = (await lastIngest())?.run_at ?? null
+    ;[updatedAt, leagues] = await Promise.all([
+      lastIngest().then((r) => r?.run_at ?? null),
+      leagueRegistry(),
+    ])
   } catch {
-    // db unreachable — nav renders without the timestamp
+    // db unreachable — nav renders without the timestamp, picker without leagues
   }
   return (
     <html lang="is" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <LeagueProvider>
+          <LeagueProvider leagues={leagues}>
             <SwRegister />
             <Nav updatedAt={updatedAt} />
             <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>

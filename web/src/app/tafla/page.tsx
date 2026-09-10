@@ -1,6 +1,7 @@
 import { TaflaView, type SimRow } from '@/components/TaflaView'
 import { dashboardData, allTeamInfo } from '@/lib/dashboard'
-import { seasonSim } from '@/lib/queries'
+import { seasonSim, leagueRegistry } from '@/lib/queries'
+import type { League } from '@/lib/types'
 
 export const revalidate = 300
 
@@ -11,20 +12,18 @@ export const metadata = {
 
 export default async function TaflaPage() {
   try {
-    const [besta, lengjudeild, simBesta, simLengju, teams] = await Promise.all([
-      dashboardData('besta'),
-      dashboardData('lengjudeild'),
-      seasonSim('besta'),
-      seasonSim('lengjudeild'),
+    const registry = await leagueRegistry()
+    const [teams, ...loaded] = await Promise.all([
       allTeamInfo(),
+      ...registry.map(async (l) => ({
+        key: l.key as League,
+        bundle: await dashboardData(l.key as League, l.current_season ?? undefined),
+        sim: (await seasonSim(l.key as League)) as SimRow[],
+      })),
     ])
-    return (
-      <TaflaView
-        bundles={{ besta, lengjudeild }}
-        sims={{ besta: simBesta as SimRow[], lengjudeild: simLengju as SimRow[] }}
-        teams={teams}
-      />
-    )
+    const bundles = Object.fromEntries(loaded.map((x) => [x.key, x.bundle]))
+    const sims = Object.fromEntries(loaded.map((x) => [x.key, x.sim]))
+    return <TaflaView bundles={bundles} sims={sims} teams={teams} />
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }

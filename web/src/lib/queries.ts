@@ -1,7 +1,7 @@
 import { db } from './db'
 import { CURRENT_SEASON } from './recompute'
 import type { League } from './types'
-import { LEAGUES } from './leagues'
+import { LEAGUES, type LeagueRow } from './leagues'
 
 export interface TeamInfo {
   id: number
@@ -137,6 +137,17 @@ export async function teamPools(): Promise<Map<number, string>> {
     if (cfg) pools.set(r.team_id, cfg.eloPool)
   }
   return pools
+}
+
+/** Every competition on the site, ordered for the picker. */
+export async function leagueRegistry(): Promise<LeagueRow[]> {
+  const { data } = await db()
+    .from('league_registry')
+    .select('*')
+    .eq('visible', true)
+    .order('sort_order')
+    .order('name')
+  return (data ?? []) as LeagueRow[]
 }
 
 export interface StandingRow {

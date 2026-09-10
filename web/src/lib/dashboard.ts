@@ -81,10 +81,14 @@ async function leagueScorers(league: League): Promise<Map<string, { goals: numbe
   return out
 }
 
-export async function dashboardData(league: League): Promise<DashboardBundle> {
+/**
+ * @param season the league's own current season — competitions do not share a
+ *   calendar, so the English 2025/26 must not be looked up as 2026.
+ */
+export async function dashboardData(league: League, season = CURRENT_SEASON): Promise<DashboardBundle> {
   const [table, matches, elo, sim, goalRace, scorerProbs] = await Promise.all([
-    standings(CURRENT_SEASON, league),
-    seasonMatches(CURRENT_SEASON),
+    standings(season, league),
+    seasonMatches(season),
     eloHistory(),
     seasonSim(league),
     leagueScorers(league),

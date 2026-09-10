@@ -31,7 +31,7 @@ export function TaflaView({
   sims: Partial<Record<League, SimRow[]>>
   teams: Record<number, DashboardTeam>
 }) {
-  const { league } = useLeague()
+  const { league, current } = useLeague()
   const d = bundles[league]
   const sim = sims[league] ?? []
   const nm = (id: number) => teams[id]?.name ?? `#${id}`
@@ -56,11 +56,11 @@ export function TaflaView({
       <section className="min-w-0">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
           <h1 className="display text-2xl font-black" style={{ color: 'var(--accent)' }}>
-            {d.title} 2026
+            {current?.name ?? d.title} {current?.current_season ?? 2026}
           </h1>
           <div className="flex items-center gap-3">
             <LeagueSwitcher size="sm" />
-            <ShareButton title={`${d.title} 2026`} text={`Staðan í ${d.title}:`} path="/tafla" imagePath={league === 'besta' ? '/api/og/tafla' : undefined} />
+            <ShareButton title={`${current?.name ?? d.title} ${current?.current_season ?? 2026}`} text={`Staðan í ${current?.name ?? d.title}:`} path="/tafla" imagePath={league === 'besta' ? '/api/og/tafla' : undefined} />
           </div>
         </div>
         <div className="card p-4">
