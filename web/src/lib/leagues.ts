@@ -58,4 +58,14 @@ export const leagueConfig = (l: League) => LEAGUES[l]
 export const APIF_ID_OFFSET = 1_000_000_000
 export const toMatchId = (fixtureId: number) => APIF_ID_OFFSET + fixtureId
 export const toFixtureId = (matchId: number) => matchId - APIF_ID_OFFSET
-export const isApifMatch = (matchId: number) => matchId >= APIF_ID_OFFSET
+export const isApifMatch = (matchId: number) =>
+  matchId >= APIF_ID_OFFSET && matchId < FEED_ID_OFFSET
+
+/**
+ * Flat-file feeds (datasets/football-datasets) carry no match id, so one is
+ * built from the parts that identify the row. Composed rather than hashed —
+ * 12k+ matches in a hashed space collide often enough to matter.
+ */
+export const FEED_ID_OFFSET = 2_000_000_000
+export const feedMatchId = (season: number, leagueIndex: number, row: number) =>
+  FEED_ID_OFFSET + (season - 1900) * 1_000_000 + leagueIndex * 100_000 + row
