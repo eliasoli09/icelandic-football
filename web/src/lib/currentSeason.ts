@@ -142,5 +142,17 @@ export async function ingestCurrentSeason(
     }
     leagues.push({ league, matches: rows.length, newTeams: newTeams.length ? newTeams : undefined })
   }
+
+  // The registry says which season each competition is playing, and the
+  // dashboard reads it. Nothing used to write it, so it stayed on whatever the
+  // last manual edit said and the site served a season that had finished.
+  const loaded = leagues.filter((l) => l.matches).map((l) => ({ key: l.league, season }))
+  if (!opts.dryRun && loaded.length) {
+    const { error } = await db().rpc('rpc_set_league_seasons', {
+      p_secret: SECRET(),
+      p_rows: loaded,
+    })
+    if (error) throw error
+  }
   return { season, leagues }
 }
