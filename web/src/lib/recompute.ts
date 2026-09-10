@@ -243,35 +243,76 @@ function seasonRates(
 }
 
 /** Recompute Elo, predictions and simulations from the full match table. */
-export async function recomputeAll() {
+/**
+ * Rate every played match that has no rating yet, continuing from the ratings
+ * already stored. Elo is sequential but incremental — replaying 26 years on
+ * every run does not survive more than a couple of leagues.
+ *
+ * `full` rebuilds from scratch, which is only needed if historical results
+ * were corrected after the fact.
+ */
+export async function updateElo(full = false): Promise<Map<string, number>> {
+  const seed = new Map<string, number>()
+  if (full) {
+    const all = await allMatches()
+    const input: EloMatch[] = all
+      .filter((m) => m.status === 'played' && m.home_goals !== null && m.season >= ELO_START_SEASON)
+      .map((m, i) => ({
+        matchId: m.id, order: i, date: m.date, league: m.league,
+        home: String(m.home_team), away: String(m.away_team),
+        homeGoals: m.home_goals!, awayGoals: m.away_goals!,
+      }))
+    const records = runElo(input)
+    await replaceTable('team_elo', records.map((r) => ({
+      team_id: Number(r.team), match_id: r.matchId, date: r.date,
+      elo_before: r.eloBefore, elo_after: r.eloAfter,
+    })))
+    return currentRatings(records)
+  }
+
+  const { data: cur, error: curErr } = await db()
+    .from('team_elo_current')
+    .select('team_id, elo_after')
+  if (curErr) throw curErr
+  for (const r of cur ?? []) seed.set(String(r.team_id), r.elo_after as number)
+
+  const pending: MatchRow[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db()
+      .from('matches_needing_elo')
+      .select('id, season, league, date, home_team, away_team, home_goals, away_goals')
+      .order('season').order('date', { nullsFirst: true }).order('id')
+      .range(from, from + 999)
+    if (error) throw error
+    pending.push(...(data as MatchRow[]))
+    if (data.length < 1000) break
+  }
+  if (!pending.length) return seed
+
+  const input: EloMatch[] = pending.map((m, i) => ({
+    matchId: m.id, order: i, date: m.date, league: m.league,
+    home: String(m.home_team), away: String(m.away_team),
+    homeGoals: m.home_goals!, awayGoals: m.away_goals!,
+  }))
+  const records = runElo(input, seed)
+  for (let i = 0; i < records.length; i += 500) {
+    const { error } = await db().rpc('rpc_append_elo', {
+      p_secret: SECRET(),
+      p_rows: records.slice(i, i + 500).map((r) => ({
+        team_id: Number(r.team), match_id: r.matchId, date: r.date,
+        elo_before: r.eloBefore, elo_after: r.eloAfter,
+      })),
+    })
+    if (error) throw error
+  }
+  for (const [team, elo] of currentRatings(records)) seed.set(team, elo)
+  return seed
+}
+
+export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
+  const ratings = await updateElo(opts.fullElo)
   const matches = await allMatches()
   const played = matches.filter((m) => m.status === 'played' && m.home_goals !== null)
-
-  // --- team Elo (modern era: from ELO_START_SEASON) ---
-  const eloInput: EloMatch[] = played
-    .filter((m) => m.season >= ELO_START_SEASON)
-    .map((m, i) => ({
-    matchId: m.id,
-    order: i, // allMatches is season+date ordered
-    date: m.date,
-    league: m.league,
-    home: String(m.home_team),
-    away: String(m.away_team),
-    homeGoals: m.home_goals!,
-    awayGoals: m.away_goals!,
-  }))
-  const eloRecords = runElo(eloInput)
-  await replaceTable(
-    'team_elo',
-    eloRecords.map((r) => ({
-      team_id: Number(r.team),
-      match_id: r.matchId,
-      date: r.date,
-      elo_before: r.eloBefore,
-      elo_after: r.eloAfter,
-    })),
-  )
-  const ratings = currentRatings(eloRecords)
 
   // news-based adjustments (transfers, injuries, Europe congestion) — applied
   // transparently on top of Elo at prediction time, never to stored history
@@ -661,7 +702,7 @@ export async function recomputeAll() {
   )
 
   return {
-    eloRecords: eloRecords.length,
+    ratedTeams: ratings.size,
     playerRecords: playerRecords.length,
     predictions: predRows.length,
     beltEvents: belt.history.length,

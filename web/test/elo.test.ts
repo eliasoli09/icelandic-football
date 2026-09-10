@@ -60,3 +60,27 @@ describe('runElo', () => {
     expect(Math.abs(cur.get('A')! - cur.get('B')!)).toBeLessThan(10)
   })
 })
+
+// Elo is sequential, so a run must be able to continue from stored ratings
+// rather than replaying every season — that is what makes many leagues viable.
+describe('runElo — resuming from stored ratings', () => {
+  const m = (matchId: number, order: number, home: string, away: string, hg: number, ag: number): EloMatch => ({
+    matchId, order, date: null, league: 'besta', home, away, homeGoals: hg, awayGoals: ag,
+  })
+  const all = [m(1, 1, 'A', 'B', 2, 0), m(2, 2, 'B', 'C', 1, 1), m(3, 3, 'A', 'C', 0, 1)]
+
+  it('produces the same ratings split in two as in one pass', () => {
+    const full = currentRatings(runElo(all))
+    const first = runElo(all.slice(0, 2))
+    const resumed = currentRatings([...first, ...runElo(all.slice(2), currentRatings(first))])
+    for (const team of ['A', 'B', 'C']) {
+      expect(resumed.get(team)).toBeCloseTo(full.get(team)!, 9)
+    }
+  })
+
+  it('seeds an unseen club at its league base', () => {
+    const recs = runElo([m(9, 9, 'A', 'NEW', 1, 0)], new Map([['A', 1700]]))
+    expect(recs.find((r) => r.team === 'A')!.eloBefore).toBe(1700)
+    expect(recs.find((r) => r.team === 'NEW')!.eloBefore).toBe(1500)
+  })
+})

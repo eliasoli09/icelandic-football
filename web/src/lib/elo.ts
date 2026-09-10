@@ -39,8 +39,12 @@ export function movMultiplier(goalDiff: number) {
  * Teams enter at the baseline of the league they first appear in;
  * ratings persist across seasons and divisions (promotion/relegation).
  */
-export function runElo(matches: EloMatch[]): TeamEloRecord[] {
-  const rating = new Map<string, number>()
+/**
+ * @param seed ratings a club already carries, so a run can continue from where
+ *   the last one stopped instead of replaying every season.
+ */
+export function runElo(matches: EloMatch[], seed?: Map<string, number>): TeamEloRecord[] {
+  const rating = new Map<string, number>(seed ?? [])
   const records: TeamEloRecord[] = []
   const sorted = [...matches].sort((a, b) => a.order - b.order)
   for (const m of sorted) {
