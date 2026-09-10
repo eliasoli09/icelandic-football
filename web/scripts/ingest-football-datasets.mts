@@ -54,7 +54,15 @@ const seasonOf = (file: string) => {
   return a < 50 ? 2000 + a : 1900 + a
 }
 
-const files = readdirSync(folder).filter((f) => /^season-\d{4}\.csv$/.test(f)).sort((a, b) => seasonOf(a) - seasonOf(b))
+// The season in progress belongs to scripts/ingest-current-season.mts, which
+// numbers its rows by pairing rather than by file row. Letting both write the
+// same season would give every match two ids and so two rows.
+const { seasonForDate } = await import(join(webDir, 'src/lib/currentSeason.ts'))
+const LIVE = seasonForDate()
+
+const files = readdirSync(folder)
+  .filter((f) => /^season-\d{4}\.csv$/.test(f) && seasonOf(f) < LIVE)
+  .sort((a, b) => seasonOf(a) - seasonOf(b))
 if (!files.length) throw new Error(`engar skrár í ${folder}`)
 
 let total = 0, seasons = 0
