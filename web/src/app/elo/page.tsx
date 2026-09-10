@@ -1,6 +1,6 @@
 import { EloChart, type EloSeriesPoint } from '@/components/EloChart'
 import { ShareButton } from '@/components/ShareButton'
-import { teams, eloHistory, teamInfo, type EloRow } from '@/lib/queries'
+import { teams, eloHistory, teamInfo, leagueRegistry, type EloRow } from '@/lib/queries'
 import { LEAGUES } from '@/lib/leagues'
 import { TeamBadge } from '@/components/TeamBadge'
 import { displayColor } from '@/lib/teamColors'
@@ -24,10 +24,22 @@ const PERIODS = [
   { key: 's5', label: '5 tímabil', back: 5 },
 ]
 
-const POOLS = [
-  { id: 'is', title: 'Íslensk lið', note: 'Efsta deild frá 2000 og Lengjudeildin frá 2019. Byrjunarstig 1500 (efsta deild) og 1400 (Lengjudeildin).' },
-  { id: 'eng', title: 'Ensk lið', note: 'Enska úrvalsdeildin. Byrjunarstig 1500.' },
-]
+/**
+ * Sections come from the registry: one per Elo pool, titled by the leagues in
+ * it. Ratings only compare inside a pool, so a hardcoded list would silently
+ * hide every competition added later.
+ */
+function poolsFrom(registry: { key: string; name: string; elo_pool: string }[]) {
+  const by = new Map<string, string[]>()
+  for (const l of registry) {
+    if (!by.has(l.elo_pool)) by.set(l.elo_pool, [])
+    by.get(l.elo_pool)!.push(l.name)
+  }
+  return [...by].map(([id, names]) => ({
+    id,
+    title: names.length > 1 ? names.join(' og ') : names[0],
+  }))
+}
 
 interface Row {
   id: number
@@ -42,8 +54,11 @@ export default async function EloPage() {
   let names = new Map<number, string>()
   let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let history: EloRow[] = []
+  let registry: Awaited<ReturnType<typeof leagueRegistry>> = []
   try {
-    ;[names, infos, history] = await Promise.all([teams(), teamInfo(), eloHistory()])
+    ;[names, infos, history, registry] = await Promise.all([
+      teams(), teamInfo(), eloHistory(), leagueRegistry(),
+    ])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -99,7 +114,7 @@ export default async function EloPage() {
     return out
   }
 
-  const sections = POOLS.map((p) => ({
+  const sections = poolsFrom(registry).map((p) => ({
     ...p,
     table: rows.filter((r) => r.pool === p.id).sort((a, b) => b.elo - a.elo),
   })).filter((s) => s.table.length)
@@ -167,7 +182,7 @@ export default async function EloPage() {
               </table>
             </div>
             <p className="text-[11px] muted mt-3 leading-relaxed">
-              {s.note} Stig fylgja liðum milli deilda og tímabila. <strong>± 5 leikir</strong> er breyting yfir
+              Stig fylgja liðum milli deilda og tímabila. <strong>± 5 leikir</strong> er breyting yfir
               síðustu fimm leiki; <strong>6 mán / 1 ár / 5 ár</strong> sýna hreyfinguna á því tímabili og standa
               sem „—“ þegar liðið á engin stig svo langt aftur.
             </p>
