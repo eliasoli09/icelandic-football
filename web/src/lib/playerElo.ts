@@ -2,9 +2,9 @@ import type { MatchEvent, League } from './types'
 import type { Position } from './positions'
 import { normalizeName } from './positions'
 
-export const PLAYER_BASE: Record<League, number> = { besta: 1500, lengjudeild: 1400, premier: 1500, laliga: 1500, seriea: 1500, bundesliga: 1500, ligue1: 1500 }
+export const PLAYER_BASE: Record<League, number> = { besta: 1500, lengjudeild: 1400, premier: 1500, laliga: 1500, seriea: 1500, bundesliga: 1500, ligue1: 1500, championship: 1500, eredivisie: 1500, primeira: 1500 }
 /** goals and results in the second tier move the needle less */
-export const LEAGUE_WEIGHT: Record<League, number> = { besta: 1, lengjudeild: 0.6, premier: 1, laliga: 1, seriea: 1, bundesliga: 1, ligue1: 1 }
+export const LEAGUE_WEIGHT: Record<League, number> = { besta: 1, lengjudeild: 0.6, premier: 1, laliga: 1, seriea: 1, bundesliga: 1, ligue1: 1, championship: 1, eredivisie: 1, primeira: 1 }
 /** clean-sheet bonus by (inferred) position — keepers and defenders get the
  * credit their work deserves; unknown positions get a flat middle value */
 export const CLEAN_SHEET_BONUS: Record<Position, number> = { GK: 18, DF: 12, MF: 6, FW: 4 }

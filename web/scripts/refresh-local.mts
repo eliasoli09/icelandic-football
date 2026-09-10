@@ -17,5 +17,8 @@ for (const line of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')
 const t0 = Date.now()
 const { ingestSeason, recomputeAll } = await import(join(webDir, 'src/lib/recompute.ts'))
 console.log('ingest:', JSON.stringify(await ingestSeason()))
-console.log('recompute:', JSON.stringify(await recomputeAll()))
+// --full rebuilds Elo from scratch; needed after backfilling history into a
+// pool that already had later matches rated
+const full = process.argv.includes('--full')
+console.log('recompute:', JSON.stringify(await recomputeAll({ fullElo: full })))
 console.log(`done in ${Math.round((Date.now() - t0) / 1000)}s`)

@@ -74,6 +74,21 @@ export const LEAGUES: Record<League, LeagueConfig> = {
     size: 18, split: false, europeSlots: 4, relegationSlots: 2, eloPool: 'fra',
     goals: { home: 1.445, away: 1.025 },
   },
+  championship: {
+    id: 'championship', name: 'Enska B-deildin', short: 'Championship', source: 'apif',
+    size: 24, split: false, europeSlots: 2, relegationSlots: 3, promotion: true, eloPool: 'eng',
+    goals: { home: 1.419, away: 1.138 },
+  },
+  eredivisie: {
+    id: 'eredivisie', name: 'Eredivisie', short: 'Eredivisie', source: 'apif',
+    size: 18, split: false, europeSlots: 5, relegationSlots: 2, eloPool: 'ned',
+    goals: { home: 1.768, away: 1.347 },
+  },
+  primeira: {
+    id: 'primeira', name: 'Primeira Liga', short: 'Primeira', source: 'apif',
+    size: 18, split: false, europeSlots: 4, relegationSlots: 2, eloPool: 'por',
+    goals: { home: 1.436, away: 1.141 },
+  },
 }
 
 export const leagueConfig = (l: League) => LEAGUES[l]
@@ -135,3 +150,10 @@ export const isApifMatch = (matchId: number) =>
 export const FEED_ID_OFFSET = 2_000_000_000
 export const feedMatchId = (season: number, leagueIndex: number, row: number) =>
   FEED_ID_OFFSET + (season - 1900) * 1_000_000 + leagueIndex * 100_000 + row
+
+/**
+ * The soccer-dataset carries its own fixture ids (max ~1.02e8), so they only
+ * need lifting clear of the KSÍ and feed ranges.
+ */
+export const DATASET_ID_OFFSET = 3_000_000_000
+export const datasetMatchId = (fixtureId: number) => DATASET_ID_OFFSET + fixtureId

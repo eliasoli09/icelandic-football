@@ -1,6 +1,6 @@
 import type { League } from './types'
 
-export const BASE: Record<League, number> = { besta: 1500, lengjudeild: 1400, premier: 1500, laliga: 1500, seriea: 1500, bundesliga: 1500, ligue1: 1500 }
+export const BASE: Record<League, number> = { besta: 1500, lengjudeild: 1400, premier: 1500, laliga: 1500, seriea: 1500, bundesliga: 1500, ligue1: 1500, championship: 1500, eredivisie: 1500, primeira: 1500 }
 export const K = 24
 export const HFA = 60 // home-field advantage in Elo points
 

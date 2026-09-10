@@ -270,10 +270,19 @@ export async function updateElo(full = false): Promise<Map<string, number>> {
         homeGoals: m.home_goals!, awayGoals: m.away_goals!,
       }))
     const records = runElo(input)
-    await replaceTable('team_elo', records.map((r) => ({
-      team_id: Number(r.team), match_id: r.matchId, date: r.date,
-      elo_before: r.eloBefore, elo_after: r.eloAfter,
-    })))
+    // a full rebuild is ~180k rows across ten leagues; one payload that size
+    // is refused by the transport, so clear and then append in batches
+    await replaceTable('team_elo', [])
+    for (let i = 0; i < records.length; i += 500) {
+      const { error } = await db().rpc('rpc_append_elo', {
+        p_secret: SECRET(),
+        p_rows: records.slice(i, i + 500).map((r) => ({
+          team_id: Number(r.team), match_id: r.matchId, date: r.date,
+          elo_before: r.eloBefore, elo_after: r.eloAfter,
+        })),
+      })
+      if (error) throw error
+    }
     return currentRatings(records)
   }
 
