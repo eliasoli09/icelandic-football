@@ -21,19 +21,16 @@ const NAV = [
   { href: '/h2h', label: 'H2H' },
 ]
 
-export function Nav({ updatedAt }: { updatedAt: string | null }) {
+export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const reduce = useReducedMotion()
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href)
 
-  const stamp = updatedAt
-    ? new Date(updatedAt).toLocaleString('is-IS', {
-        day: 'numeric', month: 'numeric', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', timeZone: 'UTC',
-      })
-    : null
+  // Format once on the server: browser ICU locale support can differ, and a
+  // hydration replacement would restart an entrance already being prepared.
+  const stamp = updatedLabel
 
   return (
     <header

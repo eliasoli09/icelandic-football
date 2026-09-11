@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { drawWaves, resolveColor, type RGB } from './draw'
 import { waveQuality, waveSettings, type WaveSettings } from './field'
 import styles from './LightWaves.module.css'
+import { useEntranceClock } from '../Entrance/EntranceClock'
 
 export type LightWavesProps = Partial<WaveSettings> & {
   /** Any CSS colour. Changing this preserves the ongoing motion. */
@@ -15,6 +16,7 @@ export type LightWavesProps = Partial<WaveSettings> & {
  * Pointer input is observed on that parent; the canvas never intercepts it. */
 export function LightWaves({ color = '#e8b93c', className = '', ...options }: LightWavesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const entranceClock = useEntranceClock()
   const setColorRef = useRef<((color: string) => void) | null>(null)
   const latestColor = useRef(color)
   const { speed, amplitude, threadCount, brightness, particleCount, mouseInfluence } = waveSettings(options)
@@ -61,14 +63,14 @@ export function LightWaves({ color = '#e8b93c', className = '', ...options }: Li
       if (!canDraw() || reduced.matches) { previous = null; return }
       const dt = previous === null ? 0 : Math.max(0, (now - previous) / 1000)
       previous = now
-      elapsed += dt * speed
+      elapsed = entranceClock?.current.active ? entranceClock.current.waveTime : elapsed + dt * speed
       // Exponential damping has the same response at 30, 60 and 120 Hz.
       const follow = 1 - Math.exp(-dt * 2.2)
       pointer.x += (target.x - pointer.x) * follow
       pointer.y += (target.y - pointer.y) * follow
       const blend = 1 - Math.exp(-dt * 3)
       rgb = rgb.map((v, i) => v + (targetColor[i] - v) * blend) as RGB
-      draw()
+      if (!entranceClock?.current.active || entranceClock.current.heroVisible) draw()
       frame = requestAnimationFrame(tick)
     }
 
@@ -137,7 +139,7 @@ export function LightWaves({ color = '#e8b93c', className = '', ...options }: Li
       finePointer.removeEventListener('change', resetPointer)
       window.removeEventListener('resize', resize)
     }
-  }, [speed, amplitude, threadCount, brightness, particleCount, mouseInfluence])
+  }, [speed, amplitude, threadCount, brightness, particleCount, mouseInfluence, entranceClock])
 
   return (
     <div

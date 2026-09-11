@@ -17,10 +17,15 @@ export interface LeagueTheme {
   glow: string
 }
 
-/** Hand-picked, so the leagues the site was built around keep their identity. */
-const PINNED: Record<string, { h: number; s: number }> = {
-  besta: { h: 43, s: 79 },
-  lengjudeild: { h: 207, s: 90 },
+/**
+ * The leagues the site was built around keep their hand-tuned identity. These
+ * are the exact values globals.css uses, so anything reading the theme in
+ * JavaScript — the hero waves, a canvas, an OG image — paints the same colour
+ * the stylesheet does rather than a near-miss.
+ */
+const PINNED: Record<string, { accent: string; accentLight: string; ink: string }> = {
+  besta: { accent: '#e8b93c', accentLight: '#8a6410', ink: '#171104' },
+  lengjudeild: { accent: '#2f9df4', accentLight: '#1a6fc0', ink: '#051220' },
 }
 
 /** Hues that read as muddy or near-invisible on the dark surface. */
@@ -53,8 +58,11 @@ export function leagueTheme(key: string, override?: string | null): LeagueTheme 
     }
   }
   const pin = PINNED[key]
-  const h = pin?.h ?? hueFrom(key)
-  const s = pin?.s ?? 72
+  if (pin) {
+    return { ...pin, inkLight: '#ffffff', glow: hexGlow(pin.accent, 0.06) }
+  }
+  const h = hueFrom(key)
+  const s = 72
   return {
     accent: `hsl(${h} ${s}% 62%)`,
     accentLight: `hsl(${h} ${Math.min(100, s + 8)}% 32%)`,

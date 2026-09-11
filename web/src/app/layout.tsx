@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Geist, Geist_Mono, Archivo } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { Database } from 'lucide-react'
@@ -43,11 +44,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
   return (
     <html lang="is" suppressHydrationWarning>
+      <head><Script id="entrance-session" strategy="beforeInteractive">{`try{if(sessionStorage.getItem('besta-spain:entrance:v1')==='seen'){document.documentElement.dataset.entranceSeen='true'}}catch(e){}`}</Script></head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <LeagueProvider leagues={leagues}>
             <SwRegister />
-            <Nav updatedAt={updatedAt} />
+            <Nav updatedLabel={updatedAt ? new Date(updatedAt).toLocaleString('is-IS', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) : null} />
             <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
             <footer className="border-t mt-16" style={{ borderColor: 'var(--border)' }}>
               <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">

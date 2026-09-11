@@ -41,6 +41,8 @@ export interface DashboardBundle {
   league: League
   title: string
   tagline: string
+  /** Shown above the title; blank when unknown. */
+  country: string
   standings: (StandingRow & {
     zone: 'champ' | 'up' | 'playoff' | 'down' | null
     group: SplitGroup | null
@@ -209,11 +211,10 @@ export async function dashboardData(league: League, season = CURRENT_SEASON): Pr
 
   return {
     league,
-    title: league === 'besta' ? 'Besta deildin' : 'Lengjudeildin',
-    tagline:
-      league === 'besta'
-        ? 'Staðan, form, spár og lykiltölur'
-        : 'Baráttan um sæti í efstu deild',
+    title: cfg?.name ?? league,
+    // a second tier is about climbing; everything else is about the season
+    tagline: promo ? 'Baráttan um sæti í efstu deild' : 'Staðan, form, spár og lykiltölur',
+    country: cfg?.country ?? '',
     standings: zones,
     zoneLegend,
     featured: upcoming[0] ? toFixture(upcoming[0]) : null,

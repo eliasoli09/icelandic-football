@@ -4,6 +4,13 @@ export type RGB = [number, number, number]
 type Quality = ReturnType<typeof waveQuality>
 type Pointer = { x: number; y: number }
 
+/** Optional entrance deformation. The settled hero uses the same renderer. */
+export interface WaveFlow {
+  deform: (x: number, strand: number, layer: number, y: number) => number
+  opacity: (x: number, index: number, layer: number) => number
+  particles: number
+}
+
 const rgba = (c: RGB, opacity: number) => `rgba(${c[0]},${c[1]},${c[2]},${opacity})`
 const mix = (c: RGB, white: number): RGB => c.map(v => Math.round(v + (255 - v) * white)) as RGB
 
@@ -29,6 +36,7 @@ export function drawWaves(
   pointer: Pointer,
   settings: WaveSettings,
   quality: Quality,
+  flow?: WaveFlow,
 ) {
   ctx.clearRect(0, 0, width, height)
   const light = mix(color, 0.62)
@@ -64,7 +72,8 @@ export function drawWaves(
         const p = basis[j]
         const x = j / samples
         const fine = settings.amplitude * 0.006 * Math.sin(x * 18 - time * 0.31 + strand * 2 + layer) * strand
-        const y = (p.center + strand * p.spread + fine) * height
+        const fieldY = p.center + strand * p.spread + fine
+        const y = (flow ? flow.deform(x, strand, layer, fieldY) : fieldY) * height
         const px = p.x + pointer.x * settings.mouseInfluence * height * Math.sin(x * Math.PI)
         if (j === 0) path.moveTo(px, y)
         else path.lineTo(px, y)
@@ -87,7 +96,7 @@ export function drawWaves(
         // yellow band. Neighboring filaments still share the same lighting.
         const density = Math.min(1, Math.max(0.34, basis[Math.round(x * samples)].spread / 0.14))
         const alpha = Math.min(1, strength * edge * density * (0.4 + trail + 0.7 * Math.exp(-d * d)))
-        gradient.addColorStop(x, rgba(i % 9 === 0 ? light : baseColor, alpha))
+        gradient.addColorStop(x, rgba(i % 9 === 0 ? light : baseColor, alpha * (flow?.opacity(x, i, layer) ?? 1)))
       }
       ctx.strokeStyle = gradient
       ctx.stroke(path)
@@ -110,7 +119,7 @@ export function drawWaves(
     const offset = (seed(i + 130) - 0.5) * (i % 5 === 0 ? 0.65 : 0.2)
     const y = ribbonY(x, strand, layer, time, settings.amplitude) + offset
     const fade = Math.sin(age * Math.PI) ** 2
-    const alpha = fade * (0.16 + seed(i + 10) * 0.4) * brightness
+    const alpha = fade * (0.16 + seed(i + 10) * 0.4) * brightness * (flow?.particles ?? 1)
     const radius = (i % 11 === 0 ? 1.9 : 0.5) + seed(i + 60) * 0.75
     const px = x * width
     const py = (y + pointer.y * settings.mouseInfluence * Math.sin(x * Math.PI)) * height

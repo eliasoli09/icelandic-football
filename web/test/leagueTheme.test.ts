@@ -14,9 +14,20 @@ describe('leagueTheme', () => {
     expect(seen.size).toBe(7)
   })
 
-  it('keeps the hand-picked identity of the founding leagues', () => {
-    expect(leagueTheme('besta').accent).toContain('43')
-    expect(leagueTheme('lengjudeild').accent).toContain('207')
+  it('gives the founding leagues the exact colours the stylesheet uses', () => {
+    // anything painting from JS — the hero waves, an OG image — must match
+    // globals.css, not approximate it
+    expect(leagueTheme('besta').accent).toBe('#e8b93c')
+    expect(leagueTheme('lengjudeild').accent).toBe('#2f9df4')
+  })
+
+  it('always returns a usable colour, whatever it is handed', () => {
+    for (const bad of [undefined, null, '', 'red', 'var(--accent)', '#xyz', '#fff']) {
+      const t = leagueTheme('some-league', bad as string | null | undefined)
+      expect(typeof t.accent).toBe('string')
+      expect(t.accent.length).toBeGreaterThan(3)
+      expect(t.glow.length).toBeGreaterThan(3)
+    }
   })
 
   it('honours an explicit colour and ignores a malformed one', () => {

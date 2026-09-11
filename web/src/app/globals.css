@@ -56,6 +56,20 @@
 }
 .fade-up { animation: fade-up 0.25s ease-out; }
 
+/* The entrance only stages the existing dashboard. Removing its root attribute
+   restores the normal page immediately, including the no-WebGL fallback. */
+.entrance-page { position: relative; z-index: 1; }
+html[data-entrance-seen='true']:not([data-entrance]) .entrance-overlay { display: none; }
+html[data-entrance] .dashboard-content { animation: none; }
+html[data-entrance] .league-theme > header,
+html[data-entrance] .wave-hero-content { opacity: var(--entrance-hero, 0); }
+html[data-entrance] .league-theme > footer,
+html[data-entrance] .dashboard-content > :not(.wave-hero),
+html[data-entrance] .entrance-page > :not(.dashboard-content) { opacity: var(--entrance-content, 0); }
+html[data-entrance] .wave-hero { background: transparent; backdrop-filter: none; }
+html[data-entrance] .wave-hero > [aria-hidden='true'] { opacity: var(--entrance-handoff, 0); background: #080c0f; }
+html[data-entrance='reveal'] .entrance-scene { z-index: 0; }
+
 /* Light mode has no translucent surface, so solid is the same colour. Scoped
    away from .dark, which sets its own opaque value — an unscoped :root rule
    here has equal specificity and, coming later, silently made every popover

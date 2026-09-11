@@ -10,6 +10,8 @@ export interface LeagueConfig {
   /** Shown in headings and the switcher. */
   name: string
   short: string
+  /** Shown above the dashboard title. */
+  country: string
   /** Where matches come from. */
   source: 'ksi' | 'apif'
   /** API-Football league id (source 'apif' only). */
@@ -40,52 +42,52 @@ export interface LeagueConfig {
 
 export const LEAGUES: Record<League, LeagueConfig> = {
   besta: {
-    id: 'besta', name: 'Besta deildin', short: 'Besta', source: 'ksi',
+    id: 'besta', country: 'Ísland', name: 'Besta deildin', short: 'Besta', source: 'ksi',
     size: 12, split: true, europeSlots: 3, relegationSlots: 2, eloPool: 'is',
     goals: { home: 1.751, away: 1.423 },
   },
   lengjudeild: {
-    id: 'lengjudeild', name: 'Lengjudeildin', short: 'Lengju', source: 'ksi',
+    id: 'lengjudeild', country: 'Ísland', name: 'Lengjudeildin', short: 'Lengju', source: 'ksi',
     size: 12, split: false, europeSlots: 2, relegationSlots: 2, promotion: true, eloPool: 'is',
     goals: { home: 1.872, away: 1.525 },
   },
   premier: {
-    id: 'premier', name: 'Enska úrvalsdeildin', short: 'Enska', source: 'apif',
+    id: 'premier', country: 'England', name: 'Enska úrvalsdeildin', short: 'Enska', source: 'apif',
     apifId: 39, size: 20, split: false, europeSlots: 5, relegationSlots: 3, eloPool: 'eng',
     goals: { home: 1.550, away: 1.273 },
   },
   laliga: {
-    id: 'laliga', name: 'La Liga', short: 'La Liga', source: 'apif',
+    id: 'laliga', country: 'Spánn', name: 'La Liga', short: 'La Liga', source: 'apif',
     size: 20, split: false, europeSlots: 5, relegationSlots: 3, eloPool: 'esp',
     goals: { home: 1.550, away: 1.112 },
   },
   seriea: {
-    id: 'seriea', name: 'Serie A', short: 'Serie A', source: 'apif',
+    id: 'seriea', country: 'Ítalía', name: 'Serie A', short: 'Serie A', source: 'apif',
     size: 20, split: false, europeSlots: 5, relegationSlots: 3, eloPool: 'ita',
     goals: { home: 1.511, away: 1.141 },
   },
   bundesliga: {
-    id: 'bundesliga', name: 'Bundesliga', short: 'Bundesliga', source: 'apif',
+    id: 'bundesliga', country: 'Þýskaland', name: 'Bundesliga', short: 'Bundesliga', source: 'apif',
     size: 18, split: false, europeSlots: 5, relegationSlots: 2, eloPool: 'ger',
     goals: { home: 1.681, away: 1.264 },
   },
   ligue1: {
-    id: 'ligue1', name: 'Ligue 1', short: 'Ligue 1', source: 'apif',
+    id: 'ligue1', country: 'Frakkland', name: 'Ligue 1', short: 'Ligue 1', source: 'apif',
     size: 18, split: false, europeSlots: 4, relegationSlots: 2, eloPool: 'fra',
     goals: { home: 1.445, away: 1.025 },
   },
   championship: {
-    id: 'championship', name: 'Enska B-deildin', short: 'Championship', source: 'apif',
+    id: 'championship', country: 'England', name: 'Enska B-deildin', short: 'Championship', source: 'apif',
     size: 24, split: false, europeSlots: 2, relegationSlots: 3, promotion: true, eloPool: 'eng',
     goals: { home: 1.419, away: 1.138 },
   },
   eredivisie: {
-    id: 'eredivisie', name: 'Eredivisie', short: 'Eredivisie', source: 'apif',
+    id: 'eredivisie', country: 'Holland', name: 'Eredivisie', short: 'Eredivisie', source: 'apif',
     size: 18, split: false, europeSlots: 5, relegationSlots: 2, eloPool: 'ned',
     goals: { home: 1.768, away: 1.347 },
   },
   primeira: {
-    id: 'primeira', name: 'Primeira Liga', short: 'Primeira', source: 'apif',
+    id: 'primeira', country: 'Portúgal', name: 'Primeira Liga', short: 'Primeira', source: 'apif',
     size: 18, split: false, europeSlots: 4, relegationSlots: 2, eloPool: 'por',
     goals: { home: 1.436, away: 1.141 },
   },
@@ -121,6 +123,7 @@ export function configFromRow(r: LeagueRow): LeagueConfig {
     id: r.key as League,
     name: r.name,
     short: r.short,
+    country: r.country,
     source: (r.source === 'ksi' ? 'ksi' : 'apif') as LeagueConfig['source'],
     apifId: r.apif_id ?? undefined,
     size: r.size,

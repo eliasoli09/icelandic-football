@@ -18,11 +18,7 @@ import { CountUp } from './motion'
 import type { DashboardBundle, DashboardTeam } from '@/lib/dashboard'
 import type { League } from '@/lib/types'
 import { displayColor, tint } from '@/lib/teamColors'
-
-const fmtKick = (d: string | null) =>
-  d
-    ? new Date(d).toLocaleString('is-IS', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })
-    : 'Óráðið'
+import { formatKickoff as fmtKick } from '@/lib/kickoff'
 
 function SectionHead({
   icon: Icon,
@@ -74,16 +70,16 @@ export function Dashboard({
   )
 
   return (
-    <div className="fade-up grid grid-cols-1 gap-6">
+    <div className="dashboard-content fade-up grid grid-cols-1 gap-6">
         {/* ── Hero band ─────────────────────────────────────────── */}
         <section className="wave-hero card" style={{ '--accent': theme.accent, '--accent-ink': theme.ink } as React.CSSProperties}>
           <LightWaves color={theme.accent} />
           <div className="wave-hero-content p-6 sm:p-8 grid grid-cols-1 gap-6 lg:grid-cols-[0.85fr_1.15fr] items-center relative">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] muted mb-2">
-                Íslensk knattspyrnugreining
+                {d.country ? `${d.country} — knattspyrnugreining` : 'Knattspyrnugreining'}
               </p>
-              <h1 className="display text-3xl sm:text-5xl font-black tracking-tight mb-1" style={{ color: 'var(--accent)' }}>
+              <h1 data-entrance-focus tabIndex={-1} className="display text-3xl sm:text-5xl font-black tracking-tight mb-1" style={{ color: 'var(--accent)' }}>
                 {d.title}
               </h1>
               <p className="muted text-sm mb-5">{d.tagline}</p>
