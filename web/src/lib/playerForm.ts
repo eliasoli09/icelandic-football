@@ -142,3 +142,26 @@ export class PlayerWeights {
     this.w.set(k, prev + (involvement - prev) * this.rate)
   }
 }
+
+/**
+ * Elo enters the goal expectation as 10^edge, which is convex: averaged over a
+ * division, a spread of ratings pushes the mean above the rate the division
+ * actually scores at. Measured across the 2026/27 run-ins it ran 6 to 9 per
+ * cent high, so every match in a league is scaled by one factor that puts the
+ * average back on the league's own measured rate.
+ *
+ * Returns 1 when there is nothing to correct, so a caller can apply it blindly.
+ */
+export function leagueScale(predicted: number[], leagueRate: number): number {
+  let sum = 0
+  let n = 0
+  for (const p of predicted) {
+    if (Number.isFinite(p) && p > 0) { sum += p; n++ }
+  }
+  if (!n || !(leagueRate > 0)) return 1
+  const mean = sum / n
+  if (!(mean > 0)) return 1
+  // a factor far from 1 means the inputs disagree with the league, not that the
+  // league is wrong — clamp rather than let one bad rate distort every match
+  return Math.min(1.25, Math.max(0.8, leagueRate / mean))
+}

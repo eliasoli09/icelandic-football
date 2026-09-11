@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   XgForm, PlayerWeights, missingShare, availability, adjustLambda,
-  XG_MIN_MATCHES, XG_WEIGHT,
+  XG_MIN_MATCHES, XG_WEIGHT, leagueScale,
 } from '../src/lib/playerForm'
 
 const AVG = 1.41
@@ -107,5 +107,30 @@ describe('PlayerWeights', () => {
     const peak = w.get('A', 'X')
     for (let i = 0; i < 20; i++) w.record('A', 'X', 0)
     expect(w.get('A', 'X')).toBeLessThan(peak * 0.3)
+  })
+})
+
+describe('leagueScale', () => {
+  it('puts an inflated division back on its own scoring rate', () => {
+    const predicted = [3.2, 3.0, 3.4, 3.0] // mean 3.15
+    const k = leagueScale(predicted, 2.945)
+    expect(k).toBeLessThan(1)
+    const after = predicted.map((p) => p * k).reduce((a, b) => a + b, 0) / predicted.length
+    expect(after).toBeCloseTo(2.945, 6)
+  })
+
+  it('leaves a division that already matches alone', () => {
+    expect(leagueScale([2.8, 2.8, 2.8], 2.8)).toBeCloseTo(1, 9)
+  })
+
+  it('has nothing to say without input', () => {
+    expect(leagueScale([], 2.8)).toBe(1)
+    expect(leagueScale([2.8], 0)).toBe(1)
+    expect(leagueScale([0, NaN, -1], 2.8)).toBe(1)
+  })
+
+  it('refuses to rescale a division out of all recognition', () => {
+    expect(leagueScale([10, 10], 2.8)).toBe(0.8)
+    expect(leagueScale([0.5, 0.5], 2.8)).toBe(1.25)
   })
 })

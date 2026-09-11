@@ -25,7 +25,7 @@ for (const l of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')) {
 const { db } = await import(join(webDir, 'src/lib/db.ts'))
 const { predictMatch } = await import(join(webDir, 'src/lib/predict.ts'))
 const { LEAGUES } = await import(join(webDir, 'src/lib/leagues.ts'))
-const { XgForm, PlayerWeights, missingShare, adjustLambda } =
+const { XgForm, PlayerWeights, missingShare, adjustLambda, leagueScale } =
   await import(join(webDir, 'src/lib/playerForm.ts'))
 const { divisionQuantile, seededRating } = await import(join(webDir, 'src/lib/newcomers.ts'))
 
@@ -150,7 +150,7 @@ const weights = new PlayerWeights()
 
 // ── other leagues: xG form from the stored match xG ────────────────────
 const form = new Map<string, InstanceType<typeof XgForm>>([['premier', plForm]])
-type Cfg = { source: string; goals: { home: number; away: number }; short?: string }
+type Cfg = { source: string; goals: { home: number; away: number }; name: string; short: string }
 for (const [key, cfg] of Object.entries(LEAGUES) as [string, Cfg][]) {
   if (key === 'premier' || cfg.source === 'ksi') continue
   const avg = (cfg.goals.home + cfg.goals.away) / 2
@@ -243,7 +243,59 @@ try {
 } catch (err) {
   console.error(`# leikjaplan hinna deildanna ekki sótt: ${err instanceof Error ? err.message : err}`)
 }
-fixtures.sort((a, b) => a.date.localeCompare(b.date) || a.league.localeCompare(b.league) || a.time.localeCompare(b.time))
+// Every league outside England publishes only the next few days, so the rest of
+// the season is derived instead: a double round robin plays every ordered pair
+// exactly once, and we know the clubs and what they have already played. The
+// Premier League, where the real list is published, checks the arithmetic —
+// 380 pairs less 30 played is the 350 the official feed returns.
+{
+  const dated = new Map<string, Fixture>()
+  for (const f of fixtures) dated.set(`${f.league}|${f.home}|${f.away}`, f)
+
+  const clubs = new Map<string, Set<string>>()
+  const done = new Set<string>()
+  for (const m of played) {
+    if (m.season !== 2026 || m.league === 'premier') continue
+    if (!(LEAGUES as Record<string, Cfg | undefined>)[m.league]) continue
+    const set = clubs.get(m.league) ?? new Set<string>()
+    set.add(m.home); set.add(m.away); clubs.set(m.league, set)
+    done.add(`${m.league}|${m.home}|${m.away}`)
+  }
+  for (const [league, set] of clubs) {
+    if ((LEAGUES as Record<string, Cfg>)[league].source === 'ksi') continue
+    for (const home of set) {
+      for (const away of set) {
+        if (home === away) continue
+        const key = `${league}|${home}|${away}`
+        if (done.has(key) || dated.has(key)) continue
+        fixtures.push({ league, date: '', time: '', home, away })
+      }
+    }
+  }
+}
+
+// Iceland runs a calendar-year season with a split, so its remaining fixtures
+// are published rather than derived — they are already in the database.
+{
+  const { data, error } = await db().from('matches')
+    .select('league, date, home_team, away_team')
+    .eq('season', 2026).eq('status', 'upcoming').in('league', ['besta', 'lengjudeild'])
+    .order('date')
+  if (error) throw error
+  for (const m of (data ?? []) as any[]) {
+    const home = teamName.get(m.home_team), away = teamName.get(m.away_team)
+    if (!home || !away) continue
+    fixtures.push({
+      league: m.league, date: (m.date ?? '').slice(0, 10),
+      time: (m.date ?? '').slice(11, 16), home, away,
+    })
+  }
+}
+
+fixtures.sort((a, b) =>
+  (a.date ? 0 : 1) - (b.date ? 0 : 1) ||
+  a.date.localeCompare(b.date) || a.time.localeCompare(b.time) ||
+  a.home.localeCompare(b.home))
 
 // A name we cannot match would quietly collect a default rating and be read as
 // a promoted club, which is how Hull, Ipswich and Coventry briefly arrived in
@@ -281,8 +333,7 @@ let withPlayers = 0
 
 const groups = new Map<string, Fixture[]>()
 for (const f of fixtures) {
-  const k = f.league === 'premier' ? 'premier' : 'annad'
-  const g = groups.get(k) ?? []; g.push(f); groups.set(k, g)
+  const g = groups.get(f.league) ?? []; g.push(f); groups.set(f.league, g)
 }
 
 /** how many fixtures the squad data actually reaches */
@@ -296,8 +347,9 @@ function countWithPlayers(list: Fixture[]) {
   return n
 }
 
-function predict(f: Fixture) {
-  const cfg = (LEAGUES as any)[f.league]
+/** the two goal expectations, before the league is put back on its own scale */
+function expectations(f: Fixture) {
+  const cfg = (LEAGUES as Record<string, Cfg | undefined>)[f.league]
   const goals = cfg?.goals
   const base = predictMatch({
     eloHome: rating(f.home, f.league), eloAway: rating(f.away, f.league),
@@ -306,14 +358,33 @@ function predict(f: Fixture) {
   const lf = form.get(f.league)
   const fh = lf?.get(f.home) ?? null
   const fa = lf?.get(f.away) ?? null
-  const avg = goals ? (goals.home + goals.away) / 2 : null
   const xh = fh && fa && goals ? goals.home * fh.attack * fa.defence : null
   const xa = fh && fa && goals ? goals.away * fa.attack * fh.defence : null
   const mh = missing.get(f.home) ?? 0
   const ma = missing.get(f.away) ?? 0
-  const lh = adjustLambda(base.lambdaHome, xh, mh)
-  const la = adjustLambda(base.lambdaAway, xa, ma)
-  // re-run the Poisson with the adjusted expectations
+  return {
+    lh: adjustLambda(base.lambdaHome, xh, mh),
+    la: adjustLambda(base.lambdaAway, xa, ma),
+    usedForm: xh !== null, mh, ma,
+  }
+}
+
+/** one factor per league, so its matches average the rate it really scores at */
+const scale = new Map<string, number>()
+for (const [league, list] of groups) {
+  const cfg = (LEAGUES as Record<string, Cfg | undefined>)[league]
+  if (!cfg) { scale.set(league, 1); continue }
+  const totals = list.map((f) => { const e = expectations(f); return e.lh + e.la })
+  scale.set(league, leagueScale(totals, cfg.goals.home + cfg.goals.away))
+}
+
+function predict(f: Fixture) {
+  const e = expectations(f)
+  const k = scale.get(f.league) ?? 1
+  const lh = e.lh * k
+  const la = e.la * k
+  const { usedForm, mh, ma } = e
+  // the Poisson, on the adjusted expectations
   const pois = (l: number, k: number) => { let p = Math.exp(-l); for (let i = 1; i <= k; i++) p *= l / i; return p }
   let h = 0, d = 0, a = 0, bestP = -1, bh = 0, ba = 0
   for (let i = 0; i <= 9; i++) for (let j = 0; j <= 9; j++) {
@@ -322,8 +393,8 @@ function predict(f: Fixture) {
     if (p > bestP) { bestP = p; bh = i; ba = j }
   }
   const s = h + d + a
-  if (xh !== null || mh > 0 || ma > 0) withPlayers++
-  return { h: h / s, d: d / s, a: a / s, lh, la, bh, ba, usedForm: xh !== null, mh, ma }
+  if (usedForm || mh > 0 || ma > 0) withPlayers++
+  return { h: h / s, d: d / s, a: a / s, lh, la, bh, ba, usedForm, mh, ma }
 }
 
 const header: string[] = []
@@ -340,13 +411,22 @@ header.push(`# Leikir: ${fixtures.length}`)
 header.push(`# Þar af með leikmannagögnum: ${countWithPlayers(fixtures)}`)
 console.log(header.join('\n'))
 
-for (const [key, label] of [['premier', 'ENSKA ÚRVALSDEILDIN — allir leikir sem eftir eru'], ['annad', 'AÐRAR DEILDIR — næstu leikir']] as const) {
+const order = [...groups.keys()].sort((a, b) => (groups.get(b)!.length - groups.get(a)!.length))
+for (const key of order) {
   const list = groups.get(key) ?? []
   if (!list.length) continue
-  console.log(`\n\n═══ ${label} (${list.length}) ═══`)
-  let day = ''
+  const cfg = (LEAGUES as Record<string, Cfg | undefined>)[key]
+  const dated = list.filter((f) => f.date).length
+  console.log(`\n\n═══ ${(cfg?.name ?? key).toUpperCase()} — ${list.length} leikir eftir ═══`)
+  if (dated < list.length) {
+    console.log(`   ${dated} með dagsetningu úr leikjaplani, ${list.length - dated} leiddir út úr umferðakeppninni`)
+  }
+  let day = '\u0000'
   for (const f of list) {
-    if (f.date !== day) { day = f.date; console.log(`\n── ${day} ──`) }
+    if (f.date !== day) {
+      day = f.date
+      console.log(day ? `\n── ${day} ──` : '\n── síðar á tímabilinu (dagsetning óbirt) ──')
+    }
     const p = predict(f)
     const pick = p.h >= p.d && p.h >= p.a ? '1' : p.a >= p.d ? '2' : 'X'
     const flags = [
@@ -362,8 +442,7 @@ for (const [key, label] of [['premier', 'ENSKA ÚRVALSDEILDIN — allir leikir s
       mkt = `  markaður 1:${pct(inv[0] / t)}  munur ${edge >= 0 ? '+' : ''}${(edge * 100).toFixed(0)}`
     }
     console.log(
-      `${key === 'annad' ? line((LEAGUES as any)[f.league]?.short ?? f.league, 12) + ' ' : ''}` +
-      `${line(f.home, 15)} - ${line(f.away, 15)} ` +
+      `${line(f.home, 16)} - ${line(f.away, 16)} ` +
       `1 ${pct(p.h)}  X ${pct(p.d)}  2 ${pct(p.a)}  [${pick}] ` +
       ` ${p.bh}-${p.ba}  vænt ${p.lh.toFixed(1)}-${p.la.toFixed(1)}  ${flags}${mkt}`,
     )
