@@ -223,99 +223,50 @@ try {
 }
 
 // ── fixtures ───────────────────────────────────────────────────────────
+// Every remaining match now lives in the database with a date, loaded from the
+// leagues' own published calendars, so that is the one source here. The results
+// feed is still read, but only for the bookmakers' prices on the next few days.
 interface Fixture { league: string; date: string; time: string; home: string; away: string; odds?: [number, number, number] }
 const fixtures: Fixture[] = []
-
-// the Premier League publishes its whole season
-try {
-  const [fxRes, bootRes] = await Promise.all([
-    fetch('https://fantasy.premierleague.com/api/fixtures/', { headers: UA }),
-    fetch('https://fantasy.premierleague.com/api/bootstrap-static/', { headers: UA }),
-  ])
-  const fx = (await fxRes.json()) as any[]
-  const boot = (await bootRes.json()) as any
-  const clubs = new Map<number, string>(boot.teams.map((t: any) => [t.id, fix(t.name)]))
-  for (const f of fx) {
-    if (f.finished || !f.kickoff_time) continue
-    fixtures.push({
-      league: 'premier', date: f.kickoff_time.slice(0, 10), time: f.kickoff_time.slice(11, 16),
-      home: clubs.get(f.team_h)!, away: clubs.get(f.team_a)!,
-    })
-  }
-} catch (err) {
-  console.error(`# enska leikjaplanið ekki sótt: ${err instanceof Error ? err.message : err}`)
-}
-
-// everyone else: the next few days, with the market's price alongside
-try {
-  const res = await fetch('https://www.football-data.co.uk/fixtures.csv', { headers: UA, redirect: 'follow' })
-  const text = (await res.text()).replace(/^﻿/, '')
-  const lines = text.split(/\r?\n/).filter((l) => l.trim())
-  const head = lines.shift()!.split(',')
-  const at = (r: string[], n: string) => (r[head.indexOf(n)] ?? '').trim()
-  for (const line of lines) {
-    const r = line.split(',')
-    const league = DIVS[at(r, 'Div')]
-    if (!league || league === 'premier') continue // the FPL feed already has these
-    const d = at(r, 'Date').match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
-    if (!d) continue
-    const o = [at(r, 'B365H'), at(r, 'B365D'), at(r, 'B365A')].map(Number)
-    fixtures.push({
-      league, date: `${d[3]}-${d[2]}-${d[1]}`, time: at(r, 'Time'),
-      home: fix(at(r, 'HomeTeam')), away: fix(at(r, 'AwayTeam')),
-      odds: o.every((x) => x > 1) ? (o as [number, number, number]) : undefined,
-    })
-  }
-} catch (err) {
-  console.error(`# leikjaplan hinna deildanna ekki sótt: ${err instanceof Error ? err.message : err}`)
-}
-// Every league outside England publishes only the next few days, so the rest of
-// the season is derived instead: a double round robin plays every ordered pair
-// exactly once, and we know the clubs and what they have already played. The
-// Premier League, where the real list is published, checks the arithmetic —
-// 380 pairs less 30 played is the 350 the official feed returns.
-{
-  const dated = new Map<string, Fixture>()
-  for (const f of fixtures) dated.set(`${f.league}|${f.home}|${f.away}`, f)
-
-  const clubs = new Map<string, Set<string>>()
-  const done = new Set<string>()
-  for (const m of played) {
-    if (m.season !== 2026 || m.league === 'premier') continue
-    if (!(LEAGUES as Record<string, Cfg | undefined>)[m.league]) continue
-    const set = clubs.get(m.league) ?? new Set<string>()
-    set.add(m.home); set.add(m.away); clubs.set(m.league, set)
-    done.add(`${m.league}|${m.home}|${m.away}`)
-  }
-  for (const [league, set] of clubs) {
-    if ((LEAGUES as Record<string, Cfg>)[league].source === 'ksi') continue
-    for (const home of set) {
-      for (const away of set) {
-        if (home === away) continue
-        const key = `${league}|${home}|${away}`
-        if (done.has(key) || dated.has(key)) continue
-        fixtures.push({ league, date: '', time: '', home, away })
-      }
-    }
-  }
-}
-
-// Iceland runs a calendar-year season with a split, so its remaining fixtures
-// are published rather than derived — they are already in the database.
-{
+for (let from = 0; ; from += 1000) {
   const { data, error } = await db().from('matches')
     .select('league, date, home_team, away_team')
-    .eq('season', 2026).eq('status', 'upcoming').in('league', ['besta', 'lengjudeild'])
-    .order('date')
+    .eq('season', 2026).eq('status', 'upcoming')
+    .order('date', { nullsFirst: false }).order('id')
+    .range(from, from + 999)
   if (error) throw error
-  for (const m of (data ?? []) as any[]) {
+  if (!data?.length) break
+  for (const m of data as any[]) {
     const home = teamName.get(m.home_team), away = teamName.get(m.away_team)
     if (!home || !away) continue
     fixtures.push({
-      league: m.league, date: (m.date ?? '').slice(0, 10),
-      time: (m.date ?? '').slice(11, 16), home, away,
+      league: m.league,
+      date: (m.date ?? '').slice(0, 10),
+      time: (m.date ?? '').slice(11, 16),
+      home, away,
     })
   }
+  if (data.length < 1000) break
+}
+
+// the market's price, where there is one
+try {
+  const res = await fetch('https://www.football-data.co.uk/fixtures.csv', { headers: UA, redirect: 'follow' })
+  const text = (await res.text()).replace(/^\ufeff/, '')
+  const lines = text.split(/\r?\n/).filter((l) => l.trim())
+  const head = lines.shift()!.split(',')
+  const at = (r: string[], n: string) => (r[head.indexOf(n)] ?? '').trim()
+  const priced = new Map<string, [number, number, number]>()
+  for (const line of lines) {
+    const r = line.split(',')
+    const league = DIVS[at(r, 'Div')]
+    if (!league) continue
+    const o = [at(r, 'B365H'), at(r, 'B365D'), at(r, 'B365A')].map(Number)
+    if (o.every((x) => x > 1)) priced.set(`${league}|${fix(at(r, 'HomeTeam'))}|${fix(at(r, 'AwayTeam'))}`, o as [number, number, number])
+  }
+  for (const f of fixtures) f.odds = priced.get(`${f.league}|${f.home}|${f.away}`)
+} catch (err) {
+  console.error(`# stuðlar ekki sóttir: ${err instanceof Error ? err.message : err}`)
 }
 
 fixtures.sort((a, b) =>

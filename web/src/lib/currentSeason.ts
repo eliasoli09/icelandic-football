@@ -1,5 +1,6 @@
 import { db } from './db'
 import { feedMatchId } from './leagues'
+import { CALENDAR_SOURCES, parseCalendar, checkMapping } from './fixtureCalendar'
 
 /**
  * The season being played right now, from football-data.co.uk.
@@ -50,7 +51,13 @@ export interface CurrentSeasonResult {
   season: number
   leagues: { league: string; matches?: number; newTeams?: string[]; error?: string }[]
   /** fixtures still to play, written so the site has something to show ahead */
-  fixtures?: { written: number; byLeague: Record<string, number>; error?: string }
+  fixtures?: {
+    written: number
+    byLeague: Record<string, number>
+    /** what the full-season calendar contributed, or why it did not */
+    calendars?: Record<string, string>
+    error?: string
+  }
 }
 
 export async function ingestCurrentSeason(
@@ -234,6 +241,42 @@ export async function ingestCurrentSeason(
     fixtureError ??= err instanceof Error ? err.message : String(err)
   }
 
+  // The results feed publishes only the next few days. openfootball carries a
+  // date and a kick-off time for every match of the season, so the rest of the
+  // calendar comes from there — but only for a league whose clubs pair up with
+  // ours exactly, since a near-miss would hand one club's season to another.
+  const calendars: Record<string, string> = {}
+  for (const [league, url] of Object.entries(CALENDAR_SOURCES)) {
+    const s = slots.get(league)
+    if (!s) continue
+    try {
+      const res = await fetch(url)
+      if (!res.ok) { calendars[league] = `HTTP ${res.status}`; continue }
+      const parsed = parseCalendar(await res.text())
+      const theirs = [...new Set(parsed.flatMap((m) => [m.home, m.away]))]
+      const check = checkMapping(theirs, [...s.slot.keys()])
+      if (!check.ok) {
+        calendars[league] = [
+          check.unmapped.length ? `óþekkt: ${check.unmapped.join(', ')}` : '',
+          check.unused.length ? `vantar: ${check.unused.join(', ')}` : '',
+          ...check.collisions,
+        ].filter(Boolean).join('; ')
+        continue
+      }
+      let added = 0
+      for (const m of parsed) {
+        if (m.played) continue
+        const home = check.mapped.get(m.home)!
+        const away = check.mapped.get(m.away)!
+        const when = m.date ? `${m.date}T${m.time ?? '00:00'}:00Z` : null
+        if (await addFixture(league, home, away, when)) added++
+      }
+      calendars[league] = `${added} leikir`
+    } catch (err) {
+      calendars[league] = err instanceof Error ? err.message : String(err)
+    }
+  }
+
   if (!opts.dryRun && fixtures.length) {
     for (let i = 0; i < fixtures.length; i += 500) {
       const { error } = await db().rpc('rpc_upsert_matches', {
@@ -259,6 +302,6 @@ export async function ingestCurrentSeason(
   for (const f of fixtures) byLeague[f.league as string] = (byLeague[f.league as string] ?? 0) + 1
   return {
     season, leagues,
-    fixtures: { written: fixtures.length, byLeague, error: fixtureError },
+    fixtures: { written: fixtures.length, byLeague, calendars, error: fixtureError },
   }
 }
