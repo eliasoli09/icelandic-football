@@ -28,6 +28,7 @@ const { LEAGUES } = await import(join(webDir, 'src/lib/leagues.ts'))
 const { XgForm, PlayerWeights, missingShare, adjustLambda, leagueScale } =
   await import(join(webDir, 'src/lib/playerForm.ts'))
 const { divisionQuantile, seededRating } = await import(join(webDir, 'src/lib/newcomers.ts'))
+const { fit: dcFit, predict: dcPredict, DC_BLEND } = await import(join(webDir, 'src/lib/dixonColes.ts'))
 
 const FPL_REPO = '/Users/elias/FH leikmenn/Fantasy-Premier-League/data'
 const DIVS: Record<string, string> = {
@@ -80,12 +81,13 @@ const rating = (t: string, league: string) =>
 // ── matches, for pairings and for non-Premier xG ───────────────────────
 interface Played {
   season: number; league: string; date: string
-  home: string; away: string; hxg: number | null; axg: number | null
+  home: string; away: string; hg: number; ag: number
+  hxg: number | null; axg: number | null
 }
 const played: Played[] = []
 for (let from = 0; ; from += 1000) {
   const { data, error } = await db().from('matches')
-    .select('season, league, date, home_team, away_team, home_xg, away_xg')
+    .select('season, league, date, home_team, away_team, home_goals, away_goals, home_xg, away_xg')
     .eq('status', 'played').gte('season', 2015)
     .order('season').order('date', { nullsFirst: true }).order('id')
     .range(from, from + 999)
@@ -95,7 +97,7 @@ for (let from = 0; ; from += 1000) {
     played.push({
       season: m.season, league: m.league, date: (m.date ?? '').slice(0, 10),
       home: teamName.get(m.home_team) ?? '?', away: teamName.get(m.away_team) ?? '?',
-      hxg: m.home_xg, axg: m.away_xg,
+      hg: m.home_goals, ag: m.away_goals, hxg: m.home_xg, axg: m.away_xg,
     })
   }
   if (data.length < 1000) break
@@ -161,6 +163,30 @@ for (const [key, cfg] of Object.entries(LEAGUES) as [string, Cfg][]) {
     f.record(m.away, m.axg, m.hxg)
   }
   form.set(key, f)
+}
+
+// ── Dixon-Coles, one fit per league ───────────────────────────────────
+// Elo carries a club's whole history in one number and follows it between
+// divisions; this reads the entire scoreline but sees one league at a time.
+// They are wrong in different ways, which is why the blend beats either.
+const dc = new Map<string, ReturnType<typeof dcFit>>()
+{
+  const today = Date.now()
+  const byLeague = new Map<string, { home: string; away: string; homeGoals: number; awayGoals: number; ageDays: number }[]>()
+  for (const m of played) {
+    if (!m.date) continue
+    const cfg = (LEAGUES as Record<string, Cfg | undefined>)[m.league]
+    if (!cfg) continue
+    const ageDays = (today - Date.parse(m.date + 'T00:00:00Z')) / 86400000
+    if (!(ageDays >= 0) || ageDays > 7 * 365) continue
+    const list = byLeague.get(m.league) ?? []
+    list.push({ home: m.home, away: m.away, homeGoals: m.hg, awayGoals: m.ag, ageDays })
+    byLeague.set(m.league, list)
+  }
+  for (const [league, list] of byLeague) {
+    if (list.length < 150) continue
+    dc.set(league, dcFit(list))
+  }
 }
 
 // ── who is missing, live ───────────────────────────────────────────────
@@ -393,8 +419,19 @@ function predict(f: Fixture) {
     if (p > bestP) { bestP = p; bh = i; ba = j }
   }
   const s = h + d + a
+  let ph = h / s, pd = d / s, pa = a / s
+  // Elo keeps the casting vote; Dixon-Coles is worth about a third of one
+  const model = dc.get(f.league)
+  let usedDc = false
+  if (model && model.attack.has(f.home) && model.attack.has(f.away)) {
+    const q = dcPredict(model, f.home, f.away)
+    ph = ph * (1 - DC_BLEND) + q.pHome * DC_BLEND
+    pd = pd * (1 - DC_BLEND) + q.pDraw * DC_BLEND
+    pa = pa * (1 - DC_BLEND) + q.pAway * DC_BLEND
+    usedDc = true
+  }
   if (usedForm || mh > 0 || ma > 0) withPlayers++
-  return { h: h / s, d: d / s, a: a / s, lh, la, bh, ba, usedForm, mh, ma }
+  return { h: ph, d: pd, a: pa, lh, la, bh, ba, usedForm, usedDc, mh, ma }
 }
 
 const header: string[] = []
@@ -405,7 +442,8 @@ header.push('# Elo + xG-form + fjarvera lykilmanna. Enska úrvalsdeildin fær al
 header.push('# Hinar deildirnar keyra á Elo og taka xG-formið inn sjálfkrafa þegar')
 header.push('# tímabilið hefur gefið hverju liði sex leiki af því.')
 header.push('#')
-header.push('# Dálkar:  xG = xG-form notað   H-nn% / Ú-nn% = hlutfall sóknarframlags sem vantar')
+header.push('# Dálkar:  DC = Dixon-Coles blandað inn   xG = xG-form notað')
+header.push('#          H-nn% / Ú-nn% = hlutfall sóknarframlags sem vantar')
 header.push(`# Leikir: ${fixtures.length}`)
 
 header.push(`# Þar af með leikmannagögnum: ${countWithPlayers(fixtures)}`)
@@ -430,6 +468,7 @@ for (const key of order) {
     const p = predict(f)
     const pick = p.h >= p.d && p.h >= p.a ? '1' : p.a >= p.d ? '2' : 'X'
     const flags = [
+      p.usedDc ? 'DC' : '  ',
       p.usedForm ? 'xG' : '  ',
       p.mh > 0.08 ? `H-${Math.round(p.mh * 100)}%` : '     ',
       p.ma > 0.08 ? `Ú-${Math.round(p.ma * 100)}%` : '     ',
