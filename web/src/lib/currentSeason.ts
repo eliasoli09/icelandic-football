@@ -29,6 +29,12 @@ export const DIVISIONS = [
  * season runs into May, so anything before July is still the season that
  * started the previous year.
  */
+/** the Premier League's own API writes names the results feed spells differently */
+const FPL_ALIAS: Record<string, string> = {
+  'Man Utd': 'Man United', Spurs: 'Tottenham',
+  'Hull City': 'Hull', 'Ipswich Town': 'Ipswich', 'Coventry City': 'Coventry',
+}
+
 export const seasonForDate = (d = new Date()) =>
   d.getMonth() >= 6 ? d.getFullYear() : d.getFullYear() - 1
 
@@ -43,6 +49,8 @@ const stamp = (date: string, time: string) => {
 export interface CurrentSeasonResult {
   season: number
   leagues: { league: string; matches?: number; newTeams?: string[]; error?: string }[]
+  /** fixtures still to play, written so the site has something to show ahead */
+  fixtures?: { written: number; byLeague: Record<string, number>; error?: string }
 }
 
 export async function ingestCurrentSeason(
@@ -70,6 +78,10 @@ export async function ingestCurrentSeason(
   }
 
   const leagues: CurrentSeasonResult['leagues'] = []
+  /** league -> its club slots, so a fixture and the result it becomes share an id */
+  const slots = new Map<string, { idx: number; slot: Map<string, number> }>()
+  /** ids that already carry a result, and must never be overwritten by a fixture */
+  const settled = new Set<number>()
   for (const { div, league, idx } of DIVISIONS) {
     let text: string
     try {
@@ -107,6 +119,7 @@ export async function ingestCurrentSeason(
       ...new Set(played.flatMap((r) => [at(r, 'HomeTeam'), at(r, 'AwayTeam')])),
     ].sort()
     const slot = new Map(clubs.map((c, i) => [c, i]))
+    slots.set(league, { idx, slot })
     const newTeams = clubs.filter((c) => !ids.has(c))
 
     const rows: Record<string, unknown>[] = []
@@ -134,6 +147,7 @@ export async function ingestCurrentSeason(
     if (new Set(rows.map((r) => r.id)).size !== rows.length) {
       throw new Error(`${league}: tvö leikjanúmer rákust á`)
     }
+    for (const r of rows) settled.add(r.id as number)
 
     if (!opts.dryRun) {
       for (let i = 0; i < rows.length; i += 500) {
@@ -147,6 +161,89 @@ export async function ingestCurrentSeason(
     leagues.push({ league, matches: rows.length, newTeams: newTeams.length ? newTeams : undefined })
   }
 
+  // ── fixtures still to play ────────────────────────────────────────
+  // Results alone leave the site with nothing to show ahead of a match. These
+  // rows carry the same pairing-derived id as the result they will become, so
+  // the next ingest overwrites the fixture in place instead of adding a second
+  // copy of the match.
+  const fixtures: Record<string, unknown>[] = []
+  const seenFixture = new Set<number>()
+  const addFixture = async (
+    league: string, home: string, away: string, date: string | null,
+  ) => {
+    const s = slots.get(league)
+    const h = s?.slot.get(home)
+    const a = s?.slot.get(away)
+    // a club that has not played yet has no slot, and inventing one would
+    // collide with the id the result gets later — skip rather than guess
+    if (s === undefined || h === undefined || a === undefined) return false
+    const id = feedMatchId(season, s.idx, h * 1000 + a)
+    // The upsert would write null goals and status 'upcoming' straight over a
+    // finished match, so a pairing that already has a result is never a fixture.
+    if (settled.has(id) || seenFixture.has(id)) return false
+    seenFixture.add(id)
+    fixtures.push({
+      id, season, league, phase: 'main', date, venue: null,
+      home_team: opts.dryRun ? 0 : await ensureTeam(home),
+      away_team: opts.dryRun ? 0 : await ensureTeam(away),
+      home_goals: null, away_goals: null, status: 'upcoming',
+    })
+    return true
+  }
+
+  let fixtureError: string | undefined
+  try {
+    const res = await fetch('https://www.football-data.co.uk/fixtures.csv', { redirect: 'follow' })
+    if (res.ok) {
+      const text = (await res.text()).replace(/^\ufeff/, '')
+      const lines = text.split(/\r?\n/).filter((l) => l.trim())
+      const head = lines.shift()?.split(',') ?? []
+      const at = (r: string[], n: string) => (r[head.indexOf(n)] ?? '').trim()
+      const byDiv = new Map<string, string>(DIVISIONS.map((d) => [d.div, d.league]))
+      for (const line of lines) {
+        const r = line.split(',')
+        const league = byDiv.get(at(r, 'Div'))
+        if (!league) continue
+        await addFixture(league, at(r, 'HomeTeam'), at(r, 'AwayTeam'), stamp(at(r, 'Date'), at(r, 'Time')))
+      }
+    }
+  } catch (err) {
+    fixtureError = err instanceof Error ? err.message : String(err)
+  }
+
+  // England publishes its whole season, so it is the one league that can show
+  // every remaining fixture rather than the next few days.
+  try {
+    const [fxRes, teamRes] = await Promise.all([
+      fetch('https://fantasy.premierleague.com/api/fixtures/'),
+      fetch('https://fantasy.premierleague.com/api/bootstrap-static/'),
+    ])
+    if (fxRes.ok && teamRes.ok) {
+      const boot = (await teamRes.json()) as { teams: { id: number; name: string }[] }
+      const club = new Map(boot.teams.map((t) => [t.id, FPL_ALIAS[t.name] ?? t.name]))
+      for (const f of (await fxRes.json()) as {
+        finished: boolean; kickoff_time: string | null; team_h: number; team_a: number
+      }[]) {
+        if (f.finished) continue
+        const home = club.get(f.team_h), away = club.get(f.team_a)
+        if (!home || !away) continue
+        await addFixture('premier', home, away, f.kickoff_time)
+      }
+    }
+  } catch (err) {
+    fixtureError ??= err instanceof Error ? err.message : String(err)
+  }
+
+  if (!opts.dryRun && fixtures.length) {
+    for (let i = 0; i < fixtures.length; i += 500) {
+      const { error } = await db().rpc('rpc_upsert_matches', {
+        p_secret: SECRET(),
+        p_rows: fixtures.slice(i, i + 500),
+      })
+      if (error) throw error
+    }
+  }
+
   // The registry says which season each competition is playing, and the
   // dashboard reads it. Nothing used to write it, so it stayed on whatever the
   // last manual edit said and the site served a season that had finished.
@@ -158,5 +255,10 @@ export async function ingestCurrentSeason(
     })
     if (error) throw error
   }
-  return { season, leagues }
+  const byLeague: Record<string, number> = {}
+  for (const f of fixtures) byLeague[f.league as string] = (byLeague[f.league as string] ?? 0) + 1
+  return {
+    season, leagues,
+    fixtures: { written: fixtures.length, byLeague, error: fixtureError },
+  }
 }

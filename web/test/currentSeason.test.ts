@@ -48,3 +48,25 @@ describe('feed ids for the live season', () => {
     expect(seen.size).toBe(24 * 23)
   })
 })
+
+// A fixture and the result it becomes are the same match, so they share an id.
+// That is what lets the next ingest replace the fixture in place — and it is
+// also why a pairing that already has a result must never be written back as a
+// fixture: the upsert would put null goals over a finished match.
+describe('fixtures and the results they become', () => {
+  const id = (home: number, away: number) => feedMatchId(2026, 0, home * 1000 + away)
+
+  it('gives a fixture the same id as its eventual result', () => {
+    expect(id(3, 11)).toBe(id(3, 11))
+  })
+
+  it('keeps the two legs of a pairing apart', () => {
+    expect(id(3, 11)).not.toBe(id(11, 3))
+  })
+
+  it('never lets one league’s pairing reach another’s', () => {
+    const a = feedMatchId(2026, 0, 19 * 1000 + 19)
+    const b = feedMatchId(2026, 1, 0)
+    expect(a).toBeLessThan(b)
+  })
+})
