@@ -125,6 +125,10 @@ export async function ingestCurrentSeason(
         home_goals: Number(at(r, 'FTHG')),
         away_goals: Number(at(r, 'FTAG')),
         status: 'played',
+        // carried since 2026/27; a better read on the next match than the
+        // goals actually scored, so it is stored as it arrives
+        home_xg: at(r, 'HxG') === '' ? null : Number(at(r, 'HxG')),
+        away_xg: at(r, 'AxG') === '' ? null : Number(at(r, 'AxG')),
       })
     }
     if (new Set(rows.map((r) => r.id)).size !== rows.length) {
