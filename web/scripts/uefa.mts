@@ -2,17 +2,25 @@
  * European club football: ratings, every league-phase match, and a simulation
  * of where the three competitions finish.
  *
- * Usage: cd web && npx tsx scripts/uefa.mts [> uefa.txt]
+ * Writes what it works out to uefa_club, uefa_match and uefa_sim, which is
+ * what the site reads. Pass --dry to print without writing.
+ *
+ * Usage: cd web && npx tsx scripts/uefa.mts [--dry] [> uefa.txt]
  */
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
 const webDir = join(dirname(fileURLToPath(import.meta.url)), '..')
+for (const l of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')) {
+  const m = l.match(/^([A-Z_]+)=(.*)$/); if (m && !process.env[m[1]]) process.env[m[1]] = m[2]
+}
+const dryRun = process.argv.includes('--dry')
 const SP = '/private/tmp/claude-501/-Users-elias-FH-leikmenn-/65c87b5e-6d92-47c6-b996-b5da95bfafe5/scratchpad'
 const { buildEuropeanScale, HOME_ADVANTAGE } = await import(join(webDir, 'src/lib/uefaRating.ts'))
 const { simulateSeason } = await import(join(webDir, 'src/lib/simulate.ts'))
 const { predictMatch } = await import(join(webDir, 'src/lib/predict.ts'))
+const { db } = await import(join(webDir, 'src/lib/db.ts'))
 
 const CONTINENTAL = new Set([89, 90, 91, 100000531])
 const isCup = (n: string) => /cup|pokal|coupe|copa|taca|taça|trophy|beker|supercup|super cup|playoff|play-off|shield/i.test(n)
@@ -84,6 +92,10 @@ const COMPS = [
   { key: 'uecl', name: 'Sambandsdeildin', direct: 8, playoff: 24 },
 ]
 
+const clubRows: Record<string, unknown>[] = []
+const matchRows: Record<string, unknown>[] = []
+const simRows: Record<string, unknown>[] = []
+
 console.log('# Evrópukeppnirnar 2026/27')
 console.log(`# unnin ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC`)
 console.log('#')
@@ -127,6 +139,17 @@ for (const comp of COMPS) {
     goalsAgainst: state.get(c)!.ga, played: state.get(c)!.n,
   }))
   type SimRow = { team: string; posProbs: number[]; projectedPoints: number }
+  for (const c of clubs) {
+    const id = idOf[c]
+    const l = id != null ? scale.leagueOf.get(id) : undefined
+    const assoc = ms.find((f) => f.home === c)?.homeAssoc ?? ms.find((f) => f.away === c)?.awayAssoc ?? ''
+    clubRows.push({
+      club: c, assoc, comp: comp.key, rating: Math.round(ratingOf(c) * 10) / 10,
+      league_name: l !== undefined ? league.get(l)?.name ?? null : null,
+      league_strength: l !== undefined ? Math.round(scale.league.get(l) ?? 1500) : null,
+      rated: id != null && scale.club.has(id),
+    })
+  }
   const sim: SimRow[] = simulateSeason(
     teams as never, left.map((f) => ({ home: f.home, away: f.away })), 20000, 20260912, { goals: GOALS },
   )
@@ -141,10 +164,28 @@ for (const comp of COMPS) {
     const po = sum(r.posProbs.slice(comp.direct, comp.playoff))
     const out = sum(r.posProbs.slice(comp.playoff))
     const assoc = ms.find((f) => f.home === r.team)?.homeAssoc ?? ms.find((f) => f.away === r.team)?.awayAssoc ?? ''
+    simRows.push({
+      comp: comp.key, club: r.team, proj_points: r.projectedPoints,
+      p_top8: top, p_playoff: po, p_out: out, pos_probs: r.posProbs,
+    })
     const pc = (x: number) => (x >= 0.995 ? '100%' : x < 0.005 ? ' <1%' : `${Math.round(x * 100)}%`.padStart(4))
     console.log(
       `${r.team.padEnd(24)} ${assoc.padEnd(4)} ${String(Math.round(ratingOf(r.team))).padStart(7)}  ${r.projectedPoints.toFixed(1).padStart(4)}    ${pc(top)}    ${pc(po)}     ${pc(out)}`,
     )
+  }
+
+  for (const m of ms) {
+    const p = m.homeGoals === null
+      ? predictMatch({ eloHome: ratingOf(m.home), eloAway: ratingOf(m.away), home: null, away: null, goals: GOALS })
+      : null
+    matchRows.push({
+      id: `${m.comp}-${m.matchday}-${m.home}-${m.away}`.replace(/\s+/g, '_'),
+      comp: m.comp, matchday: m.matchday,
+      date: m.date ? `${m.date}T${m.time ?? '00:00'}:00Z` : null,
+      home: m.home, away: m.away, home_goals: m.homeGoals, away_goals: m.awayGoals,
+      p_home: p?.pHome ?? null, p_draw: p?.pDraw ?? null, p_away: p?.pAway ?? null,
+      lambda_home: p?.lambdaHome ?? null, lambda_away: p?.lambdaAway ?? null,
+    })
   }
 
   console.log(`\n── hver einasti leikur sem eftir er (${left.length}) ──`)
@@ -159,4 +200,16 @@ for (const comp of COMPS) {
       `1 ${pc(p.pHome)}  X ${pc(p.pDraw)}  2 ${pc(p.pAway)}  [${pick}]  vænt ${p.lambdaHome.toFixed(1)}-${p.lambdaAway.toFixed(1)}`,
     )
   }
+}
+
+// ── store it, since the site reads the database and not this output ────
+if (!dryRun) {
+  const { data, error } = await db().rpc('rpc_replace_uefa', {
+    p_secret: process.env.CRON_SECRET!,
+    p_clubs: clubRows, p_matches: matchRows, p_sim: simRows,
+  })
+  if (error) throw error
+  console.error(`skrifað: ${clubRows.length} félög, ${matchRows.length} leikir, ${simRows.length} hermunarraðir (${data})`)
+} else {
+  console.error(`þurrkeyrsla: ${clubRows.length} félög, ${matchRows.length} leikir, ${simRows.length} hermunarraðir`)
 }

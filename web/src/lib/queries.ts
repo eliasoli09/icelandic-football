@@ -499,3 +499,42 @@ export async function matchReport(matchId: number) {
     .maybeSingle()
   return data
 }
+
+// ── European club competitions ─────────────────────────────────────────
+export interface UefaClub {
+  club: string; assoc: string; comp: string
+  rating: number | null; league_name: string | null; league_strength: number | null
+  rated: boolean
+}
+export interface UefaMatch {
+  id: string; comp: string; matchday: number; date: string | null
+  home: string; away: string; home_goals: number | null; away_goals: number | null
+  p_home: number | null; p_draw: number | null; p_away: number | null
+}
+export interface UefaSim {
+  comp: string; club: string
+  proj_points: number; p_top8: number; p_playoff: number; p_out: number
+}
+
+export async function uefaClubs(): Promise<UefaClub[]> {
+  const { data } = await db().from('uefa_club').select('*').order('rating', { ascending: false })
+  return (data ?? []) as UefaClub[]
+}
+
+export async function uefaMatches(): Promise<UefaMatch[]> {
+  const out: UefaMatch[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db().from('uefa_match').select('*')
+      .order('date', { nullsFirst: false }).order('id').range(from, from + 999)
+    if (!data?.length) break
+    out.push(...(data as UefaMatch[]))
+    if (data.length < 1000) break
+  }
+  return out
+}
+
+export async function uefaSim(): Promise<UefaSim[]> {
+  const { data } = await db().from('uefa_sim').select('comp, club, proj_points, p_top8, p_playoff, p_out')
+    .order('proj_points', { ascending: false })
+  return (data ?? []) as UefaSim[]
+}
