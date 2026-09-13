@@ -19,6 +19,7 @@ const dryRun = process.argv.includes('--dry')
 const SP = '/private/tmp/claude-501/-Users-elias-FH-leikmenn-/65c87b5e-6d92-47c6-b996-b5da95bfafe5/scratchpad'
 const { buildEuropeanScale, HOME_ADVANTAGE } = await import(join(webDir, 'src/lib/uefaRating.ts'))
 const { simulateSeason } = await import(join(webDir, 'src/lib/simulate.ts'))
+const { UEFA_SIMULATION_RUNS } = await import(join(webDir, 'src/lib/uefaConfig.ts'))
 const { predictMatch } = await import(join(webDir, 'src/lib/predict.ts'))
 const { db } = await import(join(webDir, 'src/lib/db.ts'))
 
@@ -151,7 +152,7 @@ for (const comp of COMPS) {
     })
   }
   const sim: SimRow[] = simulateSeason(
-    teams as never, left.map((f) => ({ home: f.home, away: f.away })), 20000, 20260912, { goals: GOALS },
+    teams as never, left.map((f) => ({ home: f.home, away: f.away })), UEFA_SIMULATION_RUNS, 20260912, { goals: GOALS },
   )
 
   console.log(`\n\n═══ ${comp.name.toUpperCase()} ═══`)

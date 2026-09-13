@@ -1,0 +1,99 @@
+.background {
+  position: absolute;
+  z-index: 0;
+  top: -54px;
+  left: 50%;
+  width: 100vw;
+  height: 900px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  overflow: hidden;
+  contain: paint;
+  isolation: isolate;
+  mask-image: linear-gradient(#000 0%, #000 40%, rgb(0 0 0 / 65%) 66%, transparent 100%);
+}
+.europa { --field: #080808; --accent: #ff6900; --soft-accent: #ff9a38; --tint: 255 105 0; }
+.conference { --field: #030b07; --accent: #00d74a; --soft-accent: #55f2b2; --tint: 0 215 74; }
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 32% 30% at 81% 13%, rgb(var(--tint) / 9%), transparent 80%),
+    radial-gradient(ellipse 24% 30% at 100% 45%, rgb(var(--tint) / 5%), transparent 80%);
+}
+.contours { position: absolute; inset: 0; width: 100%; height: 100%; opacity: var(--art-brightness); }
+.contour { fill: none; stroke-width: 1.15; stroke-linecap: butt; stroke-linejoin: miter; vector-effect: non-scaling-stroke; }
+.conference .contour { stroke-width: 1; stroke-linecap: round; }
+.conference .contour:nth-child(5n) { stroke-width: 2.7; opacity: .75; }
+.glint {
+  fill: none;
+  stroke: var(--soft-accent);
+  stroke-width: 1.8;
+  stroke-linejoin: miter;
+  stroke-dasharray: .024 .976;
+  stroke-dashoffset: 1;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 2.5px var(--accent));
+  opacity: .75;
+}
+.background[data-ready='true'] { animation: enter 300ms ease-out both; }
+.background[data-ready='true'] .contour { stroke-dasharray: 1; animation: draw 1.08s cubic-bezier(.2, .7, .2, 1) both; }
+.background[data-ready='true'] .glint { animation-name: travel; animation-timing-function: linear; animation-iteration-count: infinite; animation-fill-mode: both; }
+.trophy {
+  position: absolute;
+  top: 40px;
+  right: max(9%, calc((100vw - 1220px) / 2 + 76px));
+  width: 218px;
+  height: 238px;
+  opacity: .94;
+  will-change: transform;
+  --light-x: 48%;
+  --light-y: 32%;
+}
+.trophyImage { display: block; height: 100%; width: 100%; object-fit: contain; filter: brightness(.94) contrast(1.08) saturate(.72) drop-shadow(0 12px 21px rgb(0 0 0 / 50%)); }
+.trophyShade, .trophyLight {
+  position: absolute;
+  inset: 0;
+  mask-image: var(--trophy-mask);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+.trophyShade { background: linear-gradient(100deg, rgb(0 0 0 / 50%), transparent 37%, rgb(0 0 0 / 23%) 80%); }
+.trophyLight {
+  background: radial-gradient(ellipse 30% 62% at var(--light-x) var(--light-y), rgb(255 255 255 / 22%), rgb(var(--tint) / 15%) 37%, transparent 78%);
+  mix-blend-mode: screen;
+}
+.foregroundThreads { opacity: .24; mask-image: linear-gradient(transparent 0, transparent 22%, #000 28%, transparent 41%); }
+.readabilityShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--field) 15%, var(--field) 36%, transparent 69%),
+    linear-gradient(transparent 20%, rgb(0 0 0 / 15%) 34%, var(--field) 78%, transparent);
+  opacity: .64;
+}
+.background[data-active='false'] { animation: none; }
+.background[data-active='false'] .contour { animation: none; stroke-dashoffset: 0; }
+.background[data-running='false'], .background[data-running='false'] * { animation-play-state: paused; }
+@keyframes enter { from { opacity: 0; } to { opacity: 1; } }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes travel { from { stroke-dashoffset: 1; } to { stroke-dashoffset: -1; } }
+@media (max-width: 900px) {
+  .trophy { right: 2%; width: 194px; height: 256px; opacity: .7; }
+  .contours { opacity: calc(var(--art-brightness) * .68); }
+}
+@media (max-width: 640px) {
+  .background { height: 740px; }
+  .trophy { width: 154px; height: 222px; top: 22px; right: -30px; opacity: .46; }
+  .contours { width: 155%; left: -28%; opacity: calc(var(--art-brightness) * .46); }
+  .extraLine, .farGroup { display: none; }
+  .glint { filter: none; stroke-width: 1.1; }
+  .foregroundThreads { opacity: .1; }
+  .trophyImage { filter: brightness(.94) contrast(1.08) saturate(.72); }
+  .readabilityShade { background: linear-gradient(90deg, var(--field) 8%, transparent 85%), linear-gradient(transparent 20%, var(--field) 68%, transparent); opacity: .6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .background, .background * { animation: none !important; }
+  .background .contour { stroke-dasharray: none; stroke-dashoffset: 0; }
+  .glint { display: none; }
+  .trophy { transform: none !important; will-change: auto; }
+}

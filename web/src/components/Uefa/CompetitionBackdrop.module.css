@@ -1,0 +1,5 @@
+.backdrop { position:absolute; inset:0; z-index:0; pointer-events:none; }
+.layer { position:absolute; inset:0; pointer-events:none; opacity:1; transition:opacity .3s ease; animation:enter .3s ease both; }
+.layer[data-active='false'] { opacity:0; animation:none; }
+@keyframes enter { from { opacity:0; } to { opacity:1; } }
+@media (prefers-reduced-motion:reduce) { .layer { transition:none; animation:none; } }
