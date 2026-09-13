@@ -31,6 +31,14 @@ export const HOME_ADVANTAGE = 60
 const K_DOMESTIC = 20
 /** a tie between leagues is rarer and more informative than another league match */
 const K_LEAGUE = 28
+/**
+ * A continental tie also says something about the two clubs, not only about
+ * their leagues, and throwing that away meant a club could dominate Europe
+ * without it ever reaching its own number. Swept 0 to 20 over 7,497 ties; 10
+ * was the low point, and it is worth about 0.0005 of log loss — real in
+ * direction, small in size.
+ */
+const K_CLUB_FROM_EUROPE = 10
 
 export interface EuropeanScale {
   /** club id -> rating on the European scale */
@@ -71,9 +79,14 @@ export function buildEuropeanScale(
         // what the tie actually tests is the gap between the two leagues
         const clubGap = (dom(m.home) - dom(m.away)) / 2
         const e = expected(str(lh) + clubGap + HOME_ADVANTAGE - (str(la) - clubGap))
-        const d = K_LEAGUE * (result(m.homeGoals, m.awayGoals) - e)
+        const outcome = result(m.homeGoals, m.awayGoals)
+        const d = K_LEAGUE * (outcome - e)
         strength.set(lh, str(lh) + d)
         strength.set(la, str(la) - d)
+        // the same surprise, credited to the clubs that produced it
+        const dc = K_CLUB_FROM_EUROPE * (outcome - e)
+        domestic.set(m.home, dom(m.home) + dc)
+        domestic.set(m.away, dom(m.away) - dc)
       }
       continue
     }

@@ -21,6 +21,7 @@ const { buildEuropeanScale, HOME_ADVANTAGE } = await import(join(webDir, 'src/li
 const { simulateSeason } = await import(join(webDir, 'src/lib/simulate.ts'))
 const { UEFA_SIMULATION_RUNS } = await import(join(webDir, 'src/lib/uefaConfig.ts'))
 const { predictMatch } = await import(join(webDir, 'src/lib/predict.ts'))
+const { leagueScale } = await import(join(webDir, 'src/lib/playerForm.ts'))
 const { db } = await import(join(webDir, 'src/lib/db.ts'))
 
 const CONTINENTAL = new Set([89, 90, 91, 100000531])
@@ -97,13 +98,38 @@ const clubRows: Record<string, unknown>[] = []
 const matchRows: Record<string, unknown>[] = []
 const simRows: Record<string, unknown>[] = []
 
+// Elo reaches the goal expectation as 10^edge, which is convex, so averaged
+// over a competition the mean lands above the rate European ties really
+// produce — 2.90 against 2.80. One factor puts it back.
+const scaleProbe: number[] = []
+for (const f of (JSON.parse(readFileSync(`${SP}/uefa-fixtures.json`, 'utf-8')) as Fx[])) {
+  if (f.homeGoals !== null) continue
+  const p = predictMatch({ eloHome: ratingOf(f.home), eloAway: ratingOf(f.away), home: null, away: null, goals: GOALS })
+  scaleProbe.push(p.lambdaHome + p.lambdaAway)
+}
+const GOAL_SCALE = leagueScale(scaleProbe, GOALS.home + GOALS.away)
+
 console.log('# Evrópukeppnirnar 2026/27')
 console.log(`# unnin ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC`)
 console.log('#')
 console.log('# Einkunn: staða félags í eigin deild plús styrkur deildarinnar, þar sem')
 console.log('# styrkur deilda er metinn eingöngu úr leikjum sem fóru yfir landamæri.')
 console.log(`# Byggt á ${scale.bridged.toLocaleString('is')} slíkum leikjum.`)
-console.log(`# Mörk í Evrópukeppnum: heima ${GOALS.home.toFixed(2)}, úti ${GOALS.away.toFixed(2)}`)
+console.log(`# Mörk í Evrópukeppnum: heima ${GOALS.home.toFixed(2)}, úti ${GOALS.away.toFixed(2)} (skölun ${GOAL_SCALE.toFixed(3)})`)
+
+/** a prediction with the competition put back on its own scoring rate */
+function scaled(home: string, away: string) {
+  const base = predictMatch({ eloHome: ratingOf(home), eloAway: ratingOf(away), home: null, away: null, goals: GOALS })
+  const lh = base.lambdaHome * GOAL_SCALE, la = base.lambdaAway * GOAL_SCALE
+  const pois = (l: number, k: number) => { let v = Math.exp(-l); for (let i = 1; i <= k; i++) v *= l / i; return v }
+  let h = 0, d = 0, a = 0
+  for (let i = 0; i <= 9; i++) for (let j = 0; j <= 9; j++) {
+    const q = pois(lh, i) * pois(la, j)
+    if (i > j) h += q; else if (i === j) d += q; else a += q
+  }
+  const s = h + d + a
+  return { pHome: h / s, pDraw: d / s, pAway: a / s, lambdaHome: lh, lambdaAway: la }
+}
 
 // ── league strength ────────────────────────────────────────────────────
 /** how many clubs each league currently has, so one-off entrants are not ranked */
@@ -176,9 +202,7 @@ for (const comp of COMPS) {
   }
 
   for (const m of ms) {
-    const p = m.homeGoals === null
-      ? predictMatch({ eloHome: ratingOf(m.home), eloAway: ratingOf(m.away), home: null, away: null, goals: GOALS })
-      : null
+    const p = m.homeGoals === null ? scaled(m.home, m.away) : null
     matchRows.push({
       id: `${m.comp}-${m.matchday}-${m.home}-${m.away}`.replace(/\s+/g, '_'),
       comp: m.comp, matchday: m.matchday,
@@ -193,7 +217,7 @@ for (const comp of COMPS) {
   let day = ''
   for (const f of left) {
     if (f.date !== day) { day = f.date ?? ''; console.log(`\n${day}`) }
-    const p = predictMatch({ eloHome: ratingOf(f.home), eloAway: ratingOf(f.away), home: null, away: null, goals: GOALS })
+    const p = scaled(f.home, f.away)
     const pick = p.pHome >= p.pDraw && p.pHome >= p.pAway ? '1' : p.pAway >= p.pDraw ? '2' : 'X'
     const pc = (x: number) => `${Math.round(x * 100)}%`.padStart(4)
     console.log(

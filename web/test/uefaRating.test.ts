@@ -89,3 +89,52 @@ describe('buildEuropeanScale', () => {
     expect(s.leagueOf.has(999)).toBe(false)
   })
 })
+
+// A continental tie says something about the two clubs, not only their two
+// leagues. Before this, a club could take Europe apart without it ever
+// reaching its own rating.
+describe('continental ties reach the clubs', () => {
+  const A = 1, B = 2
+  const clubsA = [1, 2, 3, 4], clubsB = [11, 12, 13, 14]
+  const cont = (id: number) => id === 99
+  const isLeague = (id: number) => id === A || id === B
+  const season = (league: number, clubs: number[]) => {
+    const out = []
+    let day = 1
+    for (const h of clubs) for (const a of clubs) {
+      if (h === a) continue
+      out.push({
+        date: `2024-${String(1 + (day % 11)).padStart(2, '0')}-${String(1 + (day % 27)).padStart(2, '0')}`,
+        league, home: h, away: a, homeGoals: 1, awayGoals: 1,
+      })
+      day++
+    }
+    return out
+  }
+  const base = [...season(A, clubsA), ...season(B, clubsB)].sort((x, y) => x.date.localeCompare(y.date))
+
+  it('lifts a club that beats another league, above its own league-mates', () => {
+    const ties = Array.from({ length: 12 }, (_, i) => ({
+      date: `2025-06-${String(1 + (i % 28)).padStart(2, '0')}`,
+      league: 99, home: 1, away: clubsB[i % 4], homeGoals: 4, awayGoals: 0,
+    }))
+    const s = buildEuropeanScale([...base, ...ties], cont, isLeague)
+    // every club in league A drew every domestic match, so only Europe separates them
+    expect(s.club.get(1)!).toBeGreaterThan(s.club.get(2)!)
+    expect(s.club.get(1)!).toBeGreaterThan(s.club.get(3)!)
+  })
+
+  it('separates clubs by Europe far more than by a home-advantage drift', () => {
+    const ties = Array.from({ length: 12 }, (_, i) => ({
+      date: `2025-06-${String(1 + (i % 28)).padStart(2, '0')}`,
+      league: 99, home: 1, away: clubsB[i % 4], homeGoals: 4, awayGoals: 0,
+    }))
+    const s = buildEuropeanScale([...base, ...ties], cont, isLeague)
+    // 2 and 3 never left home; all-draw seasons still drift them a little apart
+    // because the home side is always the favourite
+    const drift = Math.abs(s.club.get(2)! - s.club.get(3)!)
+    const europe = s.club.get(1)! - s.club.get(2)!
+    expect(drift).toBeLessThan(2)
+    expect(europe).toBeGreaterThan(drift * 20)
+  })
+})
