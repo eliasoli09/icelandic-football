@@ -17,7 +17,7 @@ for (const l of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')) {
 }
 const dryRun = process.argv.includes('--dry')
 const SP = '/private/tmp/claude-501/-Users-elias-FH-leikmenn-/65c87b5e-6d92-47c6-b996-b5da95bfafe5/scratchpad'
-const { buildEuropeanScale, HOME_ADVANTAGE } = await import(join(webDir, 'src/lib/uefaRating.ts'))
+const { buildEuropeanScale, HOME_ADVANTAGE, RANKING_SCALE } = await import(join(webDir, 'src/lib/uefaRating.ts'))
 const { simulateSeason } = await import(join(webDir, 'src/lib/simulate.ts'))
 const { UEFA_SIMULATION_RUNS } = await import(join(webDir, 'src/lib/uefaConfig.ts'))
 const { predictMatch } = await import(join(webDir, 'src/lib/predict.ts'))
@@ -63,11 +63,38 @@ for (const l of readFileSync(`${SP}/sd/bt_fixtures.csv`, 'utf-8').split('\n').sl
 matches.sort((a, b) => a.date.localeCompare(b.date))
 const GOALS = { home: euroGoals.h / euroGoals.n, away: euroGoals.a / euroGoals.n }
 
+// the published league ranking, and how our league names map onto it
+const RANKING = JSON.parse(readFileSync(join(webDir, 'src/lib/data/leagueRankings.json'), 'utf-8')) as {
+  source: string; updated: string
+  leagues: { league: string; country: string; confederation: string; rating: number }[]
+}
+const COUNTRY: Record<string, string> = {
+  'Czech Republic': 'Czechia', 'Czech-Republic': 'Czechia', Turkey: 'Turkiye',
+  Macedonia: 'North Macedonia', Bosnia: 'Bosnia-Herzegovina',
+}
+const key = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '')
+const ranked = new Map<string, number>()
+for (const r of RANKING.leagues) ranked.set(`${key(r.country)}|${key(r.league)}`, r.rating)
+const publishedRating = (id: number) => {
+  const L = league.get(id); if (!L) return undefined
+  const c = key(COUNTRY[L.country] ?? L.country)
+  const direct = ranked.get(`${c}|${key(L.name)}`)
+  if (direct !== undefined) return direct
+  // the two sources name the same competition differently here and there
+  for (const [k, v] of ranked) {
+    if (!k.startsWith(c + '|')) continue
+    const n = k.slice(c.length + 1)
+    if (n === key(L.name) || n.includes(key(L.name)) || key(L.name).includes(n)) return v
+  }
+  return undefined
+}
+
 const scale = buildEuropeanScale(
   matches,
   (id: number) => CONTINENTAL.has(id),
   (id: number) =>
     !CONTINENTAL.has(id) && !isCup(league.get(id)?.name ?? '') && league.get(id)?.country !== 'World',
+  publishedRating,
 )
 
 // ── this season's competitions ─────────────────────────────────────────
@@ -94,6 +121,42 @@ const COMPS = [
   { key: 'uecl', name: 'Sambandsdeildin', direct: 8, playoff: 24 },
 ]
 
+// UEFA's own country coefficient: two points a win, one a draw, divided by how
+// many clubs the country entered, over five seasons. Shown beside the rating
+// because it is the number people recognise; it does not feed any prediction.
+const COEFF_SEASONS = [2021, 2022, 2023, 2024, 2025]
+const coeff = (() => {
+  const seasonOf = (d: string) => (d.slice(5) >= '07-01' ? Number(d.slice(0, 4)) : Number(d.slice(0, 4)) - 1)
+  const countryOf = new Map<number, string>()
+  for (const m of matches) {
+    const L = league.get(m.league)
+    if (!L || CONTINENTAL.has(m.league) || isCup(L.name)) continue
+    countryOf.set(m.home, L.country); countryOf.set(m.away, L.country)
+  }
+  const pts = new Map<string, number>(), ent = new Map<string, Set<number>>()
+  for (const m of matches) {
+    if (!CONTINENTAL.has(m.league)) continue
+    const s = seasonOf(m.date)
+    if (!COEFF_SEASONS.includes(s)) continue
+    for (const [t, gf, ga] of [[m.home, m.homeGoals, m.awayGoals], [m.away, m.awayGoals, m.homeGoals]] as [number, number, number][]) {
+      const c = countryOf.get(t); if (!c) continue
+      const set = ent.get(`${c}|${s}`) ?? new Set<number>(); set.add(t); ent.set(`${c}|${s}`, set)
+      pts.set(`${c}|${s}`, (pts.get(`${c}|${s}`) ?? 0) + (gf > ga ? 2 : gf === ga ? 1 : 0))
+    }
+  }
+  const out = new Map<string, number>()
+  for (const c of new Set(countryOf.values())) {
+    let total = 0
+    for (const s of COEFF_SEASONS) {
+      const e = ent.get(`${c}|${s}`)?.size ?? 0
+      if (e) total += (pts.get(`${c}|${s}`) ?? 0) / e
+    }
+    if (total > 0) out.set(c, Math.round(total * 100) / 100)
+  }
+  return out
+})()
+const coeffRank = new Map([...coeff].sort((a, b) => b[1] - a[1]).map(([c], i) => [c, i + 1]))
+
 const clubRows: Record<string, unknown>[] = []
 const matchRows: Record<string, unknown>[] = []
 const simRows: Record<string, unknown>[] = []
@@ -112,9 +175,9 @@ const GOAL_SCALE = leagueScale(scaleProbe, GOALS.home + GOALS.away)
 console.log('# Evrópukeppnirnar 2026/27')
 console.log(`# unnin ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC`)
 console.log('#')
-console.log('# Einkunn: staða félags í eigin deild plús styrkur deildarinnar, þar sem')
-console.log('# styrkur deilda er metinn eingöngu úr leikjum sem fóru yfir landamæri.')
-console.log(`# Byggt á ${scale.bridged.toLocaleString('is')} slíkum leikjum.`)
+console.log('# Einkunn: staða félags í eigin deild plús styrkur deildarinnar.')
+console.log(`# Styrkur deilda kemur frá ${RANKING.source} (${RANKING.updated}),`)
+console.log(`# og er stilltur úr ${scale.bridged.toLocaleString('is')} Evrópuleikjum fyrir deildir sem eru ekki á þeim lista.`)
 console.log(`# Mörk í Evrópukeppnum: heima ${GOALS.home.toFixed(2)}, úti ${GOALS.away.toFixed(2)} (skölun ${GOAL_SCALE.toFixed(3)})`)
 
 /** a prediction with the competition put back on its own scoring rate */
@@ -175,6 +238,9 @@ for (const comp of COMPS) {
       league_name: l !== undefined ? league.get(l)?.name ?? null : null,
       league_strength: l !== undefined ? Math.round(scale.league.get(l) ?? 1500) : null,
       rated: id != null && scale.club.has(id),
+      country: l !== undefined ? league.get(l)?.country ?? null : null,
+      coefficient: l !== undefined ? coeff.get(league.get(l)?.country ?? '') ?? null : null,
+      coefficient_rank: l !== undefined ? coeffRank.get(league.get(l)?.country ?? '') ?? null : null,
     })
   }
   const sim: SimRow[] = simulateSeason(

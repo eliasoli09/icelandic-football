@@ -505,6 +505,10 @@ export interface UefaClub {
   club: string; assoc: string; comp: string
   rating: number | null; league_name: string | null; league_strength: number | null
   rated: boolean
+  country: string | null
+  /** UEFA's own country coefficient, shown beside the rating; feeds nothing */
+  coefficient: number | null
+  coefficient_rank: number | null
 }
 export interface UefaMatch {
   id: string; comp: string; matchday: number; date: string | null

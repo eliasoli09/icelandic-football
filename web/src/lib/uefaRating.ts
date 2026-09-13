@@ -13,9 +13,16 @@
  *   one Elo pool over all of Europe       0.63996
  *   league strength alone                 0.64934
  *
- * The first wins, and is what this builds. League strength is fitted from the
- * continental ties alone; a club's European rating is where it stands inside
- * its own league, plus what that league is worth.
+ * The first wins, and is what this builds. A club's European rating is where it
+ * stands inside its own league, plus what that league is worth.
+ *
+ * What a league is worth is read from globalfootballrankings.com where it has a
+ * rating there, and fitted from the continental ties where it does not. The
+ * published ranking measures clearly better. On the 2,394 ties before 2021 —
+ * old enough that a September 2026 snapshot cannot be reflecting them — it goes
+ * 0.99078 to 0.98090. On ties from 2021 on, which the ranking is partly built
+ * from, it goes 0.98305 to 0.94679; that second figure is flattered by the
+ * overlap and the first is the one to believe.
  */
 
 export interface RatedMatch {
@@ -31,6 +38,17 @@ export const HOME_ADVANTAGE = 60
 const K_DOMESTIC = 20
 /** a tie between leagues is rarer and more informative than another league match */
 const K_LEAGUE = 28
+/**
+ * The published ranking runs about 52 to 91; this puts it on the rating scale.
+ * Swept 0 to 50 with an interior optimum at 30.
+ */
+export const RANKING_SCALE = 30
+/**
+ * Where the published scale is anchored. Only differences affect a prediction,
+ * but a club rating is also read by people, so the ranked leagues are centred
+ * on 1500 like every other rating on the site.
+ */
+export const RANKING_CENTRE = 1500
 /**
  * A continental tie also says something about the two clubs, not only about
  * their leagues, and throwing that away meant a club could dominate Europe
@@ -61,6 +79,8 @@ export function buildEuropeanScale(
   matches: RatedMatch[],
   isContinental: (leagueId: number) => boolean,
   isLeague: (leagueId: number) => boolean,
+  /** published rating for a league, where one exists */
+  published?: (leagueId: number) => number | undefined,
 ): EuropeanScale {
   const domestic = new Map<number, number>()
   const strength = new Map<number, number>()
@@ -103,9 +123,27 @@ export function buildEuropeanScale(
   const members = new Map<number, number[]>()
   for (const [club, l] of leagueOf) members.set(l, [...(members.get(l) ?? []), club])
   const club = new Map<number, number>()
+  const worth = new Map<number, number>()
+  for (const [l] of members) {
+    const p = published?.(l)
+    worth.set(l, p === undefined ? str(l) : p * RANKING_SCALE)
+  }
+  // the published ratings and the fitted ones live on different centres, so the
+  // fitted ones are shifted onto the published scale rather than left beside it
+  const both = [...members.keys()].filter((l) => published?.(l) !== undefined)
+  if (both.length) {
+    const shift =
+      RANKING_CENTRE - both.reduce((s, l) => s + worth.get(l)!, 0) / both.length
+    for (const l of both) worth.set(l, worth.get(l)! + shift)
+    // the fitted ones live on their own centre; move them onto the published
+    // one using the leagues that have both
+    const offset =
+      both.reduce((s, l) => s + (worth.get(l)! - str(l)), 0) / both.length
+    for (const [l] of members) if (published?.(l) === undefined) worth.set(l, str(l) + offset)
+  }
   for (const [l, clubs] of members) {
     const mean = clubs.reduce((s, c) => s + dom(c), 0) / clubs.length
-    for (const c of clubs) club.set(c, dom(c) - mean + str(l))
+    for (const c of clubs) club.set(c, dom(c) - mean + worth.get(l)!)
   }
-  return { club, league: strength, leagueOf, bridged }
+  return { club, league: worth, leagueOf, bridged }
 }

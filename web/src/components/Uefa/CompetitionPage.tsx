@@ -19,7 +19,7 @@ type Props = {
 export function CompetitionPage({competition,clubs,rows,ladder,upcoming,played}:Props) {
   const byClub=new Map(clubs.map(c=>[c.club,c]))
   const scale=strengthScale(ladder.map(l=>l.strength))
-  const standings=rows.map((r,i)=>({...r,rank:i+1,rating:byClub.get(r.club)?.rating??null,assoc:byClub.get(r.club)?.assoc,rated:byClub.get(r.club)?.rated}))
+  const standings=rows.map((r,i)=>({...r,rank:i+1,rating:byClub.get(r.club)?.rating??null,assoc:byClub.get(r.club)?.assoc,rated:byClub.get(r.club)?.rated,coefficient:byClub.get(r.club)?.coefficient??null,coefficientRank:byClub.get(r.club)?.coefficient_rank??null}))
   return <div className={styles.competition} data-uefa-theme={competition.key}>
     <CompetitionBackdrop competition={competition.key} />
     <header className={`${styles.hero} uefa-hero`}>

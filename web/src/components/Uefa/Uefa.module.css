@@ -133,3 +133,13 @@
 }
 
 @media (prefers-reduced-motion:reduce) { :global(body):has(.competition),:global(.league-theme):has(.competition) { transition:none; } }
+
+/* UEFA's own coefficient, beside the rating. Quieter than the rating because
+   it is context rather than the number the prediction runs on. */
+.coefficient {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.72em;
+  opacity: 0.62;
+  font-variant-numeric: tabular-nums;
+}

@@ -5,9 +5,15 @@ import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react'
 import { formatUefaNumber, probabilityLabel, probabilityWidth, sortStandings, type StandingsSort, type SortDirection, type SortableStanding } from '@/lib/uefaDisplay'
 import styles from './Uefa.module.css'
 
-export interface UefaStanding extends SortableStanding { assoc?: string; rated?: boolean }
+export interface UefaStanding extends SortableStanding {
+  assoc?: string
+  rated?: boolean
+  /** UEFA's own country coefficient, shown beside the rating; feeds nothing */
+  coefficient?: number | null
+  coefficientRank?: number | null
+}
 const columns: {key:StandingsSort;label:string}[] = [
-  {key:'rank',label:'#'}, {key:'club',label:'Lið'}, {key:'rating',label:'Einkunn'},
+  {key:'rank',label:'#'}, {key:'club',label:'Lið'}, {key:'rating',label:'Einkunn / UEFA'},
   {key:'proj_points',label:'Stig'}, {key:'p_top8',label:'8 efstu'},
   {key:'p_playoff',label:'Umspil'}, {key:'p_out',label:'Úr leik'},
 ]
@@ -31,7 +37,13 @@ export function UefaStandings({ rows }: { rows: UefaStanding[] }) {
         <th scope="row"><span className={styles.clubName}>{row.club}</span> <span className={styles.assoc}>{row.assoc}</span>
           {row.rated===false && <span className={styles.estimate} title="Félagið er ekki í einkunnagrunni; notast er við styrk deildarinnar.">metið af deild</span>}
         </th>
-        <td>{formatUefaNumber(row.rating)}</td><td>{formatUefaNumber(row.proj_points,1)}</td>
+        <td>
+          {formatUefaNumber(row.rating)}
+          {row.coefficient != null && <span className={styles.coefficient}
+            title={`Stuðull UEFA fyrir landið, fimm tímabil${row.coefficientRank ? ` — ${row.coefficientRank}. sæti` : ''}. Hann hefur engin áhrif á spána.`}>
+            {row.coefficient.toFixed(1)}
+          </span>}
+        </td><td>{formatUefaNumber(row.proj_points,1)}</td>
         {(['p_top8','p_playoff','p_out'] as const).map((key,i)=><td key={key}>
           <span className={styles.probability} data-outcome={i}>
             <span className={styles.track} aria-hidden="true"><span style={{width:`${probabilityWidth(row[key])}%`}} /></span>

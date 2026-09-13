@@ -1,0 +1,365 @@
+{
+ "source": "https://globalfootballrankings.com/rankings/leagues/men",
+ "captured": "2026-09-13",
+ "updated": "Sep 13, 2026",
+ "note": "Read from the rendered ranking table. robots.txt allows it and names crawlers explicitly. Iceland's Besta deild is not ranked.",
+ "leagues": [
+  {
+   "rank": 1,
+   "league": "Premier League",
+   "country": "England",
+   "confederation": "UEFA",
+   "rating": 91.0
+  },
+  {
+   "rank": 2,
+   "league": "Bundesliga",
+   "country": "Germany",
+   "confederation": "UEFA",
+   "rating": 86.4
+  },
+  {
+   "rank": 3,
+   "league": "LaLiga",
+   "country": "Spain",
+   "confederation": "UEFA",
+   "rating": 86.1
+  },
+  {
+   "rank": 4,
+   "league": "Serie A",
+   "country": "Italy",
+   "confederation": "UEFA",
+   "rating": 85.6
+  },
+  {
+   "rank": 5,
+   "league": "Ligue 1",
+   "country": "France",
+   "confederation": "UEFA",
+   "rating": 85.4
+  },
+  {
+   "rank": 6,
+   "league": "Serie A",
+   "country": "Brazil",
+   "confederation": "CONMEBOL",
+   "rating": 84.0
+  },
+  {
+   "rank": 7,
+   "league": "Pro League",
+   "country": "Belgium",
+   "confederation": "UEFA",
+   "rating": 82.6
+  },
+  {
+   "rank": 8,
+   "league": "Liga Portugal",
+   "country": "Portugal",
+   "confederation": "UEFA",
+   "rating": 82.0
+  },
+  {
+   "rank": 9,
+   "league": "Liga Profesional",
+   "country": "Argentina",
+   "confederation": "CONMEBOL",
+   "rating": 81.6
+  },
+  {
+   "rank": 10,
+   "league": "Championship",
+   "country": "England",
+   "confederation": "UEFA",
+   "rating": 81.1
+  },
+  {
+   "rank": 11,
+   "league": "Eliteserien",
+   "country": "Norway",
+   "confederation": "UEFA",
+   "rating": 80.4
+  },
+  {
+   "rank": 12,
+   "league": "Eredivisie",
+   "country": "Netherlands",
+   "confederation": "UEFA",
+   "rating": 80.1
+  },
+  {
+   "rank": 13,
+   "league": "Liga MX",
+   "country": "Mexico",
+   "confederation": "CONCACAF",
+   "rating": 80.0
+  },
+  {
+   "rank": 14,
+   "league": "MLS",
+   "country": "USA",
+   "confederation": "CONCACAF",
+   "rating": 80.0
+  },
+  {
+   "rank": 15,
+   "league": "Ekstraklasa",
+   "country": "Poland",
+   "confederation": "UEFA",
+   "rating": 79.9
+  },
+  {
+   "rank": 16,
+   "league": "Primera A",
+   "country": "Colombia",
+   "confederation": "CONMEBOL",
+   "rating": 79.9
+  },
+  {
+   "rank": 17,
+   "league": "Serie A",
+   "country": "Ecuador",
+   "confederation": "CONMEBOL",
+   "rating": 79.6
+  },
+  {
+   "rank": 18,
+   "league": "Super League",
+   "country": "Switzerland",
+   "confederation": "UEFA",
+   "rating": 79.6
+  },
+  {
+   "rank": 19,
+   "league": "1. Liga",
+   "country": "Czechia",
+   "confederation": "UEFA",
+   "rating": 79.4
+  },
+  {
+   "rank": 20,
+   "league": "Superliga",
+   "country": "Denmark",
+   "confederation": "UEFA",
+   "rating": 79.3
+  },
+  {
+   "rank": 21,
+   "league": "Super Lig",
+   "country": "Turkiye",
+   "confederation": "UEFA",
+   "rating": 79.2
+  },
+  {
+   "rank": 22,
+   "league": "HNL",
+   "country": "Croatia",
+   "confederation": "UEFA",
+   "rating": 78.9
+  },
+  {
+   "rank": 23,
+   "league": "Bundesliga",
+   "country": "Austria",
+   "confederation": "UEFA",
+   "rating": 78.9
+  },
+  {
+   "rank": 24,
+   "league": "Premier League",
+   "country": "Russia",
+   "confederation": "UEFA",
+   "rating": 78.8
+  },
+  {
+   "rank": 26,
+   "league": "LaLiga 2",
+   "country": "Spain",
+   "confederation": "UEFA",
+   "rating": 78.6
+  },
+  {
+   "rank": 28,
+   "league": "2. Bundesliga",
+   "country": "Germany",
+   "confederation": "UEFA",
+   "rating": 78.4
+  },
+  {
+   "rank": 30,
+   "league": "Super League 1",
+   "country": "Greece",
+   "confederation": "UEFA",
+   "rating": 78.1
+  },
+  {
+   "rank": 31,
+   "league": "1. Division",
+   "country": "Cyprus",
+   "confederation": "UEFA",
+   "rating": 78.0
+  },
+  {
+   "rank": 33,
+   "league": "Allsvenskan",
+   "country": "Sweden",
+   "confederation": "UEFA",
+   "rating": 77.0
+  },
+  {
+   "rank": 34,
+   "league": "Premiership",
+   "country": "Scotland",
+   "confederation": "UEFA",
+   "rating": 76.7
+  },
+  {
+   "rank": 35,
+   "league": "NB I",
+   "country": "Hungary",
+   "confederation": "UEFA",
+   "rating": 76.6
+  },
+  {
+   "rank": 40,
+   "league": "Ligat HaAl",
+   "country": "Israel",
+   "confederation": "UEFA",
+   "rating": 76.2
+  },
+  {
+   "rank": 41,
+   "league": "Ligue 2",
+   "country": "France",
+   "confederation": "UEFA",
+   "rating": 76.1
+  },
+  {
+   "rank": 43,
+   "league": "Serie B",
+   "country": "Italy",
+   "confederation": "UEFA",
+   "rating": 75.8
+  },
+  {
+   "rank": 44,
+   "league": "SuperLiga",
+   "country": "Romania",
+   "confederation": "UEFA",
+   "rating": 75.8
+  },
+  {
+   "rank": 45,
+   "league": "League One",
+   "country": "England",
+   "confederation": "UEFA",
+   "rating": 75.5
+  },
+  {
+   "rank": 48,
+   "league": "Premier League",
+   "country": "Azerbaijan",
+   "confederation": "UEFA",
+   "rating": 75.3
+  },
+  {
+   "rank": 51,
+   "league": "1. Liga",
+   "country": "Slovakia",
+   "confederation": "UEFA",
+   "rating": 74.8
+  },
+  {
+   "rank": 52,
+   "league": "First Professional League",
+   "country": "Bulgaria",
+   "confederation": "UEFA",
+   "rating": 74.8
+  },
+  {
+   "rank": 53,
+   "league": "Premier League",
+   "country": "Ukraine",
+   "confederation": "UEFA",
+   "rating": 74.6
+  },
+  {
+   "rank": 54,
+   "league": "Liga Portugal 2",
+   "country": "Portugal",
+   "confederation": "UEFA",
+   "rating": 74.5
+  },
+  {
+   "rank": 55,
+   "league": "Super Liga",
+   "country": "Serbia",
+   "confederation": "UEFA",
+   "rating": 74.4
+  },
+  {
+   "rank": 56,
+   "league": "Prva Liga",
+   "country": "Slovenia",
+   "confederation": "UEFA",
+   "rating": 73.9
+  },
+  {
+   "rank": 62,
+   "league": "Premier League",
+   "country": "Bosnia-Herzegovina",
+   "confederation": "UEFA",
+   "rating": 72.7
+  },
+  {
+   "rank": 63,
+   "league": "Veikkausliiga",
+   "country": "Finland",
+   "confederation": "UEFA",
+   "rating": 72.7
+  },
+  {
+   "rank": 69,
+   "league": "Challenger Pro League",
+   "country": "Belgium",
+   "confederation": "UEFA",
+   "rating": 71.6
+  },
+  {
+   "rank": 71,
+   "league": "Erovnuli Liga",
+   "country": "Georgia",
+   "confederation": "UEFA",
+   "rating": 70.8
+  },
+  {
+   "rank": 76,
+   "league": "League Two",
+   "country": "England",
+   "confederation": "UEFA",
+   "rating": 69.7
+  },
+  {
+   "rank": 77,
+   "league": "Virsliga",
+   "country": "Latvia",
+   "confederation": "UEFA",
+   "rating": 69.3
+  },
+  {
+   "rank": 79,
+   "league": "Eerste Divisie",
+   "country": "Netherlands",
+   "confederation": "UEFA",
+   "rating": 68.8
+  },
+  {
+   "rank": 89,
+   "league": "Championship",
+   "country": "Scotland",
+   "confederation": "UEFA",
+   "rating": 66.8
+  }
+ ]
+}
