@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { ribbonY, waveQuality, waveSettings } from '../src/components/LightWaves/field'
+import { ribbonY, travelingLight, waveQuality, waveSettings } from '../src/components/LightWaves/field'
 
 describe('light ribbon field', () => {
+  it('moves light continuously through the wrap boundary without a brightness jump', () => {
+    const wrap = 1.7 / .048
+    for (const x of [0, .25, .75, 1]) {
+      expect(Math.abs(travelingLight(x, wrap - .0001, 0, 1) - travelingLight(x, wrap + .0001, 0, 1))).toBeLessThan(.001)
+    }
+    expect(travelingLight(.35, 4, 0, 1)).not.toBeCloseTo(travelingLight(.35, 10, 0, 1), 2)
+  })
   it('changes curvature over time instead of translating a fixed layer', () => {
     const curvature = (x: number, t: number) =>
       ribbonY(x - 0.02, 0.1, 1, t) - 2 * ribbonY(x, 0.1, 1, t) + ribbonY(x + 0.02, 0.1, 1, t)

@@ -70,20 +70,23 @@ export function Dashboard({
   )
 
   return (
-    <div className="dashboard-content fade-up grid grid-cols-1 gap-6">
+    <div className="dashboard-content grid grid-cols-1 gap-6">
         {/* ── Hero band ─────────────────────────────────────────── */}
         <section className="wave-hero card" style={{ '--accent': theme.accent, '--accent-ink': theme.ink } as React.CSSProperties}>
           <LightWaves color={theme.accent} />
           <div className="wave-hero-content p-6 sm:p-8 grid grid-cols-1 gap-6 lg:grid-cols-[0.85fr_1.15fr] items-center relative">
-            <div>
+            <div className="wave-hero-copy">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] muted mb-2">
-                {d.country ? `${d.country} — knattspyrnugreining` : 'Knattspyrnugreining'}
+                {d.country ? `${d.country} — knattspyrnugreining` : 'Knattspyrnugreining'} · {d.title}
               </p>
-              <h1 data-entrance-focus tabIndex={-1} className="display text-3xl sm:text-5xl font-black tracking-tight mb-1" style={{ color: 'var(--accent)' }}>
-                {d.title}
+              <h1 data-entrance-focus tabIndex={-1} className="display wave-hero-title font-black tracking-tight">
+                Leikurinn<br /><span>byrjar hér.</span>
               </h1>
               <p className="muted text-sm mb-5">{d.tagline}</p>
-              <LeagueSwitcher />
+              <div className="wave-hero-actions">
+                {d.featured && <Link href={`/leikir/${d.featured.id}`} className="wave-hero-cta">Skoða leikspá <ArrowRight size={16} aria-hidden="true" /></Link>}
+                <LeagueSwitcher />
+              </div>
             </div>
 
             {d.featured ? (
@@ -116,6 +119,13 @@ export function Dashboard({
                 {d.featured.pHome !== null && (
                   <ProbBar pHome={d.featured.pHome} pDraw={d.featured.pDraw!} pAway={d.featured.pAway!} compact />
                 )}
+                {d.featured.pHome !== null && <div className="wave-hero-match-reveal"><div>
+                  <div className="wave-hero-outcomes">
+                    <span><strong style={{ color: 'var(--accent)' }}>{Math.round(d.featured.pHome * 100)}%</strong><small>Heimasigur</small></span>
+                    <span><strong>{Math.round(d.featured.pDraw! * 100)}%</strong><small>Jafntefli</small></span>
+                    <span><strong style={{ color: 'var(--ice)' }}>{Math.round(d.featured.pAway! * 100)}%</strong><small>Útisigur</small></span>
+                  </div>
+                </div></div>}
                 {d.featured.venue && (
                   <p className="text-[11px] muted mt-3 inline-flex items-center gap-1">
                     <MapPin size={11} aria-hidden /> {d.featured.venue}

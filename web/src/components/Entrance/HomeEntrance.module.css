@@ -60,6 +60,8 @@
 .start:disabled { cursor: default; }
 .start:focus-visible { background: #fffbea; filter: drop-shadow(0 0 18px #ffe898); }
 .skip:focus-visible { outline: 2px solid #f3d675; outline-offset: 4px; }
+.replay { display: flex; align-items: center; gap: 7px; margin: 24px 0 0 auto; min-height: 36px; padding: 7px 11px; border: 1px solid var(--border); border-radius: 99px; color: var(--text-2); font-size: 10px; cursor: pointer; }
+.replay:hover { color: var(--accent); border-color: var(--accent); }
 .caption {
   position: fixed; z-index: 61; top: calc(var(--ball-y) + var(--ball-r) * 1.6); left: 20px; right: 20px;
   text-align: center; color: #b5a37b; letter-spacing: .2em; text-transform: uppercase;

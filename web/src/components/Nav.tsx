@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useState } from 'react'
-import { Menu, X, Clock, Shield } from 'lucide-react'
+import { Menu, X, Clock, Shield, ChevronDown } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
 import { LeagueSwitcher } from './LeagueSwitcher'
 
@@ -13,6 +13,7 @@ const NAV = [
   { href: '/elo', label: 'Elo' },
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
+  { href: '/kort', label: 'Kort' },
   { href: '/leikmenn', label: 'Leikmenn' },
   { href: '/sludur', label: 'Slúður' },
   { href: '/uefa', label: 'Evrópa' },
@@ -20,6 +21,9 @@ const NAV = [
   { href: '/saga', label: 'Saga' },
   { href: '/h2h', label: 'H2H' },
 ]
+
+const PRIMARY_NAV = NAV.slice(0, 5)
+const MORE_NAV = NAV.slice(5)
 
 export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
   const pathname = usePathname()
@@ -49,7 +53,7 @@ export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
         </Link>
 
         <nav aria-label="Aðalvalmynd" className="hidden lg:flex gap-0.5 text-sm font-medium ml-2">
-          {NAV.map((n) => {
+          {PRIMARY_NAV.map((n) => {
             const active = isActive(n.href)
             return (
               <Link
@@ -71,12 +75,22 @@ export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
               </Link>
             )
           })}
+          <details className="relative">
+            <summary className="list-none cursor-pointer px-3 py-1.5 inline-flex items-center gap-1.5 rounded-md" style={{ color: MORE_NAV.some(n => isActive(n.href)) ? 'var(--text)' : 'var(--text-2)' }}>
+              Meira <ChevronDown size={12} aria-hidden />
+            </summary>
+            <div className="absolute left-0 top-full mt-3 min-w-40 rounded-xl border p-1.5 shadow-xl" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
+              {MORE_NAV.map(n => <Link key={n.href} href={n.href} aria-current={isActive(n.href) ? 'page' : undefined} className="block rounded-lg px-3 py-2.5 text-sm" style={{ color: isActive(n.href) ? 'var(--accent)' : 'var(--text-2)' }} onClick={event => event.currentTarget.closest('details')?.removeAttribute('open')}>{n.label}</Link>)}
+            </div>
+          </details>
         </nav>
 
         <div className="flex-1" />
 
         <div className="hidden md:block">
+          {pathname.startsWith('/kort') ? <span className="text-[10px] muted whitespace-nowrap">Besta + Lengju · 2026</span> :
           <LeagueSwitcher size="sm" />
+          }
         </div>
 
         <span className="hidden xl:inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full border"
@@ -112,7 +126,7 @@ export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
         >
-          <div className="md:hidden flex justify-center"><LeagueSwitcher size="sm" /></div>
+          {!pathname.startsWith('/kort') && <div className="md:hidden flex justify-center"><LeagueSwitcher size="sm" /></div>}
           <div className="grid grid-cols-2 gap-1.5">
             {NAV.map((n) => {
               const active = isActive(n.href)

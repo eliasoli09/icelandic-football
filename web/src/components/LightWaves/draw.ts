@@ -1,4 +1,4 @@
-import { ribbonBasis, ribbonY, seed, type WaveSettings, type waveQuality } from './field'
+import { ribbonBasis, ribbonY, seed, travelingLight, type WaveSettings, type waveQuality } from './field'
 
 export type RGB = [number, number, number]
 type Quality = ReturnType<typeof waveQuality>
@@ -39,8 +39,8 @@ export function drawWaves(
   flow?: WaveFlow,
 ) {
   ctx.clearRect(0, 0, width, height)
-  const light = mix(color, 0.62)
-  const deep = color.map(v => Math.round(v * 0.57)) as RGB
+  const light = mix(color, 0.58)
+  const deep = color.map(v => Math.round(v * 0.64)) as RGB
   const { threads, particles, samples, mobile } = quality
   const brightness = settings.brightness
   // Use the interpolated palette for the atmosphere as well as the threads.
@@ -55,7 +55,7 @@ export function drawWaves(
 
   for (let layer = 0; layer < 3; layer++) {
     const count = Math.floor(threads / 3) + (layer < threads % 3 ? 1 : 0)
-    const strength = [0.42, 0.9, 1.05][layer] * brightness
+    const strength = [0.46, 0.92, 1.0][layer] * brightness
     const baseColor = layer === 0 ? deep : color
     // Share the expensive field samples across neighboring threads.
     const basis = Array.from({ length: samples + 1 }, (_, j) => {
@@ -81,29 +81,27 @@ export function drawWaves(
 
       // One gradient stroke combines the continuous filament and traveling
       // light, avoiding a second rasterization of every path.
-      const edge = 0.45 + 0.55 * Math.cos(strand * Math.PI)
-      ctx.lineWidth = (layer === 0 ? 0.55 : 0.75) + (i % 7 === 0 ? 0.2 : 0)
+      const edge = (0.45 + 0.55 * Math.cos(strand * Math.PI)) * (.58 + .42 * seed(i + layer * 97))
+      ctx.lineWidth = [0.48, 0.63, 0.78][layer] + (i % 12 === 0 ? 0.15 : 0)
 
-      const packet = ((time * (0.042 + layer * 0.006) + strand * 0.19 + layer * 0.43) % 1.7) - 0.35
       const gradient = ctx.createLinearGradient(0, 0, width, 0)
       // A second, broader light trail prevents a ribbon from blinking as a
       // packet leaves. Each strand's phase differs slightly from its neighbor.
       for (let stop = 0; stop <= 16; stop++) {
         const x = stop / 16
-        const d = (x - packet) / 0.14
-        const trail = 0.18 + 0.18 * (0.5 + 0.5 * Math.sin(x * 10 - time * 0.44 + strand * 3 + layer))
         // Keep compressed folds translucent instead of merging into a thick
         // yellow band. Neighboring filaments still share the same lighting.
         const density = Math.min(1, Math.max(0.34, basis[Math.round(x * samples)].spread / 0.14))
-        const alpha = Math.min(1, strength * edge * density * (0.4 + trail + 0.7 * Math.exp(-d * d)))
-        gradient.addColorStop(x, rgba(i % 9 === 0 ? light : baseColor, alpha * (flow?.opacity(x, i, layer) ?? 1)))
+        const emphasis = .35 + .65 * Math.sin(x * Math.PI * .5)
+        const alpha = Math.min(1, strength * edge * density * emphasis * (.42 + travelingLight(x, time, strand, layer)))
+        gradient.addColorStop(x, rgba(i % 7 === 0 ? light : baseColor, alpha * (flow?.opacity(x, i, layer) ?? 1)))
       }
       ctx.strokeStyle = gradient
       ctx.stroke(path)
       // Only a few fine filaments receive a soft halo; no full-canvas blur.
-      if (i % 9 === 0 && layer > 0 && !mobile) {
-        ctx.globalAlpha = 0.14
-        ctx.lineWidth = 3.2
+      if (i % 12 === 0 && layer > 0 && !mobile) {
+        ctx.globalAlpha = 0.12
+        ctx.lineWidth = 3.5
         ctx.stroke(path)
         ctx.globalAlpha = 1
       }

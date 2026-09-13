@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { Shield, ArrowUpRight } from 'lucide-react'
+import { Shield, ArrowUpRight, RotateCcw } from 'lucide-react'
 import { EntranceClockContext } from './EntranceClock'
-import { deformY, entranceFrame, flowPoint, followerX, introQuality, mainBall, smooth, trailOpacity, waveRect, WAVE_START, type Rect } from './timeline'
+import { deformY, entranceFrame, flowPoint, followerX, introQuality, mainBall, smooth, trailOpacity, waveRect, WAVE_START, ENTRANCE_TIMING as timing, type Rect } from './timeline'
 import { drawWaves, resolveColor, type RGB } from '../LightWaves/draw'
 import { seed, waveQuality, waveSettings } from '../LightWaves/field'
 import type { BallInstance, BallRenderer } from './BallRenderer'
@@ -55,6 +55,7 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
     let previous: number | null = null
     let time = 0
     let idleTime = 0
+    let timeout: number | undefined
     let viewport: Rect = { x: 0, y: 0, width: innerWidth, height: innerHeight }
     let hero: Rect = viewport
     let palette: RGB = [232, 185, 60]
@@ -72,6 +73,8 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
       .map(el => ({ el, inert: el.inert }))
 
     html.dataset.entrance = 'waiting'
+    clock.current.waveTime = WAVE_START
+    clock.current.heroVisible = false
     clock.current.active = true
     blocked.forEach(({ el }) => { el.inert = true })
     document.body.style.overflow = 'hidden'
@@ -125,7 +128,7 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
         hero = { x: r.x + 1, y: r.y + 1, width: r.width - 2, height: r.height - 2 }
         targetPalette = resolveColor(getComputedStyle(element).getPropertyValue('--accent').trim() || '#e8b93c')
         destinationReady = true
-        if (renderer) setReady(true)
+        if (renderer) { clearTimeout(timeout); setReady(true) }
       } else {
         if (contentRef.current?.querySelector('p') && !contentRef.current.querySelector('[role="status"]')) {
           finish()
@@ -144,8 +147,8 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
       overlay.style.setProperty('--ball-y', `${main.y}px`)
       overlay.style.setProperty('--ball-r', `${main.radius}px`)
       overlay.style.setProperty('--charge', String(state.charge))
-      overlay.style.setProperty('--launch', String(smooth(.22, .42, t)))
-      overlay.style.setProperty('--floor-opacity', String(1 - smooth(.2, .7, t)))
+      overlay.style.setProperty('--launch', String(smooth(.28, .58, t)))
+      overlay.style.setProperty('--floor-opacity', String(1 - smooth(.3, 1.05, t)))
       const balls: BallInstance[] = []
       if (main.alpha > 0) balls.push(main)
       if (started && !reduced.matches) {
@@ -162,9 +165,9 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
           const size = (viewport.width < 768 ? 4 : 6) + seed(i + 100) * (viewport.width < 768 ? 8 : 13)
           const alpha = state.balls * smooth(-.08, .04, x) * (1 - smooth(1, 1.1, x))
           if (alpha > .002) balls.push({
-            ...p, radius: size * (1 - smooth(1.1, 2.2, t) * .96),
-            rotationX: t * .5 + seed(i) * 2,
-            rotationY: t * 1.5 + seed(i + 2) * 6, rotationZ: t * -.35,
+            ...p, radius: size * (1 - smooth(1.5, 2.95, t) * .96),
+            rotationX: t * .36 + seed(i) * 2,
+            rotationY: t * 1.1 + seed(i + 2) * 6, rotationZ: t * -.24,
             alpha, logo: false,
           })
         }
@@ -175,19 +178,20 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
         // The settled hero fades in as one opaque composition over this same
         // frame. Keep the source present until the handoff is fully covered.
         region.style.opacity = '1'
-        region.style.setProperty('--settle', String(smooth(1.5, 2.7, t)))
+        region.style.setProperty('--settle', String(smooth(timing.settleStart, timing.settleEnd, t)))
         ctx.setTransform(waves.width / rect.width, 0, 0, waves.height / rect.height, 0, 0)
         drawWaves(ctx, rect.width, rect.height, clock.current.waveTime, palette, { x: 0, y: 0 }, settings, q, {
           deform: (x, strand, layer, y) => deformY(x, strand, layer, y, t),
           opacity: (x, index, layer) => trailOpacity(x, index, layer, q.threads, quality.balls, t),
-          particles: smooth(1.4, 2.2, t),
+          particles: smooth(1.8, 2.95, t),
         })
         html.style.setProperty('--entrance-hero', String(state.hero))
         html.style.setProperty('--entrance-content', String(state.content))
-        html.style.setProperty('--entrance-handoff', String(smooth(2.75, 3.05, t)))
-        clock.current.heroVisible = t >= 2.7
-        if (t >= 2.2) html.dataset.entrance = 'reveal'
-        overlay.style.setProperty('--backdrop', String(1 - smooth(2.2, 2.8, t)))
+        html.style.setProperty('--entrance-handoff', String(smooth(timing.handoffStart, timing.handoffEnd, t)))
+        // Warm the destination canvas before its first visible crossfade frame.
+        clock.current.heroVisible = t >= timing.settleEnd - .15
+        if (t >= timing.heroStart) html.dataset.entrance = 'reveal'
+        overlay.style.setProperty('--backdrop', String(1 - smooth(timing.heroStart, timing.heroEnd, t)))
       }
       renderer.render(balls)
     }
@@ -204,7 +208,7 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
           if (time >= .18) { finish(); return }
         } else {
           clock.current.waveTime += dt
-          const blend = smooth(1.5, 2.7, time)
+          const blend = smooth(timing.settleStart, timing.settleEnd, time)
           palette = [232, 185, 60].map((v, i) => v + (targetPalette[i] - v) * blend) as RGB
           if (entranceFrame(time).complete) { finish(); return }
         }
@@ -220,6 +224,7 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
     }
     const start = () => {
       if (started || !renderer || !destinationReady || disposed || finished) return
+      clearTimeout(timeout)
       started = true
       remember()
       setRunning(true)
@@ -254,14 +259,13 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
     canvas.addEventListener('webglcontextlost', onLost)
 
     // A missing image, unsupported GPU or delayed chunk must never trap visitors.
-    const timeout = window.setTimeout(finish, 8000)
+    timeout = window.setTimeout(finish, 8000)
     const logo = new Image()
     logo.onload = async () => {
       try {
         const { BallRenderer } = await import('./BallRenderer')
         if (disposed || finished) return
         renderer = new BallRenderer(canvas, logo)
-        clearTimeout(timeout)
         measure()
         sync()
         if (startRef.current && destinationReady) {
@@ -297,9 +301,19 @@ export function HomeEntrance({ children }: { children: ReactNode }) {
     }
   }, [visible])
 
+  const replay = () => {
+    consumed = false
+    try { sessionStorage.removeItem(SESSION_KEY) } catch { /* Memory fallback. */ }
+    delete document.documentElement.dataset.entranceSeen
+    setReady(false)
+    setRunning(false)
+    setVisible(true)
+  }
+
   return (
     <EntranceClockContext.Provider value={clock}>
       <div ref={contentRef} className="entrance-page">{children}</div>
+      {!visible && <button className={styles.replay} onClick={replay}><RotateCcw size={13} aria-hidden="true" />Spila inngang aftur</button>}
       {visible && (
         <div ref={overlayRef} className={`${styles.overlay} entrance-overlay`} role="dialog" aria-modal="true" aria-label="Velkomin í Bestu spána">
           <div className={`${styles.scene} entrance-scene`} aria-hidden="true">

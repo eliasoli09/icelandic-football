@@ -63,6 +63,8 @@ html[data-entrance-seen='true']:not([data-entrance]) .entrance-overlay { display
 html[data-entrance] .dashboard-content { animation: none; }
 html[data-entrance] .league-theme > header,
 html[data-entrance] .wave-hero-content { opacity: var(--entrance-hero, 0); }
+html[data-entrance] .wave-hero-copy { transform: translateY(calc((1 - var(--entrance-hero, 0)) * 14px)); }
+html[data-entrance] .wave-hero-match { transform: translateY(calc((1 - var(--entrance-hero, 0)) * 9px)); }
 html[data-entrance] .league-theme > footer,
 html[data-entrance] .dashboard-content > :not(.wave-hero),
 html[data-entrance] .entrance-page > :not(.dashboard-content) { opacity: var(--entrance-content, 0); }
@@ -163,7 +165,22 @@ h1, h2, h3, .display {
 }
 .wave-hero-content { min-height: 360px; z-index: 1; }
 .wave-hero-content > * { min-width: 0; }
-.wave-hero-match { backdrop-filter: blur(7px); }
+.wave-hero-title { font-size: clamp(38px, 4.6vw, 60px); line-height: .97; letter-spacing: -.045em; margin: 11px 0 15px; }
+.wave-hero-title span { color: var(--accent); }
+.wave-hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.wave-hero-cta { display: inline-flex; align-items: center; gap: 11px; min-height: 44px; padding: 11px 18px; border-radius: 99px; background: linear-gradient(130deg, color-mix(in srgb, var(--accent) 58%, white), var(--accent)); color: var(--accent-ink); font-size: 12px; font-weight: 800; box-shadow: 0 3px 18px color-mix(in srgb, var(--accent) 15%, transparent); transition: transform .4s ease, box-shadow .4s ease; }
+.wave-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 5px 24px color-mix(in srgb, var(--accent) 24%, transparent); }
+.wave-hero-match { backdrop-filter: blur(9px); transition: border-color .65s ease, transform .65s cubic-bezier(.22,1,.36,1), box-shadow .65s ease; }
+.wave-hero-match:hover, .wave-hero-match:focus-visible { transform: translateY(-3px) scale(1.012); border-color: color-mix(in srgb, var(--accent) 78%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 15%, transparent), 0 0 26px color-mix(in srgb, var(--accent) 14%, transparent), 0 18px 35px #0005; }
+/* Reserve the details' intrinsic height. Animating this grid from 0fr to 1fr
+   resized and cleared the wave canvas on every hover frame. */
+.wave-hero-match-reveal { display: grid; grid-template-rows: 1fr; opacity: 0; transform: translateY(5px); transition: opacity .5s ease, transform .65s cubic-bezier(.22,1,.36,1); }
+.wave-hero-match-reveal > div { min-height: 0; overflow: hidden; }
+.wave-hero-match:hover .wave-hero-match-reveal, .wave-hero-match:focus-visible .wave-hero-match-reveal { opacity: 1; transform: translateY(0); }
+.wave-hero-outcomes { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 16px; padding-top: 12px; border-top: 1px solid #ffffff10; text-align: center; }
+.wave-hero-outcomes > span + span { border-left: 1px solid #ffffff12; }
+.wave-hero-outcomes strong { display: block; font-size: 22px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.wave-hero-outcomes small { color: var(--text-2); font-size: 9px; }
 @media (min-width: 1024px) {
   .wave-hero-match { width: 100%; max-width: 430px; }
 }
