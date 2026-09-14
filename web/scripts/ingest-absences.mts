@@ -87,6 +87,7 @@ for (const [key, club] of Object.entries(data.clubs)) {
     const row = {
       league: club.league, team_id: id, player_id: a.player_id, player: a.name,
       reason: a.reason, since: iso(a.since), until: iso(a.until), market_value: a.value,
+      captured: data.captured,
     }
     const seen = longest.get(a.player_id)
     if (!seen) { longest.set(a.player_id, row); continue }
