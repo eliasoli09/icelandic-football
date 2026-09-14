@@ -80,12 +80,22 @@ DATE = re.compile(r"^\d{2}/\d{2}/\d{4}$")
 
 
 def tidy_name(cell):
-    """The squad cell holds the name twice, then the position: 'Pedri Pedri Midfield'."""
+    """Pull the player's name out of Transfermarkt's player cell.
+
+    The cell holds the name twice and then the position — 'Pedri Pedri
+    Midfield' — and for a player on loan it puts the parent club first:
+    'SS Lazio Ivan Provedel Ivan Provedel Goalkeeper'. So the name is the
+    longest run of words that repeats immediately, wherever it starts.
+    """
     words = re.sub(r"\s+", " ", cell or "").strip().split()
-    for k in range(len(words) // 2, 0, -1):
-        if words[:k] == words[k:2 * k]:
-            return " ".join(words[:k])
-    return " ".join(words[:3])
+    best = ""
+    for start in range(len(words)):
+        for k in range((len(words) - start) // 2, 0, -1):
+            if words[start:start + k] == words[start + k:start + 2 * k]:
+                if k * 2 > len(best.split()):
+                    best = " ".join(words[start:start + k])
+                break
+    return best or " ".join(words[:3])
 
 
 def club_absences(club_id, slug):
@@ -100,23 +110,24 @@ def club_absences(club_id, slug):
         value[pid] = next((money(c) for c in reversed(row["cells"]) if "€" in c), 0.0)
         name_of[pid] = row["cells"][1] if len(row["cells"]) > 1 else ""
 
+    # The injury table's columns are fixed: player, age, reason, since,
+    # expected return, matches missed. Searching the cells instead of indexing
+    # them put a loan club in the name and the name in the reason.
     absent = []
     for row in read_rows(fetch(
         f"https://www.transfermarkt.com/{slug}/sperrenundverletzungen/verein/{club_id}",
         f"inj_{club_id}.html")):
         pid = player_id(row["links"])
-        if not pid:
+        cells = row["cells"]
+        if not pid or len(cells) < 5:      # the Injuries/Suspensions headings
             continue
-        cells = [c for c in row["cells"] if c]
-        dates = [c for c in cells if DATE.match(c)]
-        reason = next((c for c in cells if not DATE.match(c) and not c.isdigit()
-                       and c != name_of.get(pid, "") and len(c) > 3), "")
+        since, until = cells[3], cells[4]
         absent.append({
             "player_id": pid,
-            "name": tidy_name(name_of.get(pid, "")),
-            "reason": reason,
-            "since": dates[0] if dates else None,
-            "until": dates[1] if len(dates) > 1 else None,
+            "name": tidy_name(cells[0]) or tidy_name(name_of.get(pid, "")),
+            "reason": cells[2].strip(),
+            "since": since if DATE.match(since) else None,
+            "until": until if DATE.match(until) else None,
             "value": round(value.get(pid, 0.0)),
         })
 

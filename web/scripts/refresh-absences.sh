@@ -13,12 +13,14 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 CACHE="${TM_CACHE:-$HOME/.cache/transfermarkt}"
-OUT="$(mktemp -t absences).json"
+# mktemp creates the file it names, so appending a suffix would leave that one
+# behind every run; take a directory and put the file inside it instead
+WORK="$(mktemp -d -t absences)"
+OUT="$WORK/absences.json"
+trap 'rm -rf "$WORK" "$CACHE"' EXIT
 # yesterday's pages must not be reused, or every day records the same absences
 rm -rf "$CACHE"
 mkdir -p "$CACHE"
 
 TM_CACHE="$CACHE" python3 scripts/lib/tm_absences.py "$OUT"
 npx tsx scripts/ingest-absences.mts "$OUT"
-rm -f "$OUT"
-rm -rf "$CACHE"
