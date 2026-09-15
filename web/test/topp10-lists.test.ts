@@ -47,7 +47,7 @@ describe('Topp 10 lists', () => {
       it('uses a plain hyphen, not a dash, in what it shows', () => {
         const shown = [list.title, list.question, list.note ?? '', ...list.sources.map((s) => s.name),
           ...list.answers.flatMap((a) => [a.label, a.detail, a.hint ?? '', a.slot ?? ''])]
-        for (const text of shown) expect(text).not.toMatch(/[–—]/)
+        for (const text of shown) expect(text).not.toMatch(/[\u2013\u2014]/)
       })
     })
   }

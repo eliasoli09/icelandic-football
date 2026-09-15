@@ -1,11 +1,11 @@
 export function formatUefaNumber(value: number | null | undefined, digits = 0): string {
-  if (value == null || !Number.isFinite(value)) return '—'
+  if (value == null || !Number.isFinite(value)) return '-'
   const [whole, fraction] = value.toFixed(digits).split('.')
   return whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (fraction ? `,${fraction}` : '')
 }
 
 export function probabilityLabel(value: number | null): string {
-  if (value === null || !Number.isFinite(value)) return '—'
+  if (value === null || !Number.isFinite(value)) return '-'
   if (value > 0 && value < .005) return '<1%'
   return `${Math.round(value * 100)}%`
 }

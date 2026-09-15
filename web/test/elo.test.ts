@@ -56,14 +56,14 @@ describe('runElo', () => {
     const recs = runElo([m('A', 'B', 2, 0, 1), m('B', 'A', 2, 0, 2)])
     const cur = currentRatings(recs)
     expect(cur.size).toBe(2)
-    // A won then lost by same margin vs same opponent — near-symmetric
+    // A won then lost by same margin vs same opponent - near-symmetric
     expect(Math.abs(cur.get('A')! - cur.get('B')!)).toBeLessThan(10)
   })
 })
 
 // Elo is sequential, so a run must be able to continue from stored ratings
-// rather than replaying every season — that is what makes many leagues viable.
-describe('runElo — resuming from stored ratings', () => {
+// rather than replaying every season - that is what makes many leagues viable.
+describe('runElo - resuming from stored ratings', () => {
   const m = (matchId: number, order: number, home: string, away: string, hg: number, ag: number): EloMatch => ({
     matchId, order, date: null, league: 'besta', home, away, homeGoals: hg, awayGoals: ag,
   })

@@ -85,7 +85,7 @@ async function leagueScorers(league: League): Promise<Map<string, { goals: numbe
 }
 
 /**
- * @param season the league's own current season — competitions do not share a
+ * @param season the league's own current season - competitions do not share a
  *   calendar, so the English 2025/26 must not be looked up as 2026.
  */
 export async function dashboardData(league: League, season = CURRENT_SEASON): Promise<DashboardBundle> {
@@ -143,7 +143,7 @@ export async function dashboardData(league: League, season = CURRENT_SEASON): Pr
     }))
     .sort((a, b) => b.elo - a.elo)
 
-  // zones — after the split the halves are frozen, so order by half first
+  // zones - after the split the halves are frozen, so order by half first
   const cfg = LEAGUES[league]
   const ordered = applySplit(table, splitGroups(leagueMatches))
   const n = ordered.length
@@ -175,7 +175,7 @@ export async function dashboardData(league: League, season = CURRENT_SEASON): Pr
         { cls: 'zone-down', label: `Fallsæti (${down} neðstu)` },
       ]
     : [
-        { cls: 'zone-champ', label: league === 'besta' ? 'Efsta sæti — Íslandsmeistarar' : 'Meistarar' },
+        { cls: 'zone-champ', label: league === 'besta' ? 'Efsta sæti - Íslandsmeistarar' : 'Meistarar' },
         { cls: 'zone-up', label: `Evrópusæti (${up} efstu)` },
         { cls: 'zone-down', label: `Fallsæti (${down} neðstu)` },
       ]
@@ -199,12 +199,12 @@ export async function dashboardData(league: League, season = CURRENT_SEASON): Pr
   const cleanSheets = played.filter((m) => m.home_goals === 0 || m.away_goals === 0).length
   const biggest = played.reduce((a, m) => Math.max(a, m.home_goals! + m.away_goals!), 0)
   const draws = played.filter((m) => m.home_goals === m.away_goals).length
-  const pct = (x: number) => (played.length ? `${Math.round((x / played.length) * 100)}%` : '—')
+  const pct = (x: number) => (played.length ? `${Math.round((x / played.length) * 100)}%` : '-')
   const keyStats = [
-    { label: 'Mörk að meðaltali', value: played.length ? (totalGoals / played.length).toFixed(2) : '—', sub: 'í leik' },
+    { label: 'Mörk að meðaltali', value: played.length ? (totalGoals / played.length).toFixed(2) : '-', sub: 'í leik' },
     { label: 'Heimasigrar', value: pct(homeWins), sub: 'af leikjum' },
     { label: 'Bæði skora', value: pct(bothScored), sub: 'af leikjum' },
-    { label: 'Markahæsti leikur', value: played.length ? String(biggest) : '—', sub: 'mörk alls' },
+    { label: 'Markahæsti leikur', value: played.length ? String(biggest) : '-', sub: 'mörk alls' },
     { label: 'Hrein netta', value: pct(cleanSheets), sub: 'annað liðið á núlli' },
     { label: 'Jafntefli', value: pct(draws), sub: 'af leikjum' },
   ]

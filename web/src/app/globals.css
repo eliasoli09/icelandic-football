@@ -73,7 +73,7 @@ html[data-entrance] .wave-hero > [aria-hidden='true'] { opacity: var(--entrance-
 html[data-entrance='reveal'] .entrance-scene { z-index: 0; }
 
 /* Light mode has no translucent surface, so solid is the same colour. Scoped
-   away from .dark, which sets its own opaque value — an unscoped :root rule
+   away from .dark, which sets its own opaque value - an unscoped :root rule
    here has equal specificity and, coming later, silently made every popover
    see-through. */
 :root:not(.dark) { --surface-solid: var(--surface); }
@@ -328,7 +328,7 @@ h1, h2, h3, .display {
     0 0 14px -2px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
-/* 2.5D podium (tafla top-3) — front + skewed top/side faces in club colors */
+/* 2.5D podium (tafla top-3) - front + skewed top/side faces in club colors */
 .podium {
   display: flex;
   align-items: flex-end;

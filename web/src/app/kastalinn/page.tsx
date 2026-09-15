@@ -41,7 +41,7 @@ export default async function KastalinnPage() {
     const winner = h.taken ? h.holder_after : null
     if (winner !== null) wins.set(winner, (wins.get(winner) ?? 0) + 1)
     else if (h.holder_before === h.holder_after) {
-      // draw or won defense — we can't distinguish here; wins counted via taken+defended below
+      // draw or won defense - we can't distinguish here; wins counted via taken+defended below
     }
   }
   // ranking by reigns then title matches
@@ -86,7 +86,7 @@ export default async function KastalinnPage() {
         <div className="mt-4">
           <ShareButton
             title="Konungur kastalans"
-            text={`👑 ${nm(holder)} eru konungar kastalans — ${defenses} ${defenses === 1 ? 'vörn' : 'varnir'} í röð!`}
+            text={`👑 ${nm(holder)} eru konungar kastalans - ${defenses} ${defenses === 1 ? 'vörn' : 'varnir'} í röð!`}
             path="/kastalinn"
             imagePath="/api/og/kastalinn"
           />
@@ -94,14 +94,14 @@ export default async function KastalinnPage() {
         <p className="text-[11px] muted mt-4 max-w-xl mx-auto">
           Óopinber meistaratign íslenska boltans, að hætti UFWC, með óslitna línu frá 1912: á tímabilinu 1912–1984 gekk beltið milli Íslandsmeistara
           (KSÍ á ekki einstök leikjaúrslit frá þeim tíma), og frá 1985 er það varið í hverjum einasta deildarleik
-          — meistarar ÍA 1984 báru beltið inn í leikjatímabilið og síðan hefur það gengið mann fram af manni — tapist leikur fer beltið
+          - meistarar ÍA 1984 báru beltið inn í leikjatímabilið og síðan hefur það gengið mann fram af manni - tapist leikur fer beltið
           til andstæðingsins, jafntefli og sigrar halda því. {history.length.toLocaleString('is-IS')} titilleikir frá upphafi.
         </p>
       </section>
 
       <div className="grid gap-8 lg:grid-cols-2">
         <section>
-          <h2 className="display text-lg font-extrabold mb-4">Konungaröðin — flestar valdatíðir</h2>
+          <h2 className="display text-lg font-extrabold mb-4">Konungaröðin - flestar valdatíðir</h2>
           <div className="card p-4">
             <table className="w-full text-sm">
               <thead>

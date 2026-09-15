@@ -13,18 +13,18 @@ const NAV = [
   { href: '/elo', label: 'Elo' },
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
+  { href: '/topp10', label: 'Topp 10' },
   { href: '/kort', label: 'Kort' },
   { href: '/leikmenn', label: 'Leikmenn' },
   { href: '/sludur', label: 'Slúður' },
   { href: '/uefa', label: 'Evrópa' },
-  { href: '/topp10', label: 'Topp 10' },
   { href: '/kastalinn', label: 'Kastalinn' },
   { href: '/saga', label: 'Saga' },
   { href: '/h2h', label: 'H2H' },
 ]
 
-const PRIMARY_NAV = NAV.slice(0, 5)
-const MORE_NAV = NAV.slice(5)
+const PRIMARY_NAV = NAV.slice(0, 6)
+const MORE_NAV = NAV.slice(6)
 
 export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
   const pathname = usePathname()

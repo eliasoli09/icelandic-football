@@ -44,7 +44,7 @@ export default async function SagaPage() {
           <ShareButton title="Saga efstu deildar" text="All-time tafla íslensku efstu deildarinnar frá 1912:" path="/saga" />
         </div>
         <p className="text-sm muted max-w-2xl">
-          Hvert einasta keppnistímabil frá upphafi — smelltu á lið til að lesa AI-greiningu á sögu þess og stöðu.
+          Hvert einasta keppnistímabil frá upphafi - smelltu á lið til að lesa AI-greiningu á sögu þess og stöðu.
         </p>
       </div>
 

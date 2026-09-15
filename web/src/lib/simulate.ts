@@ -35,8 +35,8 @@ export interface SeasonSimResult {
   pEurope: number // top 3 (approximation, documented)
   pRelegation: number // bottom 2
   projectedPoints: number // mean final points across runs
-  pointsLow: number // 10th percentile — a bad run of results
-  pointsHigh: number // 90th percentile — a good one
+  pointsLow: number // 10th percentile - a bad run of results
+  pointsHigh: number // 90th percentile - a good one
 }
 
 const REGULAR_ROUNDS_GAMES = 22
@@ -46,7 +46,7 @@ const REGULAR_ROUNDS_GAMES = 22
  * Remaining regular fixtures are played; if the split phase hasn't happened,
  * the table after 22 rounds splits top 6 / bottom 6, each group playing a
  * single round robin (5 games, points carried). Home side in split games is
- * random — the real KSÍ schedule isn't known in advance.
+ * random - the real KSÍ schedule isn't known in advance.
  */
 export function simulateSeason(
   teams: SimTeamState[],
@@ -58,7 +58,7 @@ export function simulateSeason(
     upSlots?: number
     /**
      * Frozen split halves, once KSÍ has published them. The halves never meet
-     * again, so they are ranked separately — the upper half takes places 1–6
+     * again, so they are ranked separately - the upper half takes places 1–6
      * and the lower half 7–12 however the points fall. When this is set the
      * caller is expected to pass the real split fixtures in `remainingRegular`,
      * so no synthetic split round is generated.

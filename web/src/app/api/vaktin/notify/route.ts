@@ -59,13 +59,13 @@ export async function POST(req: NextRequest) {
       for (const l of result.legs) {
         const was = prev[l.id]
         if (was === l.status) continue
-        if (l.status === 'vann') messages.push(`✅ ${l.label} — í höfn!`)
-        else if (l.status === 'tapad') messages.push(`❌ ${l.label} — datt`)
+        if (l.status === 'vann') messages.push(`✅ ${l.label} - í höfn!`)
+        else if (l.status === 'tapad') messages.push(`❌ ${l.label} - datt`)
       }
       const prevAlive = !Object.values(prev).includes('tapad')
       if (prevAlive && !result.alive) messages.push(`Seðillinn datt (${result.vann}/${result.legs.length} í höfn)`)
       else if (result.alive && result.vann === result.legs.length && Object.values(prev).some((s) => s !== 'vann')) {
-        messages.push(`🎉 SEÐILLINN VANN — allir ${result.legs.length} leggir í höfn!`)
+        messages.push(`🎉 SEÐILLINN VANN - allir ${result.legs.length} leggir í höfn!`)
       }
     }
 

@@ -15,7 +15,7 @@ const BASE = 'https://www.betexplorer.com'
 const LEAGUE_SLUGS = ['besta-deild-karla', 'division-1']
 const fixturesUrl = (leagueSlug: string) => `${BASE}/football/iceland/${leagueSlug}/fixtures/`
 const UA = 'Mozilla/5.0 (compatible; islensk-fotbolti.vercel.app; odds display)'
-/** Only ask for odds this close to kickoff — books price this league late. */
+/** Only ask for odds this close to kickoff - books price this league late. */
 const HORIZON_DAYS = 12
 
 /** BetExplorer team slug → team name in our teams table. */
@@ -113,7 +113,7 @@ export interface BookmakerOdds {
 /**
  * Parse the match-odds JSON payload (HTML table) into per-bookmaker 1X2 odds.
  * Cells carry data-pos: 1 = home, 0 = draw, 2 = away (verified against our
- * own predictions). Rows missing any outcome are skipped — heavy favourites
+ * own predictions). Rows missing any outcome are skipped - heavy favourites
  * often lack the short odds until books post the full market, and the
  * position attributes are unreliable on those partial rows.
  */
@@ -149,7 +149,7 @@ const fetchText = async (url: string, referer?: string) => {
 
 /**
  * Fetch odds for near-term fixtures and replace them in match_odds.
- * Failures are reported, never thrown — odds are a bonus layer on top
+ * Failures are reported, never thrown - odds are a bonus layer on top
  * of the ingest pipeline and must not break it.
  */
 export async function refreshOdds(): Promise<{

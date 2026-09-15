@@ -34,7 +34,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
   })
 }
 
-/** Toggle a manual leg. The slug is the capability — whoever has it may tick. */
+/** Toggle a manual leg. The slug is the capability - whoever has it may tick. */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   let body: { legId?: string; done?: boolean }

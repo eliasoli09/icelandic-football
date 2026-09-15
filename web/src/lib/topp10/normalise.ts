@@ -2,9 +2,9 @@
  * The single spelling both the list builder and the game reduce a name to, so
  * a guess and an accepted answer are compared on the same terms.
  *
- * Icelandic letters are spelled out rather than dropped — "Þórisson" becomes
+ * Icelandic letters are spelled out rather than dropped - "Þórisson" becomes
  * "thorisson", which is how most people type it without an Icelandic keyboard
- * — and every other accent is removed.
+ * - and every other accent is removed.
  */
 export function normalise(text: string): string {
   return text

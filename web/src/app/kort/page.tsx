@@ -7,7 +7,7 @@ import { seasonMatches } from '@/lib/queries'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Heimavellir Íslands — Besta spáin',
+  title: 'Heimavellir Íslands - Besta spáin',
   description: 'Kannaðu heimavelli 24 félaga í Bestu deild og Lengjudeild karla 2026 á gagnvirku Íslandskorti. Félögin, sögurnar og vegalengdirnar á milli þeirra.',
 }
 

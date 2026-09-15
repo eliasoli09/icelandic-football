@@ -1,7 +1,7 @@
 /**
  * Shared live evaluation for bet slips: loads the slip's matches, overlays
  * in-play scores/events from API-Football, evaluates every leg, and attaches
- * minute-by-minute win probabilities (time-decayed Poisson — see inplay.ts).
+ * minute-by-minute win probabilities (time-decayed Poisson - see inplay.ts).
  * Used by the slip status route (viewer polling) and the notify endpoint
  * (pg_cron minute pulse).
  */
@@ -75,7 +75,7 @@ function legProbability(
     case 'baedi_skora':
       return probBtts(gh, ga, lh, la)
     case 'markaskorari':
-      // team unknown — use the average remaining team rate as an approximation
+      // team unknown - use the average remaining team rate as an approximation
       return probScorer((lh + la) / 2)
     default:
       return null

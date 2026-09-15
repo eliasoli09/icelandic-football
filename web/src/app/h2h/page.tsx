@@ -41,14 +41,14 @@ export default async function H2HPage({
   return (
     <div className="max-w-2xl mx-auto">
       <h1 className="display text-2xl font-black mb-1">Innbyrðis viðureignir</h1>
-      <p className="text-sm muted mb-4">Veldu tvö lið — efsta deild frá 1985 og Lengjudeildin frá 2019 (KSÍ á ekki leikjaúrslit eldri leikja).</p>
+      <p className="text-sm muted mb-4">Veldu tvö lið - efsta deild frá 1985 og Lengjudeildin frá 2019 (KSÍ á ekki leikjaúrslit eldri leikja).</p>
       <form className="flex gap-3 mb-6" method="get">
         <select name="a" defaultValue={a ?? ''} className="card px-3 py-2 text-sm flex-1" style={{ color: 'var(--text)' }}>
-          <option value="">— Lið A —</option>
+          <option value="">- Lið A -</option>
           {options.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
         </select>
         <select name="b" defaultValue={b ?? ''} className="card px-3 py-2 text-sm flex-1" style={{ color: 'var(--text)' }}>
-          <option value="">— Lið B —</option>
+          <option value="">- Lið B -</option>
           {options.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
         </select>
         <button type="submit" className="card px-4 py-2 text-sm font-semibold" style={{ background: 'var(--accent)', color: '#fff', border: 'none' }}>
@@ -76,8 +76,8 @@ export default async function H2HPage({
           <div className="grid gap-2 text-sm max-w-md mx-auto">
             <div className="flex justify-between"><span className="muted">Leikir alls</span><span className="num">{w1 + w2 + stats.draws}</span></div>
             <div className="flex justify-between"><span className="muted">Mörk</span><span className="num">{g1}–{g2}</span></div>
-            <div className="flex justify-between"><span className="muted">Fyrsti leikur</span><span className="num">{stats.first ? new Date(stats.first).toLocaleDateString('is-IS', { timeZone: 'UTC' }) : '—'}</span></div>
-            <div className="flex justify-between"><span className="muted">Nýjasti leikur</span><span className="num">{stats.last ? new Date(stats.last).toLocaleDateString('is-IS', { timeZone: 'UTC' }) : '—'}</span></div>
+            <div className="flex justify-between"><span className="muted">Fyrsti leikur</span><span className="num">{stats.first ? new Date(stats.first).toLocaleDateString('is-IS', { timeZone: 'UTC' }) : '-'}</span></div>
+            <div className="flex justify-between"><span className="muted">Nýjasti leikur</span><span className="num">{stats.last ? new Date(stats.last).toLocaleDateString('is-IS', { timeZone: 'UTC' }) : '-'}</span></div>
             {stats.biggest && (
               <div className="flex justify-between">
                 <span className="muted">Stærsti sigur</span>

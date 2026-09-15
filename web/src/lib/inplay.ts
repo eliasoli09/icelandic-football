@@ -11,7 +11,7 @@
  * - Bæði skora:       per-team P(≥1 more) for whoever hasn't scored
  * - Markaskorari:     1 − exp(−share · λ_rem,team), share ≈ hlutur leikmanns
  *
- * Simple by design — no red-card/momentum adjustments. Good enough to give
+ * Simple by design - no red-card/momentum adjustments. Good enough to give
  * an honest, moving percentage; not a pricing engine.
  */
 

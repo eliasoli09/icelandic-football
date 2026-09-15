@@ -1,7 +1,7 @@
 /**
  * API-Football (api-sports.io) live layer for the World Cup: fixture-id
  * mapping and in-play scores/events. Requires the paid plan for season 2026.
- * Display/tracking only — never feeds the prediction model.
+ * Display/tracking only - never feeds the prediction model.
  */
 import type { ApifEvent } from './vaktin'
 

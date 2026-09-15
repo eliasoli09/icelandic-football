@@ -2,7 +2,7 @@
  * World Cup 2026 layer: fixtures from fixturedownload.com (open JSON feed,
  * all 104 matches incl. results), national-team Elo from eloratings.net,
  * probabilities via the site's own Elo→Poisson engine (predictMatch).
- * Display + Miðavaktin layer — completely separate from the Icelandic model.
+ * Display + Miðavaktin layer - completely separate from the Icelandic model.
  */
 import { createClient } from '@supabase/supabase-js'
 import { predictMatch } from './predict'
@@ -46,9 +46,9 @@ export interface WcFeedMatch {
 }
 
 export const ROUND_NAMES: Record<number, string> = {
-  1: 'Riðlakeppni — 1. umferð',
-  2: 'Riðlakeppni — 2. umferð',
-  3: 'Riðlakeppni — 3. umferð',
+  1: 'Riðlakeppni - 1. umferð',
+  2: 'Riðlakeppni - 2. umferð',
+  3: 'Riðlakeppni - 3. umferð',
   4: '32-liða úrslit',
   5: '16-liða úrslit',
   6: '8-liða úrslit',
@@ -116,9 +116,9 @@ export async function refreshWorldCup(): Promise<{
   const missingElo: string[] = []
   const preds: object[] = []
   for (const m of feed) {
-    if (m.HomeTeamScore !== null) continue // played — result speaks for itself
+    if (m.HomeTeamScore !== null) continue // played - result speaks for itself
     if (/winner|runner|loser|1[a-l]|2[a-l]|3rd/i.test(m.HomeTeam + m.AwayTeam) && !ratings.has(m.HomeTeam)) {
-      // placeholder pairing (e.g. "Winner match 101") — skip until teams are known
+      // placeholder pairing (e.g. "Winner match 101") - skip until teams are known
       const eh = eloFor(m.HomeTeam, ratings)
       if (eh === null) continue
     }
@@ -168,7 +168,7 @@ export async function mapWcApifIds(): Promise<{ mapped: number; unmatched: strin
   return { mapped: rows.length, unmatched }
 }
 
-/** Scores-only refresh (no Elo/prediction fetch) — used by the live status route. */
+/** Scores-only refresh (no Elo/prediction fetch) - used by the live status route. */
 export async function refreshWcScores(): Promise<number> {
   const feed = (await (await fetch(FEED, { cache: 'no-store' })).json()) as WcFeedMatch[]
   const matches = feed.map((m) => ({

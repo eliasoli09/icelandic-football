@@ -41,7 +41,7 @@ export function OddsTable({
     <section className="card p-5">
       <h2 className="display font-extrabold mb-1">Stuðlar veðbanka</h2>
       <p className="text-xs muted mb-3">
-        Raðað eftir besta stuðlinum á líklegustu úrslitin samkvæmt spánni ({favLabel}) — bestu
+        Raðað eftir besta stuðlinum á líklegustu úrslitin samkvæmt spánni ({favLabel}) - bestu
         stuðlar í hverjum dálki gylltir.
       </p>
       <div className="table-wrap">
@@ -95,8 +95,8 @@ export function OddsTable({
         </table>
       </div>
       <p className="text-[10px] muted mt-3">
-        Boltavaktar-stuðlarnir eru hreinar líkur spálíkansins (1/líkur, engin álagning) — ekki veðmálstilboð.
-        Uppfært {updated.toLocaleDateString('is-IS', { day: 'numeric', month: 'short', timeZone: 'UTC' })} · Stuðlar geta breyst · 18 ára aldurstakmark — spilaðu ábyrgt
+        Boltavaktar-stuðlarnir eru hreinar líkur spálíkansins (1/líkur, engin álagning) - ekki veðmálstilboð.
+        Uppfært {updated.toLocaleDateString('is-IS', { day: 'numeric', month: 'short', timeZone: 'UTC' })} · Stuðlar geta breyst · 18 ára aldurstakmark - spilaðu ábyrgt
       </p>
     </section>
   )

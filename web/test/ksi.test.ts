@@ -6,7 +6,7 @@ import { parseMatchCards } from '../src/lib/ksi'
 const fx = (name: string) =>
   readFileSync(join(__dirname, 'fixtures', name), 'utf8')
 
-describe('parseMatchCards — results page (Besta deild 2026)', () => {
+describe('parseMatchCards - results page (Besta deild 2026)', () => {
   const cards = parseMatchCards(fx('results_page.html'), 2026)
 
   it('finds all 15 cards on the page', () => {
@@ -20,7 +20,7 @@ describe('parseMatchCards — results page (Besta deild 2026)', () => {
     expect(m.homeGoals).toBe(1)
     expect(m.awayGoals).toBe(0)
     expect(m.status).toBe('played')
-    // ÍBV's home ground — proves venue is taken from the card's own header,
+    // ÍBV's home ground - proves venue is taken from the card's own header,
     // not the following card's
     expect(m.venue).toBe('Hásteinsvöllur')
     expect(m.date).toMatch(/^2026-07-04T/)
@@ -32,7 +32,7 @@ describe('parseMatchCards — results page (Besta deild 2026)', () => {
   })
 })
 
-describe('parseMatchCards — fixtures page (upcoming)', () => {
+describe('parseMatchCards - fixtures page (upcoming)', () => {
   const cards = parseMatchCards(fx('fixtures_page.html'), 2026)
 
   it('parses the upcoming Keflavík–Fram card with kickoff time', () => {
@@ -56,7 +56,7 @@ describe('parseMatchCards — fixtures page (upcoming)', () => {
 // `max-w-[125rem] l:max-w-[160rem] wrap-break-word`). The old exact-class
 // regexes matched nothing, so the nightly ingest silently scraped zero cards
 // for six weeks. Parse on the stable part of the class list instead.
-describe('parseMatchCards — KSÍ markup with extra utility classes', () => {
+describe('parseMatchCards - KSÍ markup with extra utility classes', () => {
   const cards = parseMatchCards(fx('results_page_v2.html'), 2026)
 
   it('still finds all 15 cards', () => {
@@ -86,9 +86,9 @@ describe('parseMatchCards — KSÍ markup with extra utility classes', () => {
 
 // KSÍ publishes placeholder cards for stages whose participants aren't decided
 // ("Úrslitaleikur" / "23. Umferð" vs a team literally named "."). They look
-// like real cards — team links, crest slots — so they were ingested as matches
+// like real cards - team links, crest slots - so they were ingested as matches
 // and even created clubs named "23. Umferð" in the teams table.
-describe('parseMatchCards — undecided-stage placeholders', () => {
+describe('parseMatchCards - undecided-stage placeholders', () => {
   const cards = parseMatchCards(fx('playoff_placeholder_page.html'), 2026)
 
   it('keeps the real playoff ties', () => {
@@ -105,7 +105,7 @@ describe('parseMatchCards — undecided-stage placeholders', () => {
 // been drawn shows up as "Undanúrslit" against "Fyrri leikur". An earlier fix
 // only knew about "Úrslitaleikur" and "23. Umferð", so these still got in and
 // created three phantom clubs.
-describe('parseMatchCards — stage names used as clubs', () => {
+describe('parseMatchCards - stage names used as clubs', () => {
   const card = (home: string, away: string) => `
     <div class="grid-cols-[1fr_auto_1fr] gap">
       <a href="/oll-mot/mot/lid?id=1"><span class="body-4 group-hover:underline text-right max-w-[125rem] wrap-break-word">${home}</span></a>

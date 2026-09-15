@@ -6,7 +6,7 @@ describe('UEFA presentation preserves data', () => {
     expect(formatUefaNumber(15.8, 1)).toBe('15,8')
     expect(formatUefaNumber(20000)).toBe('20.000')
     expect(formatUefaNumber(0)).toBe('0')
-    expect(formatUefaNumber(null)).toBe('—')
+    expect(formatUefaNumber(null)).toBe('-')
   })
   it('keeps independent raw probability widths rather than normalizing rounded totals', () => {
     const values = [.655, .315, .03]
@@ -14,7 +14,7 @@ describe('UEFA presentation preserves data', () => {
     expect(values.map(probabilityWidth)).toEqual([65.5, 31.5, 3])
     expect(probabilityLabel(0)).toBe('0%')
     expect(probabilityLabel(.001)).toBe('<1%')
-    expect(probabilityLabel(null)).toBe('—')
+    expect(probabilityLabel(null)).toBe('-')
   })
   it('gives all league bars one zero-based scale with visible headroom', () => {
     const scale = strengthScale([1809, 1624, 0])

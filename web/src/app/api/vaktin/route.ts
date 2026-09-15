@@ -10,7 +10,7 @@ const db = () =>
 
 const MARKETS = new Set(['urslit', 'mork_yfir', 'mork_undir', 'baedi_skora', 'markaskorari', 'handvirkt'])
 
-/** Create a bet slip. Public endpoint — validated and size-capped. */
+/** Create a bet slip. Public endpoint - validated and size-capped. */
 export async function POST(req: NextRequest) {
   let body: { title?: string; legs?: SlipLeg[] }
   try {

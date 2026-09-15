@@ -63,4 +63,4 @@ export function PosHeatmap({
 }
 
 const pct = (p: number) =>
-  p >= 0.995 ? '100%' : p >= 0.01 ? `${Math.round(p * 100)}%` : p > 0 ? '<1%' : '—'
+  p >= 0.995 ? '100%' : p >= 0.01 ? `${Math.round(p * 100)}%` : p > 0 ? '<1%' : '-'

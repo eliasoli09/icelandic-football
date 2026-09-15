@@ -79,7 +79,7 @@ function Picker({
     )
     const by = new Map<string, typeof leagues>()
     for (const l of hit) {
-      const k = l.country || '—'
+      const k = l.country || '-'
       if (!by.has(k)) by.set(k, [])
       by.get(k)!.push(l)
     }

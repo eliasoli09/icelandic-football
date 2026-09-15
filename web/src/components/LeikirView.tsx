@@ -30,7 +30,7 @@ export function LeikirView({
     <div key={league} className="fade-up">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <h1 className="display text-2xl font-black" style={{ color: 'var(--accent)' }}>
-          Leikir — {title} 2026
+          Leikir - {title} 2026
         </h1>
         <LeagueSwitcher size="sm" />
       </div>

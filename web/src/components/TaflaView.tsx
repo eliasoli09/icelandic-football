@@ -116,7 +116,7 @@ export function TaflaView({
                     <td className="text-right num whitespace-nowrap">
                       {(() => {
                         const s = projOf.get(r.teamId)
-                        if (s?.proj_points == null) return <span className="muted">—</span>
+                        if (s?.proj_points == null) return <span className="muted">-</span>
                         return (
                           <span
                             className="muted"
@@ -150,7 +150,7 @@ export function TaflaView({
             {d.standings.some((r) => r.group) && (
               <>
                 Deildin skiptist í efri og neðri hluta eftir 22 umferðir. Stig færast með, en
-                hóparnir mætast ekki aftur — neðri hlutinn kemst því ekki ofar en í 7. sæti.
+                hóparnir mætast ekki aftur - neðri hlutinn kemst því ekki ofar en í 7. sæti.
                 <br />
               </>
             )}
@@ -162,7 +162,7 @@ export function TaflaView({
       <section className="min-w-0">
         <h2 className="display text-lg font-extrabold mb-4 inline-flex items-center gap-2">
           <Trophy size={16} aria-hidden style={{ color: 'var(--accent)' }} />
-          Sætalíkur — 10.000 hermanir
+          Sætalíkur - 10.000 hermanir
         </h2>
         <div className="card p-4">
           {simRows.length ? (
@@ -172,7 +172,7 @@ export function TaflaView({
                 {league === 'besta'
                   ? `Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo + markatölfræði. ${
                       d.standings.some((r) => r.group)
-                        ? 'Efri og neðri hluti eru hermdir hvor í sínu lagi — hóparnir mætast ekki aftur, svo neðri hlutinn getur ekki endað ofar en í 7. sæti.'
+                        ? 'Efri og neðri hluti eru hermdir hvor í sínu lagi - hóparnir mætast ekki aftur, svo neðri hlutinn getur ekki endað ofar en í 7. sæti.'
                         : 'Deildarskiptingin (efri/neðri hluti) er hermd eftir 22 umferðir.'
                     } Meistari = 1. sæti, Evrópa = 3 efstu (nálgun), fall = 2 neðstu.`
                   : 'Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo + markatölfræði. Meistari = 1. sæti, upp = 2 efstu (beint), fall = 2 neðstu. Umspilssæti sjást í sætadreifingunni (3.–4. sæti).'}

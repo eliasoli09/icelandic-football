@@ -44,7 +44,7 @@ export function SludurView({ items, teams }: { items: TransferItem[]; teams: Rec
         </h1>
         <p className="text-sm muted mt-1 inline-flex items-center gap-1.5">
           <Newspaper size={13} aria-hidden />
-          Staðfest félagaskipti og heitustu orðrómarnir — heimildir af fotbolti.net
+          Staðfest félagaskipti og heitustu orðrómarnir - heimildir af fotbolti.net
         </p>
       </div>
 
@@ -111,7 +111,7 @@ export function SludurView({ items, teams }: { items: TransferItem[]; teams: Rec
       </div>
 
       <p className="text-[11px] muted mt-8">
-        Uppfært vikulega úr fréttum fotbolti.net. Orðrómar eru aldrei notaðir í spálíkanið — aðeins staðfestar fréttir hafa áhrif á fréttastuðla.
+        Uppfært vikulega úr fréttum fotbolti.net. Orðrómar eru aldrei notaðir í spálíkanið - aðeins staðfestar fréttir hafa áhrif á fréttastuðla.
       </p>
     </div>
   )

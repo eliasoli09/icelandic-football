@@ -36,7 +36,7 @@ export interface LeagueConfig {
    * other. Icelandic and English clubs never meet, so they are rated apart.
    */
   eloPool: string
-  /** Measured goals per game, home and away — feeds the Poisson model. */
+  /** Measured goals per game, home and away - feeds the Poisson model. */
   goals: { home: number; away: number }
 }
 
@@ -147,7 +147,7 @@ export const isApifMatch = (matchId: number) =>
 
 /**
  * Flat-file feeds (datasets/football-datasets) carry no match id, so one is
- * built from the parts that identify the row. Composed rather than hashed —
+ * built from the parts that identify the row. Composed rather than hashed -
  * 12k+ matches in a hashed space collide often enough to matter.
  */
 export const FEED_ID_OFFSET = 2_000_000_000

@@ -4,7 +4,7 @@ import { SlipBuilder } from '@/components/SlipBuilder'
 
 export const revalidate = 300
 
-export const metadata = { title: 'Seðlavaktin — Besta spáin' }
+export const metadata = { title: 'Seðlavaktin - Besta spáin' }
 
 export default async function VaktinPage() {
   let matches: Awaited<ReturnType<typeof wcMatches>> = []
@@ -21,14 +21,14 @@ export default async function VaktinPage() {
     <div className="fade-up max-w-2xl mx-auto">
       <h1 className="display text-2xl font-black mb-1" style={{ color: 'var(--accent)' }}>Seðlavaktin</h1>
       <p className="text-sm muted mb-6">
-        Sendu inn skjáskot af seðlinum þínum — eða settu leggina inn handvirkt — og fáðu hlekk sem tikkar sjálfkrafa í hólfin þegar leikirnir rúlla. Ekkert innskráningarvesen — hlekkurinn er seðillinn.
+        Sendu inn skjáskot af seðlinum þínum - eða settu leggina inn handvirkt - og fáðu hlekk sem tikkar sjálfkrafa í hólfin þegar leikirnir rúlla. Ekkert innskráningarvesen - hlekkurinn er seðillinn.
       </p>
       {upcoming.length ? (
         <SlipBuilder matches={upcoming} />
       ) : (
         <p className="muted text-sm">Engir óspilaðir HM-leikir í boði núna.</p>
       )}
-      <p className="text-[11px] muted mt-6">18 ára aldurstakmark — spilaðu ábyrgt. Seðlavaktin er vöktunartól, ekki veðmálaþjónusta.</p>
+      <p className="text-[11px] muted mt-6">18 ára aldurstakmark - spilaðu ábyrgt. Seðlavaktin er vöktunartól, ekki veðmálaþjónusta.</p>
     </div>
   )
 }

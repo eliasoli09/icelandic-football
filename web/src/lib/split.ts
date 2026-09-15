@@ -11,7 +11,7 @@ interface PhasedMatch {
  * fixtures KSÍ publishes after round 22. Taking it from the fixtures rather
  * than re-deriving it from the table means the site follows KSÍ even if a
  * points deduction or tiebreak lands somewhere we would not have guessed.
- * Null until the split fixtures exist (and for leagues that never split —
+ * Null until the split fixtures exist (and for leagues that never split -
  * lengjudeild's `umspil` is a knockout playoff, not a half).
  */
 export function splitGroups(matches: PhasedMatch[]): Map<number, SplitGroup> | null {
@@ -26,7 +26,7 @@ export function splitGroups(matches: PhasedMatch[]): Map<number, SplitGroup> | n
 
 /**
  * Order a standings table by split half. The halves never mix again, so a
- * lower-half club cannot climb past 7th however many points it collects —
+ * lower-half club cannot climb past 7th however many points it collects -
  * sorting on points alone would quietly misreport the league.
  * Input order is preserved within each half (it already carries the league's
  * points → goal difference → goals scored tiebreaks).

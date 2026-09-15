@@ -20,7 +20,7 @@ import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext }
 export const CURRENT_SEASON = 2026
 /** recomputeAll covers the KSÍ leagues; API-Football competitions run their own pass. */
 const ICELANDIC: League[] = ['besta', 'lengjudeild']
-/** Team Elo covers the modern era only — last 26 years, from 2000. */
+/** Team Elo covers the modern era only - last 26 years, from 2000. */
 export const ELO_START_SEASON = 2000
 export const TOURNAMENTS_2026: { id: number; league: League; phase: Phase }[] = [
   { id: 7025510, league: 'besta', phase: 'main' },
@@ -252,7 +252,7 @@ function seasonRates(
 /** Recompute Elo, predictions and simulations from the full match table. */
 /**
  * Rate every played match that has no rating yet, continuing from the ratings
- * already stored. Elo is sequential but incremental — replaying 26 years on
+ * already stored. Elo is sequential but incremental - replaying 26 years on
  * every run does not survive more than a couple of leagues.
  *
  * `full` rebuilds from scratch, which is only needed if historical results
@@ -330,7 +330,7 @@ export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
   const matches = await allMatches(ICELANDIC)
   const played = matches.filter((m) => m.status === 'played' && m.home_goals !== null)
 
-  // news-based adjustments (transfers, injuries, Europe congestion) — applied
+  // news-based adjustments (transfers, injuries, Europe congestion) - applied
   // transparently on top of Elo at prediction time, never to stored history
   const { data: adjRows } = await db()
     .from('news_adjustments')
@@ -347,7 +347,7 @@ export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
   const adjustedRating = (teamId: number) =>
     (ratings.get(String(teamId)) ?? 1500) + (newsAdj.get(teamId)?.delta ?? 0)
 
-  // players confirmed out (injury/ban) — excluded from remaining games in the
+  // players confirmed out (injury/ban) - excluded from remaining games in the
   // scorer races; their current tally still counts, so a lead can still hold
   const { data: outRows } = await db()
     .from('player_out')
@@ -582,7 +582,7 @@ export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
   }
   await replaceTable('season_sim', simRows)
 
-  // assists race from the SofaScore snapshot (Besta deild only — no lengju data)
+  // assists race from the SofaScore snapshot (Besta deild only - no lengju data)
   const { data: sofa } = await db()
     .from('sofascore_players')
     .select('name, assists, appearances')

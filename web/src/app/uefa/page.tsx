@@ -4,7 +4,7 @@ import { getUefaCompetition } from '@/lib/uefaCompetitions'
 
 export const revalidate = 300
 
-export const metadata = { title: 'Evrópukeppnirnar — Besta spáin' }
+export const metadata = { title: 'Evrópukeppnirnar - Besta spáin' }
 
 export default async function UefaPage({
   searchParams,

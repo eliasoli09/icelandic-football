@@ -19,7 +19,7 @@ export default function Home() {
 
 async function HomeContent() {
   try {
-    // every registered competition, each on its own season — a league in the
+    // every registered competition, each on its own season - a league in the
     // switcher that answers "not loaded yet" is worse than not offering it
     const registry = await leagueRegistry()
     const [teams, ...loaded] = await Promise.all([
@@ -32,6 +32,6 @@ async function HomeContent() {
     const bundles = Object.fromEntries(loaded.map((x) => [x.key, x.bundle]))
     return <Dashboard bundles={bundles} teams={teams} />
   } catch {
-    return <p className="muted">Gagnagrunnur ekki tengdur enn — keyrðu fyrst innhleðslu.</p>
+    return <p className="muted">Gagnagrunnur ekki tengdur enn - keyrðu fyrst innhleðslu.</p>
   }
 }

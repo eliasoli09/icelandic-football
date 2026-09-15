@@ -1,5 +1,5 @@
 /**
- * Framlagsstuðull — a per-player contribution index computed from the
+ * Framlagsstuðull - a per-player contribution index computed from the
  * SofaScore season snapshot (top-150 Besta deild players).
  *
  * Categories (per appearance, z-scored across the player pool):
@@ -7,13 +7,13 @@
  *  - vörn:    tackles + interceptions + clearances + duels won
  *  - sendingar: accurate-pass % weighted by passing volume
  *  - framsækni: accurate long balls + crosses + passes into final third
- *    (progressive-passing proxies — activates only when the SofaScore drop
+ *    (progressive-passing proxies - activates only when the SofaScore drop
  *    includes those columns; otherwise neutral for everyone)
  *  - markvarsla: saves + clean sheets + penalty saves (goalkeepers only)
  *
  * The index is expressed in Elo-points (capped ±80) and added to the
  * event-based player Elo for a combined rating. Goals and cards are NOT
- * included here — they already drive the event Elo.
+ * included here - they already drive the event Elo.
  */
 
 export interface SofaPlayerInput {

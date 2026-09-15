@@ -15,7 +15,7 @@ describe('leagueTheme', () => {
   })
 
   it('gives the founding leagues the exact colours the stylesheet uses', () => {
-    // anything painting from JS — the hero waves, an OG image — must match
+    // anything painting from JS - the hero waves, an OG image - must match
     // globals.css, not approximate it
     expect(leagueTheme('besta').accent).toBe('#e8b93c')
     expect(leagueTheme('lengjudeild').accent).toBe('#2f9df4')

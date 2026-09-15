@@ -208,9 +208,9 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
         <p className="text-sm muted">
           {s.alive
             ? s.tapad === 0 && done === total
-              ? '🎉 Allir leggir í höfn — seðillinn vann!'
-              : `${total - done} ${total - done === 1 ? 'leggur' : 'leggir'} eftir — seðillinn lifir`
-            : `Seðillinn datt — ${s.tapad} ${s.tapad === 1 ? 'leggur tapaðist' : 'leggir töpuðust'}`}
+              ? '🎉 Allir leggir í höfn - seðillinn vann!'
+              : `${total - done} ${total - done === 1 ? 'leggur' : 'leggir'} eftir - seðillinn lifir`
+            : `Seðillinn datt - ${s.tapad} ${s.tapad === 1 ? 'leggur tapaðist' : 'leggir töpuðust'}`}
         </p>
 
         {pct !== null && s.alive && done < total && (
@@ -261,10 +261,10 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
           )}
         </div>
         {notif === 'denied' && (
-          <p className="text-[11px] muted mt-2">Tilkynningum var hafnað — kveiktu á þeim í stillingum vafrans/símans.</p>
+          <p className="text-[11px] muted mt-2">Tilkynningum var hafnað - kveiktu á þeim í stillingum vafrans/símans.</p>
         )}
         {notif === 'unsupported' && (
-          <p className="text-[11px] muted mt-2">📲 Á iPhone: Deila → „Add to Home Screen" — þá er hægt að kveikja á tilkynningum þegar seðillinn er opnaður þaðan.</p>
+          <p className="text-[11px] muted mt-2">📲 Á iPhone: Deila → „Add to Home Screen" - þá er hægt að kveikja á tilkynningum þegar seðillinn er opnaður þaðan.</p>
         )}
       </motion.div>
 
@@ -324,7 +324,7 @@ export function SlipView({ slug, initial }: { slug: string; initial: Status }) {
       </div>
 
       <p className="text-[11px] muted">
-        Staðan, markaskorarar og líkur uppfærast sjálfkrafa í rauntíma meðan leikir eru í gangi {updated ? `· síðast ${updated.toLocaleTimeString('is-IS')}` : ''} · Líkurnar eru Poisson-mat spálíkansins, ekki stuðlar · Handvirku hólfin (horn o.þ.h.) tikkarðu sjálf/ur · 18 ára aldurstakmark — spilaðu ábyrgt
+        Staðan, markaskorarar og líkur uppfærast sjálfkrafa í rauntíma meðan leikir eru í gangi {updated ? `· síðast ${updated.toLocaleTimeString('is-IS')}` : ''} · Líkurnar eru Poisson-mat spálíkansins, ekki stuðlar · Handvirku hólfin (horn o.þ.h.) tikkarðu sjálf/ur · 18 ára aldurstakmark - spilaðu ábyrgt
       </p>
     </div>
   )

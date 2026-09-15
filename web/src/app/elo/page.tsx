@@ -77,7 +77,7 @@ export default async function EloPage() {
   for (const rs of byTeam.values()) {
     rs.sort((a, b) => a.season - b.season || a.match_id - b.match_id)
   }
-  // each pool runs on its own calendar — the English data starts at 2024
+  // each pool runs on its own calendar - the English data starts at 2024
   const poolSeason = new Map<string, number>()
   for (const r of history) {
     const pool = LEAGUES[r.league]?.eloPool ?? 'is'
@@ -88,11 +88,11 @@ export default async function EloPage() {
     const pool = LEAGUES[rs[rs.length - 1].league]?.eloPool ?? 'is'
     const now = poolSeason.get(pool) ?? rs[rs.length - 1].season
     const moves = PERIODS.map((p) => {
-      // where the club stood at the end of that season — null when it has no
+      // where the club stood at the end of that season - null when it has no
       // record that far back, which is the honest answer for a new league
       const target = now - p.back
       // a club that has not played inside the window has not moved for a
-      // reason worth reporting — "—" beats a misleading +0
+      // reason worth reporting - "-" beats a misleading +0
       if (!rs.some((r) => r.season > target)) return null
       let at: number | null = null
       for (const r of rs) if (r.season <= target) at = r.elo_after
@@ -103,7 +103,7 @@ export default async function EloPage() {
 
   const infoFor = (name: string) => [...infos.values()].find((x) => x.name === name)
   // filtering the chart on `date` used to drop every 2019-2025 match, because
-  // those rows carry no date — season is the axis that actually covers them
+  // those rows carry no date - season is the axis that actually covers them
   const points = (poolId: string): EloSeriesPoint[] => {
     const out: EloSeriesPoint[] = []
     for (const r of history) {
@@ -128,7 +128,7 @@ export default async function EloPage() {
 
       <p className="text-[11px] muted -mt-4 leading-relaxed">
         Elo-stig eru <strong>aðeins samanburðarhæf innan sömu deildakeppni</strong>. Íslensk og ensk lið mætast
-        aldrei, svo hvor hópur byrjar í eigin 1500 og þróast sjálfstætt — hærri tala hjá öðrum hópnum segir ekkert
+        aldrei, svo hvor hópur byrjar í eigin 1500 og þróast sjálfstætt - hærri tala hjá öðrum hópnum segir ekkert
         um styrk gagnvart hinum.
       </p>
 
@@ -161,7 +161,7 @@ export default async function EloPage() {
                       {t.moves.map((m, k) => (
                         <td key={PERIODS[k].key} className="text-right num pl-3 whitespace-nowrap">
                           {m === null ? (
-                            <span className="muted">—</span>
+                            <span className="muted">-</span>
                           ) : (
                             <span style={{ color: m > 1 ? 'var(--win)' : m < -1 ? 'var(--loss)' : undefined }}>
                               {m >= 0 ? '+' : ''}{Math.round(m)}
@@ -177,7 +177,7 @@ export default async function EloPage() {
             <p className="text-[11px] muted mt-3 leading-relaxed">
               Stig fylgja liðum milli deilda og tímabila. <strong>± 5 leikir</strong> er breyting yfir
               síðustu fimm leiki; <strong>6 mán / 1 ár / 5 ár</strong> sýna hreyfinguna á því tímabili og standa
-              sem „—“ þegar liðið á engin stig svo langt aftur.
+              sem „-“ þegar liðið á engin stig svo langt aftur.
             </p>
           </div>
           <div className="card p-4 sm:p-5">

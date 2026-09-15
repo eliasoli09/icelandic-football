@@ -3,7 +3,7 @@
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef } from 'react'
 
-/** Animated three-segment probability bar — fills on scroll-into-view. */
+/** Animated three-segment probability bar - fills on scroll-into-view. */
 export function ProbBar({
   pHome,
   pDraw,

@@ -18,8 +18,8 @@
  *
  * What a league is worth is read from globalfootballrankings.com where it has a
  * rating there, and fitted from the continental ties where it does not. The
- * published ranking measures clearly better. On the 2,394 ties before 2021 —
- * old enough that a September 2026 snapshot cannot be reflecting them — it goes
+ * published ranking measures clearly better. On the 2,394 ties before 2021 -
+ * old enough that a September 2026 snapshot cannot be reflecting them - it goes
  * 0.99078 to 0.98090. On ties from 2021 on, which the ranking is partly built
  * from, it goes 0.98305 to 0.94679; that second figure is flattered by the
  * overlap and the first is the one to believe.
@@ -53,7 +53,7 @@ export const RANKING_CENTRE = 1500
  * A continental tie also says something about the two clubs, not only about
  * their leagues, and throwing that away meant a club could dominate Europe
  * without it ever reaching its own number. Swept 0 to 20 over 7,497 ties; 10
- * was the low point, and it is worth about 0.0005 of log loss — real in
+ * was the low point, and it is worth about 0.0005 of log loss - real in
  * direction, small in size.
  */
 const K_CLUB_FROM_EUROPE = 10

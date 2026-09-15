@@ -1,10 +1,10 @@
 /**
  * Miðavaktin: bet-slip legs and their evaluation.
  *
- * MVP data source is the WC result feed (wc_matches) — score-based markets
+ * MVP data source is the WC result feed (wc_matches) - score-based markets
  * settle when results land. Player markets (scorer/shots/cards) evaluate
  * live from API-Football events once the paid plan is active; until then
- * they fall back to manual ticking. Odds/bets are the user's own — this is
+ * they fall back to manual ticking. Odds/bets are the user's own - this is
  * a tracker, it never places or suggests bets.
  */
 import type { WcMatchRow } from './queries'
@@ -15,7 +15,7 @@ export type LegMarket =
   | 'mork_undir'    // total goals under line
   | 'baedi_skora'   // both teams to score
   | 'markaskorari'  // player scores (API events when available)
-  | 'handvirkt'     // anything else — user ticks it
+  | 'handvirkt'     // anything else - user ticks it
 
 export interface SlipLeg {
   id: string
@@ -50,12 +50,12 @@ const started = (m: WcMatchRow) => new Date(m.date).getTime() < Date.now()
 const finished = (m: WcMatchRow) => m.home_score !== null && m.away_score !== null && !m.live
 
 export function evaluateLeg(leg: SlipLeg, m: WcMatchRow | undefined, events?: ApifEvent[] | null): LegResult {
-  if (!m) return { status: 'handvirkt', detail: 'Leikur fannst ekki — merktu handvirkt' }
+  if (!m) return { status: 'handvirkt', detail: 'Leikur fannst ekki - merktu handvirkt' }
 
   if (leg.market === 'handvirkt') {
     return leg.manualDone
       ? { status: 'vann', detail: 'Merkt handvirkt' }
-      : { status: started(m) ? 'i_gangi' : 'obyrjad', detail: 'Handvirkt hólf — tikkaðu við þegar leggurinn dettur' }
+      : { status: started(m) ? 'i_gangi' : 'obyrjad', detail: 'Handvirkt hólf - tikkaðu við þegar leggurinn dettur' }
   }
 
   if (!started(m)) return { status: 'obyrjad', detail: `Hefst ${new Date(m.date).toLocaleString('is-IS', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}` }
@@ -64,7 +64,7 @@ export function evaluateLeg(leg: SlipLeg, m: WcMatchRow | undefined, events?: Ap
 
   switch (leg.market) {
     case 'urslit': {
-      if (!finished(m)) return { status: 'i_gangi', detail: 'Leikur í gangi — lokatölur ókomnar' }
+      if (!finished(m)) return { status: 'i_gangi', detail: 'Leikur í gangi - lokatölur ókomnar' }
       const outcome = m.home_score! > m.away_score! ? '1' : m.home_score! < m.away_score! ? '2' : 'X'
       return outcome === leg.pick
         ? { status: 'vann', detail: `Lauk ${m.home_score}–${m.away_score}` }
@@ -78,7 +78,7 @@ export function evaluateLeg(leg: SlipLeg, m: WcMatchRow | undefined, events?: Ap
       // can secure early once over the line even without final score
       return total > (leg.line ?? 0)
         ? { status: 'vann', detail: `${total} mörk komin` }
-        : { status: 'i_gangi', detail: `${total} mörk — vantar ${Math.ceil((leg.line ?? 0) - total + 0.5)}` }
+        : { status: 'i_gangi', detail: `${total} mörk - vantar ${Math.ceil((leg.line ?? 0) - total + 0.5)}` }
     }
     case 'mork_undir': {
       if (finished(m))
@@ -86,8 +86,8 @@ export function evaluateLeg(leg: SlipLeg, m: WcMatchRow | undefined, events?: Ap
           ? { status: 'vann', detail: `${total} mörk` }
           : { status: 'tapad', detail: `${total} mörk` }
       return total < (leg.line ?? 0)
-        ? { status: 'i_gangi', detail: `${total} mörk — heldur enn` }
-        : { status: 'tapad', detail: `${total} mörk komin — sprungið` }
+        ? { status: 'i_gangi', detail: `${total} mörk - heldur enn` }
+        : { status: 'tapad', detail: `${total} mörk komin - sprungið` }
     }
     case 'baedi_skora': {
       const both = (m.home_score ?? 0) > 0 && (m.away_score ?? 0) > 0
@@ -104,9 +104,9 @@ export function evaluateLeg(leg: SlipLeg, m: WcMatchRow | undefined, events?: Ap
         if (finished(m)) return { status: 'tapad', detail: 'Skoraði ekki' }
         return { status: 'i_gangi', detail: 'Ekki skorað enn' }
       }
-      // no event feed yet (Free plan) — manual fallback
+      // no event feed yet (Free plan) - manual fallback
       if (leg.manualDone) return { status: 'vann', detail: 'Merkt handvirkt' }
-      if (finished(m)) return { status: 'handvirkt', detail: 'Lokatölur komnar — staðfestu handvirkt (live-gögn koma með API-uppfærslu)' }
+      if (finished(m)) return { status: 'handvirkt', detail: 'Lokatölur komnar - staðfestu handvirkt (live-gögn koma með API-uppfærslu)' }
       return { status: started(m) ? 'i_gangi' : 'obyrjad', detail: 'Vaktað handvirkt þar til API-áskrift virkjast' }
     }
   }

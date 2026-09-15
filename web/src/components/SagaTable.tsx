@@ -146,7 +146,7 @@ function FragmentRow({
               <Crown size={10} aria-hidden /> {t}
             </span>
           ) : (
-            <span className="muted text-xs">—</span>
+            <span className="muted text-xs">-</span>
           )}
         </td>
         {detailed && (

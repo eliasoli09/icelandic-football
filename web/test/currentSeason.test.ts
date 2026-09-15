@@ -50,7 +50,7 @@ describe('feed ids for the live season', () => {
 })
 
 // A fixture and the result it becomes are the same match, so they share an id.
-// That is what lets the next ingest replace the fixture in place — and it is
+// That is what lets the next ingest replace the fixture in place - and it is
 // also why a pairing that already has a result must never be written back as a
 // fixture: the upsert would put null goals over a finished match.
 describe('fixtures and the results they become', () => {

@@ -182,7 +182,7 @@ export async function ingestCurrentSeason(
     const h = s?.slot.get(home)
     const a = s?.slot.get(away)
     // a club that has not played yet has no slot, and inventing one would
-    // collide with the id the result gets later — skip rather than guess
+    // collide with the id the result gets later - skip rather than guess
     if (s === undefined || h === undefined || a === undefined) return false
     const id = feedMatchId(season, s.idx, h * 1000 + a)
     // The upsert would write null goals and status 'upcoming' straight over a
@@ -243,7 +243,7 @@ export async function ingestCurrentSeason(
 
   // The results feed publishes only the next few days. openfootball carries a
   // date and a kick-off time for every match of the season, so the rest of the
-  // calendar comes from there — but only for a league whose clubs pair up with
+  // calendar comes from there - but only for a league whose clubs pair up with
   // ours exactly, since a near-miss would hand one club's season to another.
   const calendars: Record<string, string> = {}
   for (const [league, url] of Object.entries(CALENDAR_SOURCES)) {

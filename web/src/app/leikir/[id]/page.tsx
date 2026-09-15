@@ -112,7 +112,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
       {factors && match.status === 'upcoming' && (
         <section className="card p-5">
-          <h2 className="display font-extrabold mb-4">Af hverju? — rökin á bak við spána</h2>
+          <h2 className="display font-extrabold mb-4">Af hverju? - rökin á bak við spána</h2>
           <div className="grid gap-2.5 text-sm">
             <Row label="Elo-stig">
               <span className="num">{factors.eloHome} gegn {factors.eloAway} <span className="muted">(munur {factors.eloDiff > 0 ? '+' : ''}{factors.eloDiff})</span></span>
@@ -140,7 +140,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                 ...factors.newsAdjustments.away.map((r) => `${nm(match.away_team)} ${r}`)].map((r) => (
                 <p key={r} className="text-xs" style={{ color: 'var(--accent)' }}>{r}</p>
               ))}
-              <p className="text-[10px] muted">Handskráð atvik úr fréttum (t.d. sölur, meiðsli, Evrópuálag) — lögð ofan á Elo í spánni.</p>
+              <p className="text-[10px] muted">Handskráð atvik úr fréttum (t.d. sölur, meiðsli, Evrópuálag) - lögð ofan á Elo í spánni.</p>
             </div>
           )}
           {factors.topScorelines && (

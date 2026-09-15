@@ -3,13 +3,13 @@
  *
  * The two Icelandic leagues have hand-picked colours defined in globals.css.
  * Everything else gets a stable colour derived from its key, so adding a
- * league is a row in a table rather than a CSS edit — and the same league
+ * league is a row in a table rather than a CSS edit - and the same league
  * always looks the same without anyone maintaining a palette of hundreds.
  */
 export interface LeagueTheme {
   /** dark theme accent */
   accent: string
-  /** light theme accent — darker, for contrast on white */
+  /** light theme accent - darker, for contrast on white */
   accentLight: string
   /** text colour that reads on the accent */
   ink: string
@@ -20,7 +20,7 @@ export interface LeagueTheme {
 /**
  * The leagues the site was built around keep their hand-tuned identity. These
  * are the exact values globals.css uses, so anything reading the theme in
- * JavaScript — the hero waves, a canvas, an OG image — paints the same colour
+ * JavaScript - the hero waves, a canvas, an OG image - paints the same colour
  * the stylesheet does rather than a near-miss.
  */
 const PINNED: Record<string, { accent: string; accentLight: string; ink: string }> = {

@@ -65,7 +65,7 @@ export function Dashboard({
       className={`stat text-[13px] w-11 text-center py-1 rounded-md ${best ? '' : 'muted'}`}
       style={best ? { background: 'color-mix(in srgb, var(--accent) 18%, transparent)', color: 'var(--accent)' } : {}}
     >
-      {v === null ? '—' : `${Math.round(v * 100)}%`}
+      {v === null ? '-' : `${Math.round(v * 100)}%`}
     </span>
   )
 
@@ -77,7 +77,7 @@ export function Dashboard({
           <div className="wave-hero-content p-6 sm:p-8 grid grid-cols-1 gap-6 lg:grid-cols-[0.85fr_1.15fr] items-center relative">
             <div className="wave-hero-copy">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] muted mb-2">
-                {d.country ? `${d.country} — knattspyrnugreining` : 'Knattspyrnugreining'} · {d.title}
+                {d.country ? `${d.country} - knattspyrnugreining` : 'Knattspyrnugreining'} · {d.title}
               </p>
               <h1 data-entrance-focus tabIndex={-1} className="display wave-hero-title font-black tracking-tight">
                 Leikurinn<br /><span>byrjar hér.</span>
@@ -217,7 +217,7 @@ export function Dashboard({
               {!d.fixtures.length && <p className="muted text-sm py-2">Engir fleiri leikir á dagskrá.</p>}
             </div>
             <div className="flex justify-end mt-1">
-              <span className="text-[10px] muted">1 · X · 2 — líklegasta úrslitið litað</span>
+              <span className="text-[10px] muted">1 · X · 2 - líklegasta úrslitið litað</span>
             </div>
           </section>
 

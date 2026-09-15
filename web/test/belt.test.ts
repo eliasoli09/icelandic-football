@@ -15,7 +15,7 @@ describe('runBelt', () => {
     expect(res.currentHolder).toBe(2)
   })
 
-  it('holder keeps on draw, loses on defeat — even in matches not involving others', () => {
+  it('holder keeps on draw, loses on defeat - even in matches not involving others', () => {
     const res = runBelt([
       m(1, 1, 2, 1, 0), // 1 takes belt
       m(2, 3, 4, 5, 0), // no holder involved → ignored
@@ -71,7 +71,7 @@ describe('computeAllTime', () => {
   })
 })
 
-describe('runBelt — relegation handover', () => {
+describe('runBelt - relegation handover', () => {
   it('passes the belt to the reigning champions when the holder drops out', () => {
     const ctx = {
       seasonTeams: new Map([
@@ -83,7 +83,7 @@ describe('runBelt — relegation handover', () => {
     const res = runBelt(
       [
         m(1, 1, 2, 2, 0, 1998), // team 1 claims the belt in 1998
-        m(2, 2, 3, 1, 0, 1999), // first match of 1999 — holder 1 is gone
+        m(2, 2, 3, 1, 0, 1999), // first match of 1999 - holder 1 is gone
       ],
       undefined,
       ctx,

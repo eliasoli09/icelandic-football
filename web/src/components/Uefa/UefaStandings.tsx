@@ -24,7 +24,7 @@ export function UefaStandings({ rows }: { rows: UefaStanding[] }) {
   function select(key: StandingsSort) {
     setSort(current=>({key,direction:current.key===key ? current.direction==='asc'?'desc':'asc' : key==='club'||key==='rank'?'asc':'desc'}))
   }
-  return <div className={styles.tableScroll} tabIndex={0} role="region" aria-label="Spáð lokastaða — skrunanleg tafla">
+  return <div className={styles.tableScroll} tabIndex={0} role="region" aria-label="Spáð lokastaða - skrunanleg tafla">
     <table className={styles.standings}>
       <caption className="sr-only">Spáð lokastaða allra {rows.length} liða. Prósentustikur nota sameiginlegan kvarða frá 0 til 100%. Raða má með dálkahausunum.</caption>
       <thead><tr>{columns.map(({key,label})=><th key={key} scope="col" aria-sort={sort.key===key ? sort.direction==='asc'?'ascending':'descending':'none'}>
@@ -40,7 +40,7 @@ export function UefaStandings({ rows }: { rows: UefaStanding[] }) {
         <td>
           {formatUefaNumber(row.rating)}
           {row.coefficient != null && <span className={styles.coefficient}
-            title={`Stuðull UEFA fyrir landið, fimm tímabil${row.coefficientRank ? ` — ${row.coefficientRank}. sæti` : ''}. Hann hefur engin áhrif á spána.`}>
+            title={`Stuðull UEFA fyrir landið, fimm tímabil${row.coefficientRank ? ` - ${row.coefficientRank}. sæti` : ''}. Hann hefur engin áhrif á spána.`}>
             {row.coefficient.toFixed(1)}
           </span>}
         </td><td>{formatUefaNumber(row.proj_points,1)}</td>

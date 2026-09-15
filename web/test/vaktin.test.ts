@@ -12,7 +12,7 @@ const leg = (over: Partial<SlipLeg>): SlipLeg => ({ id: 'a', match_id: 98, marke
 const PAST = '2020-01-01T00:00:00Z'
 const FUTURE = '2030-01-01T00:00:00Z'
 
-describe('evaluateLeg — úrslit', () => {
+describe('evaluateLeg - úrslit', () => {
   it('wins on correct pick, loses on wrong', () => {
     const m = mkMatch({ date: PAST, home_score: 2, away_score: 1 })
     expect(evaluateLeg(leg({ pick: '1' }), m).status).toBe('vann')
@@ -25,7 +25,7 @@ describe('evaluateLeg — úrslit', () => {
   })
 })
 
-describe('evaluateLeg — mörk', () => {
+describe('evaluateLeg - mörk', () => {
   it('over secures early, under dies early', () => {
     const live = mkMatch({ date: PAST, home_score: 2, away_score: 1 })
     // feed only has final scores, but logic must handle partial data the same way
@@ -39,7 +39,7 @@ describe('evaluateLeg — mörk', () => {
   })
 })
 
-describe('evaluateLeg — bæði skora + markaskorari', () => {
+describe('evaluateLeg - bæði skora + markaskorari', () => {
   it('BTTS wins as soon as both have scored', () => {
     expect(evaluateLeg(leg({ market: 'baedi_skora' }), mkMatch({ date: PAST, home_score: 1, away_score: 1 })).status).toBe('vann')
     expect(evaluateLeg(leg({ market: 'baedi_skora' }), mkMatch({ date: PAST, home_score: 3, away_score: 0 })).status).toBe('tapad')

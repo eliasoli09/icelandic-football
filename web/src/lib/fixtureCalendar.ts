@@ -5,8 +5,8 @@
  * The results feed only publishes the next few days, so without this the site
  * knows who is playing this weekend and nothing after that.
  *
- * openfootball writes clubs out in full — "Paris Saint-Germain FC" where our
- * history has "Paris SG" — so every name is mapped explicitly. Nothing is
+ * openfootball writes clubs out in full - "Paris Saint-Germain FC" where our
+ * history has "Paris SG" - so every name is mapped explicitly. Nothing is
  * guessed: a first attempt matched on normalised substrings and quietly put
  * Paris Saint-Germain on Paris FC, which would have handed one club's season
  * to another. A league whose mapping is not a bijection is refused outright.
@@ -97,7 +97,7 @@ export const CLUB_NAMES: Record<string, string> = {
 
 /**
  * Everything both spellings agree on: accents, punctuation, the club-type
- * designator and the founding year. What is left has to match exactly — never
+ * designator and the founding year. What is left has to match exactly - never
  * as a substring, which is the mistake that put Paris Saint-Germain on Paris
  * FC, since "paris saint germain" does contain "paris".
  */
@@ -139,7 +139,7 @@ export function parseCalendar(text: string): CalendarMatch[] {
     const md = line.match(/^\s*[^\w\s]?\s*Matchday\s+(\d+)/i)
     if (md) { matchday = Number(md[1]); continue }
 
-    // "  Fri Aug 14 2026" — the year is written once and carried forward
+    // "  Fri Aug 14 2026" - the year is written once and carried forward
     const dl = line.match(/^\s{0,4}[A-Z][a-z]{2}\s+([A-Z][a-z]{2})\s+(\d{1,2})(?:\s+(\d{4}))?\s*$/)
     if (dl) {
       if (dl[3]) year = Number(dl[3])
@@ -151,7 +151,7 @@ export function parseCalendar(text: string): CalendarMatch[] {
       continue
     }
 
-    // "    20:00  Home FC  v  Away FC   2-1 (1-0)" — time and score both optional
+    // "    20:00  Home FC  v  Away FC   2-1 (1-0)" - time and score both optional
     const m = line.match(/^\s+(?:(\d{1,2}:\d{2})\s+)?(.+?)\s+v\s+(.+?)\s*$/)
     if (!m) continue
     if (m[1]) time = m[1]

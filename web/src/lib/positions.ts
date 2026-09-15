@@ -33,7 +33,7 @@ export function normalizeName(name: string): string {
 }
 
 /**
- * Position inference from the season stat profile — SofaScore's export has
+ * Position inference from the season stat profile - SofaScore's export has
  * no position column. Goalkeepers are exact (saves > 0); outfielders get
  * the profile (defending / playmaking / attacking) they z-score highest on.
  */

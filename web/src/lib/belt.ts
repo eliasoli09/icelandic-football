@@ -1,5 +1,5 @@
 /**
- * Konungur kastalans — UFWC-style unofficial championship lineage for the
+ * Konungur kastalans - UFWC-style unofficial championship lineage for the
  * Icelandic top flight. KSÍ's website only carries real scorelines from the
  * 1985 season onwards (older fixtures are 0-0 placeholders), so the lineage
  * starts at the first match of 1985.

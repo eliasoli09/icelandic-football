@@ -4,11 +4,11 @@
  * Elo starts everyone at 1500 and moves them from there. That is fine in a
  * pool whose average stays near 1500, but the English pool runs from about
  * 1200 in the Championship to 2000 at the top of the Premier League, so 1500
- * is not neutral — it is upper-mid-table Championship. A club promoted from
+ * is not neutral - it is upper-mid-table Championship. A club promoted from
  * below therefore arrives rated above sides that earned their way to less.
  *
- * The three clubs in this position on 11 September 2026 — Lincoln, Elversberg
- * and Academico Viseu — produced three of the eight largest disagreements with
+ * The three clubs in this position on 11 September 2026 - Lincoln, Elversberg
+ * and Academico Viseu - produced three of the eight largest disagreements with
  * the bookmakers' closing prices, all in the same direction.
  *
  * The fix is a prior, not a guess: a promoted club is placed near the bottom

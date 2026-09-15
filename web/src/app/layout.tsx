@@ -19,7 +19,7 @@ const archivo = Archivo({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://islensk-fotbolti.vercel.app'),
-  title: 'Besta spáin — íslensk knattspyrnugreining',
+  title: 'Besta spáin - íslensk knattspyrnugreining',
   description:
     'Elo-stig, leikjaspár og líkindahermun fyrir Bestu deild karla. Uppfærist sjálfkrafa eftir hvern leik.',
   manifest: '/manifest.webmanifest',
@@ -40,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       leagueRegistry(),
     ])
   } catch {
-    // db unreachable — nav renders without the timestamp, picker without leagues
+    // db unreachable - nav renders without the timestamp, picker without leagues
   }
   return (
     <html lang="is" suppressHydrationWarning>
@@ -57,7 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <Database size={12} aria-hidden />
                   Gögn: KSÍ (ksi.is) + tölfræðiinnslög
                 </p>
-                <p className="text-xs muted">Greiningar byggðar á gögnum og líkanaspám — engin ábyrgð tekin á úrslitum.</p>
+                <p className="text-xs muted">Greiningar byggðar á gögnum og líkanaspám - engin ábyrgð tekin á úrslitum.</p>
                 {updatedAt && (
                   <span className="text-[11px] num px-3 py-1 rounded-full border inline-flex items-center gap-2"
                     style={{ borderColor: 'var(--border)', color: 'var(--text-2)' }}>

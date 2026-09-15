@@ -7,7 +7,7 @@ export const LEAGUE_AVG = (LEAGUE_HOME_AVG + LEAGUE_AWAY_AVG) / 2
 
 /**
  * How hard an Elo gap is pushed into the goal expectation. The original 800
- * made the model badly overconfident — it priced outcomes at 94% that came in
+ * made the model badly overconfident - it priced outcomes at 94% that came in
  * at 77%. Fitted out of sample (scripts/backtest.mts, scripts/calibrate.mts):
  * 1225 on the Premier League against Pinnacle closing, 1400 on a 168k-match
  * global mix. Iceland has no stored odds history to fit against, so it uses
@@ -48,14 +48,14 @@ const MAX_GOALS = 9
  */
 export function predictMatch(input: PredictInput): Prediction {
   const { eloHome, eloAway, home, away } = input
-  // Scoring rates differ a lot by competition — 3.40 goals a game in the
-  // Lengjudeild against 2.82 in the Premier League — so a caller that knows
+  // Scoring rates differ a lot by competition - 3.40 goals a game in the
+  // Lengjudeild against 2.82 in the Premier League - so a caller that knows
   // its league passes its own, and only the default is Icelandic.
   const homeAvg = input.goals?.home ?? LEAGUE_HOME_AVG
   const awayAvg = input.goals?.away ?? LEAGUE_AWAY_AVG
   const leagueAvg = (homeAvg + awayAvg) / 2
   // No home-advantage term here. The league rates above are already split home
-  // and away, and that split IS the home advantage — adding HFA on top counted
+  // and away, and that split IS the home advantage - adding HFA on top counted
   // it twice. Measured over 587,394 matches in 226 leagues it pushed the mean
   // home-win call to 51.8% against an actual 44.7%, and cost 0.011 of log loss.
   const eloEdge = (eloHome - eloAway) / ELO_EDGE_DIVISOR
@@ -120,7 +120,7 @@ export function predictMatch(input: PredictInput): Prediction {
 
 const round2 = (n: number) => Math.round(n * 100) / 100
 
-/** Sample a scoreline from the model — used by the Monte Carlo simulator. */
+/** Sample a scoreline from the model - used by the Monte Carlo simulator. */
 export function samplePoisson(lambda: number, rand: () => number): number {
   const L = Math.exp(-lambda)
   let k = 0

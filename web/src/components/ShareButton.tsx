@@ -24,7 +24,7 @@ export function ShareButton({
         await navigator.share({ title, text, url })
         return
       } catch {
-        // user cancelled — fall through to nothing
+        // user cancelled - fall through to nothing
         return
       }
     }

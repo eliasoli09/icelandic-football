@@ -66,20 +66,20 @@ export default async function LeikmennPage() {
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       <section>
-        <h1 className="display text-2xl font-black mb-5">Leikmannaeinkunn — Besta deildin</h1>
+        <h1 className="display text-2xl font-black mb-5">Leikmannaeinkunn - Besta deildin</h1>
         <BestaTable rows={besta} sofaByName={sofaByName} />
         <p className="text-[11px] muted mt-2 mb-8">
           Heild = Elo (atburðir KSÍ: mörk, spjöld, úrslit liðs, leik fyrir leik) + framlag
           (tímabilstölfræði: stórsénsar skapaðir, lykilsendingar, stoðsendingar, rispur,
-          tæklingar, hindranir, brottspyrnur, einvígi, sendingahlutfall — og markvarsla hjá markvörðum; framsækni-flokkur (langsendingar, fyrirgjafir, sendingar á lokaþriðjung) kviknar sjálfkrafa fylgi þeir dálkar með í næsta tölfræðiinnslagi).
+          tæklingar, hindranir, brottspyrnur, einvígi, sendingahlutfall - og markvarsla hjá markvörðum; framsækni-flokkur (langsendingar, fyrirgjafir, sendingar á lokaþriðjung) kviknar sjálfkrafa fylgi þeir dálkar með í næsta tölfræðiinnslagi).
           Framlagið er z-skorað miðað við hina leikmennina og fest við ±80 Elo-stig.
           Stjörnumerkt (*) heild inniheldur viðurkenningabónus: val í lið umferðar hjá fótbolta.net gefur +6 og leikmaður umferðar +10 (hámark +40).
         </p>
-        <h2 className="display text-lg font-extrabold mb-4">Elo-stig leikmanna — Lengjudeildin</h2>
+        <h2 className="display text-lg font-extrabold mb-4">Elo-stig leikmanna - Lengjudeildin</h2>
         <EloTable rows={lengju} sofaByName={sofaByName} />
         <p className="text-[11px] muted mt-2">
           Sér tafla: mörk og úrslit í Lengjudeildinni vega 60% á móti Bestu deildinni og
-          byrjunarstigin eru lægri (1400 á móti 1500) — leikmenn taka stigin með sér upp um deild.
+          byrjunarstigin eru lægri (1400 á móti 1500) - leikmenn taka stigin með sér upp um deild.
         </p>
       </section>
       <section className="grid gap-8 content-start">
@@ -121,7 +121,7 @@ export default async function LeikmennPage() {
           <p className="text-[11px] muted mt-2">Stoðsendingar: tölfræðiinnslag (uppfærist þegar nýtt skjal er hlaðið inn).</p>
         </div>
         <div>
-          <h2 className="display text-lg font-extrabold mb-4">Markakóngar — Lengjudeildin</h2>
+          <h2 className="display text-lg font-extrabold mb-4">Markakóngar - Lengjudeildin</h2>
           <RaceTable rows={goalsLengju} unit="mörk" />
         </div>
       </section>
@@ -164,12 +164,12 @@ function BestaTable({
                   : 'Utan topp-150 tölfræðilistans'}
                 style={{ color: (p.framlag?.total ?? 0) >= 0 ? 'var(--win)' : 'var(--loss)' }}
               >
-                {p.framlag ? (p.framlag.total >= 0 ? '+' : '') + p.framlag.total : '—'}
+                {p.framlag ? (p.framlag.total >= 0 ? '+' : '') + p.framlag.total : '-'}
               </td>
               <td className="text-right stat text-base" title={p.vidurkenning ? `Viðurkenningar fótbolta.net: ${p.vidurkenning.detail}` : undefined}>
                 {Math.round(p.heild)}{p.vidurkenning ? <span aria-hidden style={{ color: 'var(--accent)' }}>*</span> : ''}
               </td>
-              <td className="text-right num muted">{sofaByName.get(p.name)?.rating ?? '—'}</td>
+              <td className="text-right num muted">{sofaByName.get(p.name)?.rating ?? '-'}</td>
             </tr>
           ))}
         </tbody>
@@ -207,7 +207,7 @@ function EloTable({
               <td className="text-right stat">{Math.round(p.elo)}</td>
               <td className="text-right num muted">{p.apps}</td>
               {showSofa && (
-                <td className="text-right num">{sofaByName.get(p.name)?.rating ?? '—'}</td>
+                <td className="text-right num">{sofaByName.get(p.name)?.rating ?? '-'}</td>
               )}
             </tr>
           ))}

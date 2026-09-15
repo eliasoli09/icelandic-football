@@ -69,7 +69,7 @@ export function SlipBuilder({ matches }: { matches: MatchOpt[] }) {
         player: l.player,
         label: l.label,
       }))
-      if (!parsed.length) throw new Error('Engir leggir fundust á myndinni — prófaðu skýrara skjáskot.')
+      if (!parsed.length) throw new Error('Engir leggir fundust á myndinni - prófaðu skýrara skjáskot.')
       setLegs([...legs, ...parsed])
       if (d.notes) setNotes(d.notes)
     } catch (e) {
@@ -145,7 +145,7 @@ export function SlipBuilder({ matches }: { matches: MatchOpt[] }) {
         </button>
         <p className="text-[11px] muted inline-flex items-center justify-center gap-1.5">
           <Camera size={11} aria-hidden />
-          Gervigreind les leggina — yfirfarðu þá alltaf áður en seðillinn er búinn til
+          Gervigreind les leggina - yfirfarðu þá alltaf áður en seðillinn er búinn til
         </p>
         {notes && <p className="text-xs" style={{ color: 'var(--ice)' }}>Athugasemd lesarans: {notes}</p>}
       </div>

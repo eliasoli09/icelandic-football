@@ -6,7 +6,7 @@ const fx = (phase: string, home: number, away: number) => ({
 })
 
 // Besta deild 2026: after 22 rounds the league locks into a top 6 and a
-// bottom 6. Points carry over, but the groups do not mix again — 7th place
+// bottom 6. Points carry over, but the groups do not mix again - 7th place
 // is the ceiling for the lower group no matter how many points it wins.
 const splitFixtures = [
   ...[[1, 2], [3, 4], [5, 6]].map(([h, a]) => fx('efri', h, a)),
@@ -41,7 +41,7 @@ describe('applySplit', () => {
   ]
 
   it('keeps the lower group below the upper group even on more points', () => {
-    // team 7 has run up 60 points in the lower group — still 7th
+    // team 7 has run up 60 points in the lower group - still 7th
     const hot = table.map((r) => (r.teamId === 7 ? { ...r, points: 60 } : r))
     const out = applySplit(hot, splitGroups(splitFixtures))
     expect(out.map((r) => r.teamId)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])

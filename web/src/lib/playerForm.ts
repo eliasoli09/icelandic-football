@@ -94,7 +94,7 @@ export class XgForm {
 /**
  * How much of a club's attacking output is unavailable, as a share between 0
  * and 1. `weight` is how much of the club's recent expected involvement each
- * player carries; `absent` is the fraction of him that will be missing — 1 for
+ * player carries; `absent` is the fraction of him that will be missing - 1 for
  * injured or suspended, less for a doubt.
  */
 export function missingShare(squad: { weight: number; absent: number }[]): number {
@@ -162,6 +162,6 @@ export function leagueScale(predicted: number[], leagueRate: number): number {
   const mean = sum / n
   if (!(mean > 0)) return 1
   // a factor far from 1 means the inputs disagree with the league, not that the
-  // league is wrong — clamp rather than let one bad rate distort every match
+  // league is wrong - clamp rather than let one bad rate distort every match
   return Math.min(1.25, Math.max(0.8, leagueRate / mean))
 }

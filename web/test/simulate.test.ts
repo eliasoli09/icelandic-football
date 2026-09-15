@@ -166,16 +166,16 @@ describe('runPlayerElo', () => {
 
 // After round 22 Besta deild freezes into a top 6 and a bottom 6. The halves
 // play on for points but never meet again, so a lower-half club cannot reach
-// the top six and an upper-half club cannot be relegated — no matter what the
+// the top six and an upper-half club cannot be relegated - no matter what the
 // remaining results are.
-describe('simulateSeason — frozen split halves', () => {
+describe('simulateSeason - frozen split halves', () => {
   const upper = ['A', 'B', 'C', 'D', 'E', 'F']
   const lower = ['G', 'H', 'I', 'J', 'K', 'L']
   const groups = new Map<string, 'efri' | 'nedri'>([
     ...upper.map((n) => [n, 'efri'] as const),
     ...lower.map((n) => [n, 'nedri'] as const),
   ])
-  // single round robin inside each half — the real shape of the split rounds
+  // single round robin inside each half - the real shape of the split rounds
   const halfFixtures = (g: string[]) =>
     g.flatMap((h, i) => g.slice(i + 1).map((a) => ({ home: h, away: a })))
   const fixtures = [...halfFixtures(upper), ...halfFixtures(lower)]
@@ -215,7 +215,7 @@ describe('simulateSeason — frozen split halves', () => {
 
 // "Stigaspá": where each club is expected to finish on points, with a range
 // so the number is not read as a certainty.
-describe('simulateSeason — points projection', () => {
+describe('simulateSeason - points projection', () => {
   const names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
   it('a finished season projects exactly the points already won', () => {

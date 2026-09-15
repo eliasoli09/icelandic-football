@@ -130,7 +130,7 @@ export interface EloRow {
 /**
  * @param fromSeason floor on how far back to read. The /elo page charts 2019
  *   onward and looks back at most five seasons for its movement columns, so
- *   it has no use for the 1990s — and reading every rating row for ten
+ *   it has no use for the 1990s - and reading every rating row for ten
  *   leagues took the page 43 seconds.
  */
 export async function eloHistory(fromSeason?: number): Promise<EloRow[]> {
@@ -175,7 +175,7 @@ export async function leagueRegistry(): Promise<LeagueRow[]> {
 }
 
 /**
- * One rating per club per season — enough for a trend chart and for movement
+ * One rating per club per season - enough for a trend chart and for movement
  * columns, and small enough that adding leagues does not slow the page.
  */
 export async function eloSeasonEnds(fromSeason: number): Promise<EloRow[]> {
@@ -217,7 +217,7 @@ export async function standings(
     .eq('season', season)
     .eq('league', league)
     .eq('status', 'played')
-    // play-offs decide promotion after the table is settled — they are not
+    // play-offs decide promotion after the table is settled - they are not
     // table matches, and counting them gave four Lengjudeild clubs 23 games
     .neq('phase', 'umspil')
     .order('date', { ascending: true, nullsFirst: true })

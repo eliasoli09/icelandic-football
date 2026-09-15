@@ -78,7 +78,7 @@ export function parseMatchCards(html: string, season: number): ParsedMatch[] {
     const homeName = cleanTeam(home[2])
     const awayName = cleanTeam(away[2])
     // Until a draw is made, KSÍ fills a card with the name of the STAGE rather
-    // than the clubs — "Undanúrslit" v "Fyrri leikur", "Úrslitaleikur" v ".",
+    // than the clubs - "Undanúrslit" v "Fyrri leikur", "Úrslitaleikur" v ".",
     // "23. Umferð" v ".". Ingesting those invents clubs and phantom fixtures.
     if (isPlaceholder(homeName) || isPlaceholder(awayName)) continue
     const { date, venue } = parseHeader(header, season)

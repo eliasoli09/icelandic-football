@@ -1,7 +1,7 @@
 /**
  * Dixon-Coles: attack and defence per club, fitted by maximum likelihood.
  *
- * Elo answers one question — who is stronger — and throws the scoreline away.
+ * Elo answers one question - who is stronger - and throws the scoreline away.
  * A match tells us more than that: who created, who conceded, and by how much.
  * This model gives every club two numbers instead of one, learned from every
  * score it has been part of, and adds the two corrections the original 1997
@@ -190,7 +190,7 @@ export function fit(matches: DcMatch[], options: DcOptions = {}): DcParams {
     totalWeight += 2 * weight[i]
   }
   // Fitted, not fixed. With attack and defence both centred on zero the away
-  // side averages exp(base) and the home side exp(base + home) — so pinning
+  // side averages exp(base) and the home side exp(base + home) - so pinning
   // base to the mean over BOTH sides forces the home advantage to come out at
   // zero, whatever the scores say.
   let base = Math.log(Math.max(0.2, totalGoals / Math.max(1e-9, totalWeight)))

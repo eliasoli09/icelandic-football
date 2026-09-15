@@ -1,4 +1,4 @@
-/* Seðlavaktin service worker — push notifications + notification clicks. */
+/* Seðlavaktin service worker - push notifications + notification clicks. */
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()))
 

@@ -11,7 +11,7 @@ export interface Answer {
   /**
    * Every spelling that counts as this answer, already normalised when the
    * list was built. A guess is matched against these exactly, never as a
-   * substring — "paris" must not open Paris SG.
+   * substring - "paris" must not open Paris SG.
    */
   accept: string[]
   /** what a hint reveals; the first letter of the label when absent */
