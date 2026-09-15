@@ -1,276 +1,165 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Heart, Lightbulb, Share2, Shuffle, CalendarDays, Check, X } from 'lucide-react'
-import { LISTS } from '@/lib/topp10/lists'
-import { dailyList, dayNumber } from '@/lib/topp10/daily'
-import { guess, hint, hintFor, newGame, LIVES, type GameState, type Outcome } from '@/lib/topp10/game'
-import { shareText } from '@/lib/topp10/share'
-import type { Region, Topp10List } from '@/lib/topp10/types'
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
+import { ArrowRight, Check, ChevronDown, Info, RotateCcw, X } from 'lucide-react'
+import { CLUB_BY_ID, QUESTIONS } from '@/lib/tenaball/data'
+import { LIVES, SAVE_KEY, newRound, nextQuestion, restoreRound, submitAnswer, type Feedback, type Round } from '@/lib/tenaball/game'
+import { normalise } from '@/lib/topp10/normalise'
+import { TenaballScene } from './TenaballScene'
+import { RotatingStarBall } from './RotatingStarBall'
+import styles from './Tenaball.module.css'
 
-const REGIONS: { id: Region; label: string }[] = [
-  { id: 'island', label: 'Ísland' },
-  { id: 'enska', label: 'Enska' },
-  { id: 'evropa', label: 'Evrópa' },
-]
-
-const DAY = 86_400_000
-
-// A rebuilt list can reorder its answers, so a saved game belongs to one build of one list.
-const savedKey = (list: Topp10List, day: number) => `topp10:${day}:${list.id}:${list.verifiedAt}`
-
-function readSaved(key: string, list: Topp10List): GameState | null {
-  try {
-    const raw = localStorage.getItem(key)
-    if (!raw) return null
-    const s = JSON.parse(raw) as GameState
-    const valid = s.listId === list.id && [...s.found, ...s.hinted].every((i) => i >= 0 && i < list.answers.length)
-    return valid ? s : null
-  } catch {
-    return null
-  }
-}
-
-function writeSaved(key: string, state: GameState) {
-  try { localStorage.setItem(key, JSON.stringify(state)) } catch { /* private mode: play without saving */ }
-}
-
+type Visual = Feedback & { event: number }
 export function Topp10Game() {
-  const [region, setRegion] = useState<Region>('island')
-  // the day is read in the browser, so everyone's list turns over at their own midnight render
-  const [day, setDay] = useState<number | null>(null)
-  const [freeId, setFreeId] = useState<string | null>(null)
-
-  useEffect(() => {
-    setDay(dayNumber(new Date()))
-    try {
-      const r = localStorage.getItem('topp10:region')
-      if (r === 'island' || r === 'enska' || r === 'evropa') setRegion(r)
-    } catch { /* ignore */ }
-  }, [])
-
-  const regionLists = useMemo(() => LISTS.filter((l) => l.region === region), [region])
-  const daily = day === null ? null : dailyList(regionLists, new Date(day * DAY))
-  const list = (freeId && regionLists.find((l) => l.id === freeId)) || daily
-
-  const chooseRegion = (r: Region) => {
-    setRegion(r)
-    setFreeId(null)
-    try { localStorage.setItem('topp10:region', r) } catch { /* ignore */ }
-  }
-
-  const shuffle = () => {
-    const others = regionLists.filter((l) => l.id !== list?.id)
-    if (others.length) setFreeId(others[Math.floor(Math.random() * others.length)].id)
-  }
-
-  return (
-    <div className="grid gap-4">
-      <div role="tablist" aria-label="Keppni" className="grid grid-cols-3 gap-1.5 p-1 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
-        {REGIONS.map((r) => {
-          const active = r.id === region
-          return (
-            <button
-              key={r.id}
-              role="tab"
-              aria-selected={active}
-              onClick={() => chooseRegion(r.id)}
-              className="min-h-[44px] rounded-lg text-sm font-semibold"
-              style={{ background: active ? 'var(--accent)' : 'transparent', color: active ? 'var(--accent-ink)' : 'var(--text-2)' }}
-            >
-              {r.label}
-            </button>
-          )
-        })}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        <select
-          aria-label="Veldu lista"
-          value={freeId ?? ''}
-          onChange={(e) => setFreeId(e.target.value || null)}
-          className="card px-3 py-2 text-sm flex-1 min-w-0 min-h-[44px]"
-          style={{ color: 'var(--text)' }}
-        >
-          <option value="">Listi dagsins</option>
-          {regionLists.map((l) => <option key={l.id} value={l.id}>{l.title}</option>)}
-        </select>
-        <button onClick={shuffle} className="card px-3 min-h-[44px] text-sm font-semibold inline-flex items-center gap-1.5">
-          <Shuffle size={15} aria-hidden /> Annar listi
-        </button>
-        {freeId && (
-          <button onClick={() => setFreeId(null)} className="card px-3 min-h-[44px] text-sm font-semibold inline-flex items-center gap-1.5">
-            <CalendarDays size={15} aria-hidden /> Dagsins
-          </button>
-        )}
-      </div>
-
-      {list && day !== null
-        ? <Board key={`${list.id}:${freeId ? 'frjals' : day}`} list={list} saveAs={freeId ? null : savedKey(list, day)} daily={!freeId} />
-        : <div className="card p-6 h-64 animate-pulse" aria-hidden />}
-    </div>
-  )
-}
-
-const MESSAGES: Record<Exclude<Outcome, 'empty'>, string> = {
-  correct: 'Rétt!',
-  wrong: 'Ekki á listanum.',
-  repeat: 'Þú ert búin(n) að reyna þetta.',
-  over: 'Leiknum er lokið.',
-}
-
-function Board({ list, saveAs, daily }: { list: Topp10List; saveAs: string | null; daily: boolean }) {
-  const [state, setState] = useState<GameState>(() => newGame(list))
+  const [state, setState] = useState(() => newRound(QUESTIONS[0]))
+  const current = useRef(state)
+  const [ready, setReady] = useState(false)
   const [text, setText] = useState('')
-  const [flash, setFlash] = useState<{ outcome: Outcome; detail: string } | null>(null)
-  const [copied, setCopied] = useState(false)
+  const [feedback, setFeedback] = useState<Visual | null>(null)
+  const [highlight, setHighlight] = useState<string | null>(null)
+  const [animated, setAnimated] = useState<string[]>([])
+  const [celebrate, setCelebrate] = useState(false)
+  const [showResult, setShowResult] = useState(false)
+  const [roundNumber, setRoundNumber] = useState(0)
+  const [help, setHelp] = useState(false)
+  const [reveal, setReveal] = useState(false)
   const input = useRef<HTMLInputElement>(null)
+  const result = useRef<HTMLHeadingElement>(null)
+  const lastInput = useRef({ value: '', time: -Infinity })
+  const sequence = useRef(0)
+  const question = QUESTIONS.find(q => q.id === state.questionId)!
 
   useEffect(() => {
-    if (!saveAs) return
-    const saved = readSaved(saveAs, list)
-    if (saved) setState(saved)
-  }, [saveAs, list])
-
-  const update = (next: GameState) => {
-    setState(next)
-    if (saveAs) writeSaved(saveAs, next)
-  }
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const r = guess(list, state, text)
-    if (r.outcome === 'empty') return
-    update(r.state)
-    setFlash({ outcome: r.outcome, detail: r.revealed.map((i) => list.answers[i].label).join(', ') })
-    setText('')
-    input.current?.focus()
-  }
-
-  const share = async () => {
-    const body = shareText(list, state, `${window.location.origin}/topp10`)
-    if (navigator.share) {
-      try { await navigator.share({ text: body }); return } catch { return }
-    }
     try {
-      await navigator.clipboard.writeText(body)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch { /* clipboard blocked */ }
+      const saved = restoreRound(sessionStorage.getItem(SAVE_KEY))
+      if (saved) { current.current = saved; setState(saved); setShowResult(saved.status !== 'playing') }
+    } catch { /* Storage may be unavailable; the game still works. */ }
+    setReady(true)
+  }, [])
+  useEffect(() => {
+    if (ready && current.current.status === 'playing' && matchMedia('(pointer: fine)').matches) input.current?.focus({ preventScroll: true })
+  }, [ready, roundNumber])
+  useEffect(() => {
+    if (!celebrate) return
+    const resultTimer = setTimeout(() => setShowResult(true), 850)
+    const finishTimer = setTimeout(() => setCelebrate(false), 2900)
+    return () => { clearTimeout(resultTimer); clearTimeout(finishTimer) }
+  }, [celebrate])
+  useEffect(() => {
+    setHighlight(feedback?.kind === 'duplicate' ? feedback.clubId ?? null : null)
+    const timer = setTimeout(() => setHighlight(null), 600)
+    return () => clearTimeout(timer)
+  }, [feedback])
+  useEffect(() => { if (showResult) result.current?.focus({ preventScroll: true }) }, [showResult])
+
+  const update = (next: Round) => {
+    current.current = next
+    setState(next)
+    try { sessionStorage.setItem(SAVE_KEY, JSON.stringify(next)) } catch { /* continue without persistence */ }
   }
+  const submit = (event: FormEvent) => {
+    event.preventDefault()
+    if (!ready || current.current.status !== 'playing') return
+    const value = input.current?.value ?? text
+    const normalized = normalise(value)
+    if (!normalized) return
+    const time = performance.now()
+    // Coalesce a double click / Enter+click without blocking a different answer.
+    const repeatedEvent = normalized === lastInput.current.value && time - lastInput.current.time < 350
+    if (repeatedEvent) { input.current?.focus({ preventScroll: true }); return }
+    lastInput.current = { value: normalized, time }
+    const token = String(++sequence.current) + ':' + time
+    const response = submitAnswer(question, current.current, value, token)
+    update(response.state)
+    setFeedback({ ...response.feedback, event: sequence.current })
+    if (response.feedback.kind === 'correct') {
+      setAnimated(a => [...a, response.feedback.clubId!])
+      setText('')
+      if (input.current) input.current.value = ''
+      if (response.state.status === 'won') setCelebrate(true)
+    } else if (response.feedback.kind === 'incorrect') {
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) input.current?.animate(
+        [0, -4, 4, -3, 3, 0].map(x => ({ transform: `translateX(${x}px)` })), { duration: 280 })
+      if (response.state.status === 'lost') setShowResult(true)
+    }
+    if (response.state.status === 'playing') input.current?.focus({ preventScroll: true })
+  }
+  const next = () => {
+    update(newRound(nextQuestion(current.current.questionId)))
+    setText(''); setFeedback(null); setAnimated([]); setCelebrate(false); setShowResult(false); setReveal(false)
+    lastInput.current = { value: '', time: -Infinity }
+    setRoundNumber(n => n + 1)
+  }
+  const club = feedback?.clubId ? CLUB_BY_ID[feedback.clubId] : null
+  const message = feedback?.kind === 'correct' ? `Rétt! ${club?.label} bætist við.`
+    : feedback?.kind === 'incorrect' ? 'Ekki rétt. Reyndu aftur.'
+    : feedback?.kind === 'duplicate' ? `${club?.label} er þegar komið.` : ''
+  const kind = feedback?.kind ?? 'idle'
 
-  const over = state.status !== 'playing'
-  const total = list.answers.length
-
-  return (
-    <section className="card p-4 sm:p-5" aria-labelledby="topp10-title">
-      <div className="flex items-start justify-between gap-3 mb-1">
-        <div className="min-w-0">
-          <p className="text-[11px] uppercase tracking-wider font-semibold muted">{daily ? 'Listi dagsins' : 'Frjáls leikur'}</p>
-          <h2 id="topp10-title" className="display text-xl font-black leading-tight">{list.title}</h2>
-        </div>
-        <div className="flex items-center gap-0.5 shrink-0 pt-1" aria-label={`${state.lives} líf eftir af ${LIVES}`} role="img">
-          {Array.from({ length: LIVES }, (_, i) => (
-            <Heart key={i} size={20} aria-hidden
-              fill={i < state.lives ? 'var(--loss)' : 'transparent'}
-              style={{ color: i < state.lives ? 'var(--loss)' : 'var(--border-strong)' }} />
-          ))}
-        </div>
+  return <div className={styles.shell}>
+    <div className={styles.topline}><span>FÓTBOLTAÞRAUTIR <span>/</span> TENABALL</span><span>10 SVÖR. EIN ÁSKORUN.</span></div>
+    <section className={styles.arena} aria-labelledby="tenaball-title" data-status={state.status}>
+      <TenaballScene/>
+      <div className={styles.toolbar}>
+        <span className={styles.roundTag}><span/> ÞRAUT {String(QUESTIONS.indexOf(question) + 1).padStart(2, '0')} / {String(QUESTIONS.length).padStart(2, '0')}</span>
+        <button className={styles.helpButton} onClick={() => setHelp(!help)} aria-expanded={help} aria-controls="tenaball-help"><Info size={16}/> Svona spilarðu</button>
       </div>
-      <p className="text-sm mb-1">{list.question}</p>
-      {list.note && <p className="text-xs muted mb-3">{list.note}</p>}
-
-      <form onSubmit={submit} className="flex gap-2 mt-3">
-        <input
-          ref={input}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          // not left to implicit form submission, which some keyboards and automation skip
-          onKeyDown={(e) => { if (e.key === 'Enter') submit(e) }}
-          enterKeyHint="go"
-          disabled={over}
-          placeholder={over ? 'Leik lokið' : 'Skrifaðu nafn…'}
-          aria-label="Ágiskun"
-          autoComplete="off"
-          autoCorrect="off"
-          spellCheck={false}
-          className="flex-1 min-w-0 rounded-lg border px-3 min-h-[44px] text-base"
-          style={{ borderColor: 'var(--border-strong)', background: 'var(--bg)', color: 'var(--text)' }}
-        />
-        <button type="submit" disabled={over} className="rounded-lg px-4 min-h-[44px] text-sm font-semibold disabled:opacity-40"
-          style={{ background: 'var(--accent)', color: 'var(--accent-ink)' }}>
-          Giska
-        </button>
-      </form>
-
-      <p aria-live="polite" className="text-sm min-h-[1.5rem] mt-2 font-medium inline-flex items-center gap-1.5"
-        style={{ color: flash?.outcome === 'correct' ? 'var(--win)' : flash?.outcome === 'wrong' ? 'var(--loss)' : 'var(--text-2)' }}>
-        {flash && flash.outcome !== 'empty' && (
-          <>
-            {flash.outcome === 'correct' ? <Check size={15} aria-hidden /> : flash.outcome === 'wrong' ? <X size={15} aria-hidden /> : null}
-            {MESSAGES[flash.outcome]}{flash.detail ? ` ${flash.detail}` : ''}
-          </>
-        )}
-      </p>
-
-      <ol className="grid gap-1.5 mt-2">
-        {list.answers.map((a, i) => {
-          const found = state.found.includes(i)
-          const hinted = state.hinted.includes(i)
-          const canHint = !over && !found && !hinted && state.lives > 1
-          return (
-            <li key={i} className="flex items-center gap-3 rounded-lg border px-3 min-h-[48px]"
-              style={{
-                borderColor: found ? 'color-mix(in srgb, var(--win) 45%, transparent)' : 'var(--border)',
-                background: found ? 'color-mix(in srgb, var(--win) 10%, transparent)' : 'transparent',
-              }}>
-              <span className="num text-sm font-bold w-11 shrink-0 muted">{a.slot ?? `${a.rank}.`}</span>
-              <span className="flex-1 min-w-0 py-2">
-                {found ? (
-                  <span className="font-semibold">{a.label}</span>
-                ) : over ? (
-                  <span className="muted italic">{a.label}</span>
-                ) : hinted ? (
-                  <span className="text-sm" style={{ color: 'var(--accent)' }}>{hintFor(list, i)}</span>
-                ) : (
-                  <span className="muted" aria-label="Ófundið">?</span>
-                )}
-              </span>
-              {(found || over) && <span className="num text-xs muted shrink-0">{a.detail}</span>}
-              {canHint && (
-                <button onClick={() => update(hint(list, state, i))}
-                  className="shrink-0 w-11 h-11 -mr-2 inline-flex items-center justify-center rounded-lg"
-                  aria-label={`Vísbending fyrir ${a.slot ?? `${a.rank}. sæti`}, kostar eitt líf`}
-                  title="Vísbending (kostar líf)">
-                  <Lightbulb size={16} aria-hidden style={{ color: 'var(--text-2)' }} />
-                </button>
-              )}
+      {help && <aside id="tenaball-help" className={styles.help}>
+        <strong>Tíu félög. Þrjár tilraunir.</strong>
+        <p>Skrifaðu eitt félag í einu og ýttu á Enter eða Svara. Hvert nýtt rétt svar fyllir næsta þrep. Þú mátt svara í hvaða röð sem er. Rangt svar kostar tilraun; tómt eða endurtekið svar kostar ekkert.</p>
+        <button onClick={() => setHelp(false)}>Loka leiðbeiningum <X size={16}/></button>
+      </aside>}
+      <div className={styles.gameLayout} key={roundNumber}>
+        <header className={styles.brand}><p>MEISTARADEILDIN</p><h1 id="tenaball-title">TENABALL</h1><span>Tíu skref í átt að stjörnunum.</span></header>
+        {!showResult && <div className={styles.questionBlock}><span className={styles.eyebrow}>{question.title}</span><h2>{question.question}</h2><p>Miðað við lok tímabilsins {question.cutoff}.</p></div>}
+        <div className={`${styles.answerPanel} ${styles[kind] ?? ''}`} data-result={showResult}>
+          {showResult ? <div className={styles.result}>
+            <span className={styles.eyebrow}>{state.status === 'won' ? 'VEL GERT!' : 'VEL REYNT'}</span>
+            <h2 ref={result} tabIndex={-1}>{state.status === 'won' ? '10 AF 10!' : 'Umferð lokið'}</h2>
+            <p>{state.status === 'won' ? 'Öll tíu félögin fundin.' : `Þú fannst ${state.found.length} af 10 félögum.`}</p>
+            <button className={styles.primary} onClick={next}>{QUESTIONS.length > 1 ? 'Næsta þraut' : 'Spila aftur'}<ArrowRight size={19}/></button>
+            {state.status === 'lost' && <button className={styles.revealButton} aria-expanded={reveal} aria-controls="possible-answers" onClick={() => setReveal(!reveal)}>Sjá möguleg svör <ChevronDown size={17}/></button>}
+          </div> : <>
+            <form onSubmit={submit}>
+              <label htmlFor="tenaball-answer">Nafn félags</label>
+              <div className={styles.inputRow}><div className={styles.inputWrap}>
+                <input ref={input} id="tenaball-answer" value={text} onChange={e => setText(e.target.value)} placeholder="Skrifaðu lið …" autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="send" disabled={!ready || state.status !== 'playing'} aria-describedby="tenaball-feedback" aria-invalid={kind === 'incorrect'}/>
+                {kind === 'incorrect' && <X className={styles.inputIcon} size={20} aria-hidden/>}
+              </div><button type="submit" className={styles.primary} disabled={!ready || state.status !== 'playing'}>Svara <ArrowRight size={17}/></button></div>
+            </form>
+            <p id="tenaball-feedback" className={styles.feedback} aria-live="polite" aria-atomic="true">
+              {message ? <span key={feedback?.event}>{kind === 'correct' ? <Check size={18}/> : kind === 'incorrect' ? <X size={18}/> : <Info size={18}/>} {message}</span> : <span className={styles.prompt}>Hvaða félag kemur fyrst upp í hugann?</span>}
+            </p>
+            <div className={styles.progress}>
+              <div><strong key={state.found.length} className={animated.length ? styles.progressPop : ''}>{state.found.length} <span>/ 10</span></strong><span>rétt svör</span></div>
+              <div className={styles.lives}><span>{state.lives} {state.lives === 1 ? 'tilraun eftir' : 'tilraunir eftir'}</span><span role="img" aria-label={`${state.lives} af 3 tilraunum eftir`} className={styles.dots}>{Array.from({ length: LIVES }, (_, i) => <i key={`${i}-${i < state.lives}`} className={i < state.lives ? styles.filled : styles.spent}/>)}</span></div>
+            </div>
+            <div className={styles.progressTrack} aria-hidden><span style={{ width: `${state.found.length * 10}%` }}/></div>
+          </>}
+        </div>
+        <div className={`${styles.pyramid} ${celebrate ? styles.celebrating : ''}`} aria-label="Tíu svarþrep">
+          <svg className={styles.pyramidOutline} viewBox="0 0 500 600" preserveAspectRatio="none" aria-hidden><path d="M125 10 H375 L486 546 Q501 570 486 585 Q480 592 466 592 H34 Q20 592 14 585 Q-1 570 14 546 Z"/></svg>
+          <RotatingStarBall className={styles.crown}/>
+          <ol role="list">{Array.from({ length: 10 }, (_, i) => {
+            const id = state.found[i]
+            const found = id ? CLUB_BY_ID[id] : null
+            return <li key={i} style={{ '--step': i, '--row-width': `${46 + i * 4.4}%` } as CSSProperties} className={styles.step}>
+              <div className={`${styles.stepSurface} ${found ? styles.found : ''}`}>
+                {found && animated.includes(id) && <span className={styles.correctSweep} aria-hidden/>}
+                {feedback?.kind === 'duplicate' && highlight === id && <span key={feedback.event} className={styles.duplicateSweep} aria-hidden/>}
+                <span className={styles.stepNumber}>{i + 1}</span><span className={styles.clubName}>{found?.label ?? <span className={styles.emptyLine}/>}</span>
+                {found ? <Check className={animated.includes(id) ? styles.checkDraw : ''} size={19} aria-label="Rétt svar"/> : <span className={styles.emptyDot} aria-hidden/>}
+              </div>
             </li>
-          )
-        })}
-      </ol>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
-        <p className="text-sm font-semibold num">
-          {state.status === 'won' ? `Þú fannst öll ${total}!` : over ? `Leik lokið. Þú fannst ${state.found.length} af ${total}.` : `${state.found.length} af ${total} fundin`}
-        </p>
-        {over && (
-          <button onClick={share} className="inline-flex items-center gap-1.5 px-3 min-h-[44px] rounded-lg text-sm font-semibold border"
-            style={{ borderColor: 'var(--border-strong)' }}>
-            <Share2 size={15} aria-hidden /> {copied ? 'Afritað' : 'Deila'}
-          </button>
-        )}
+          })}</ol>
+          <p className={styles.pyramidCaption}>{state.status === 'won' ? 'ÞÚ ERT KOMIN(N) Á TOPPINN' : 'HVERT RÉTT SVAR TELUR'}</p>
+          {celebrate && <div className={styles.confetti} aria-hidden>{Array.from({ length: 28 }, (_, i) => <span key={i} style={{ '--i': i, '--x': `${(i * 37) % 100}%`, '--drift': `${(i % 2 ? 1 : -1) * (25 + i * 3)}px` } as CSSProperties}>✦</span>)}</div>}
+        </div>
       </div>
-
-      <footer className="mt-4 pt-3 border-t text-[11px] muted" style={{ borderColor: 'var(--border)' }}>
-        Tvær óháðar heimildir bornar saman og sammála um öll svör, staðfest {list.verifiedAt}:{' '}
-        {list.sources.map((s, i) => (
-          <span key={s.url}>
-            {i > 0 && ' og '}
-            <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline">{s.name}</a>
-          </span>
-        ))}
-      </footer>
+      <div className={styles.arenaFooter}><span><span className={styles.tinyStar}>✦</span> ÞÍN ÞEKKING. ÞÍN MEISTARADEILD.</span><span>10 félög <i/> 3 tilraunir <i/> Engin tímamörk</span></div>
     </section>
-  )
+    {reveal && <section id="possible-answers" className={styles.answers}><h2>Möguleg svör sem þú fannst ekki</h2><p>Þetta eru gild félög við þessari spurningu. Hvaða tíu ólík gild svör sem er duga.</p><ul>{question.clubIds.filter(id => !state.found.includes(id)).map(id => <li key={id}>{CLUB_BY_ID[id].label}</li>)}</ul></section>}
+    <div className={styles.below}><span><RotateCcw size={14}/> Framvindan vistast í þessum vafraflipa.</span><a href={question.source} target="_blank" rel="noreferrer">Heimild: UEFA · Staðfest 15.09.2026 ↗</a></div>
+    <p className={styles.srOnly} aria-live="polite">{showResult ? state.status === 'won' ? '10 af 10. Öll tíu félögin fundin.' : `Umferð lokið. Þú fannst ${state.found.length} af 10 félögum.` : ''}</p>
+  </div>
 }

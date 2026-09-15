@@ -13,7 +13,7 @@ const NAV = [
   { href: '/elo', label: 'Elo' },
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
-  { href: '/topp10', label: 'Topp 10' },
+  { href: '/topp10', label: 'Tenaball' },
   { href: '/kort', label: 'Kort' },
   { href: '/leikmenn', label: 'Leikmenn' },
   { href: '/sludur', label: 'Slúður' },
