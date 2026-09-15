@@ -1,0 +1,134 @@
+{
+  "id": "evropa-evropudeild",
+  "region": "evropa",
+  "title": "Sigurvegarar Evrópudeildarinnar 2016-2025",
+  "question": "Hvaða félag vann UEFA-bikarinn / Evrópudeildina hvert ár 2016-2025?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · List of UEFA Cup and Europa League finals",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375008944"
+    },
+    {
+      "name": "is.wikipedia.org · Evrópukeppni félagsliða í knattspyrnu",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1963832"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Sevilla",
+      "detail": "Úrslitaleikurinn 2016",
+      "accept": [
+        "sevilla",
+        "sevilla fc"
+      ],
+      "slot": "2016",
+      "hint": "Félag frá Spáni"
+    },
+    {
+      "rank": 2,
+      "label": "Manchester United",
+      "detail": "Úrslitaleikurinn 2017",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ],
+      "slot": "2017",
+      "hint": "Félag frá Englandi"
+    },
+    {
+      "rank": 3,
+      "label": "Atlético Madrid",
+      "detail": "Úrslitaleikurinn 2018",
+      "accept": [
+        "atletico madrid",
+        "atletico"
+      ],
+      "slot": "2018",
+      "hint": "Félag frá Spáni"
+    },
+    {
+      "rank": 4,
+      "label": "Chelsea",
+      "detail": "Úrslitaleikurinn 2019",
+      "accept": [
+        "chelsea",
+        "chelsea fc"
+      ],
+      "slot": "2019",
+      "hint": "Félag frá Englandi"
+    },
+    {
+      "rank": 5,
+      "label": "Sevilla",
+      "detail": "Úrslitaleikurinn 2020",
+      "accept": [
+        "sevilla",
+        "sevilla fc"
+      ],
+      "slot": "2020",
+      "hint": "Félag frá Spáni"
+    },
+    {
+      "rank": 6,
+      "label": "Villarreal",
+      "detail": "Úrslitaleikurinn 2021",
+      "accept": [
+        "villarreal",
+        "villarreal cf",
+        "villareal cf"
+      ],
+      "slot": "2021",
+      "hint": "Félag frá Spáni"
+    },
+    {
+      "rank": 7,
+      "label": "Eintracht Frankfurt",
+      "detail": "Úrslitaleikurinn 2022",
+      "accept": [
+        "eintracht frankfurt",
+        "frankfurt",
+        "eintracht"
+      ],
+      "slot": "2022",
+      "hint": "Félag frá Þýskalandi"
+    },
+    {
+      "rank": 8,
+      "label": "Sevilla",
+      "detail": "Úrslitaleikurinn 2023",
+      "accept": [
+        "sevilla",
+        "sevilla fc"
+      ],
+      "slot": "2023",
+      "hint": "Félag frá Spáni"
+    },
+    {
+      "rank": 9,
+      "label": "Atalanta",
+      "detail": "Úrslitaleikurinn 2024",
+      "accept": [
+        "atalanta",
+        "atalanta bc"
+      ],
+      "slot": "2024",
+      "hint": "Félag frá Ítalíu"
+    },
+    {
+      "rank": 10,
+      "label": "Tottenham Hotspur",
+      "detail": "Úrslitaleikurinn 2025",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ],
+      "slot": "2025",
+      "hint": "Félag frá Englandi"
+    }
+  ],
+  "verifiedAt": "2026-09-15",
+  "note": "Sama félagið getur opnað fleiri en eitt ár."
+}

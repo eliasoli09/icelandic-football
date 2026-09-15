@@ -1,0 +1,127 @@
+{
+  "id": "island-titlar",
+  "region": "island",
+  "title": "Íslandsmeistaratitlar",
+  "question": "Hvaða félög hafa oftast orðið Íslandsmeistarar karla í fótbolta?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371393570"
+    },
+    {
+      "name": "is.wikipedia.org · Besta deild karla",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1963138"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "KR",
+      "detail": "27 titlar",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ],
+      "hint": "Síðast meistari 2019"
+    },
+    {
+      "rank": 2,
+      "label": "Valur",
+      "detail": "23 titlar",
+      "accept": [
+        "valur"
+      ],
+      "hint": "Síðast meistari 2020"
+    },
+    {
+      "rank": 3,
+      "label": "Fram",
+      "detail": "18 titlar",
+      "accept": [
+        "fram"
+      ],
+      "hint": "Síðast meistari 1990"
+    },
+    {
+      "rank": 3,
+      "label": "ÍA",
+      "detail": "18 titlar",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ],
+      "hint": "Síðast meistari 2001"
+    },
+    {
+      "rank": 5,
+      "label": "FH",
+      "detail": "8 titlar",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ],
+      "hint": "Síðast meistari 2016"
+    },
+    {
+      "rank": 5,
+      "label": "Víkingur R.",
+      "detail": "8 titlar",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ],
+      "hint": "Síðast meistari 2025"
+    },
+    {
+      "rank": 7,
+      "label": "Keflavík",
+      "detail": "4 titlar",
+      "accept": [
+        "keflavik"
+      ],
+      "hint": "Síðast meistari 1973"
+    },
+    {
+      "rank": 8,
+      "label": "ÍBV",
+      "detail": "3 titlar",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ],
+      "hint": "Síðast meistari 1998"
+    },
+    {
+      "rank": 8,
+      "label": "Breiðablik",
+      "detail": "3 titlar",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ],
+      "hint": "Síðast meistari 2024"
+    },
+    {
+      "rank": 10,
+      "label": "KA",
+      "detail": "1 titill",
+      "accept": [
+        "ka"
+      ],
+      "hint": "Síðast meistari 1989"
+    },
+    {
+      "rank": 10,
+      "label": "Stjarnan",
+      "detail": "1 titill",
+      "accept": [
+        "stjarnan"
+      ],
+      "hint": "Síðast meistari 2014"
+    }
+  ],
+  "verifiedAt": "2026-09-15",
+  "note": "Þau sem eru jöfn í síðasta sæti eru öll á listanum."
+}

@@ -1,0 +1,137 @@
+{
+  "id": "island-markakongar",
+  "region": "island",
+  "title": "Markakóngar 2016-2025",
+  "question": "Hver skoraði flest mörk í efstu deild karla hvert tímabil 2016-2025?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371393570"
+    },
+    {
+      "name": "is.wikipedia.org · Besta deild karla",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1963138"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Garðar Gunnlaugsson",
+      "detail": "14 mörk",
+      "accept": [
+        "gardar gunnlaugsson",
+        "gunnlaugsson"
+      ],
+      "slot": "2016",
+      "hint": "ÍA"
+    },
+    {
+      "rank": 2,
+      "label": "Andri Rúnar Bjarnason",
+      "detail": "19 mörk",
+      "accept": [
+        "andri runar bjarnason",
+        "bjarnason",
+        "andri bjarnason"
+      ],
+      "slot": "2017",
+      "hint": "Grindavík"
+    },
+    {
+      "rank": 3,
+      "label": "Patrick Pedersen",
+      "detail": "17 mörk",
+      "accept": [
+        "patrick pedersen",
+        "patrik pedersen",
+        "pedersen"
+      ],
+      "slot": "2018",
+      "hint": "Valur"
+    },
+    {
+      "rank": 4,
+      "label": "Gary Martin",
+      "detail": "14 mörk",
+      "accept": [
+        "gary martin",
+        "martin"
+      ],
+      "slot": "2019",
+      "hint": "Valur/ÍBV"
+    },
+    {
+      "rank": 5,
+      "label": "Steven Lennon",
+      "detail": "17 mörk",
+      "accept": [
+        "steven lennon",
+        "lennon"
+      ],
+      "slot": "2020",
+      "hint": "FH"
+    },
+    {
+      "rank": 6,
+      "label": "Nikolaj Hansen",
+      "detail": "16 mörk",
+      "accept": [
+        "nikolaj hansen",
+        "hansen"
+      ],
+      "slot": "2021",
+      "hint": "Víkingur"
+    },
+    {
+      "rank": 7,
+      "label": "Nökkvi Þeyr Þórisson / Guðmundur Magnússon",
+      "detail": "17 mörk",
+      "accept": [
+        "nokkvi theyr thorisson",
+        "nokkvi thorisson",
+        "gudmundur magnusson",
+        "thorisson",
+        "magnusson"
+      ],
+      "slot": "2022",
+      "hint": "KA / Fram"
+    },
+    {
+      "rank": 8,
+      "label": "Emil Atlason",
+      "detail": "17 mörk",
+      "accept": [
+        "emil atlason",
+        "atlason"
+      ],
+      "slot": "2023",
+      "hint": "Stjarnan"
+    },
+    {
+      "rank": 9,
+      "label": "Benoný Breki Andrésson",
+      "detail": "21 mark",
+      "accept": [
+        "benony breki andresson",
+        "andresson",
+        "benony andresson"
+      ],
+      "slot": "2024",
+      "hint": "KR"
+    },
+    {
+      "rank": 10,
+      "label": "Patrick Pedersen",
+      "detail": "18 mörk",
+      "accept": [
+        "patrick pedersen",
+        "patrik pedersen",
+        "pedersen"
+      ],
+      "slot": "2025",
+      "hint": "Valur"
+    }
+  ],
+  "verifiedAt": "2026-09-15",
+  "note": "Þegar tveir urðu jafnir opnar hvor þeirra sem er árið."
+}

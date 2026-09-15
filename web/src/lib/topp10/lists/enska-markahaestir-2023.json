@@ -1,0 +1,134 @@
+{
+  "id": "enska-markahaestir-2023",
+  "region": "enska",
+  "title": "Markahæstir 2023/24",
+  "question": "Hverjir skoruðu flest mörk í ensku úrvalsdeildinni 2023/24?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2023-24 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374021367"
+    },
+    {
+      "name": "Fantasy Premier League 2023-24 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2023-24"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Erling Haaland",
+      "detail": "27 mörk",
+      "accept": [
+        "erling haaland",
+        "erling braut haaland",
+        "haaland"
+      ],
+      "hint": "Manchester City"
+    },
+    {
+      "rank": 2,
+      "label": "Cole Palmer",
+      "detail": "22 mörk",
+      "accept": [
+        "cole palmer",
+        "palmer"
+      ],
+      "hint": "Chelsea"
+    },
+    {
+      "rank": 3,
+      "label": "Alexander Isak",
+      "detail": "21 mark",
+      "accept": [
+        "alexander isak",
+        "isak"
+      ],
+      "hint": "Newcastle United"
+    },
+    {
+      "rank": 4,
+      "label": "Phil Foden",
+      "detail": "19 mörk",
+      "accept": [
+        "phil foden",
+        "foden"
+      ],
+      "hint": "Manchester City"
+    },
+    {
+      "rank": 4,
+      "label": "Dominic Solanke",
+      "detail": "19 mörk",
+      "accept": [
+        "dominic solanke",
+        "solanke"
+      ],
+      "hint": "Bournemouth"
+    },
+    {
+      "rank": 4,
+      "label": "Ollie Watkins",
+      "detail": "19 mörk",
+      "accept": [
+        "ollie watkins",
+        "watkins"
+      ],
+      "hint": "Aston Villa"
+    },
+    {
+      "rank": 7,
+      "label": "Mohamed Salah",
+      "detail": "18 mörk",
+      "accept": [
+        "mohamed salah",
+        "mo salah",
+        "salah"
+      ],
+      "hint": "Liverpool"
+    },
+    {
+      "rank": 8,
+      "label": "Son Heung-min",
+      "detail": "17 mörk",
+      "accept": [
+        "son heung min",
+        "son",
+        "heung min son",
+        "heung min"
+      ],
+      "hint": "Tottenham Hotspur"
+    },
+    {
+      "rank": 9,
+      "label": "Jarrod Bowen",
+      "detail": "16 mörk",
+      "accept": [
+        "jarrod bowen",
+        "bowen"
+      ],
+      "hint": "West Ham United"
+    },
+    {
+      "rank": 9,
+      "label": "Jean-Philippe Mateta",
+      "detail": "16 mörk",
+      "accept": [
+        "jean philippe mateta",
+        "mateta"
+      ],
+      "hint": "Crystal Palace"
+    },
+    {
+      "rank": 9,
+      "label": "Bukayo Saka",
+      "detail": "16 mörk",
+      "accept": [
+        "bukayo saka",
+        "saka"
+      ],
+      "hint": "Arsenal"
+    }
+  ],
+  "verifiedAt": "2026-09-15",
+  "note": "Þau sem eru jöfn í síðasta sæti eru öll á listanum."
+}

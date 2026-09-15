@@ -1,0 +1,118 @@
+{
+  "id": "enska-lokastada-2025",
+  "region": "enska",
+  "title": "Lokastaðan 2025/26",
+  "question": "Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2025/26?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025-26 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374984036"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Arsenal",
+      "detail": "85 stig",
+      "accept": [
+        "arsenal"
+      ],
+      "slot": "1."
+    },
+    {
+      "rank": 2,
+      "label": "Manchester City",
+      "detail": "78 stig",
+      "accept": [
+        "manchester city",
+        "man city"
+      ],
+      "slot": "2."
+    },
+    {
+      "rank": 3,
+      "label": "Manchester United",
+      "detail": "71 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ],
+      "slot": "3."
+    },
+    {
+      "rank": 4,
+      "label": "Aston Villa",
+      "detail": "65 stig",
+      "accept": [
+        "aston villa",
+        "villa"
+      ],
+      "slot": "4."
+    },
+    {
+      "rank": 5,
+      "label": "Liverpool",
+      "detail": "60 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ],
+      "slot": "5."
+    },
+    {
+      "rank": 6,
+      "label": "Bournemouth",
+      "detail": "57 stig",
+      "accept": [
+        "bournemouth",
+        "afc bournemouth"
+      ],
+      "slot": "6."
+    },
+    {
+      "rank": 7,
+      "label": "Sunderland",
+      "detail": "54 stig",
+      "accept": [
+        "sunderland"
+      ],
+      "slot": "7."
+    },
+    {
+      "rank": 8,
+      "label": "Brighton & Hove Albion",
+      "detail": "53 stig",
+      "accept": [
+        "brighton hove albion",
+        "brighton",
+        "brighton and hove albion"
+      ],
+      "slot": "8."
+    },
+    {
+      "rank": 9,
+      "label": "Brentford",
+      "detail": "53 stig",
+      "accept": [
+        "brentford"
+      ],
+      "slot": "9."
+    },
+    {
+      "rank": 10,
+      "label": "Chelsea",
+      "detail": "52 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc"
+      ],
+      "slot": "10."
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

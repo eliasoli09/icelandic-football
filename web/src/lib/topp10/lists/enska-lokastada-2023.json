@@ -1,0 +1,120 @@
+{
+  "id": "enska-lokastada-2023",
+  "region": "enska",
+  "title": "Lokastaðan 2023/24",
+  "question": "Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2023/24?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2023-24 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374021367"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Manchester City",
+      "detail": "91 stig",
+      "accept": [
+        "manchester city",
+        "man city"
+      ],
+      "slot": "1."
+    },
+    {
+      "rank": 2,
+      "label": "Arsenal",
+      "detail": "89 stig",
+      "accept": [
+        "arsenal"
+      ],
+      "slot": "2."
+    },
+    {
+      "rank": 3,
+      "label": "Liverpool",
+      "detail": "82 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ],
+      "slot": "3."
+    },
+    {
+      "rank": 4,
+      "label": "Aston Villa",
+      "detail": "68 stig",
+      "accept": [
+        "aston villa",
+        "villa"
+      ],
+      "slot": "4."
+    },
+    {
+      "rank": 5,
+      "label": "Tottenham Hotspur",
+      "detail": "66 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ],
+      "slot": "5."
+    },
+    {
+      "rank": 6,
+      "label": "Chelsea",
+      "detail": "63 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc"
+      ],
+      "slot": "6."
+    },
+    {
+      "rank": 7,
+      "label": "Newcastle United",
+      "detail": "60 stig",
+      "accept": [
+        "newcastle united",
+        "newcastle"
+      ],
+      "slot": "7."
+    },
+    {
+      "rank": 8,
+      "label": "Manchester United",
+      "detail": "60 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ],
+      "slot": "8."
+    },
+    {
+      "rank": 9,
+      "label": "West Ham United",
+      "detail": "52 stig",
+      "accept": [
+        "west ham united",
+        "west ham"
+      ],
+      "slot": "9."
+    },
+    {
+      "rank": 10,
+      "label": "Crystal Palace",
+      "detail": "49 stig",
+      "accept": [
+        "crystal palace",
+        "palace"
+      ],
+      "slot": "10."
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

@@ -1,0 +1,117 @@
+{
+  "id": "island-lokastada-2025",
+  "region": "island",
+  "title": "Lokastaða Bestu deildar 2025",
+  "question": "Hvaða lið enduðu í tíu efstu sætum Bestu deildar karla 2025?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025 Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1337561080"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Víkingur R.",
+      "detail": "57 stig",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ],
+      "slot": "1."
+    },
+    {
+      "rank": 2,
+      "label": "Valur",
+      "detail": "45 stig",
+      "accept": [
+        "valur"
+      ],
+      "slot": "2."
+    },
+    {
+      "rank": 3,
+      "label": "Stjarnan",
+      "detail": "42 stig",
+      "accept": [
+        "stjarnan"
+      ],
+      "slot": "3."
+    },
+    {
+      "rank": 4,
+      "label": "Breiðablik",
+      "detail": "42 stig",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ],
+      "slot": "4."
+    },
+    {
+      "rank": 5,
+      "label": "Fram",
+      "detail": "36 stig",
+      "accept": [
+        "fram"
+      ],
+      "slot": "5."
+    },
+    {
+      "rank": 6,
+      "label": "FH",
+      "detail": "33 stig",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ],
+      "slot": "6."
+    },
+    {
+      "rank": 7,
+      "label": "KA",
+      "detail": "39 stig",
+      "accept": [
+        "ka"
+      ],
+      "slot": "7."
+    },
+    {
+      "rank": 8,
+      "label": "ÍA",
+      "detail": "34 stig",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ],
+      "slot": "8."
+    },
+    {
+      "rank": 9,
+      "label": "ÍBV",
+      "detail": "33 stig",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ],
+      "slot": "9."
+    },
+    {
+      "rank": 10,
+      "label": "KR",
+      "detail": "31 stig",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ],
+      "slot": "10."
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

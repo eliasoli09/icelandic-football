@@ -1,0 +1,119 @@
+{
+  "id": "enska-lokastada-2009",
+  "region": "enska",
+  "title": "Lokastaðan 2009/10",
+  "question": "Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2009/10?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2009-10 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1366498314"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Chelsea",
+      "detail": "86 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc"
+      ],
+      "slot": "1."
+    },
+    {
+      "rank": 2,
+      "label": "Manchester United",
+      "detail": "85 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ],
+      "slot": "2."
+    },
+    {
+      "rank": 3,
+      "label": "Arsenal",
+      "detail": "75 stig",
+      "accept": [
+        "arsenal"
+      ],
+      "slot": "3."
+    },
+    {
+      "rank": 4,
+      "label": "Tottenham Hotspur",
+      "detail": "70 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ],
+      "slot": "4."
+    },
+    {
+      "rank": 5,
+      "label": "Manchester City",
+      "detail": "67 stig",
+      "accept": [
+        "manchester city",
+        "man city"
+      ],
+      "slot": "5."
+    },
+    {
+      "rank": 6,
+      "label": "Aston Villa",
+      "detail": "64 stig",
+      "accept": [
+        "aston villa",
+        "villa"
+      ],
+      "slot": "6."
+    },
+    {
+      "rank": 7,
+      "label": "Liverpool",
+      "detail": "63 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ],
+      "slot": "7."
+    },
+    {
+      "rank": 8,
+      "label": "Everton",
+      "detail": "61 stig",
+      "accept": [
+        "everton"
+      ],
+      "slot": "8."
+    },
+    {
+      "rank": 9,
+      "label": "Birmingham City",
+      "detail": "50 stig",
+      "accept": [
+        "birmingham city",
+        "birmingham"
+      ],
+      "slot": "9."
+    },
+    {
+      "rank": 10,
+      "label": "Blackburn Rovers",
+      "detail": "50 stig",
+      "accept": [
+        "blackburn rovers",
+        "blackburn"
+      ],
+      "slot": "10."
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

@@ -1,0 +1,119 @@
+{
+  "id": "enska-lokastada-2024",
+  "region": "enska",
+  "title": "Lokastaðan 2024/25",
+  "question": "Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2024/25?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2024-25 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372807257"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Liverpool",
+      "detail": "84 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ],
+      "slot": "1."
+    },
+    {
+      "rank": 2,
+      "label": "Arsenal",
+      "detail": "74 stig",
+      "accept": [
+        "arsenal"
+      ],
+      "slot": "2."
+    },
+    {
+      "rank": 3,
+      "label": "Manchester City",
+      "detail": "71 stig",
+      "accept": [
+        "manchester city",
+        "man city"
+      ],
+      "slot": "3."
+    },
+    {
+      "rank": 4,
+      "label": "Chelsea",
+      "detail": "69 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc"
+      ],
+      "slot": "4."
+    },
+    {
+      "rank": 5,
+      "label": "Newcastle United",
+      "detail": "66 stig",
+      "accept": [
+        "newcastle united",
+        "newcastle"
+      ],
+      "slot": "5."
+    },
+    {
+      "rank": 6,
+      "label": "Aston Villa",
+      "detail": "66 stig",
+      "accept": [
+        "aston villa",
+        "villa"
+      ],
+      "slot": "6."
+    },
+    {
+      "rank": 7,
+      "label": "Nottingham Forest",
+      "detail": "65 stig",
+      "accept": [
+        "nottingham forest",
+        "nott m forest",
+        "forest"
+      ],
+      "slot": "7."
+    },
+    {
+      "rank": 8,
+      "label": "Brighton & Hove Albion",
+      "detail": "61 stig",
+      "accept": [
+        "brighton hove albion",
+        "brighton",
+        "brighton and hove albion"
+      ],
+      "slot": "8."
+    },
+    {
+      "rank": 9,
+      "label": "Bournemouth",
+      "detail": "56 stig",
+      "accept": [
+        "bournemouth",
+        "afc bournemouth"
+      ],
+      "slot": "9."
+    },
+    {
+      "rank": 10,
+      "label": "Brentford",
+      "detail": "56 stig",
+      "accept": [
+        "brentford"
+      ],
+      "slot": "10."
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

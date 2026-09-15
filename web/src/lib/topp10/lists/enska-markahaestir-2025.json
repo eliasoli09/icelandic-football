@@ -1,0 +1,124 @@
+{
+  "id": "enska-markahaestir-2025",
+  "region": "enska",
+  "title": "Markahæstir 2025/26",
+  "question": "Hverjir skoruðu flest mörk í ensku úrvalsdeildinni 2025/26?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025-26 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374984036"
+    },
+    {
+      "name": "Fantasy Premier League 2025-26 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2025-26"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Erling Haaland",
+      "detail": "27 mörk",
+      "accept": [
+        "erling haaland",
+        "erling braut haaland",
+        "haaland"
+      ],
+      "hint": "Manchester City"
+    },
+    {
+      "rank": 2,
+      "label": "Igor Thiago",
+      "detail": "22 mörk",
+      "accept": [
+        "igor thiago",
+        "igor thiago nascimento rodrigues",
+        "thiago"
+      ],
+      "hint": "Brentford"
+    },
+    {
+      "rank": 3,
+      "label": "Antoine Semenyo",
+      "detail": "17 mörk",
+      "accept": [
+        "antoine semenyo",
+        "semenyo"
+      ],
+      "hint": "Bournemouth / Manchester City"
+    },
+    {
+      "rank": 4,
+      "label": "Ollie Watkins",
+      "detail": "16 mörk",
+      "accept": [
+        "ollie watkins",
+        "watkins"
+      ],
+      "hint": "Aston Villa"
+    },
+    {
+      "rank": 5,
+      "label": "Morgan Gibbs-White",
+      "detail": "15 mörk",
+      "accept": [
+        "morgan gibbs white",
+        "gibbs white"
+      ],
+      "hint": "Nottingham Forest"
+    },
+    {
+      "rank": 5,
+      "label": "João Pedro",
+      "detail": "15 mörk",
+      "accept": [
+        "joao pedro",
+        "joao pedro junqueira de jesus",
+        "pedro"
+      ],
+      "hint": "Chelsea"
+    },
+    {
+      "rank": 7,
+      "label": "Dominic Calvert-Lewin",
+      "detail": "14 mörk",
+      "accept": [
+        "dominic calvert lewin",
+        "calvert lewin"
+      ],
+      "hint": "Leeds United"
+    },
+    {
+      "rank": 7,
+      "label": "Viktor Gyökeres",
+      "detail": "14 mörk",
+      "accept": [
+        "viktor gyokeres",
+        "gyokeres"
+      ],
+      "hint": "Arsenal"
+    },
+    {
+      "rank": 9,
+      "label": "Eli Junior Kroupi",
+      "detail": "13 mörk",
+      "accept": [
+        "eli junior kroupi",
+        "junior kroupi",
+        "kroupi",
+        "eli kroupi"
+      ],
+      "hint": "Bournemouth"
+    },
+    {
+      "rank": 9,
+      "label": "Danny Welbeck",
+      "detail": "13 mörk",
+      "accept": [
+        "danny welbeck",
+        "welbeck"
+      ],
+      "hint": "Brighton & Hove Albion"
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

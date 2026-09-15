@@ -17,6 +17,7 @@ const NAV = [
   { href: '/leikmenn', label: 'Leikmenn' },
   { href: '/sludur', label: 'Slúður' },
   { href: '/uefa', label: 'Evrópa' },
+  { href: '/topp10', label: 'Topp 10' },
   { href: '/kastalinn', label: 'Kastalinn' },
   { href: '/saga', label: 'Saga' },
   { href: '/h2h', label: 'H2H' },

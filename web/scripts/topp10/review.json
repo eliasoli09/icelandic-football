@@ -1,0 +1,28 @@
+{
+  "builtAt": "2026-09-15",
+  "shipped": [
+    "island-titlar",
+    "island-markakongar",
+    "island-lokastada-2024",
+    "island-lokastada-2025",
+    "enska-lokastada-2009",
+    "enska-lokastada-2023",
+    "enska-lokastada-2024",
+    "enska-lokastada-2025",
+    "enska-markahaestir-2023",
+    "enska-markahaestir-2025",
+    "evropa-titlar",
+    "evropa-meistaradeild",
+    "evropa-evropudeild"
+  ],
+  "review": [
+    {
+      "id": "enska-markahaestir-2024",
+      "reason": "markahæstu: Yoane Wissa: 19 á Wikipedia, 18 í FPL"
+    },
+    {
+      "id": "evropa-markahaestir",
+      "reason": "markahæstu í Meistaradeildinni: ronaldo: 140 á ensku, 142 á íslensku; mbappe: 71 á ensku, 70 á íslensku; haaland: 59 á ensku, 57 á íslensku; kane: 55 á ensku, 53 á íslensku"
+    }
+  ]
+}

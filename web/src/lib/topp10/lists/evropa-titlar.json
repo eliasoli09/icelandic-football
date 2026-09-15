@@ -1,0 +1,167 @@
+{
+  "id": "evropa-titlar",
+  "region": "evropa",
+  "title": "Flestir Evrópumeistaratitlar",
+  "question": "Hvaða félög hafa oftast unnið Evrópukeppni meistaraliða og Meistaradeild Evrópu?",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:UEFA Champions League performance by club",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371923135"
+    },
+    {
+      "name": "is.wikipedia.org · Meistaradeild Evrópu",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1964887"
+    }
+  ],
+  "answers": [
+    {
+      "rank": 1,
+      "label": "Real Madrid",
+      "detail": "15 titlar",
+      "accept": [
+        "real madrid"
+      ],
+      "hint": "Síðast 2024"
+    },
+    {
+      "rank": 2,
+      "label": "AC Milan",
+      "detail": "7 titlar",
+      "accept": [
+        "ac milan",
+        "milan"
+      ],
+      "hint": "Síðast 2007"
+    },
+    {
+      "rank": 3,
+      "label": "Bayern München",
+      "detail": "6 titlar",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "bayern",
+        "fc bayern"
+      ],
+      "hint": "Síðast 2020"
+    },
+    {
+      "rank": 3,
+      "label": "Liverpool",
+      "detail": "6 titlar",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ],
+      "hint": "Síðast 2019"
+    },
+    {
+      "rank": 5,
+      "label": "Barcelona",
+      "detail": "5 titlar",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ],
+      "hint": "Síðast 2015"
+    },
+    {
+      "rank": 6,
+      "label": "Ajax",
+      "detail": "4 titlar",
+      "accept": [
+        "ajax",
+        "ajax amsterdam",
+        "ajax fc"
+      ],
+      "hint": "Síðast 1995"
+    },
+    {
+      "rank": 7,
+      "label": "Inter",
+      "detail": "3 titlar",
+      "accept": [
+        "inter",
+        "inter milan",
+        "internazionale",
+        "inter milano"
+      ],
+      "hint": "Síðast 2010"
+    },
+    {
+      "rank": 7,
+      "label": "Manchester United",
+      "detail": "3 titlar",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ],
+      "hint": "Síðast 2008"
+    },
+    {
+      "rank": 9,
+      "label": "Juventus",
+      "detail": "2 titlar",
+      "accept": [
+        "juventus",
+        "juve"
+      ],
+      "hint": "Síðast 1996"
+    },
+    {
+      "rank": 9,
+      "label": "Benfica",
+      "detail": "2 titlar",
+      "accept": [
+        "benfica"
+      ],
+      "hint": "Síðast 1962"
+    },
+    {
+      "rank": 9,
+      "label": "Chelsea",
+      "detail": "2 titlar",
+      "accept": [
+        "chelsea",
+        "chelsea fc"
+      ],
+      "hint": "Síðast 2021"
+    },
+    {
+      "rank": 9,
+      "label": "Paris Saint-Germain",
+      "detail": "2 titlar",
+      "accept": [
+        "paris saint germain",
+        "psg",
+        "paris sg"
+      ],
+      "hint": "Síðast 2026"
+    },
+    {
+      "rank": 9,
+      "label": "Nottingham Forest",
+      "detail": "2 titlar",
+      "accept": [
+        "nottingham forest",
+        "nott m forest",
+        "forest"
+      ],
+      "hint": "Síðast 1980"
+    },
+    {
+      "rank": 9,
+      "label": "Porto",
+      "detail": "2 titlar",
+      "accept": [
+        "porto",
+        "fc porto"
+      ],
+      "hint": "Síðast 2004"
+    }
+  ],
+  "verifiedAt": "2026-09-15",
+  "note": "Þau sem eru jöfn í síðasta sæti eru öll á listanum."
+}
