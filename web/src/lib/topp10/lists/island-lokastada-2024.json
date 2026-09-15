@@ -1,8 +1,11 @@
 {
   "id": "island-lokastada-2024",
   "region": "island",
-  "title": "Lokastaða Bestu deildar 2024",
-  "question": "Hvaða lið enduðu í tíu efstu sætum Bestu deildar karla 2024?",
+  "kind": "club",
+  "competition": "BESTA DEILDIN",
+  "title": "Topp 10 2024",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum efstu deildar karla 2024.",
+  "context": "Lokastaða tímabilsins 2024. Tíu lið eru rétt, í hvaða röð sem er.",
   "sources": [
     {
       "name": "en.wikipedia.org · 2024 Besta deild karla",
@@ -15,101 +18,91 @@
   ],
   "answers": [
     {
-      "rank": 1,
+      "id": "breidablik",
       "label": "Breiðablik",
-      "detail": "62 stig",
+      "detail": "1. sæti, 62 stig",
       "accept": [
         "breidablik",
         "blikar"
-      ],
-      "slot": "1."
+      ]
     },
     {
-      "rank": 2,
+      "id": "vikingur",
       "label": "Víkingur R.",
-      "detail": "59 stig",
+      "detail": "2. sæti, 59 stig",
       "accept": [
         "vikingur r",
         "vikingur",
         "vikingur reykjavik"
-      ],
-      "slot": "2."
+      ]
     },
     {
-      "rank": 3,
+      "id": "valur",
       "label": "Valur",
-      "detail": "44 stig",
+      "detail": "3. sæti, 44 stig",
       "accept": [
         "valur"
-      ],
-      "slot": "3."
+      ]
     },
     {
-      "rank": 4,
+      "id": "stjarnan",
       "label": "Stjarnan",
-      "detail": "42 stig",
+      "detail": "4. sæti, 42 stig",
       "accept": [
         "stjarnan"
-      ],
-      "slot": "4."
+      ]
     },
     {
-      "rank": 5,
+      "id": "ia",
       "label": "ÍA",
-      "detail": "37 stig",
+      "detail": "5. sæti, 37 stig",
       "accept": [
         "ia",
         "akranes",
         "skaginn"
-      ],
-      "slot": "5."
+      ]
     },
     {
-      "rank": 6,
+      "id": "fh",
       "label": "FH",
-      "detail": "34 stig",
+      "detail": "6. sæti, 34 stig",
       "accept": [
         "fh",
         "fimleikafelag hafnarfjardar"
-      ],
-      "slot": "6."
+      ]
     },
     {
-      "rank": 7,
+      "id": "ka",
       "label": "KA",
-      "detail": "37 stig",
+      "detail": "7. sæti, 37 stig",
       "accept": [
         "ka"
-      ],
-      "slot": "7."
+      ]
     },
     {
-      "rank": 8,
+      "id": "kr",
       "label": "KR",
-      "detail": "34 stig",
+      "detail": "8. sæti, 34 stig",
       "accept": [
         "kr",
         "knattspyrnufelag reykjavikur"
-      ],
-      "slot": "8."
+      ]
     },
     {
-      "rank": 9,
+      "id": "fram",
       "label": "Fram",
-      "detail": "30 stig",
+      "detail": "9. sæti, 30 stig",
       "accept": [
         "fram"
-      ],
-      "slot": "9."
+      ]
     },
     {
-      "rank": 10,
+      "id": "vestri",
       "label": "Vestri",
-      "detail": "25 stig",
+      "detail": "10. sæti, 25 stig",
       "accept": [
         "vestri"
-      ],
-      "slot": "10."
+      ]
     }
   ],
   "verifiedAt": "2026-09-15"

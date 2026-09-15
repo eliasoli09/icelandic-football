@@ -1,0 +1,117 @@
+{
+  "id": "spann-lokastada-2024",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LA LIGA",
+  "title": "Topp 10 2024/25",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum spænsku deildarinnar 2024/25.",
+  "context": "Lokastaða tímabilsins 2024/25. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2024-25 La Liga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374449807"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "1. sæti, 88 stig",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "2. sæti, 84 stig",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "atletico",
+      "label": "Atlético Madrid",
+      "detail": "3. sæti, 76 stig",
+      "accept": [
+        "atletico madrid",
+        "ath madrid",
+        "atletico"
+      ]
+    },
+    {
+      "id": "athletic",
+      "label": "Athletic Bilbao",
+      "detail": "4. sæti, 70 stig",
+      "accept": [
+        "athletic bilbao",
+        "ath bilbao",
+        "athletic club",
+        "bilbao"
+      ]
+    },
+    {
+      "id": "villarreal",
+      "label": "Villarreal",
+      "detail": "5. sæti, 70 stig",
+      "accept": [
+        "villarreal",
+        "villarreal cf",
+        "villareal cf"
+      ]
+    },
+    {
+      "id": "betis",
+      "label": "Real Betis",
+      "detail": "6. sæti, 60 stig",
+      "accept": [
+        "real betis",
+        "betis"
+      ]
+    },
+    {
+      "id": "celta",
+      "label": "Celta Vigo",
+      "detail": "7. sæti, 55 stig",
+      "accept": [
+        "celta vigo",
+        "celta"
+      ]
+    },
+    {
+      "id": "rayo",
+      "label": "Rayo Vallecano",
+      "detail": "8. sæti, 52 stig",
+      "accept": [
+        "rayo vallecano",
+        "vallecano",
+        "rayo"
+      ]
+    },
+    {
+      "id": "osasuna",
+      "label": "Osasuna",
+      "detail": "9. sæti, 52 stig",
+      "accept": [
+        "osasuna",
+        "ca osasuna"
+      ]
+    },
+    {
+      "id": "mallorca",
+      "label": "Mallorca",
+      "detail": "10. sæti, 48 stig",
+      "accept": [
+        "mallorca",
+        "rcd mallorca"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

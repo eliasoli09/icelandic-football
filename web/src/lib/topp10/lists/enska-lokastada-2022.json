@@ -1,0 +1,114 @@
+{
+  "id": "enska-lokastada-2022",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2022/23",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2022/23.",
+  "context": "Lokastaða tímabilsins 2022/23. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2022-23 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371430932"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "1. sæti, 89 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "2. sæti, 84 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "3. sæti, 75 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "newcastle",
+      "label": "Newcastle United",
+      "detail": "4. sæti, 71 stig",
+      "accept": [
+        "newcastle united",
+        "newcastle"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "5. sæti, 67 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "brighton",
+      "label": "Brighton & Hove Albion",
+      "detail": "6. sæti, 62 stig",
+      "accept": [
+        "brighton hove albion",
+        "brighton",
+        "brighton and hove albion"
+      ]
+    },
+    {
+      "id": "astonvilla",
+      "label": "Aston Villa",
+      "detail": "7. sæti, 61 stig",
+      "accept": [
+        "aston villa",
+        "villa",
+        "aston villa fc"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "8. sæti, 60 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "brentford",
+      "label": "Brentford",
+      "detail": "9. sæti, 59 stig",
+      "accept": [
+        "brentford"
+      ]
+    },
+    {
+      "id": "fulham",
+      "label": "Fulham",
+      "detail": "10. sæti, 52 stig",
+      "accept": [
+        "fulham"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

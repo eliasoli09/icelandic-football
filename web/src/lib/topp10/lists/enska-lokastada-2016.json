@@ -1,0 +1,114 @@
+{
+  "id": "enska-lokastada-2016",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2016/17",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2016/17.",
+  "context": "Lokastaða tímabilsins 2016/17. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2016-17 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373575976"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "1. sæti, 93 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "2. sæti, 86 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "3. sæti, 78 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "4. sæti, 76 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "5. sæti, 75 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "6. sæti, 69 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "7. sæti, 61 stig",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "southampton",
+      "label": "Southampton",
+      "detail": "8. sæti, 46 stig",
+      "accept": [
+        "southampton"
+      ]
+    },
+    {
+      "id": "bournemouth",
+      "label": "Bournemouth",
+      "detail": "9. sæti, 46 stig",
+      "accept": [
+        "bournemouth",
+        "afc bournemouth"
+      ]
+    },
+    {
+      "id": "westbrom",
+      "label": "West Bromwich Albion",
+      "detail": "10. sæti, 45 stig",
+      "accept": [
+        "west bromwich albion",
+        "west brom",
+        "wba"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

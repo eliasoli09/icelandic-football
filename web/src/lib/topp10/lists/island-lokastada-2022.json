@@ -1,0 +1,108 @@
+{
+  "id": "island-lokastada-2022",
+  "region": "island",
+  "kind": "club",
+  "competition": "BESTA DEILDIN",
+  "title": "Topp 10 2022",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum efstu deildar karla 2022.",
+  "context": "Lokastaða tímabilsins 2022. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2022 Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1303755812"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "breidablik",
+      "label": "Breiðablik",
+      "detail": "1. sæti, 63 stig",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "KA",
+      "detail": "2. sæti, 53 stig",
+      "accept": [
+        "ka"
+      ]
+    },
+    {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "3. sæti, 48 stig",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    },
+    {
+      "id": "kr",
+      "label": "KR",
+      "detail": "4. sæti, 38 stig",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    },
+    {
+      "id": "stjarnan",
+      "label": "Stjarnan",
+      "detail": "5. sæti, 37 stig",
+      "accept": [
+        "stjarnan"
+      ]
+    },
+    {
+      "id": "valur",
+      "label": "Valur",
+      "detail": "6. sæti, 35 stig",
+      "accept": [
+        "valur"
+      ]
+    },
+    {
+      "id": "keflavik",
+      "label": "Keflavík",
+      "detail": "7. sæti, 37 stig",
+      "accept": [
+        "keflavik"
+      ]
+    },
+    {
+      "id": "ibv",
+      "label": "ÍBV",
+      "detail": "8. sæti, 32 stig",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ]
+    },
+    {
+      "id": "fram",
+      "label": "Fram",
+      "detail": "9. sæti, 31 stig",
+      "accept": [
+        "fram"
+      ]
+    },
+    {
+      "id": "fh",
+      "label": "FH",
+      "detail": "10. sæti, 25 stig",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

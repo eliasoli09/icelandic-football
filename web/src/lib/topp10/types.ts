@@ -1,33 +1,39 @@
-/** Where a list belongs, which is also the tab it shows under. */
+/** Where a question belongs. */
 export type Region = 'island' | 'enska' | 'evropa'
 
+/** What an answer is, which decides the words the game uses for it. */
+export type Kind = 'club' | 'player'
+
 export interface Answer {
-  /** 1-based place; players or clubs level on the deciding figure share one */
-  rank: number
-  /** shown once the slot opens */
+  /** one club or one player, the same id on every question it appears in */
+  id: string
   label: string
-  /** the figure beside it: "27 titlar", "19 mörk" */
+  /** shown when the answers are revealed: "27 titlar", "3. sæti, 64 stig" */
   detail: string
   /**
-   * Every spelling that counts as this answer, already normalised when the
-   * list was built. A guess is matched against these exactly, never as a
-   * substring - "paris" must not open Paris SG.
+   * Every spelling that counts as this answer, already normalised. A guess is
+   * matched against these exactly, never as a substring: "paris" must not
+   * open Paris Saint-Germain.
    */
   accept: string[]
-  /** what a hint reveals; the first letter of the label when absent */
-  hint?: string
-  /** when a slot stands for something other than its answer, such as a year */
-  slot?: string
 }
 
+/**
+ * One Tenaball question: name any ten different answers from `answers`, which
+ * holds every valid one. Two independent sources agreed on the whole set.
+ */
 export interface Topp10List {
   id: string
   region: Region
+  kind: Kind
+  /** the competition, above the game title */
+  competition: string
   title: string
   question: string
-  /** ties at the last place make a list longer than ten, never shorter */
+  /** the point in time the answers hold for */
+  context: string
+  /** at least ten */
   answers: Answer[]
-  /** at least two, and independent of each other */
   sources: { name: string; url: string }[]
   /** the day both sources were last read and found to agree */
   verifiedAt: string

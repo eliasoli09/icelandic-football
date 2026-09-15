@@ -1,15 +1,15 @@
 {
-  "id": "island-lokastada-2025",
+  "id": "island-lokastada-2023",
   "region": "island",
   "kind": "club",
   "competition": "BESTA DEILDIN",
-  "title": "Topp 10 2025",
-  "question": "Nefndu liðin sem enduðu í tíu efstu sætum efstu deildar karla 2025.",
-  "context": "Lokastaða tímabilsins 2025. Tíu lið eru rétt, í hvaða röð sem er.",
+  "title": "Topp 10 2023",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum efstu deildar karla 2023.",
+  "context": "Lokastaða tímabilsins 2023. Tíu lið eru rétt, í hvaða röð sem er.",
   "sources": [
     {
-      "name": "en.wikipedia.org · 2025 Besta deild karla",
-      "url": "https://en.wikipedia.org/w/index.php?oldid=1337561080"
+      "name": "en.wikipedia.org · 2023 Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1303755817"
     },
     {
       "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
@@ -20,7 +20,7 @@
     {
       "id": "vikingur",
       "label": "Víkingur R.",
-      "detail": "1. sæti, 57 stig",
+      "detail": "1. sæti, 66 stig",
       "accept": [
         "vikingur r",
         "vikingur",
@@ -30,7 +30,7 @@
     {
       "id": "valur",
       "label": "Valur",
-      "detail": "2. sæti, 45 stig",
+      "detail": "2. sæti, 55 stig",
       "accept": [
         "valur"
       ]
@@ -38,7 +38,7 @@
     {
       "id": "stjarnan",
       "label": "Stjarnan",
-      "detail": "3. sæti, 42 stig",
+      "detail": "3. sæti, 46 stig",
       "accept": [
         "stjarnan"
       ]
@@ -46,63 +46,60 @@
     {
       "id": "breidablik",
       "label": "Breiðablik",
-      "detail": "4. sæti, 42 stig",
+      "detail": "4. sæti, 41 stig",
       "accept": [
         "breidablik",
         "blikar"
       ]
     },
     {
-      "id": "fram",
-      "label": "Fram",
-      "detail": "5. sæti, 36 stig",
-      "accept": [
-        "fram"
-      ]
-    },
-    {
       "id": "fh",
       "label": "FH",
-      "detail": "6. sæti, 33 stig",
+      "detail": "5. sæti, 40 stig",
       "accept": [
         "fh",
         "fimleikafelag hafnarfjardar"
       ]
     },
     {
+      "id": "kr",
+      "label": "KR",
+      "detail": "6. sæti, 37 stig",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    },
+    {
       "id": "ka",
       "label": "KA",
-      "detail": "7. sæti, 39 stig",
+      "detail": "7. sæti, 41 stig",
       "accept": [
         "ka"
       ]
     },
     {
-      "id": "ia",
-      "label": "ÍA",
-      "detail": "8. sæti, 34 stig",
+      "id": "fylkir",
+      "label": "Fylkir",
+      "detail": "8. sæti, 29 stig",
       "accept": [
-        "ia",
-        "akranes",
-        "skaginn"
+        "fylkir"
       ]
     },
     {
-      "id": "ibv",
-      "label": "ÍBV",
-      "detail": "9. sæti, 33 stig",
+      "id": "hk",
+      "label": "HK",
+      "detail": "9. sæti, 27 stig",
       "accept": [
-        "ibv",
-        "eyjamenn"
+        "hk"
       ]
     },
     {
-      "id": "kr",
-      "label": "KR",
-      "detail": "10. sæti, 31 stig",
+      "id": "fram",
+      "label": "Fram",
+      "detail": "10. sæti, 27 stig",
       "accept": [
-        "kr",
-        "knattspyrnufelag reykjavikur"
+        "fram"
       ]
     }
   ],

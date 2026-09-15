@@ -39,6 +39,8 @@ export function plain(text: string): string {
     .replace(/<ref[^>]*\/>/g, '')
     .replace(/<ref[^>]*>[\s\S]*?<\/ref>/g, '')
     .replace(/<!--[\s\S]*?-->/g, '')
+    // is.wikipedia's club template, {{Lið KR}}
+    .replace(/\{\{\s*Lið\s+([^{}|]+?)\s*\}\}/g, '$1')
     .replace(/\{\{\s*(?:flagicon|fbaicon|fb|flag icon|#invoke:flag\|icon)\|[^{}]*\}\}/gi, '')
     .replace(/\{\{\s*(?:nowrap|nobr|small|sortname-display)\|([^{}]*)\}\}/gi, '$1')
     .replace(/\{\{\s*sdash\s*\}\}/gi, '')

@@ -5,16 +5,16 @@ import { LISTS } from '../src/lib/topp10/lists'
 import { normalise } from '../src/lib/topp10/normalise'
 import { matchGuess, ambiguousAliases } from '../src/lib/topp10/match'
 
-// Every list here was written by scripts/topp10/build.mts after two sources
-// agreed. These checks catch a list edited by hand into something unplayable.
-describe('Topp 10 lists', () => {
-  it('has lists for every region', () => {
+// Every question here was written by scripts/topp10/build.mts after two
+// sources agreed. These checks catch one edited by hand into something unplayable.
+describe('Tenaball questions', () => {
+  it('has questions for every region', () => {
     for (const region of ['island', 'enska', 'evropa']) {
       expect(LISTS.some((l) => l.region === region)).toBe(true)
     }
   })
 
-  it('loads every list file, once', () => {
+  it('loads every question file, once', () => {
     const files = readdirSync(join(__dirname, '../src/lib/topp10/lists')).filter((f) => f.endsWith('.json'))
     expect(LISTS.length).toBe(files.length)
     expect(new Set(LISTS.map((l) => l.id)).size).toBe(LISTS.length)
@@ -22,11 +22,9 @@ describe('Topp 10 lists', () => {
 
   for (const list of LISTS) {
     describe(list.id, () => {
-      it('has at least ten answers, in order', () => {
+      it('has at least ten different answers', () => {
         expect(list.answers.length).toBeGreaterThanOrEqual(10)
-        list.answers.forEach((a, i) => {
-          if (i > 0) expect(a.rank).toBeGreaterThanOrEqual(list.answers[i - 1].rank)
-        })
+        expect(new Set(list.answers.map((a) => a.id)).size).toBe(list.answers.length)
       })
 
       it('comes from two different sources and says when it was checked', () => {
@@ -40,14 +38,14 @@ describe('Topp 10 lists', () => {
         list.answers.forEach((a, i) => {
           expect(a.accept.length).toBeGreaterThan(0)
           for (const key of a.accept) expect(normalise(key)).toBe(key)
-          for (const name of a.label.split(' / ')) expect(matchGuess(list, name)).toContain(i)
+          expect(matchGuess(list, a.label)).toEqual([i])
         })
       })
 
       it('uses a plain hyphen, not a dash, in what it shows', () => {
-        const shown = [list.title, list.question, list.note ?? '', ...list.sources.map((s) => s.name),
-          ...list.answers.flatMap((a) => [a.label, a.detail, a.hint ?? '', a.slot ?? ''])]
-        for (const text of shown) expect(text).not.toMatch(/[\u2013\u2014]/)
+        const shown = [list.title, list.question, list.context, list.competition, list.note ?? '',
+          ...list.sources.map((s) => s.name), ...list.answers.flatMap((a) => [a.label, a.detail])]
+        for (const text of shown) expect(text).not.toMatch(/[–—]/)
       })
     })
   }

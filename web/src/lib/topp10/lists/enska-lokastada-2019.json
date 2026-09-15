@@ -1,0 +1,114 @@
+{
+  "id": "enska-lokastada-2019",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2019/20",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2019/20.",
+  "context": "Lokastaða tímabilsins 2019/20. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2019-20 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373998782"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "1. sæti, 99 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "2. sæti, 81 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "3. sæti, 66 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "4. sæti, 66 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "leicester",
+      "label": "Leicester City",
+      "detail": "5. sæti, 62 stig",
+      "accept": [
+        "leicester city",
+        "leicester"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "6. sæti, 59 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "wolves",
+      "label": "Wolverhampton Wanderers",
+      "detail": "7. sæti, 59 stig",
+      "accept": [
+        "wolverhampton wanderers",
+        "wolves"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "8. sæti, 56 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "sheffutd",
+      "label": "Sheffield United",
+      "detail": "9. sæti, 54 stig",
+      "accept": [
+        "sheffield united",
+        "sheffield utd"
+      ]
+    },
+    {
+      "id": "burnley",
+      "label": "Burnley",
+      "detail": "10. sæti, 54 stig",
+      "accept": [
+        "burnley"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

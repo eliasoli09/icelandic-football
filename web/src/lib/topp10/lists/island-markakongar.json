@@ -1,8 +1,11 @@
 {
   "id": "island-markakongar",
   "region": "island",
-  "title": "Markakóngar 2016-2025",
-  "question": "Hver skoraði flest mörk í efstu deild karla hvert tímabil 2016-2025?",
+  "kind": "player",
+  "competition": "BESTA DEILDIN",
+  "title": "Markakóngar",
+  "question": "Nefndu 10 leikmenn sem urðu markakóngar efstu deildar karla 2016-2025.",
+  "context": "Tímabilin 2016-2025. Þegar tveir urðu jafnir gilda báðir.",
   "sources": [
     {
       "name": "en.wikipedia.org · Besta deild karla",
@@ -15,123 +18,99 @@
   ],
   "answers": [
     {
-      "rank": 1,
+      "id": "gardar-gunnlaugsson",
       "label": "Garðar Gunnlaugsson",
-      "detail": "14 mörk",
+      "detail": "Markakóngur 2016",
       "accept": [
         "gardar gunnlaugsson",
         "gunnlaugsson"
-      ],
-      "slot": "2016",
-      "hint": "ÍA"
+      ]
     },
     {
-      "rank": 2,
+      "id": "andri-runar-bjarnason",
       "label": "Andri Rúnar Bjarnason",
-      "detail": "19 mörk",
+      "detail": "Markakóngur 2017",
       "accept": [
         "andri runar bjarnason",
         "bjarnason",
         "andri bjarnason"
-      ],
-      "slot": "2017",
-      "hint": "Grindavík"
+      ]
     },
     {
-      "rank": 3,
+      "id": "patrick-pedersen",
       "label": "Patrick Pedersen",
-      "detail": "17 mörk",
+      "detail": "Markakóngur 2018 og 2025",
       "accept": [
         "patrick pedersen",
         "patrik pedersen",
         "pedersen"
-      ],
-      "slot": "2018",
-      "hint": "Valur"
+      ]
     },
     {
-      "rank": 4,
+      "id": "gary-martin",
       "label": "Gary Martin",
-      "detail": "14 mörk",
+      "detail": "Markakóngur 2019",
       "accept": [
         "gary martin",
         "martin"
-      ],
-      "slot": "2019",
-      "hint": "Valur/ÍBV"
+      ]
     },
     {
-      "rank": 5,
+      "id": "steven-lennon",
       "label": "Steven Lennon",
-      "detail": "17 mörk",
+      "detail": "Markakóngur 2020",
       "accept": [
         "steven lennon",
         "lennon"
-      ],
-      "slot": "2020",
-      "hint": "FH"
+      ]
     },
     {
-      "rank": 6,
+      "id": "nikolaj-hansen",
       "label": "Nikolaj Hansen",
-      "detail": "16 mörk",
+      "detail": "Markakóngur 2021",
       "accept": [
         "nikolaj hansen",
         "hansen"
-      ],
-      "slot": "2021",
-      "hint": "Víkingur"
+      ]
     },
     {
-      "rank": 7,
-      "label": "Nökkvi Þeyr Þórisson / Guðmundur Magnússon",
-      "detail": "17 mörk",
+      "id": "nokkvi-thorisson",
+      "label": "Nökkvi Þeyr Þórisson",
+      "detail": "Markakóngur 2022",
       "accept": [
         "nokkvi theyr thorisson",
         "nokkvi thorisson",
-        "gudmundur magnusson",
-        "thorisson",
-        "magnusson"
-      ],
-      "slot": "2022",
-      "hint": "KA / Fram"
+        "thorisson"
+      ]
     },
     {
-      "rank": 8,
+      "id": "gudmundur-magnusson",
+      "label": "Guðmundur Magnússon",
+      "detail": "Markakóngur 2022",
+      "accept": [
+        "gudmundur magnusson",
+        "magnusson"
+      ]
+    },
+    {
+      "id": "emil-atlason",
       "label": "Emil Atlason",
-      "detail": "17 mörk",
+      "detail": "Markakóngur 2023",
       "accept": [
         "emil atlason",
         "atlason"
-      ],
-      "slot": "2023",
-      "hint": "Stjarnan"
+      ]
     },
     {
-      "rank": 9,
+      "id": "benony-andresson",
       "label": "Benoný Breki Andrésson",
-      "detail": "21 mark",
+      "detail": "Markakóngur 2024",
       "accept": [
         "benony breki andresson",
         "andresson",
         "benony andresson"
-      ],
-      "slot": "2024",
-      "hint": "KR"
-    },
-    {
-      "rank": 10,
-      "label": "Patrick Pedersen",
-      "detail": "18 mörk",
-      "accept": [
-        "patrick pedersen",
-        "patrik pedersen",
-        "pedersen"
-      ],
-      "slot": "2025",
-      "hint": "Valur"
+      ]
     }
   ],
-  "verifiedAt": "2026-09-15",
-  "note": "Þegar tveir urðu jafnir opnar hvor þeirra sem er árið."
+  "verifiedAt": "2026-09-15"
 }

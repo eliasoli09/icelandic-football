@@ -8,6 +8,10 @@ describe('plain', () => {
     expect(plain("{{nowrap|[[Paris Saint-Germain FC|Paris Saint-Germain]]}}")).toBe('Paris Saint-Germain')
   })
 
+  it('reads the club template on is.wikipedia', () => {
+    expect(plain("'''{{Lið Víkingur R.}}'''")).toBe('Víkingur R.')
+  })
+
   it('removes bold and references', () => {
     expect(plain("'''133'''<ref name=x>{{cite web|url=a}}</ref>")).toBe('133')
   })

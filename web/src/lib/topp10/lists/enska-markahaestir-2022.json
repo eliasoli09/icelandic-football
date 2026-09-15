@@ -1,0 +1,124 @@
+{
+  "id": "enska-markahaestir-2022",
+  "region": "enska",
+  "kind": "player",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Markahæstir 2022/23",
+  "question": "Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar 2022/23.",
+  "context": "Mörk í deildinni 2022/23. Allir sem voru jafnir í 10. sæti gilda.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2022-23 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371430932"
+    },
+    {
+      "name": "Fantasy Premier League 2022-23 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2022-23"
+    }
+  ],
+  "answers": [
+    {
+      "id": "haaland",
+      "label": "Erling Haaland",
+      "detail": "36 mörk, Manchester City",
+      "accept": [
+        "erling haaland",
+        "erling braut haaland",
+        "haaland"
+      ]
+    },
+    {
+      "id": "kane",
+      "label": "Harry Kane",
+      "detail": "30 mörk, Tottenham Hotspur",
+      "accept": [
+        "harry kane",
+        "kane"
+      ]
+    },
+    {
+      "id": "toney",
+      "label": "Ivan Toney",
+      "detail": "20 mörk, Brentford",
+      "accept": [
+        "ivan toney",
+        "toney"
+      ]
+    },
+    {
+      "id": "salah",
+      "label": "Mohamed Salah",
+      "detail": "19 mörk, Liverpool",
+      "accept": [
+        "mohamed salah",
+        "mo salah",
+        "salah"
+      ]
+    },
+    {
+      "id": "callum-wilson",
+      "label": "Callum Wilson",
+      "detail": "18 mörk, Newcastle United",
+      "accept": [
+        "callum wilson",
+        "wilson"
+      ]
+    },
+    {
+      "id": "rashford",
+      "label": "Marcus Rashford",
+      "detail": "17 mörk, Manchester United",
+      "accept": [
+        "marcus rashford",
+        "rashford"
+      ]
+    },
+    {
+      "id": "martinelli",
+      "label": "Gabriel Martinelli",
+      "detail": "15 mörk, Arsenal",
+      "accept": [
+        "gabriel martinelli",
+        "gabriel martinelli silva",
+        "martinelli"
+      ]
+    },
+    {
+      "id": "odegaard",
+      "label": "Martin Ødegaard",
+      "detail": "15 mörk, Arsenal",
+      "accept": [
+        "martin odegaard",
+        "odegaard"
+      ]
+    },
+    {
+      "id": "watkins",
+      "label": "Ollie Watkins",
+      "detail": "15 mörk, Aston Villa",
+      "accept": [
+        "ollie watkins",
+        "watkins"
+      ]
+    },
+    {
+      "id": "mitrovic",
+      "label": "Aleksandar Mitrović",
+      "detail": "14 mörk, Fulham",
+      "accept": [
+        "aleksandar mitrovic",
+        "mitrovic"
+      ]
+    },
+    {
+      "id": "saka",
+      "label": "Bukayo Saka",
+      "detail": "14 mörk, Arsenal",
+      "accept": [
+        "bukayo saka",
+        "saka"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

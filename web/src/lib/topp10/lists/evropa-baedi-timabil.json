@@ -1,0 +1,118 @@
+{
+  "id": "evropa-baedi-timabil",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "MEISTARADEILDIN",
+  "title": "Meistarar tveggja tímabila",
+  "question": "Nefndu 10 félög sem hafa unnið bæði Evrópukeppni meistaraliða fyrir 1992/93 og Meistaradeildina frá 1992/93.",
+  "context": "Miðað við lok tímabilsins 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:UEFA Champions League performance by club",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371923135"
+    },
+    {
+      "name": "is.wikipedia.org · Meistaradeild Evrópu",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1964887"
+    }
+  ],
+  "answers": [
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "6 titlar fyrir og 9 eftir",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "milan",
+      "label": "AC Milan",
+      "detail": "4 titlar fyrir og 3 eftir",
+      "accept": [
+        "ac milan",
+        "milan"
+      ]
+    },
+    {
+      "id": "bayern",
+      "label": "Bayern München",
+      "detail": "3 titlar fyrir og 3 eftir",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "fc bayern munchen",
+        "bayern",
+        "fc bayern"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "4 titlar fyrir og 2 eftir",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "1 titill fyrir og 4 eftir",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "ajax",
+      "label": "Ajax",
+      "detail": "3 titlar fyrir og 1 eftir",
+      "accept": [
+        "ajax",
+        "ajax amsterdam",
+        "ajax fc"
+      ]
+    },
+    {
+      "id": "inter",
+      "label": "Inter",
+      "detail": "2 titlar fyrir og 1 eftir",
+      "accept": [
+        "inter",
+        "inter milan",
+        "internazionale",
+        "inter milano"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "1 titill fyrir og 2 eftir",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "juventus",
+      "label": "Juventus",
+      "detail": "1 titill fyrir og 1 eftir",
+      "accept": [
+        "juventus"
+      ]
+    },
+    {
+      "id": "porto",
+      "label": "Porto",
+      "detail": "1 titill fyrir og 1 eftir",
+      "accept": [
+        "porto",
+        "fc porto"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

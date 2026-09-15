@@ -1,8 +1,11 @@
 {
   "id": "enska-markahaestir-2023",
   "region": "enska",
+  "kind": "player",
+  "competition": "ENSKA ÚRVALSDEILDIN",
   "title": "Markahæstir 2023/24",
-  "question": "Hverjir skoruðu flest mörk í ensku úrvalsdeildinni 2023/24?",
+  "question": "Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar 2023/24.",
+  "context": "Mörk í deildinni 2023/24. Allir sem voru jafnir í 10. sæti gilda.",
   "sources": [
     {
       "name": "en.wikipedia.org · 2023-24 Premier League",
@@ -15,120 +18,108 @@
   ],
   "answers": [
     {
-      "rank": 1,
+      "id": "haaland",
       "label": "Erling Haaland",
-      "detail": "27 mörk",
+      "detail": "27 mörk, Manchester City",
       "accept": [
         "erling haaland",
         "erling braut haaland",
         "haaland"
-      ],
-      "hint": "Manchester City"
+      ]
     },
     {
-      "rank": 2,
+      "id": "palmer",
       "label": "Cole Palmer",
-      "detail": "22 mörk",
+      "detail": "22 mörk, Chelsea",
       "accept": [
         "cole palmer",
         "palmer"
-      ],
-      "hint": "Chelsea"
+      ]
     },
     {
-      "rank": 3,
+      "id": "isak",
       "label": "Alexander Isak",
-      "detail": "21 mark",
+      "detail": "21 mark, Newcastle United",
       "accept": [
         "alexander isak",
         "isak"
-      ],
-      "hint": "Newcastle United"
+      ]
     },
     {
-      "rank": 4,
+      "id": "foden",
       "label": "Phil Foden",
-      "detail": "19 mörk",
+      "detail": "19 mörk, Manchester City",
       "accept": [
         "phil foden",
         "foden"
-      ],
-      "hint": "Manchester City"
+      ]
     },
     {
-      "rank": 4,
+      "id": "solanke",
       "label": "Dominic Solanke",
-      "detail": "19 mörk",
+      "detail": "19 mörk, Bournemouth",
       "accept": [
         "dominic solanke",
         "solanke"
-      ],
-      "hint": "Bournemouth"
+      ]
     },
     {
-      "rank": 4,
+      "id": "watkins",
       "label": "Ollie Watkins",
-      "detail": "19 mörk",
+      "detail": "19 mörk, Aston Villa",
       "accept": [
         "ollie watkins",
         "watkins"
-      ],
-      "hint": "Aston Villa"
+      ]
     },
     {
-      "rank": 7,
+      "id": "salah",
       "label": "Mohamed Salah",
-      "detail": "18 mörk",
+      "detail": "18 mörk, Liverpool",
       "accept": [
         "mohamed salah",
         "mo salah",
         "salah"
-      ],
-      "hint": "Liverpool"
+      ]
     },
     {
-      "rank": 8,
+      "id": "son",
       "label": "Son Heung-min",
-      "detail": "17 mörk",
+      "detail": "17 mörk, Tottenham Hotspur",
       "accept": [
         "son heung min",
-        "son",
         "heung min son",
+        "son",
         "heung min"
-      ],
-      "hint": "Tottenham Hotspur"
+      ]
     },
     {
-      "rank": 9,
+      "id": "bowen",
       "label": "Jarrod Bowen",
-      "detail": "16 mörk",
+      "detail": "16 mörk, West Ham United",
       "accept": [
         "jarrod bowen",
         "bowen"
-      ],
-      "hint": "West Ham United"
+      ]
     },
     {
-      "rank": 9,
+      "id": "mateta",
       "label": "Jean-Philippe Mateta",
-      "detail": "16 mörk",
+      "detail": "16 mörk, Crystal Palace",
       "accept": [
         "jean philippe mateta",
         "mateta"
-      ],
-      "hint": "Crystal Palace"
+      ]
     },
     {
-      "rank": 9,
+      "id": "saka",
       "label": "Bukayo Saka",
-      "detail": "16 mörk",
+      "detail": "16 mörk, Arsenal",
       "accept": [
         "bukayo saka",
         "saka"
-      ],
-      "hint": "Arsenal"
+      ]
     }
   ],
-  "verifiedAt": "2026-09-15",
-  "note": "Þau sem eru jöfn í síðasta sæti eru öll á listanum."
+  "verifiedAt": "2026-09-15"
 }

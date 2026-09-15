@@ -1,0 +1,205 @@
+{
+  "id": "enska-lid-2026",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Liðin 2026/27",
+  "question": "Nefndu 10 af 20 liðum ensku úrvalsdeildarinnar 2026/27.",
+  "context": "Tímabilið 2026/27.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2026-27 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375065843"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "answers": [
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "astonvilla",
+      "label": "Aston Villa",
+      "detail": "",
+      "accept": [
+        "aston villa",
+        "villa",
+        "aston villa fc"
+      ]
+    },
+    {
+      "id": "bournemouth",
+      "label": "Bournemouth",
+      "detail": "",
+      "accept": [
+        "bournemouth",
+        "afc bournemouth"
+      ]
+    },
+    {
+      "id": "brentford",
+      "label": "Brentford",
+      "detail": "",
+      "accept": [
+        "brentford"
+      ]
+    },
+    {
+      "id": "brighton",
+      "label": "Brighton & Hove Albion",
+      "detail": "",
+      "accept": [
+        "brighton hove albion",
+        "brighton",
+        "brighton and hove albion"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "coventry",
+      "label": "Coventry City",
+      "detail": "",
+      "accept": [
+        "coventry city",
+        "coventry"
+      ]
+    },
+    {
+      "id": "palace",
+      "label": "Crystal Palace",
+      "detail": "",
+      "accept": [
+        "crystal palace",
+        "palace"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "fulham",
+      "label": "Fulham",
+      "detail": "",
+      "accept": [
+        "fulham"
+      ]
+    },
+    {
+      "id": "hull",
+      "label": "Hull City",
+      "detail": "",
+      "accept": [
+        "hull city",
+        "hull"
+      ]
+    },
+    {
+      "id": "ipswich",
+      "label": "Ipswich Town",
+      "detail": "",
+      "accept": [
+        "ipswich town",
+        "ipswich",
+        "ipswich town f c"
+      ]
+    },
+    {
+      "id": "leeds",
+      "label": "Leeds United",
+      "detail": "",
+      "accept": [
+        "leeds united",
+        "leeds"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "newcastle",
+      "label": "Newcastle United",
+      "detail": "",
+      "accept": [
+        "newcastle united",
+        "newcastle"
+      ]
+    },
+    {
+      "id": "forest",
+      "label": "Nottingham Forest",
+      "detail": "",
+      "accept": [
+        "nottingham forest",
+        "nott m forest",
+        "forest"
+      ]
+    },
+    {
+      "id": "sunderland",
+      "label": "Sunderland",
+      "detail": "",
+      "accept": [
+        "sunderland"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

@@ -1,0 +1,116 @@
+{
+  "id": "enska-lokastada-2021",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2021/22",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2021/22.",
+  "context": "Lokastaða tímabilsins 2021/22. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2021-22 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373991465"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "1. sæti, 93 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "2. sæti, 92 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "3. sæti, 74 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "4. sæti, 71 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "5. sæti, 69 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "6. sæti, 58 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "westham",
+      "label": "West Ham United",
+      "detail": "7. sæti, 56 stig",
+      "accept": [
+        "west ham united",
+        "west ham"
+      ]
+    },
+    {
+      "id": "leicester",
+      "label": "Leicester City",
+      "detail": "8. sæti, 52 stig",
+      "accept": [
+        "leicester city",
+        "leicester"
+      ]
+    },
+    {
+      "id": "brighton",
+      "label": "Brighton & Hove Albion",
+      "detail": "9. sæti, 51 stig",
+      "accept": [
+        "brighton hove albion",
+        "brighton",
+        "brighton and hove albion"
+      ]
+    },
+    {
+      "id": "wolves",
+      "label": "Wolverhampton Wanderers",
+      "detail": "10. sæti, 51 stig",
+      "accept": [
+        "wolverhampton wanderers",
+        "wolves"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

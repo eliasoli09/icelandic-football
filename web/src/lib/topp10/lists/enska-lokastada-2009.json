@@ -1,8 +1,11 @@
 {
   "id": "enska-lokastada-2009",
   "region": "enska",
-  "title": "Lokastaðan 2009/10",
-  "question": "Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2009/10?",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2009/10",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2009/10.",
+  "context": "Lokastaða tímabilsins 2009/10. Tíu lið eru rétt, í hvaða röð sem er.",
   "sources": [
     {
       "name": "en.wikipedia.org · 2009-10 Premier League",
@@ -15,104 +18,97 @@
   ],
   "answers": [
     {
-      "rank": 1,
+      "id": "chelsea",
       "label": "Chelsea",
-      "detail": "86 stig",
+      "detail": "1. sæti, 86 stig",
       "accept": [
         "chelsea",
-        "chelsea fc"
-      ],
-      "slot": "1."
+        "chelsea fc",
+        "chelsea f c"
+      ]
     },
     {
-      "rank": 2,
+      "id": "manutd",
       "label": "Manchester United",
-      "detail": "85 stig",
+      "detail": "2. sæti, 85 stig",
       "accept": [
         "manchester united",
         "man united",
         "man utd"
-      ],
-      "slot": "2."
+      ]
     },
     {
-      "rank": 3,
+      "id": "arsenal",
       "label": "Arsenal",
-      "detail": "75 stig",
+      "detail": "3. sæti, 75 stig",
       "accept": [
         "arsenal"
-      ],
-      "slot": "3."
+      ]
     },
     {
-      "rank": 4,
+      "id": "tottenham",
       "label": "Tottenham Hotspur",
-      "detail": "70 stig",
+      "detail": "4. sæti, 70 stig",
       "accept": [
         "tottenham hotspur",
         "tottenham",
         "spurs"
-      ],
-      "slot": "4."
+      ]
     },
     {
-      "rank": 5,
+      "id": "mancity",
       "label": "Manchester City",
-      "detail": "67 stig",
+      "detail": "5. sæti, 67 stig",
       "accept": [
         "manchester city",
-        "man city"
-      ],
-      "slot": "5."
+        "man city",
+        "mcfc"
+      ]
     },
     {
-      "rank": 6,
+      "id": "astonvilla",
       "label": "Aston Villa",
-      "detail": "64 stig",
+      "detail": "6. sæti, 64 stig",
       "accept": [
         "aston villa",
-        "villa"
-      ],
-      "slot": "6."
+        "villa",
+        "aston villa fc"
+      ]
     },
     {
-      "rank": 7,
+      "id": "liverpool",
       "label": "Liverpool",
-      "detail": "63 stig",
+      "detail": "7. sæti, 63 stig",
       "accept": [
         "liverpool",
         "liverpool fc"
-      ],
-      "slot": "7."
+      ]
     },
     {
-      "rank": 8,
+      "id": "everton",
       "label": "Everton",
-      "detail": "61 stig",
+      "detail": "8. sæti, 61 stig",
       "accept": [
         "everton"
-      ],
-      "slot": "8."
+      ]
     },
     {
-      "rank": 9,
+      "id": "birmingham",
       "label": "Birmingham City",
-      "detail": "50 stig",
+      "detail": "9. sæti, 50 stig",
       "accept": [
         "birmingham city",
         "birmingham"
-      ],
-      "slot": "9."
+      ]
     },
     {
-      "rank": 10,
+      "id": "blackburn",
       "label": "Blackburn Rovers",
-      "detail": "50 stig",
+      "detail": "10. sæti, 50 stig",
       "accept": [
         "blackburn rovers",
         "blackburn"
-      ],
-      "slot": "10."
+      ]
     }
   ],
   "verifiedAt": "2026-09-15"

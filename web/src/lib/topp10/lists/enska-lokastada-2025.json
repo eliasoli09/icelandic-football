@@ -1,8 +1,11 @@
 {
   "id": "enska-lokastada-2025",
   "region": "enska",
-  "title": "Lokastaðan 2025/26",
-  "question": "Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2025/26?",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2025/26",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2025/26.",
+  "context": "Lokastaða tímabilsins 2025/26. Tíu lið eru rétt, í hvaða röð sem er.",
   "sources": [
     {
       "name": "en.wikipedia.org · 2025-26 Premier League",
@@ -15,103 +18,96 @@
   ],
   "answers": [
     {
-      "rank": 1,
+      "id": "arsenal",
       "label": "Arsenal",
-      "detail": "85 stig",
+      "detail": "1. sæti, 85 stig",
       "accept": [
         "arsenal"
-      ],
-      "slot": "1."
+      ]
     },
     {
-      "rank": 2,
+      "id": "mancity",
       "label": "Manchester City",
-      "detail": "78 stig",
+      "detail": "2. sæti, 78 stig",
       "accept": [
         "manchester city",
-        "man city"
-      ],
-      "slot": "2."
+        "man city",
+        "mcfc"
+      ]
     },
     {
-      "rank": 3,
+      "id": "manutd",
       "label": "Manchester United",
-      "detail": "71 stig",
+      "detail": "3. sæti, 71 stig",
       "accept": [
         "manchester united",
         "man united",
         "man utd"
-      ],
-      "slot": "3."
+      ]
     },
     {
-      "rank": 4,
+      "id": "astonvilla",
       "label": "Aston Villa",
-      "detail": "65 stig",
+      "detail": "4. sæti, 65 stig",
       "accept": [
         "aston villa",
-        "villa"
-      ],
-      "slot": "4."
+        "villa",
+        "aston villa fc"
+      ]
     },
     {
-      "rank": 5,
+      "id": "liverpool",
       "label": "Liverpool",
-      "detail": "60 stig",
+      "detail": "5. sæti, 60 stig",
       "accept": [
         "liverpool",
         "liverpool fc"
-      ],
-      "slot": "5."
+      ]
     },
     {
-      "rank": 6,
+      "id": "bournemouth",
       "label": "Bournemouth",
-      "detail": "57 stig",
+      "detail": "6. sæti, 57 stig",
       "accept": [
         "bournemouth",
         "afc bournemouth"
-      ],
-      "slot": "6."
+      ]
     },
     {
-      "rank": 7,
+      "id": "sunderland",
       "label": "Sunderland",
-      "detail": "54 stig",
+      "detail": "7. sæti, 54 stig",
       "accept": [
         "sunderland"
-      ],
-      "slot": "7."
+      ]
     },
     {
-      "rank": 8,
+      "id": "brighton",
       "label": "Brighton & Hove Albion",
-      "detail": "53 stig",
+      "detail": "8. sæti, 53 stig",
       "accept": [
         "brighton hove albion",
         "brighton",
         "brighton and hove albion"
-      ],
-      "slot": "8."
+      ]
     },
     {
-      "rank": 9,
+      "id": "brentford",
       "label": "Brentford",
-      "detail": "53 stig",
+      "detail": "9. sæti, 53 stig",
       "accept": [
         "brentford"
-      ],
-      "slot": "9."
+      ]
     },
     {
-      "rank": 10,
+      "id": "chelsea",
       "label": "Chelsea",
-      "detail": "52 stig",
+      "detail": "10. sæti, 52 stig",
       "accept": [
         "chelsea",
-        "chelsea fc"
-      ],
-      "slot": "10."
+        "chelsea fc",
+        "chelsea f c"
+      ]
     }
   ],
   "verifiedAt": "2026-09-15"

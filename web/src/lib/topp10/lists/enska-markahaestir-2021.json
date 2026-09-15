@@ -1,0 +1,119 @@
+{
+  "id": "enska-markahaestir-2021",
+  "region": "enska",
+  "kind": "player",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Markahæstir 2021/22",
+  "question": "Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar 2021/22.",
+  "context": "Mörk í deildinni 2021/22.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2021-22 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373991465"
+    },
+    {
+      "name": "Fantasy Premier League 2021-22 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2021-22"
+    }
+  ],
+  "answers": [
+    {
+      "id": "salah",
+      "label": "Mohamed Salah",
+      "detail": "23 mörk, Liverpool",
+      "accept": [
+        "mohamed salah",
+        "mo salah",
+        "salah"
+      ]
+    },
+    {
+      "id": "son",
+      "label": "Son Heung-min",
+      "detail": "23 mörk, Tottenham Hotspur",
+      "accept": [
+        "son heung min",
+        "heung min son",
+        "son",
+        "heung min"
+      ]
+    },
+    {
+      "id": "ronaldo",
+      "label": "Cristiano Ronaldo",
+      "detail": "18 mörk, Manchester United",
+      "accept": [
+        "cristiano ronaldo",
+        "cristiano ronaldo dos santos aveiro",
+        "cr7",
+        "ronaldo"
+      ]
+    },
+    {
+      "id": "kane",
+      "label": "Harry Kane",
+      "detail": "17 mörk, Tottenham Hotspur",
+      "accept": [
+        "harry kane",
+        "kane"
+      ]
+    },
+    {
+      "id": "mane",
+      "label": "Sadio Mané",
+      "detail": "16 mörk, Liverpool",
+      "accept": [
+        "sadio mane",
+        "mane"
+      ]
+    },
+    {
+      "id": "de-bruyne",
+      "label": "Kevin De Bruyne",
+      "detail": "15 mörk, Manchester City",
+      "accept": [
+        "kevin de bruyne",
+        "kdb",
+        "bruyne",
+        "kevin bruyne"
+      ]
+    },
+    {
+      "id": "jota",
+      "label": "Diogo Jota",
+      "detail": "15 mörk, Liverpool",
+      "accept": [
+        "diogo jota",
+        "jota"
+      ]
+    },
+    {
+      "id": "vardy",
+      "label": "Jamie Vardy",
+      "detail": "15 mörk, Leicester City",
+      "accept": [
+        "jamie vardy",
+        "vardy"
+      ]
+    },
+    {
+      "id": "zaha",
+      "label": "Wilfried Zaha",
+      "detail": "14 mörk, Crystal Palace",
+      "accept": [
+        "wilfried zaha",
+        "zaha"
+      ]
+    },
+    {
+      "id": "sterling",
+      "label": "Raheem Sterling",
+      "detail": "13 mörk, Manchester City",
+      "accept": [
+        "raheem sterling",
+        "sterling"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

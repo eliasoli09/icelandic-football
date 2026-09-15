@@ -1,8 +1,11 @@
 {
   "id": "enska-lokastada-2023",
   "region": "enska",
-  "title": "Lokastaðan 2023/24",
-  "question": "Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2023/24?",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2023/24",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2023/24.",
+  "context": "Lokastaða tímabilsins 2023/24. Tíu lið eru rétt, í hvaða röð sem er.",
   "sources": [
     {
       "name": "en.wikipedia.org · 2023-24 Premier League",
@@ -15,105 +18,98 @@
   ],
   "answers": [
     {
-      "rank": 1,
+      "id": "mancity",
       "label": "Manchester City",
-      "detail": "91 stig",
+      "detail": "1. sæti, 91 stig",
       "accept": [
         "manchester city",
-        "man city"
-      ],
-      "slot": "1."
+        "man city",
+        "mcfc"
+      ]
     },
     {
-      "rank": 2,
+      "id": "arsenal",
       "label": "Arsenal",
-      "detail": "89 stig",
+      "detail": "2. sæti, 89 stig",
       "accept": [
         "arsenal"
-      ],
-      "slot": "2."
+      ]
     },
     {
-      "rank": 3,
+      "id": "liverpool",
       "label": "Liverpool",
-      "detail": "82 stig",
+      "detail": "3. sæti, 82 stig",
       "accept": [
         "liverpool",
         "liverpool fc"
-      ],
-      "slot": "3."
+      ]
     },
     {
-      "rank": 4,
+      "id": "astonvilla",
       "label": "Aston Villa",
-      "detail": "68 stig",
+      "detail": "4. sæti, 68 stig",
       "accept": [
         "aston villa",
-        "villa"
-      ],
-      "slot": "4."
+        "villa",
+        "aston villa fc"
+      ]
     },
     {
-      "rank": 5,
+      "id": "tottenham",
       "label": "Tottenham Hotspur",
-      "detail": "66 stig",
+      "detail": "5. sæti, 66 stig",
       "accept": [
         "tottenham hotspur",
         "tottenham",
         "spurs"
-      ],
-      "slot": "5."
+      ]
     },
     {
-      "rank": 6,
+      "id": "chelsea",
       "label": "Chelsea",
-      "detail": "63 stig",
+      "detail": "6. sæti, 63 stig",
       "accept": [
         "chelsea",
-        "chelsea fc"
-      ],
-      "slot": "6."
+        "chelsea fc",
+        "chelsea f c"
+      ]
     },
     {
-      "rank": 7,
+      "id": "newcastle",
       "label": "Newcastle United",
-      "detail": "60 stig",
+      "detail": "7. sæti, 60 stig",
       "accept": [
         "newcastle united",
         "newcastle"
-      ],
-      "slot": "7."
+      ]
     },
     {
-      "rank": 8,
+      "id": "manutd",
       "label": "Manchester United",
-      "detail": "60 stig",
+      "detail": "8. sæti, 60 stig",
       "accept": [
         "manchester united",
         "man united",
         "man utd"
-      ],
-      "slot": "8."
+      ]
     },
     {
-      "rank": 9,
+      "id": "westham",
       "label": "West Ham United",
-      "detail": "52 stig",
+      "detail": "9. sæti, 52 stig",
       "accept": [
         "west ham united",
         "west ham"
-      ],
-      "slot": "9."
+      ]
     },
     {
-      "rank": 10,
+      "id": "palace",
       "label": "Crystal Palace",
-      "detail": "49 stig",
+      "detail": "10. sæti, 49 stig",
       "accept": [
         "crystal palace",
         "palace"
-      ],
-      "slot": "10."
+      ]
     }
   ],
   "verifiedAt": "2026-09-15"

@@ -1,0 +1,114 @@
+{
+  "id": "enska-markahaestir-2019",
+  "region": "enska",
+  "kind": "player",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Markahæstir 2019/20",
+  "question": "Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar 2019/20.",
+  "context": "Mörk í deildinni 2019/20.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2019-20 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373998782"
+    },
+    {
+      "name": "Fantasy Premier League 2019-20 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2019-20"
+    }
+  ],
+  "answers": [
+    {
+      "id": "vardy",
+      "label": "Jamie Vardy",
+      "detail": "23 mörk, Leicester City",
+      "accept": [
+        "jamie vardy",
+        "vardy"
+      ]
+    },
+    {
+      "id": "aubameyang",
+      "label": "Pierre-Emerick Aubameyang",
+      "detail": "22 mörk, Arsenal",
+      "accept": [
+        "pierre emerick aubameyang",
+        "auba",
+        "aubameyang"
+      ]
+    },
+    {
+      "id": "ings",
+      "label": "Danny Ings",
+      "detail": "22 mörk, Southampton",
+      "accept": [
+        "danny ings",
+        "ings"
+      ]
+    },
+    {
+      "id": "sterling",
+      "label": "Raheem Sterling",
+      "detail": "20 mörk, Manchester City",
+      "accept": [
+        "raheem sterling",
+        "sterling"
+      ]
+    },
+    {
+      "id": "salah",
+      "label": "Mohamed Salah",
+      "detail": "19 mörk, Liverpool",
+      "accept": [
+        "mohamed salah",
+        "mo salah",
+        "salah"
+      ]
+    },
+    {
+      "id": "kane",
+      "label": "Harry Kane",
+      "detail": "18 mörk, Tottenham Hotspur",
+      "accept": [
+        "harry kane",
+        "kane"
+      ]
+    },
+    {
+      "id": "mane",
+      "label": "Sadio Mané",
+      "detail": "18 mörk, Liverpool",
+      "accept": [
+        "sadio mane",
+        "mane"
+      ]
+    },
+    {
+      "id": "jimenez",
+      "label": "Raúl Jiménez",
+      "detail": "17 mörk, Wolverhampton Wanderers",
+      "accept": [
+        "raul jimenez",
+        "jimenez"
+      ]
+    },
+    {
+      "id": "martial",
+      "label": "Anthony Martial",
+      "detail": "17 mörk, Manchester United",
+      "accept": [
+        "anthony martial",
+        "martial"
+      ]
+    },
+    {
+      "id": "rashford",
+      "label": "Marcus Rashford",
+      "detail": "17 mörk, Manchester United",
+      "accept": [
+        "marcus rashford",
+        "rashford"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

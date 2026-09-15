@@ -1,0 +1,114 @@
+{
+  "id": "spann-lokastada-2025",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LA LIGA",
+  "title": "Topp 10 2025/26",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum spænsku deildarinnar 2025/26.",
+  "context": "Lokastaða tímabilsins 2025/26. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2025-26 La Liga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1356513894"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "1. sæti, 94 stig",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "2. sæti, 86 stig",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "villarreal",
+      "label": "Villarreal",
+      "detail": "3. sæti, 72 stig",
+      "accept": [
+        "villarreal",
+        "villarreal cf",
+        "villareal cf"
+      ]
+    },
+    {
+      "id": "atletico",
+      "label": "Atlético Madrid",
+      "detail": "4. sæti, 69 stig",
+      "accept": [
+        "atletico madrid",
+        "ath madrid",
+        "atletico"
+      ]
+    },
+    {
+      "id": "betis",
+      "label": "Real Betis",
+      "detail": "5. sæti, 60 stig",
+      "accept": [
+        "real betis",
+        "betis"
+      ]
+    },
+    {
+      "id": "celta",
+      "label": "Celta Vigo",
+      "detail": "6. sæti, 54 stig",
+      "accept": [
+        "celta vigo",
+        "celta"
+      ]
+    },
+    {
+      "id": "getafe",
+      "label": "Getafe",
+      "detail": "7. sæti, 51 stig",
+      "accept": [
+        "getafe"
+      ]
+    },
+    {
+      "id": "rayo",
+      "label": "Rayo Vallecano",
+      "detail": "8. sæti, 50 stig",
+      "accept": [
+        "rayo vallecano",
+        "vallecano",
+        "rayo"
+      ]
+    },
+    {
+      "id": "valencia",
+      "label": "Valencia",
+      "detail": "9. sæti, 49 stig",
+      "accept": [
+        "valencia",
+        "valencia cf"
+      ]
+    },
+    {
+      "id": "sociedad",
+      "label": "Real Sociedad",
+      "detail": "10. sæti, 46 stig",
+      "accept": [
+        "real sociedad",
+        "sociedad"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

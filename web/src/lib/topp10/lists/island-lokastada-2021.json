@@ -1,0 +1,111 @@
+{
+  "id": "island-lokastada-2021",
+  "region": "island",
+  "kind": "club",
+  "competition": "BESTA DEILDIN",
+  "title": "Topp 10 2021",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum efstu deildar karla 2021.",
+  "context": "Lokastaða tímabilsins 2021. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2021 Úrvalsdeild",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1326342425"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "1. sæti, 48 stig",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    },
+    {
+      "id": "breidablik",
+      "label": "Breiðablik",
+      "detail": "2. sæti, 47 stig",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ]
+    },
+    {
+      "id": "kr",
+      "label": "KR",
+      "detail": "3. sæti, 41 stig",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "KA",
+      "detail": "4. sæti, 40 stig",
+      "accept": [
+        "ka"
+      ]
+    },
+    {
+      "id": "valur",
+      "label": "Valur",
+      "detail": "5. sæti, 39 stig",
+      "accept": [
+        "valur"
+      ]
+    },
+    {
+      "id": "fh",
+      "label": "FH",
+      "detail": "6. sæti, 33 stig",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ]
+    },
+    {
+      "id": "stjarnan",
+      "label": "Stjarnan",
+      "detail": "7. sæti, 22 stig",
+      "accept": [
+        "stjarnan"
+      ]
+    },
+    {
+      "id": "leiknir",
+      "label": "Leiknir R.",
+      "detail": "8. sæti, 22 stig",
+      "accept": [
+        "leiknir r",
+        "leiknir",
+        "leiknir reykjavik"
+      ]
+    },
+    {
+      "id": "ia",
+      "label": "ÍA",
+      "detail": "9. sæti, 21 stig",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ]
+    },
+    {
+      "id": "keflavik",
+      "label": "Keflavík",
+      "detail": "10. sæti, 21 stig",
+      "accept": [
+        "keflavik"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

@@ -1,0 +1,113 @@
+{
+  "id": "enska-lokastada-2017",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2017/18",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2017/18.",
+  "context": "Lokastaða tímabilsins 2017/18. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2017-18 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371417403"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "1. sæti, 100 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "2. sæti, 81 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "3. sæti, 77 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "4. sæti, 75 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "5. sæti, 70 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "6. sæti, 63 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "burnley",
+      "label": "Burnley",
+      "detail": "7. sæti, 54 stig",
+      "accept": [
+        "burnley"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "8. sæti, 49 stig",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "leicester",
+      "label": "Leicester City",
+      "detail": "9. sæti, 47 stig",
+      "accept": [
+        "leicester city",
+        "leicester"
+      ]
+    },
+    {
+      "id": "newcastle",
+      "label": "Newcastle United",
+      "detail": "10. sæti, 44 stig",
+      "accept": [
+        "newcastle united",
+        "newcastle"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

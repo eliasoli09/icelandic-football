@@ -1,10 +1,11 @@
 /**
- * Builds the Topp 10 lists. Each list is read from two sources that do not
- * copy each other, and is written only when they agree on every answer.
+ * Builds the Tenaball questions. Each holds every valid answer, read from two
+ * sources that do not copy each other, and is written only when they agree on
+ * the whole set.
  *
- * A list whose sources disagree, or that meets a name with no entry in
+ * A question whose sources disagree, or that meets a name with no entry in
  * names.ts, is not written: it goes to review.json with the reason, and any
- * earlier copy is removed so an unverified list cannot stay on the site. A
+ * earlier copy is removed so an unverified question cannot stay on the site. A
  * source that cannot be fetched leaves the last verified copy where it is.
  *
  * Usage: cd web && npx tsx scripts/topp10/build.mts [--cache DIR]
@@ -13,7 +14,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { tmpdir } from 'os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import type { Answer, Topp10List } from '../../src/lib/topp10/types'
+import type { Answer, Kind, Topp10List } from '../../src/lib/topp10/types'
 import type { Entity } from './names'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -35,7 +36,7 @@ const cacheDir = process.argv.includes('--cache')
   : join(tmpdir(), 'topp10-cache')
 mkdirSync(cacheDir, { recursive: true })
 
-/** Could not read a source at all; says nothing about whether a list is right. */
+/** Could not read a source at all; says nothing about whether a question is right. */
 class FetchError extends Error {}
 
 // ── sources ────────────────────────────────────────────────────────────
@@ -43,9 +44,12 @@ class FetchError extends Error {}
 const UA = 'BestaSpain-Topp10/1.0 (https://islensk-fotbolti.vercel.app; checks quiz answers)'
 let lastFetch = 0
 
-async function fetchCached(key: string, url: string): Promise<string> {
+const utf8 = (bytes: Uint8Array) => new TextDecoder('utf-8').decode(bytes)
+
+/** The raw bytes are cached, so a file in another encoding can still be read correctly. */
+async function fetchCached(key: string, url: string, decode = utf8): Promise<string> {
   const file = join(cacheDir, key.replace(/[^\w.-]+/g, '_'))
-  if (existsSync(file)) return readFileSync(file, 'utf-8')
+  if (existsSync(file)) return decode(readFileSync(file))
   const wait = lastFetch + 1000 - Date.now()
   if (wait > 0) await new Promise((r) => setTimeout(r, wait))
   lastFetch = Date.now()
@@ -53,9 +57,15 @@ async function fetchCached(key: string, url: string): Promise<string> {
   try { res = await fetch(url, { headers: { 'User-Agent': UA } }) }
   catch (err) { throw new FetchError(`${url}: ${(err as Error).message}`) }
   if (!res.ok) throw new FetchError(`${url} svaraði ${res.status}`)
-  const text = await res.text()
-  writeFileSync(file, text)
-  return text
+  const bytes = new Uint8Array(await res.arrayBuffer())
+  writeFileSync(file, bytes)
+  return decode(bytes)
+}
+
+// the 2016/17 FPL file is in Windows-1252, so "Agüero" arrives as bytes that are not UTF-8
+const utf8OrLatin = (bytes: Uint8Array) => {
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(bytes) }
+  catch { return new TextDecoder('windows-1252').decode(bytes) }
 }
 
 interface Source { name: string; url: string }
@@ -68,7 +78,7 @@ async function wiki(lang: 'en' | 'is', page: string): Promise<Page> {
   return {
     wikitext: json.parse.wikitext,
     // the exact revision that was read, so the check can be repeated
-    source: { name: `${lang}.wikipedia.org · ${String(json.parse.title).replace(/[\u2013\u2014]/g, '-')}`, url: `https://${lang}.wikipedia.org/w/index.php?oldid=${json.parse.revid}` },
+    source: { name: `${lang}.wikipedia.org · ${String(json.parse.title).replace(/[–—]/g, '-')}`, url: `https://${lang}.wikipedia.org/w/index.php?oldid=${json.parse.revid}` },
   }
 }
 
@@ -84,7 +94,7 @@ const csvCells = (line: string) => {
 
 async function fplGoals(tag: string): Promise<{ rows: { name: string; goals: number }[]; source: Source }> {
   const url = `https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/${tag}/cleaned_players.csv`
-  const lines = (await fetchCached(`fpl-${tag}.csv`, url)).trim().split('\n')
+  const lines = (await fetchCached(`fpl-${tag}.csv`, url, utf8OrLatin)).trim().split('\n')
   const head = csvCells(lines[0])
   const [f, s, g] = ['first_name', 'second_name', 'goals_scored'].map((k) => head.indexOf(k))
   if (f < 0 || s < 0 || g < 0) throw new Error(`FPL ${tag}: dálka vantar`)
@@ -98,48 +108,88 @@ const OUR_RESULTS: Source = {
   name: 'Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar',
   url: 'https://islensk-fotbolti.vercel.app/tafla',
 }
+const OUR_FIXTURES: Source = {
+  name: 'Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar',
+  url: 'https://islensk-fotbolti.vercel.app/leikir',
+}
 
 interface Rec { w: number; d: number; l: number; gf: number; ga: number }
 let teamNames: Map<number, string> | null = null
 
-/** Each club's record over the season, from the results we hold. */
-async function ourRecords(league: string, season: number, phases: string[]): Promise<Map<string, Rec>> {
+type MatchRow = { home_team: number; away_team: number; home_goals: number | null; away_goals: number | null }
+
+async function ourMatches(league: string, season: number, filter: { played: boolean; phases?: string[] }): Promise<MatchRow[]> {
   if (!teamNames) {
     const { data, error } = await db().from('teams').select('id,name').range(0, 9999)
     if (error) throw new FetchError(error.message)
     teamNames = new Map((data ?? []).map((t: { id: number; name: string }) => [t.id, t.name]))
   }
-  const rows: { home_team: number; away_team: number; home_goals: number; away_goals: number }[] = []
+  const rows: MatchRow[] = []
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await db().from('matches').select('home_team,away_team,home_goals,away_goals')
-      .eq('league', league).eq('season', season).eq('status', 'played').in('phase', phases)
-      .order('id').range(from, from + 999)
+    let q = db().from('matches').select('home_team,away_team,home_goals,away_goals').eq('league', league).eq('season', season)
+    if (filter.played) q = q.eq('status', 'played')
+    if (filter.phases) q = q.in('phase', filter.phases)
+    const { data, error } = await q.order('id').range(from, from + 999)
     if (error) throw new FetchError(error.message)
     rows.push(...(data ?? []))
     if (!data || data.length < 1000) break
   }
-  const out = new Map<string, Rec>()
-  for (const m of rows) {
-    for (const [team, gf, ga] of [[m.home_team, m.home_goals, m.away_goals], [m.away_team, m.away_goals, m.home_goals]]) {
-      const name = teamNames.get(team) ?? `#${team}`
-      const r = out.get(name) ?? { w: 0, d: 0, l: 0, gf: 0, ga: 0 }
+  return rows
+}
+
+interface Game { home: string; away: string; hg: number; ag: number }
+interface OurSeason { records: Map<string, Rec>; games: Game[] }
+
+/** Each club's record over the season, and every game, from the results we hold. */
+async function ourSeason(league: string, season: number, phases: string[]): Promise<OurSeason> {
+  const records = new Map<string, Rec>()
+  const games: Game[] = []
+  for (const m of await ourMatches(league, season, { played: true, phases })) {
+    const name = (id: number) => teamNames!.get(id) ?? `#${id}`
+    games.push({ home: name(m.home_team), away: name(m.away_team), hg: m.home_goals!, ag: m.away_goals! })
+    for (const [team, gf, ga] of [[m.home_team, m.home_goals!, m.away_goals!], [m.away_team, m.away_goals!, m.home_goals!]]) {
+      const r = records.get(name(team)) ?? { w: 0, d: 0, l: 0, gf: 0, ga: 0 }
       if (gf > ga) r.w++; else if (gf === ga) r.d++; else r.l++
       r.gf += gf; r.ga += ga
-      out.set(name, r)
+      records.set(name(team), r)
     }
   }
-  return out
+  return { records, games }
+}
+
+/** Points and goal difference of `a` against `b`, from their games with each other. */
+function headToHead(games: Game[], a: string, b: string) {
+  let pts = 0, opp = 0, gd = 0
+  for (const g of games) {
+    const [x, y] = g.home === a && g.away === b ? [g.hg, g.ag] : g.home === b && g.away === a ? [g.ag, g.hg] : [null, null]
+    if (x === null || y === null) continue
+    gd += x - y
+    if (x > y) pts += 3; else if (x === y) { pts++; opp++ } else opp += 3
+  }
+  return { pts: pts - opp, gd }
+}
+
+/** Every club with a match in the season, played or not. */
+async function ourTeams(league: string, season: number): Promise<string[]> {
+  const ids = new Set((await ourMatches(league, season, { played: false })).flatMap((m) => [m.home_team, m.away_team]))
+  return [...ids].map((id) => teamNames!.get(id) ?? `#${id}`)
 }
 
 // ── names ──────────────────────────────────────────────────────────────
 
 function registry(entries: Entity[], kind: string) {
   const byName = new Map<string, Entity>()
+  const typed = new Map<string, string>()
   for (const e of entries) {
     for (const n of [e.label, ...e.names]) {
       const key = normalise(n), prev = byName.get(key)
       if (prev && prev.id !== e.id) throw new Error(`names.ts: "${n}" er bæði ${prev.id} og ${e.id}`)
       byName.set(key, e)
+    }
+    for (const n of [e.label, ...e.names, ...(e.extra ?? [])]) {
+      const key = normalise(n), prev = typed.get(key)
+      if (prev && prev !== e.id) throw new Error(`names.ts: "${n}" er bæði ${prev} og ${e.id}`)
+      typed.set(key, e.id)
     }
   }
   return (spelling: string): Entity => {
@@ -155,24 +205,26 @@ type Draft = Answer & { loose: string[] }
 
 /**
  * An answer and every spelling that opens it. A player's surname, and first
- * name with surname, are accepted only if no other answer on the list would
- * also claim them - `finish` drops the ones that collide.
+ * name with surname, are accepted only if no other answer on the question
+ * would also claim them - `finish` drops the ones that collide.
  */
-function draft(entities: Entity[], person: boolean, rank: number, detail: string, more: Partial<Answer> = {}): Draft {
-  const fixed = new Set<string>(), loose = new Set<string>()
-  for (const e of entities) {
-    for (const n of [e.label, ...e.names, ...(e.extra ?? [])]) fixed.add(normalise(n))
-    const words = e.label.split(/\s+/)
-    if (person && words.length >= 2) loose.add(normalise(words[words.length - 1]))
-    if (person && words.length >= 3) loose.add(normalise(`${words[0]} ${words[words.length - 1]}`))
-  }
+function answerFor(kind: Kind, e: Entity, detail: string): Draft {
+  const fixed = new Set<string>([e.label, ...e.names, ...(e.extra ?? [])].map(normalise))
+  const loose = new Set<string>()
+  const words = e.label.split(/\s+/)
+  if (kind === 'player' && words.length >= 2) loose.add(normalise(words[words.length - 1]))
+  if (kind === 'player' && words.length >= 3) loose.add(normalise(`${words[0]} ${words[words.length - 1]}`))
   for (const k of fixed) loose.delete(k)
-  return { rank, label: entities.map((e) => e.label).join(' / '), detail, accept: [...fixed], ...more, loose: [...loose] }
+  return { id: e.id, label: e.label, detail, accept: [...fixed], loose: [...loose] }
 }
 
-function finish(meta: Omit<Topp10List, 'answers' | 'verifiedAt'>, drafts: Draft[]): Topp10List {
+type Meta = Omit<Topp10List, 'answers' | 'verifiedAt'>
+
+function finish(meta: Meta, drafts: Draft[]): Topp10List {
+  const ids = drafts.map((d) => d.id)
+  if (new Set(ids).size !== ids.length) throw new Error(`sama svar tvisvar: ${ids.filter((id, i) => ids.indexOf(id) !== i).join(', ')}`)
   const owners = new Map<string, Set<string>>()
-  for (const d of drafts) for (const k of [...d.accept, ...d.loose]) owners.set(k, (owners.get(k) ?? new Set()).add(d.label))
+  for (const d of drafts) for (const k of [...d.accept, ...d.loose]) owners.set(k, (owners.get(k) ?? new Set()).add(d.id))
   const answers: Answer[] = drafts.map(({ loose, ...a }) => ({
     ...a, accept: [...a.accept, ...loose.filter((k) => owners.get(k)!.size === 1)],
   }))
@@ -180,8 +232,8 @@ function finish(meta: Omit<Topp10List, 'answers' | 'verifiedAt'>, drafts: Draft[
   const list: Topp10List = { ...rest, answers, verifiedAt: today, ...(note ? { note } : {}) }
   const clash = ambiguousAliases(list)
   if (clash.length) throw new Error(`sama stafsetning opnar tvö ólík svör: ${clash.join(', ')}`)
-  if (answers.length < 10) throw new Error(`aðeins ${answers.length} svör`)
-  if (new Set(list.sources.map((s) => new URL(s.url).host + new URL(s.url).pathname)).size < 2) throw new Error('færri en tvær heimildir')
+  if (answers.length < 10) throw new Error(`aðeins ${answers.length} gild svör`)
+  if (new Set(list.sources.map((s) => new URL(s.url).host + new URL(s.url).pathname + new URL(s.url).search)).size < 2) throw new Error('færri en tvær heimildir')
   return list
 }
 
@@ -192,17 +244,17 @@ function mustAgree(problems: string[], what: string) {
 }
 
 /** The first ten, and anyone level with the tenth. */
-function topWithTies<T>(items: T[], value: (t: T) => number, n = 10): { item: T; rank: number }[] {
+function topWithTies<T>(items: T[], value: (t: T) => number, n = 10): T[] {
   const sorted = [...items].sort((a, b) => value(b) - value(a))
   if (sorted.length < n) throw new Error(`aðeins ${sorted.length} í heimild`)
   const cut = value(sorted[n - 1])
   return sorted.filter((t) => value(t) >= cut)
-    .map((item) => ({ item, rank: 1 + sorted.filter((o) => value(o) > value(item)).length }))
 }
 
-const tiesNote = (count: number) => (count > 10 ? 'Þau sem eru jöfn í síðasta sæti eru öll á listanum.' : undefined)
 const season = (y: number) => `${y}/${String((y + 1) % 100).padStart(2, '0')}`
+const enSeason = (y: number) => `${y}–${String((y + 1) % 100).padStart(2, '0')}`
 const plural = (n: number, one: string, many: string) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? one : many}`
+const listYears = (years: number[]) => years.length > 1 ? `${years.slice(0, -1).join(', ')} og ${years[years.length - 1]}` : String(years[0])
 
 // ── league tables ──────────────────────────────────────────────────────
 
@@ -211,72 +263,184 @@ const recKey = (r: Rec) => `${r.w}-${r.d}-${r.l}-${r.gf}-${r.ga}`
 
 /**
  * The published table held against our own results. Every club's record must
- * equal one of ours exactly and belong to the same club, and ordering those
- * records by points, goal difference and goals scored must give the published
- * order. Clubs level on all three can't be ordered from results alone, so such
- * a tie inside the ten shown sends the list to review instead.
+ * equal exactly one of ours, the top ten must be the same clubs by name in
+ * both, and ordering those records by points, goal difference and goals scored
+ * must give the published order. Clubs level on all three can't be ordered
+ * from results alone, so such a tie inside the top ten sends it to review.
  */
-function verifyTable(groups: TableRow[][], ours: Map<string, Rec>, shown = 10) {
+function verifyTable(groups: TableRow[][], ours: OurSeason, shown = 10, tiebreak: 'gd' | 'h2h' = 'gd') {
   const all = groups.flat()
   const problems: string[] = []
-  if (all.length !== ours.size) problems.push(`${all.length} lið í töflu, ${ours.size} í úrslitum`)
+  if (all.length !== ours.records.size) problems.push(`${all.length} lið í töflu, ${ours.records.size} í úrslitum`)
   const byKey = new Map<string, string[]>()
-  for (const [name, r] of ours) byKey.set(recKey(r), [...(byKey.get(recKey(r)) ?? []), name])
-  const clubs = all.map((row) => {
-    const club = clubOf(row.name)
+  for (const [name, r] of ours.records) byKey.set(recKey(r), [...(byKey.get(recKey(r)) ?? []), name])
+  const top = all.slice(0, shown).map((row) => ({ row, club: clubOf(row.name) }))
+  const dbName = new Map<TableRow, string>()
+  all.forEach((row, i) => {
     const hits = byKey.get(recKey(row)) ?? []
     if (hits.length !== 1) problems.push(`${row.name} ${recKey(row)} finnst ${hits.length} sinnum í úrslitum`)
-    else if (clubOf(hits[0]).id !== club.id) problems.push(`${row.name} ${recKey(row)} er ${hits[0]} í úrslitum`)
-    return { row, club }
+    else if (i < shown && clubOf(hits[0]).id !== top[i].club.id) problems.push(`${row.name} ${recKey(row)} er ${hits[0]} í úrslitum`)
+    else dbName.set(row, hits[0])
   })
+  const gd = (r: TableRow) => r.gf - r.ga
   let offset = 0
   for (const group of groups) {
-    const gd = (r: TableRow) => r.gf - r.ga
-    const sorted = [...group].sort((a, b) => b.pts - a.pts || gd(b) - gd(a) || b.gf - a.gf)
-    sorted.forEach((row, i) => {
-      if (offset + i >= shown) return
-      if (row !== group[i]) problems.push(`${offset + i + 1}. sæti er ${group[i].name} í töflu en ${row.name} eftir stigum`)
-      const next = sorted[i + 1]
-      if (next && next.pts === row.pts && gd(next) === gd(row) && next.gf === row.gf) problems.push(`${row.name} og ${next.name} eru jöfn á öllu`)
-    })
+    if (tiebreak === 'gd') {
+      const sorted = [...group].sort((a, b) => b.pts - a.pts || gd(b) - gd(a) || b.gf - a.gf)
+      sorted.forEach((row, i) => {
+        if (offset + i >= shown) return
+        if (row !== group[i]) problems.push(`${offset + i + 1}. sæti er ${group[i].name} í töflu en ${row.name} eftir stigum`)
+        const next = sorted[i + 1]
+        if (next && next.pts === row.pts && gd(next) === gd(row) && next.gf === row.gf) problems.push(`${row.name} og ${next.name} eru jöfn á öllu`)
+      })
+    } else {
+      // Spain and Italy separate clubs level on points by their games with each other first
+      group.forEach((row, i) => {
+        const below = group[i + 1]
+        if (offset + i >= shown || !below || row.pts > below.pts) return
+        if (row.pts < below.pts) { problems.push(`${row.name} er ofar en ${below.name} með færri stig`); return }
+        const level = group.filter((r) => r.pts === row.pts)
+        if (level.length > 2) { problems.push(`${level.map((r) => r.name).join(', ')} eru jöfn að stigum`); return }
+        const a = dbName.get(row), b = dbName.get(below)
+        if (!a || !b) return
+        const h = headToHead(ours.games, a, b)
+        const decided = [h.pts, h.gd, gd(row) - gd(below), row.gf - below.gf].find((x) => x !== 0)
+        if (decided === undefined) problems.push(`${row.name} og ${below.name} eru jöfn á öllu`)
+        else if (decided < 0) problems.push(`${row.name} er ofar en ${below.name} en tapar innbyrðis eða á markatölu`)
+      })
+    }
     offset += group.length
   }
   mustAgree(problems, 'tafla og úrslit ósammála')
-  return clubs.slice(0, shown)
+  return top
 }
 
-const tableDrafts = (rows: { row: TableRow; club: Entity }[]) =>
-  rows.map(({ row, club }, i) => draft([club], false, i + 1, plural(row.pts, 'stig', 'stig'), { slot: `${i + 1}.` }))
+const tableAnswers = (top: { row: TableRow; club: Entity }[]) =>
+  top.map(({ row, club }, i) => answerFor('club', club, `${i + 1}. sæti, ${plural(row.pts, 'stig', 'stig')}`))
 
-async function premierTable(y: number): Promise<Topp10List> {
-  const page = await wiki('en', `${y}–${String((y + 1) % 100).padStart(2, '0')} Premier League`)
-  const [first] = W.sportsTables(page.wikitext)
-  if (!first) throw new Error('engin Sports table á síðunni')
+const LEAGUES = {
+  premier: { page: 'Premier League', teams: 20, region: 'enska', competition: 'ENSKA ÚRVALSDEILDIN', of: 'ensku úrvalsdeildarinnar', id: 'enska', tiebreak: 'gd' },
+  laliga: { page: 'La Liga', teams: 20, region: 'evropa', competition: 'LA LIGA', of: 'spænsku deildarinnar', id: 'spann', tiebreak: 'h2h' },
+  seriea: { page: 'Serie A', teams: 20, region: 'evropa', competition: 'SERIE A', of: 'ítölsku deildarinnar', id: 'italia', tiebreak: 'h2h' },
+  bundesliga: { page: 'Bundesliga', teams: 18, region: 'evropa', competition: 'BUNDESLIGA', of: 'þýsku deildarinnar', id: 'thyskaland', tiebreak: 'gd' },
+  ligue1: { page: 'Ligue 1', teams: 18, region: 'evropa', competition: 'LIGUE 1', of: 'frönsku deildarinnar', id: 'frakkland', tiebreak: 'gd' },
+} as const
+
+async function leagueTable(league: keyof typeof LEAGUES, y: number): Promise<Topp10List> {
+  const L = LEAGUES[league]
+  const page = await wiki('en', `${enSeason(y)} ${L.page}`)
+  let table = page, [first] = W.sportsTables(page.wikitext)
+  if (!first) {
+    // some seasons keep the table in its own template, "{{2024–25 La Liga table}}"
+    const t = page.wikitext.match(/==\s*League table\s*==\s*\{\{\s*([^{}|\n]+? table)\s*\}\}/)
+    if (!t) throw new Error('engin Sports table á síðunni')
+    table = await wiki('en', `Template:${t[1].trim()}`)
+    ;[first] = W.sportsTables(table.wikitext)
+    if (!first) throw new Error(`engin Sports table í Template:${t[1].trim()}`)
+  }
   const rows: TableRow[] = W.readSportsTable(first)
-  if (rows.length !== 20) throw new Error(`${rows.length} lið í fyrstu töflu síðunnar`)
-  const top = verifyTable([rows], await ourRecords('premier', y, ['main']))
+  if (rows.length !== L.teams) throw new Error(`${rows.length} lið í töflunni`)
+  const top = verifyTable([rows], await ourSeason(league, y, ['main']), 10, L.tiebreak)
   return finish({
-    id: `enska-lokastada-${y}`, region: 'enska',
-    title: `Lokastaðan ${season(y)}`,
-    question: `Hvaða lið enduðu í tíu efstu sætum ensku úrvalsdeildarinnar ${season(y)}?`,
-    sources: [page.source, OUR_RESULTS],
-  }, tableDrafts(top))
+    id: `${L.id}-lokastada-${y}`, region: L.region, kind: 'club', competition: L.competition,
+    title: `Topp 10 ${season(y)}`,
+    question: `Nefndu liðin sem enduðu í tíu efstu sætum ${L.of} ${season(y)}.`,
+    context: `Lokastaða tímabilsins ${season(y)}. Tíu lið eru rétt, í hvaða röð sem er.`,
+    sources: [table.source, OUR_RESULTS],
+  }, tableAnswers(top))
 }
 
 async function bestaTable(y: number): Promise<Topp10List> {
-  const page = await wiki('en', `${y} Besta deild karla`)
+  const page = await wiki('en', y >= 2022 ? `${y} Besta deild karla` : `${y} Úrvalsdeild`)
   const tables: TableRow[][] = W.sportsTables(page.wikitext).map(W.readSportsTable)
-  // regular season, then the top six and bottom six play on with their totals
-  if (tables.length !== 3 || tables[1].length !== 6 || tables[2].length !== 6) {
+  let top
+  if (tables.length === 3 && tables[1].length === 6 && tables[2].length === 6) {
+    // regular season, then the top six and bottom six play on with their totals
+    top = verifyTable([tables[1], tables[2]], await ourSeason('besta', y, ['main', 'efri', 'nedri']))
+  } else if (y < 2022 && tables.length >= 1 && tables[0].length === 12) {
+    top = verifyTable([tables[0]], await ourSeason('besta', y, ['main']))
+  } else {
     throw new Error(`óvænt uppsetning: ${tables.map((t) => t.length).join(' + ')} lið`)
   }
-  const top = verifyTable([tables[1], tables[2]], await ourRecords('besta', y, ['main', 'efri', 'nedri']))
   return finish({
-    id: `island-lokastada-${y}`, region: 'island',
-    title: `Lokastaða Bestu deildar ${y}`,
-    question: `Hvaða lið enduðu í tíu efstu sætum Bestu deildar karla ${y}?`,
+    id: `island-lokastada-${y}`, region: 'island', kind: 'club', competition: 'BESTA DEILDIN',
+    title: `Topp 10 ${y}`,
+    question: `Nefndu liðin sem enduðu í tíu efstu sætum efstu deildar karla ${y}.`,
+    context: `Lokastaða tímabilsins ${y}. Tíu lið eru rétt, í hvaða röð sem er.`,
     sources: [page.source, OUR_RESULTS],
-  }, tableDrafts(top))
+  }, tableAnswers(top))
+}
+
+/** The clubs playing a season now: the league's page against our own fixture list. */
+async function clubsInSeason(o: {
+  id: string; league: string; season: number; page: string; teams: number
+  region: Topp10List['region']; competition: string; title: string; question: string; context: string
+}): Promise<Topp10List> {
+  const page = await wiki('en', o.page)
+  const [first] = W.sportsTables(page.wikitext)
+  if (!first) throw new Error('engin Sports table á síðunni')
+  // before a season is played the module generates the order itself, so the clubs are read from their names
+  const names = [...first.entries()].filter(([k]) => /^name_/.test(k)).map(([, v]) => W.plain(v))
+  const wikiClubs = new Map(names.map((n) => { const c = clubOf(n); return [c.id, c] }))
+  const ourClubs = new Map((await ourTeams(o.league, o.season)).map((n) => { const c = clubOf(n); return [c.id, c] }))
+  const problems: string[] = []
+  if (names.length !== o.teams || wikiClubs.size !== o.teams) problems.push(`${wikiClubs.size} lið á Wikipedia`)
+  if (ourClubs.size !== o.teams) problems.push(`${ourClubs.size} lið í leikjaplani`)
+  for (const [id, c] of wikiClubs) if (!ourClubs.has(id)) problems.push(`${c.label} aðeins á Wikipedia`)
+  for (const [id, c] of ourClubs) if (!wikiClubs.has(id)) problems.push(`${c.label} aðeins í leikjaplani`)
+  mustAgree(problems, 'lið tímabilsins')
+  const clubs = [...wikiClubs.values()].sort((a, b) => a.label.localeCompare(b.label, 'is'))
+  return finish({
+    id: o.id, region: o.region, kind: 'club', competition: o.competition,
+    title: o.title, question: o.question, context: o.context,
+    sources: [page.source, OUR_FIXTURES],
+  }, clubs.map((c) => answerFor('club', c, '')))
+}
+
+// ── titles by club ─────────────────────────────────────────────────────
+
+type Titles = Map<string, { club: Entity; years: number[] }>
+
+/** A table of winners: club, number of titles, and the years, which must add up. */
+function readTitles(rows: string[][], clubCol: number, titlesCol: number, yearsCol: number): Titles {
+  const out: Titles = new Map()
+  for (const r of rows) {
+    const titles = Number(W.plain(r[titlesCol] ?? ''))
+    if (!Number.isInteger(titles)) throw new Error(`ólesanleg röð: ${r.map(W.plain).join(' | ')}`)
+    if (titles === 0) continue
+    const club = clubOf(W.plain(r[clubCol]).replace(/\s*\+$/, ''))
+    const years = [...W.plain(r[yearsCol] ?? '').matchAll(/\b(?:18|19|20)\d{2}\b/g)].map((x) => Number(x[0]))
+    if (years.length !== titles) throw new Error(`${club.label}: ${titles} titlar en ${years.length} ártöl`)
+    if (out.has(club.id)) throw new Error(`${club.label} kemur tvisvar fyrir`)
+    out.set(club.id, { club, years: years.sort((a, b) => a - b) })
+  }
+  return out
+}
+
+const lastYear = (t: Titles) => Math.max(...[...t.values()].flatMap((x) => x.years))
+
+/**
+ * Both sources, compared up to the last year both cover. A club that won only
+ * after that year would be refused as an answer while being right, so its
+ * existence sends the question to review rather than being ignored.
+ */
+function agreedTitles(a0: Titles, b0: Titles, what: string): { titles: Titles; last: number } {
+  const last = Math.min(lastYear(a0), lastYear(b0))
+  const trim = (t: Titles): Titles => new Map([...t]
+    .map(([id, x]) => [id, { ...x, years: x.years.filter((y) => y <= last) }] as const)
+    .filter(([, x]) => x.years.length))
+  const a = trim(a0), b = trim(b0)
+  const problems: string[] = []
+  for (const id of new Set([...a.keys(), ...b.keys()])) {
+    const x = a.get(id), y = b.get(id)
+    if (!x || !y) { problems.push(`${(x ?? y)!.club.label} aðeins í annarri`); continue }
+    if (x.years.join() !== y.years.join()) problems.push(`${x.club.label}: ${x.years.join(' ')} og ${y.years.join(' ')}`)
+  }
+  for (const t of [...a0.values(), ...b0.values()]) {
+    if (!a.has(t.club.id)) problems.push(`${t.club.label} vann eftir ${last}, sem aðeins önnur heimildin nær til`)
+  }
+  mustAgree(problems, what)
+  return { titles: a, last }
 }
 
 // ── Iceland ────────────────────────────────────────────────────────────
@@ -304,29 +468,46 @@ async function islandTitles(): Promise<Topp10List> {
     if (x.last !== y.last) problems.push(`${x.club.label}: síðast ${x.last} og ${y.last}`)
   }
   mustAgree(problems, 'Íslandsmeistaratitlar')
-  const top = topWithTies([...a.values()], (x) => x.titles)
+  const clubs = [...a.values()].sort((x, y) => y.titles - x.titles)
+  const last = Math.max(...clubs.map((c) => c.last))
   return finish({
-    id: 'island-titlar', region: 'island',
-    title: 'Íslandsmeistaratitlar',
-    question: 'Hvaða félög hafa oftast orðið Íslandsmeistarar karla í fótbolta?',
+    id: 'island-meistarar', region: 'island', kind: 'club', competition: 'ÍSLANDSMÓTIÐ',
+    title: 'Íslandsmeistarar',
+    question: 'Nefndu 10 félög sem hafa orðið Íslandsmeistarar karla í fótbolta.',
+    context: `Til og með tímabilinu ${last}.`,
     sources: [en.source, is.source],
-    note: tiesNote(top.length),
-  }, top.map(({ item, rank }) => draft([item.club], false, rank, plural(item.titles, 'titill', 'titlar'), { hint: `Síðast meistari ${item.last}` })))
+  }, clubs.map((c) => answerFor('club', c.club, `${plural(c.titles, 'titill', 'titlar')}, síðast ${c.last}`)))
+}
+
+async function islandCup(): Promise<Topp10List> {
+  const en = await wiki('en', "Icelandic Men's Football Cup"), is = await wiki('is', 'Bikarkeppni karla í knattspyrnu')
+  const { titles, last } = agreedTitles(
+    readTitles(W.dataRows(W.tableAfter(en.wikitext, '==Performance by club==')), 0, 1, 2),
+    readTitles(W.dataRows(W.tableAfter(is.wikitext, '=== Sigrar í úrslitaleikjum')), 0, 1, 2),
+    'bikarmeistarar',
+  )
+  const clubs = [...titles.values()].sort((x, y) => y.years.length - x.years.length)
+  return finish({
+    id: 'island-bikarmeistarar', region: 'island', kind: 'club', competition: 'BIKARKEPPNIN',
+    title: 'Bikarmeistarar',
+    question: 'Nefndu 10 félög sem hafa orðið bikarmeistarar karla í fótbolta.',
+    context: `Til og með bikarúrslitunum ${last}.`,
+    sources: [en.source, is.source],
+  }, clubs.map((c) => answerFor('club', c.club, `${plural(c.years.length, 'titill', 'titlar')}, síðast ${c.years[c.years.length - 1]}`)))
 }
 
 async function bestaScorers(from: number, to: number): Promise<Topp10List> {
   const en = await wiki('en', 'Besta deild karla'), is = await wiki('is', 'Besta deild karla')
   const read = (rows: string[][]) => {
-    type Season = { people: Map<string, Entity>; goals: number; clubs: string[] }
+    type Season = { people: Map<string, Entity>; goals: number }
     const byYear = new Map<number, Season>()
     for (const r of rows) {
       const year = Number(W.plain(r[0]))
       if (!(year >= from && year <= to)) continue
       const goals = Number(W.plain(r[2]))
-      const entry: Season = byYear.get(year) ?? { people: new Map(), goals, clubs: [] }
+      const entry: Season = byYear.get(year) ?? { people: new Map(), goals }
       if (!Number.isInteger(goals) || entry.goals !== goals) throw new Error(`${year}: ólesanleg markatala`)
       for (const name of W.plainList(r[1])) { const p = personOf(name); entry.people.set(p.id, p) }
-      for (const c of W.plainList(r[3] ?? '')) if (!entry.clubs.includes(c)) entry.clubs.push(c)
       byYear.set(year, entry)
     }
     return byYear
@@ -343,24 +524,27 @@ async function bestaScorers(from: number, to: number): Promise<Topp10List> {
     if (ids(x) !== ids(z)) problems.push(`${y}: ${ids(x)} og ${ids(z)}`)
   }
   mustAgree(problems, 'markakóngar')
-  const shared = years.some((y) => a.get(y)!.people.size > 1)
+  const won = new Map<string, { person: Entity; years: number[] }>()
+  for (const y of years) {
+    for (const p of a.get(y)!.people.values()) {
+      const w = won.get(p.id) ?? { person: p, years: [] }
+      w.years.push(y); won.set(p.id, w)
+    }
+  }
   return finish({
-    id: 'island-markakongar', region: 'island',
-    title: `Markakóngar ${from}-${to}`,
-    question: `Hver skoraði flest mörk í efstu deild karla hvert tímabil ${from}-${to}?`,
+    id: 'island-markakongar', region: 'island', kind: 'player', competition: 'BESTA DEILDIN',
+    title: 'Markakóngar',
+    question: `Nefndu 10 leikmenn sem urðu markakóngar efstu deildar karla ${from}-${to}.`,
+    context: `Tímabilin ${from}-${to}. Þegar tveir urðu jafnir gilda báðir.`,
     sources: [en.source, is.source],
-    note: shared ? 'Þegar tveir urðu jafnir opnar hvor þeirra sem er árið.' : undefined,
-  }, years.map((y, i) => {
-    const e = a.get(y)!
-    return draft([...e.people.values()], true, i + 1, plural(e.goals, 'mark', 'mörk'), { slot: String(y), hint: b.get(y)!.clubs.join(' / ') })
-  }))
+  }, [...won.values()].map((w) => answerFor('player', w.person, `Markakóngur ${listYears(w.years)}`)))
 }
 
 // ── England ────────────────────────────────────────────────────────────
 
 async function premierScorers(y: number): Promise<Topp10List> {
   const tag = `${y}-${String((y + 1) % 100).padStart(2, '0')}`
-  const page = await wiki('en', `${y}–${String((y + 1) % 100).padStart(2, '0')} Premier League`)
+  const page = await wiki('en', `${enSeason(y)} Premier League`)
   const rows: string[][] = W.dataRows(W.tableAfter(page.wikitext, /===\s*Top scorers\s*===/)).map((r: string[]) => r.map(W.plain))
   const listed: { person: Entity; club: string; goals: number }[] = rows.map((r) => {
     const goals = Number(r[3])
@@ -368,7 +552,7 @@ async function premierScorers(y: number): Promise<Topp10List> {
     return { person: personOf(r[1]), club: r[2], goals }
   })
   const top = topWithTies(listed, (x) => x.goals)
-  const cut = top[top.length - 1].item.goals
+  const cut = top[top.length - 1].goals
   const fpl = await fplGoals(tag)
   const problems: string[] = []
   const fplById = new Map<string, number>()
@@ -381,137 +565,108 @@ async function premierScorers(y: number): Promise<Topp10List> {
     if (fplById.has(id)) problems.push(`${r.name} tvisvar í FPL`)
     fplById.set(id, r.goals)
   }
-  const topIds = new Set(top.map((t) => t.item.person.id))
-  for (const { item } of top) {
+  const topIds = new Set(top.map((t) => t.person.id))
+  for (const item of top) {
     const g = fplById.get(item.person.id)
     if (g !== item.goals) problems.push(`${item.person.label}: ${item.goals} á Wikipedia, ${g ?? 'vantar'} í FPL`)
   }
   for (const [id, g] of fplById) if (g >= cut && !topIds.has(id)) problems.push(`${id}: ${g} mörk í FPL en ekki á lista Wikipedia`)
   mustAgree(problems, 'markahæstu')
   return finish({
-    id: `enska-markahaestir-${y}`, region: 'enska',
+    id: `enska-markahaestir-${y}`, region: 'enska', kind: 'player', competition: 'ENSKA ÚRVALSDEILDIN',
     title: `Markahæstir ${season(y)}`,
-    question: `Hverjir skoruðu flest mörk í ensku úrvalsdeildinni ${season(y)}?`,
+    question: `Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar ${season(y)}.`,
+    context: top.length > 10
+      ? `Mörk í deildinni ${season(y)}. Allir sem voru jafnir í 10. sæti gilda.`
+      : `Mörk í deildinni ${season(y)}.`,
     sources: [page.source, fpl.source],
-    note: tiesNote(top.length),
-  }, top.map(({ item, rank }) => draft([item.person], true, rank, plural(item.goals, 'mark', 'mörk'), { hint: item.club })))
+  }, top.map((item) => answerFor('player', item.person, `${plural(item.goals, 'mark', 'mörk')}, ${item.club}`)))
 }
 
 // ── Europe ─────────────────────────────────────────────────────────────
 
-async function europeTitles(): Promise<Topp10List> {
-  const en = await wiki('en', 'Template:UEFA Champions League performance by club')
-  const is = await wiki('is', 'Meistaradeild Evrópu')
-  const read = (rows: string[][], clubCol: number, titlesCol: number, yearsCol: number) => {
-    const m = new Map<string, { club: Entity; titles: number; years: number[] }>()
-    for (const r of rows) {
-      const titles = Number(W.plain(r[titlesCol] ?? ''))
-      if (!Number.isInteger(titles)) throw new Error(`ólesanleg röð: ${r.map(W.plain).join(' | ')}`)
-      if (titles === 0) continue
-      const club = clubOf(W.plain(r[clubCol]))
-      const years = [...W.plain(r[yearsCol] ?? '').matchAll(/\b(?:19|20)\d{2}\b/g)].map((x) => Number(x[0]))
-      if (years.length !== titles) throw new Error(`${club.label}: ${titles} titlar en ${years.length} ártöl`)
-      if (m.has(club.id)) throw new Error(`${club.label} kemur tvisvar fyrir`)
-      m.set(club.id, { club, titles, years })
-    }
-    return m
-  }
-  const a = read(W.dataRows(W.tableAfter(en.wikitext, '{|')), 0, 1, 3)
-  const b = read(W.dataRows(W.tableAfter(is.wikitext, '=== Sigurliðin')), 1, 2, 3)
-  const problems: string[] = []
-  for (const id of new Set([...a.keys(), ...b.keys()])) {
-    const x = a.get(id), y = b.get(id)
-    if (!x || !y) { problems.push(`${(x ?? y)!.club.label} aðeins í annarri`); continue }
-    if (x.years.join() !== y.years.join()) problems.push(`${x.club.label}: ${x.years.join(' ')} og ${y.years.join(' ')}`)
-  }
-  mustAgree(problems, 'Evróputitlar')
-  const top = topWithTies([...a.values()], (x) => x.titles)
-  return finish({
-    id: 'evropa-titlar', region: 'evropa',
-    title: 'Flestir Evrópumeistaratitlar',
-    question: 'Hvaða félög hafa oftast unnið Evrópukeppni meistaraliða og Meistaradeild Evrópu?',
-    sources: [en.source, is.source],
-    note: tiesNote(top.length),
-  }, top.map(({ item, rank }) => draft([item.club], false, rank, plural(item.titles, 'titill', 'titlar'), { hint: `Síðast ${Math.max(...item.years)}` })))
+let championsMemo: Promise<{ titles: Titles; last: number; sources: Source[] }> | null = null
+function champions() {
+  return championsMemo ??= (async () => {
+    const en = await wiki('en', 'Template:UEFA Champions League performance by club')
+    const is = await wiki('is', 'Meistaradeild Evrópu')
+    const { titles, last } = agreedTitles(
+      readTitles(W.dataRows(W.tableAfter(en.wikitext, '{|')), 0, 1, 3),
+      readTitles(W.dataRows(W.tableAfter(is.wikitext, '=== Sigurliðin')), 1, 2, 3),
+      'Evrópumeistarar',
+    )
+    return { titles, last, sources: [en.source, is.source] }
+  })()
 }
 
-/** Winner of each final on an English "List of … finals" page, by the year it was played. */
-function enFinals(wt: string): Map<number, string> {
-  const start = wt.indexOf('==List of finals=='), end = wt.indexOf('==Performances==')
-  if (start < 0 || end < 0) throw new Error('fann ekki lista yfir úrslitaleiki')
+/** The Champions League was named for the 1992/93 season, whose final was in 1993. */
+const NEW_ERA = 1993
+
+function championsQuestion(o: { id: string; title: string; question: string; years: (years: number[]) => number[]; detail: (years: number[]) => string }) {
+  return async (): Promise<Topp10List> => {
+    const { titles, last, sources } = await champions()
+    const clubs = [...titles.values()]
+      .map((t) => ({ club: t.club, years: o.years(t.years) }))
+      .filter((t) => t.years.length)
+      .sort((a, b) => b.years.length - a.years.length)
+    return finish({
+      id: o.id, region: 'evropa', kind: 'club', competition: 'MEISTARADEILDIN',
+      title: o.title, question: o.question,
+      context: `Miðað við lok tímabilsins ${season(last - 1)}.`,
+      sources,
+    }, clubs.map((t) => answerFor('club', t.club, o.detail(t.years))))
+  }
+}
+
+/** UEFA Cup and Europa League winners on is.wikipedia, by the year of the final. */
+function isUefaCupWinners(wt: string): Map<number, string> {
+  const start = wt.indexOf('=== UEFA Cup ==='), end = wt.indexOf('== Neðanmálsgreinar')
+  if (start < 0 || end < 0) throw new Error('fann ekki úrslitaleikina á íslensku síðunni')
   const out = new Map<number, string>()
-  for (const block of wt.slice(start, end).split(/\n\|-/)) {
-    const lines = block.split('\n')
-    const from = lines.findIndex((l) => /^\s*!\s*scope\s*=\s*"row"/.test(l))
-    if (from < 0) continue
-    const to = lines.findIndex((l, i) => i > from && /^\s*(\|\}|\{\|)/.test(l))
-    const rows = W.dataRows(`{|\n${lines.slice(from, to < 0 ? undefined : to).join('\n')}\n|}`)
-    if (rows.length !== 1) continue
-    const s = W.plain(rows[0][0]).match(/^(\d{4})\s*[–-]\s*(\d{2}|\d{4})$/)
-    const winner = W.plain(rows[0][2] ?? '')
-    if (s && winner) out.set(Number(s[1]) + 1, winner)
+  const rows = /^\|\s*(\d{4})\s*[-–]\s*\d{2,4}(?:&nbsp;|\s)*\|\|([^\n]*?)\|\|([^\n]*)$/gm
+  for (const m of wt.slice(start, end).matchAll(rows)) {
+    const year = Number(m[1]) + 1
+    const link = (x: RegExpMatchArray) => W.plain(`[[${x[1]}]]`)
+    // the page marks the winner in italics or bold, on either side
+    const marked = [...m[2].matchAll(/'{2,3}\s*\[\[([^\]]+)\]\]/g)].map(link)
+    if (marked.length === 1) { out.set(year, marked[0]); continue }
+    const teams = [...m[2].matchAll(/\[\[([^\]]+)\]\]/g)].map(link)
+    if (marked.length || teams.length !== 2) continue
+    // unmarked: the note after the score may name the winner, "Ajax vann með fleiri mörkum…"
+    const escaped = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const said = teams.filter((t) => new RegExp(`(^|[\\s(,.])${escaped(t)}\\s+vann\\b`).test(m[3]))
+    if (said.length === 1) { out.set(year, said[0]); continue }
+    // or it is a one-match final decided in normal or extra time, read from its score
+    const score = m[3].match(/^\s*(\d+)\s*-\s*(\d+)/)
+    if (score && score[1] !== score[2] && !/víta/i.test(m[3])) {
+      out.set(year, teams[Number(score[1]) > Number(score[2]) ? 0 : 1])
+    }
   }
   return out
 }
 
-async function winnersByYear(opts: {
-  id: string; competition: string; question: (range: string) => string
-  en: Page; is: Page; isWinners: Map<number, string>
-}): Promise<Topp10List> {
-  const a = enFinals(opts.en.wikitext), b = opts.isWinners
-  const common = [...a.keys()].filter((y) => b.has(y)).sort((x, y) => x - y)
-  const years = common.slice(-10)
-  if (years.length < 10 || years[9] - years[0] !== 9) throw new Error(`heimildir eiga ekki tíu samfelld ár sameiginleg (${years.join(', ')})`)
-  // the range is what both sources cover, and the title says which years it is
-  const problems: string[] = []
-  const clubs = years.map((y) => {
-    const x = clubOf(a.get(y)!), z = clubOf(b.get(y)!)
-    if (x.id !== z.id) problems.push(`${y}: ${x.label} og ${z.label}`)
-    if (!x.country) problems.push(`${x.label} vantar land í names.ts`)
-    return x
-  })
-  mustAgree(problems, `sigurvegarar ${opts.competition}`)
-  const range = `${years[0]}-${years[9]}`
-  return finish({
-    id: opts.id, region: 'evropa',
-    title: `Sigurvegarar ${opts.competition} ${range}`,
-    question: opts.question(range),
-    sources: [opts.en.source, opts.is.source],
-    note: 'Sama félagið getur opnað fleiri en eitt ár.',
-  }, years.map((y, i) => draft([clubs[i]], false, i + 1, `Úrslitaleikurinn ${y}`, { slot: String(y), hint: `Félag frá ${clubs[i].country}` })))
-}
-
-async function uclWinners(): Promise<Topp10List> {
-  const en = await wiki('en', 'List of European Cup and UEFA Champions League finals')
-  const is = await wiki('is', 'Meistaradeild Evrópu')
-  const byYear = new Map<number, string>()
-  for (const r of W.dataRows(W.tableAfter(is.wikitext, '=== Sigurliðin'))) {
-    for (const x of W.plain(r[3] ?? '').matchAll(/\b(?:19|20)\d{2}\b/g)) {
-      const y = Number(x[0])
-      if (byYear.has(y)) throw new Error(`${y} á tvö félög í íslensku heimildinni`)
-      byYear.set(y, W.plain(r[1]))
-    }
-  }
-  return winnersByYear({
-    id: 'evropa-meistaradeild', competition: 'Meistaradeildarinnar', en, is, isWinners: byYear,
-    question: (range) => `Hvaða félag vann Meistaradeild Evrópu hvert ár ${range}?`,
-  })
-}
-
-async function uelWinners(): Promise<Topp10List> {
-  const en = await wiki('en', 'List of UEFA Cup and Europa League finals')
+async function uefaCup(): Promise<Topp10List> {
+  const en = await wiki('en', 'Template:UEFA Europa League performance by club')
   const is = await wiki('is', 'Evrópudeild UEFA')
-  const byYear = new Map<number, string>()
-  // "| 2020-21 || [[Manchester United]] - '''[[Villareal CF]]''' || 1-1 …": the winner is the
-  // team in bold, on either side; a final with neither in bold is left out
-  for (const m of is.wikitext.matchAll(/^\|\s*(\d{4})\s*[-–]\s*\d{2,4}\s*\|\|([^\n]*?)\|\|/gm)) {
-    const bold = [...m[2].matchAll(/'''(.+?)'''/g)]
-    if (bold.length === 1) byYear.set(Number(m[1]) + 1, W.plain(bold[0][1]))
+  const byYear = isUefaCupWinners(is.wikitext)
+  const first = Math.min(...byYear.keys()), lastIs = Math.max(...byYear.keys())
+  const missing = Array.from({ length: lastIs - first + 1 }, (_, i) => first + i).filter((y) => !byYear.has(y))
+  if (first !== 1972 || missing.length) throw new Error(`íslenska síðan: sigurvegara vantar ${first !== 1972 ? `frá ${first}` : missing.join(', ')}`)
+  const b: Titles = new Map()
+  for (const [year, name] of [...byYear].sort((x, y) => x[0] - y[0])) {
+    const club = clubOf(name)
+    const t = b.get(club.id) ?? { club, years: [] }
+    t.years.push(year); b.set(club.id, t)
   }
-  return winnersByYear({
-    id: 'evropa-evropudeild', competition: 'Evrópudeildarinnar', en, is, isWinners: byYear,
-    question: (range) => `Hvaða félag vann UEFA-bikarinn / Evrópudeildina hvert ár ${range}?`,
-  })
+  const { titles, last } = agreedTitles(readTitles(W.dataRows(W.tableAfter(en.wikitext, '{|')), 0, 1, 3), b, 'UEFA-bikarinn')
+  const clubs = [...titles.values()].sort((x, y) => y.years.length - x.years.length)
+  return finish({
+    id: 'evropa-evropudeildin', region: 'evropa', kind: 'club', competition: 'EVRÓPUDEILDIN',
+    title: 'UEFA-bikarinn og Evrópudeildin',
+    question: 'Nefndu 10 félög sem hafa unnið UEFA-bikarinn eða Evrópudeildina.',
+    context: `Frá 1971/72, miðað við lok tímabilsins ${season(last - 1)}.`,
+    sources: [en.source, is.source],
+  }, clubs.map((c) => answerFor('club', c.club, `${plural(c.years.length, 'titill', 'titlar')}, síðast ${c.years[c.years.length - 1]}`)))
 }
 
 async function uclScorers(): Promise<Topp10List> {
@@ -522,40 +677,66 @@ async function uclScorers(): Promise<Topp10List> {
       .filter((x) => x.name && Number.isInteger(x.goals))
   const a = topWithTies(read(W.dataRows(W.tableAfter(en.wikitext, 'All-time top scorers')), 1, 2), (x) => x.goals)
   const b = topWithTies(read(W.dataRows(W.tableAfter(is.wikitext, 'Markahæstu menn')), 1, 2), (x) => x.goals)
-  const goals = (list: typeof a) => new Map(list.map(({ item }) => [personOf(item.name).id, item.goals]))
+  const goals = (list: typeof a) => new Map(list.map((item) => [personOf(item.name).id, item.goals]))
   const x = goals(a), z = goals(b)
   const problems: string[] = []
   for (const id of new Set([...x.keys(), ...z.keys()])) {
-    if (x.get(id) !== z.get(id)) problems.push(`${id}: ${x.get(id) ?? '–'} á ensku, ${z.get(id) ?? '–'} á íslensku`)
+    if (x.get(id) !== z.get(id)) problems.push(`${id}: ${x.get(id) ?? '-'} á ensku, ${z.get(id) ?? '-'} á íslensku`)
   }
   mustAgree(problems, 'markahæstu í Meistaradeildinni')
   return finish({
-    id: 'evropa-markahaestir', region: 'evropa',
-    title: 'Markahæstir í Meistaradeildinni',
-    question: 'Hverjir hafa skorað flest mörk í Evrópukeppni meistaraliða og Meistaradeildinni?',
+    id: 'evropa-markahaestir', region: 'evropa', kind: 'player', competition: 'MEISTARADEILDIN',
+    title: 'Markahæstir frá upphafi',
+    question: 'Nefndu 10 markahæstu leikmenn Evrópukeppni meistaraliða og Meistaradeildarinnar.',
+    context: 'Mörk í aðalkeppninni frá upphafi.',
     sources: [en.source, is.source],
-    note: tiesNote(a.length),
-  }, a.map(({ item, rank }) => draft([personOf(item.name)], true, rank, plural(item.goals, 'mark', 'mörk'))))
+  }, a.map((item) => answerFor('player', personOf(item.name), plural(item.goals, 'mark', 'mörk'))))
 }
 
 // ── run ────────────────────────────────────────────────────────────────
 
+const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i)
+
 const BUILDERS: [string, () => Promise<Topp10List>][] = [
-  ['island-titlar', islandTitles],
+  ['island-meistarar', islandTitles],
+  ['island-bikarmeistarar', islandCup],
   ['island-markakongar', () => bestaScorers(2016, 2025)],
-  ['island-lokastada-2024', () => bestaTable(2024)],
-  ['island-lokastada-2025', () => bestaTable(2025)],
-  ['enska-lokastada-2009', () => premierTable(2009)],
-  ['enska-lokastada-2023', () => premierTable(2023)],
-  ['enska-lokastada-2024', () => premierTable(2024)],
-  ['enska-lokastada-2025', () => premierTable(2025)],
-  ['enska-markahaestir-2023', () => premierScorers(2023)],
-  ['enska-markahaestir-2024', () => premierScorers(2024)],
-  ['enska-markahaestir-2025', () => premierScorers(2025)],
-  ['evropa-titlar', europeTitles],
-  ['evropa-meistaradeild', uclWinners],
-  ['evropa-evropudeild', uelWinners],
+  ...range(2016, 2025).map((y) => [`island-lokastada-${y}`, () => bestaTable(y)] as [string, () => Promise<Topp10List>]),
+  ['island-lid-2026', () => clubsInSeason({
+    id: 'island-lid-2026', league: 'besta', season: 2026, page: '2026 Besta deild karla', teams: 12,
+    region: 'island', competition: 'BESTA DEILDIN', title: 'Liðin 2026',
+    question: 'Nefndu 10 af 12 liðum Bestu deildar karla 2026.', context: 'Tímabilið 2026.',
+  })],
+
+  ['enska-lokastada-2009', () => leagueTable('premier', 2009)],
+  ...range(2016, 2025).map((y) => [`enska-lokastada-${y}`, () => leagueTable('premier', y)] as [string, () => Promise<Topp10List>]),
+  ...range(2016, 2025).map((y) => [`enska-markahaestir-${y}`, () => premierScorers(y)] as [string, () => Promise<Topp10List>]),
+  ['enska-lid-2026', () => clubsInSeason({
+    id: 'enska-lid-2026', league: 'premier', season: 2026, page: '2026–27 Premier League', teams: 20,
+    region: 'enska', competition: 'ENSKA ÚRVALSDEILDIN', title: 'Liðin 2026/27',
+    question: 'Nefndu 10 af 20 liðum ensku úrvalsdeildarinnar 2026/27.', context: 'Tímabilið 2026/27.',
+  })],
+
+  ['evropa-meistarar', championsQuestion({
+    id: 'evropa-meistarar', title: 'Evrópumeistarar',
+    question: 'Nefndu 10 félög sem hafa unnið Evrópukeppni meistaraliða eða Meistaradeildina.',
+    years: (y) => y, detail: (y) => `${plural(y.length, 'titill', 'titlar')}, síðast ${y[y.length - 1]}`,
+  })],
+  ['evropa-meistaradeildin', championsQuestion({
+    id: 'evropa-meistaradeildin', title: 'Nýtt nafn. Sömu draumar.',
+    question: 'Nefndu 10 félög sem hafa unnið Meistaradeildina frá og með tímabilinu 1992/93.',
+    years: (y) => y.filter((x) => x >= NEW_ERA), detail: (y) => `${plural(y.length, 'titill', 'titlar')} frá 1993`,
+  })],
+  ['evropa-baedi-timabil', championsQuestion({
+    id: 'evropa-baedi-timabil', title: 'Meistarar tveggja tímabila',
+    question: 'Nefndu 10 félög sem hafa unnið bæði Evrópukeppni meistaraliða fyrir 1992/93 og Meistaradeildina frá 1992/93.',
+    years: (y) => y.some((x) => x < NEW_ERA) && y.some((x) => x >= NEW_ERA) ? y : [],
+    detail: (y) => `${plural(y.filter((x) => x < NEW_ERA).length, 'titill', 'titlar')} fyrir og ${y.filter((x) => x >= NEW_ERA).length} eftir`,
+  })],
+  ['evropa-evropudeildin', uefaCup],
   ['evropa-markahaestir', uclScorers],
+  ...(['laliga', 'seriea', 'bundesliga', 'ligue1'] as const).flatMap((league) => [2024, 2025].map((y) =>
+    [`${LEAGUES[league].id}-lokastada-${y}`, () => leagueTable(league, y)] as [string, () => Promise<Topp10List>])),
 ]
 
 mkdirSync(LISTS_DIR, { recursive: true })
@@ -570,10 +751,10 @@ for (const [id, build] of BUILDERS) {
   const file = join(LISTS_DIR, `${id}.json`)
   try {
     const list = await build()
-    if (list.id !== id) throw new Error(`listinn heitir ${list.id}`)
+    if (list.id !== id) throw new Error(`spurningin heitir ${list.id}`)
     writeFileSync(file, JSON.stringify(list, null, 2) + '\n')
     shipped.push(id)
-    console.log(`✓ ${id} - ${list.answers.length} svör`)
+    console.log(`✓ ${id} - ${list.answers.length} gild svör`)
   } catch (err) {
     const reason = (err as Error).message
     if (err instanceof FetchError) {
@@ -589,7 +770,7 @@ for (const [id, build] of BUILDERS) {
 const files = readdirSync(LISTS_DIR).filter((f) => f.endsWith('.json')).sort()
 const ident = (f: string) => f.slice(0, -5).replace(/[^a-z0-9]+/gi, '_')
 writeFileSync(join(LISTS_DIR, 'index.ts'), [
-  '// Written by scripts/topp10/build.mts: only lists whose two sources agreed.',
+  '// Written by scripts/topp10/build.mts: only questions whose two sources agreed.',
   "import type { Topp10List } from '../types'",
   ...files.map((f) => `import ${ident(f)} from './${f}'`),
   '',
@@ -597,4 +778,4 @@ writeFileSync(join(LISTS_DIR, 'index.ts'), [
   '',
 ].join('\n'))
 writeFileSync(REVIEW_FILE, JSON.stringify({ builtAt: today, shipped, review }, null, 2) + '\n')
-console.log(`\n${shipped.length} listar staðfestir, ${review.length} til yfirferðar → ${REVIEW_FILE}`)
+console.log(`\n${shipped.length} spurningar staðfestar, ${review.length} til yfirferðar → ${REVIEW_FILE}`)

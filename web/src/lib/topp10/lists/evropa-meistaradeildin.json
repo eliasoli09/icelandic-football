@@ -1,0 +1,168 @@
+{
+  "id": "evropa-meistaradeildin",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "MEISTARADEILDIN",
+  "title": "Nýtt nafn. Sömu draumar.",
+  "question": "Nefndu 10 félög sem hafa unnið Meistaradeildina frá og með tímabilinu 1992/93.",
+  "context": "Miðað við lok tímabilsins 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:UEFA Champions League performance by club",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371923135"
+    },
+    {
+      "name": "is.wikipedia.org · Meistaradeild Evrópu",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1964887"
+    }
+  ],
+  "answers": [
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "9 titlar frá 1993",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "4 titlar frá 1993",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "milan",
+      "label": "AC Milan",
+      "detail": "3 titlar frá 1993",
+      "accept": [
+        "ac milan",
+        "milan"
+      ]
+    },
+    {
+      "id": "bayern",
+      "label": "Bayern München",
+      "detail": "3 titlar frá 1993",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "fc bayern munchen",
+        "bayern",
+        "fc bayern"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "2 titlar frá 1993",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "2 titlar frá 1993",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "2 titlar frá 1993",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "psg",
+      "label": "Paris Saint-Germain",
+      "detail": "2 titlar frá 1993",
+      "accept": [
+        "paris saint germain",
+        "paris sg",
+        "psg"
+      ]
+    },
+    {
+      "id": "ajax",
+      "label": "Ajax",
+      "detail": "1 titill frá 1993",
+      "accept": [
+        "ajax",
+        "ajax amsterdam",
+        "ajax fc"
+      ]
+    },
+    {
+      "id": "inter",
+      "label": "Inter",
+      "detail": "1 titill frá 1993",
+      "accept": [
+        "inter",
+        "inter milan",
+        "internazionale",
+        "inter milano"
+      ]
+    },
+    {
+      "id": "juventus",
+      "label": "Juventus",
+      "detail": "1 titill frá 1993",
+      "accept": [
+        "juventus"
+      ]
+    },
+    {
+      "id": "porto",
+      "label": "Porto",
+      "detail": "1 titill frá 1993",
+      "accept": [
+        "porto",
+        "fc porto"
+      ]
+    },
+    {
+      "id": "dortmund",
+      "label": "Borussia Dortmund",
+      "detail": "1 titill frá 1993",
+      "accept": [
+        "borussia dortmund",
+        "dortmund",
+        "bvb"
+      ]
+    },
+    {
+      "id": "marseille",
+      "label": "Marseille",
+      "detail": "1 titill frá 1993",
+      "accept": [
+        "marseille",
+        "olympique de marseille",
+        "om"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "1 titill frá 1993",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

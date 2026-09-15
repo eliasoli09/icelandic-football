@@ -1,0 +1,120 @@
+{
+  "id": "thyskaland-lokastada-2025",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "BUNDESLIGA",
+  "title": "Topp 10 2025/26",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum þýsku deildarinnar 2025/26.",
+  "context": "Lokastaða tímabilsins 2025/26. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2025-26 Bundesliga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1356116444"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "bayern",
+      "label": "Bayern München",
+      "detail": "1. sæti, 89 stig",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "fc bayern munchen",
+        "bayern",
+        "fc bayern"
+      ]
+    },
+    {
+      "id": "dortmund",
+      "label": "Borussia Dortmund",
+      "detail": "2. sæti, 73 stig",
+      "accept": [
+        "borussia dortmund",
+        "dortmund",
+        "bvb"
+      ]
+    },
+    {
+      "id": "leipzig",
+      "label": "RB Leipzig",
+      "detail": "3. sæti, 65 stig",
+      "accept": [
+        "rb leipzig",
+        "leipzig"
+      ]
+    },
+    {
+      "id": "stuttgart",
+      "label": "VfB Stuttgart",
+      "detail": "4. sæti, 62 stig",
+      "accept": [
+        "vfb stuttgart",
+        "stuttgart"
+      ]
+    },
+    {
+      "id": "hoffenheim",
+      "label": "Hoffenheim",
+      "detail": "5. sæti, 61 stig",
+      "accept": [
+        "hoffenheim",
+        "tsg hoffenheim"
+      ]
+    },
+    {
+      "id": "leverkusen",
+      "label": "Bayer Leverkusen",
+      "detail": "6. sæti, 59 stig",
+      "accept": [
+        "bayer leverkusen",
+        "leverkusen",
+        "bayer 04 leverkusen"
+      ]
+    },
+    {
+      "id": "freiburg",
+      "label": "SC Freiburg",
+      "detail": "7. sæti, 47 stig",
+      "accept": [
+        "sc freiburg",
+        "freiburg"
+      ]
+    },
+    {
+      "id": "frankfurt",
+      "label": "Eintracht Frankfurt",
+      "detail": "8. sæti, 44 stig",
+      "accept": [
+        "eintracht frankfurt",
+        "frankfurt",
+        "ein frankfurt",
+        "eintracht"
+      ]
+    },
+    {
+      "id": "augsburg",
+      "label": "FC Augsburg",
+      "detail": "9. sæti, 43 stig",
+      "accept": [
+        "fc augsburg",
+        "augsburg"
+      ]
+    },
+    {
+      "id": "mainz",
+      "label": "Mainz 05",
+      "detail": "10. sæti, 40 stig",
+      "accept": [
+        "mainz 05",
+        "mainz",
+        "1 fsv mainz 05"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

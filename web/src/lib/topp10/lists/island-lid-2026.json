@@ -1,0 +1,128 @@
+{
+  "id": "island-lid-2026",
+  "region": "island",
+  "kind": "club",
+  "competition": "BESTA DEILDIN",
+  "title": "Liðin 2026",
+  "question": "Nefndu 10 af 12 liðum Bestu deildar karla 2026.",
+  "context": "Tímabilið 2026.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2026 Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375007537"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "answers": [
+    {
+      "id": "breidablik",
+      "label": "Breiðablik",
+      "detail": "",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ]
+    },
+    {
+      "id": "fh",
+      "label": "FH",
+      "detail": "",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ]
+    },
+    {
+      "id": "fram",
+      "label": "Fram",
+      "detail": "",
+      "accept": [
+        "fram"
+      ]
+    },
+    {
+      "id": "ia",
+      "label": "ÍA",
+      "detail": "",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ]
+    },
+    {
+      "id": "ibv",
+      "label": "ÍBV",
+      "detail": "",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "KA",
+      "detail": "",
+      "accept": [
+        "ka"
+      ]
+    },
+    {
+      "id": "keflavik",
+      "label": "Keflavík",
+      "detail": "",
+      "accept": [
+        "keflavik"
+      ]
+    },
+    {
+      "id": "kr",
+      "label": "KR",
+      "detail": "",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    },
+    {
+      "id": "stjarnan",
+      "label": "Stjarnan",
+      "detail": "",
+      "accept": [
+        "stjarnan"
+      ]
+    },
+    {
+      "id": "valur",
+      "label": "Valur",
+      "detail": "",
+      "accept": [
+        "valur"
+      ]
+    },
+    {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    },
+    {
+      "id": "thor",
+      "label": "Þór",
+      "detail": "",
+      "accept": [
+        "thor",
+        "thor akureyri",
+        "thor ak"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

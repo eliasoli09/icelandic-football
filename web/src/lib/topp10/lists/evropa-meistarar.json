@@ -1,0 +1,257 @@
+{
+  "id": "evropa-meistarar",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "MEISTARADEILDIN",
+  "title": "Evrópumeistarar",
+  "question": "Nefndu 10 félög sem hafa unnið Evrópukeppni meistaraliða eða Meistaradeildina.",
+  "context": "Miðað við lok tímabilsins 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:UEFA Champions League performance by club",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371923135"
+    },
+    {
+      "name": "is.wikipedia.org · Meistaradeild Evrópu",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1964887"
+    }
+  ],
+  "answers": [
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "15 titlar, síðast 2024",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "milan",
+      "label": "AC Milan",
+      "detail": "7 titlar, síðast 2007",
+      "accept": [
+        "ac milan",
+        "milan"
+      ]
+    },
+    {
+      "id": "bayern",
+      "label": "Bayern München",
+      "detail": "6 titlar, síðast 2020",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "fc bayern munchen",
+        "bayern",
+        "fc bayern"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "6 titlar, síðast 2019",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "5 titlar, síðast 2015",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "ajax",
+      "label": "Ajax",
+      "detail": "4 titlar, síðast 1995",
+      "accept": [
+        "ajax",
+        "ajax amsterdam",
+        "ajax fc"
+      ]
+    },
+    {
+      "id": "inter",
+      "label": "Inter",
+      "detail": "3 titlar, síðast 2010",
+      "accept": [
+        "inter",
+        "inter milan",
+        "internazionale",
+        "inter milano"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "3 titlar, síðast 2008",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "juventus",
+      "label": "Juventus",
+      "detail": "2 titlar, síðast 1996",
+      "accept": [
+        "juventus"
+      ]
+    },
+    {
+      "id": "benfica",
+      "label": "Benfica",
+      "detail": "2 titlar, síðast 1962",
+      "accept": [
+        "benfica"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "2 titlar, síðast 2021",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "psg",
+      "label": "Paris Saint-Germain",
+      "detail": "2 titlar, síðast 2026",
+      "accept": [
+        "paris saint germain",
+        "paris sg",
+        "psg"
+      ]
+    },
+    {
+      "id": "forest",
+      "label": "Nottingham Forest",
+      "detail": "2 titlar, síðast 1980",
+      "accept": [
+        "nottingham forest",
+        "nott m forest",
+        "forest"
+      ]
+    },
+    {
+      "id": "porto",
+      "label": "Porto",
+      "detail": "2 titlar, síðast 2004",
+      "accept": [
+        "porto",
+        "fc porto"
+      ]
+    },
+    {
+      "id": "dortmund",
+      "label": "Borussia Dortmund",
+      "detail": "1 titill, síðast 1997",
+      "accept": [
+        "borussia dortmund",
+        "dortmund",
+        "bvb"
+      ]
+    },
+    {
+      "id": "celtic",
+      "label": "Celtic",
+      "detail": "1 titill, síðast 1967",
+      "accept": [
+        "celtic",
+        "glasgow celtic",
+        "celtic fc"
+      ]
+    },
+    {
+      "id": "hamburg",
+      "label": "Hamburger SV",
+      "detail": "1 titill, síðast 1983",
+      "accept": [
+        "hamburger sv",
+        "hamburg",
+        "hsv"
+      ]
+    },
+    {
+      "id": "steaua",
+      "label": "Steaua Búkarest",
+      "detail": "1 titill, síðast 1986",
+      "accept": [
+        "steaua bukarest",
+        "fcsb",
+        "steaua bucuresti",
+        "steaua bucharest",
+        "steaua"
+      ]
+    },
+    {
+      "id": "marseille",
+      "label": "Marseille",
+      "detail": "1 titill, síðast 1993",
+      "accept": [
+        "marseille",
+        "olympique de marseille",
+        "om"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "1 titill, síðast 2023",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "feyenoord",
+      "label": "Feyenoord",
+      "detail": "1 titill, síðast 1970",
+      "accept": [
+        "feyenoord",
+        "feyenoord rotterdam"
+      ]
+    },
+    {
+      "id": "astonvilla",
+      "label": "Aston Villa",
+      "detail": "1 titill, síðast 1982",
+      "accept": [
+        "aston villa",
+        "villa",
+        "aston villa fc"
+      ]
+    },
+    {
+      "id": "psv",
+      "label": "PSV Eindhoven",
+      "detail": "1 titill, síðast 1988",
+      "accept": [
+        "psv eindhoven",
+        "psv"
+      ]
+    },
+    {
+      "id": "redstar",
+      "label": "Rauða stjarnan",
+      "detail": "1 titill, síðast 1991",
+      "accept": [
+        "rauda stjarnan",
+        "red star belgrade",
+        "rauda stjarnan belgrad",
+        "crvena zvezda"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

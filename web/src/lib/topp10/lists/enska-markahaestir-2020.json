@@ -1,0 +1,116 @@
+{
+  "id": "enska-markahaestir-2020",
+  "region": "enska",
+  "kind": "player",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Markahæstir 2020/21",
+  "question": "Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar 2020/21.",
+  "context": "Mörk í deildinni 2020/21.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2020-21 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371793505"
+    },
+    {
+      "name": "Fantasy Premier League 2020-21 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2020-21"
+    }
+  ],
+  "answers": [
+    {
+      "id": "kane",
+      "label": "Harry Kane",
+      "detail": "23 mörk, Tottenham Hotspur",
+      "accept": [
+        "harry kane",
+        "kane"
+      ]
+    },
+    {
+      "id": "salah",
+      "label": "Mohamed Salah",
+      "detail": "22 mörk, Liverpool",
+      "accept": [
+        "mohamed salah",
+        "mo salah",
+        "salah"
+      ]
+    },
+    {
+      "id": "bruno-fernandes",
+      "label": "Bruno Fernandes",
+      "detail": "18 mörk, Manchester United",
+      "accept": [
+        "bruno fernandes",
+        "bruno miguel borges fernandes",
+        "fernandes"
+      ]
+    },
+    {
+      "id": "bamford",
+      "label": "Patrick Bamford",
+      "detail": "17 mörk, Leeds United",
+      "accept": [
+        "patrick bamford",
+        "bamford"
+      ]
+    },
+    {
+      "id": "son",
+      "label": "Son Heung-min",
+      "detail": "17 mörk, Tottenham Hotspur",
+      "accept": [
+        "son heung min",
+        "heung min son",
+        "son",
+        "heung min"
+      ]
+    },
+    {
+      "id": "calvert-lewin",
+      "label": "Dominic Calvert-Lewin",
+      "detail": "16 mörk, Everton",
+      "accept": [
+        "dominic calvert lewin",
+        "calvert lewin"
+      ]
+    },
+    {
+      "id": "vardy",
+      "label": "Jamie Vardy",
+      "detail": "15 mörk, Leicester City",
+      "accept": [
+        "jamie vardy",
+        "vardy"
+      ]
+    },
+    {
+      "id": "watkins",
+      "label": "Ollie Watkins",
+      "detail": "14 mörk, Aston Villa",
+      "accept": [
+        "ollie watkins",
+        "watkins"
+      ]
+    },
+    {
+      "id": "gundogan",
+      "label": "İlkay Gündoğan",
+      "detail": "13 mörk, Manchester City",
+      "accept": [
+        "ilkay gundogan",
+        "gundogan"
+      ]
+    },
+    {
+      "id": "lacazette",
+      "label": "Alexandre Lacazette",
+      "detail": "13 mörk, Arsenal",
+      "accept": [
+        "alexandre lacazette",
+        "lacazette"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

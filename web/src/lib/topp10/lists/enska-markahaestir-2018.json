@@ -1,0 +1,161 @@
+{
+  "id": "enska-markahaestir-2018",
+  "region": "enska",
+  "kind": "player",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Markahæstir 2018/19",
+  "question": "Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar 2018/19.",
+  "context": "Mörk í deildinni 2018/19. Allir sem voru jafnir í 10. sæti gilda.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2018-19 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374062989"
+    },
+    {
+      "name": "Fantasy Premier League 2018-19 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2018-19"
+    }
+  ],
+  "answers": [
+    {
+      "id": "aubameyang",
+      "label": "Pierre-Emerick Aubameyang",
+      "detail": "22 mörk, Arsenal",
+      "accept": [
+        "pierre emerick aubameyang",
+        "auba",
+        "aubameyang"
+      ]
+    },
+    {
+      "id": "mane",
+      "label": "Sadio Mané",
+      "detail": "22 mörk, Liverpool",
+      "accept": [
+        "sadio mane",
+        "mane"
+      ]
+    },
+    {
+      "id": "salah",
+      "label": "Mohamed Salah",
+      "detail": "22 mörk, Liverpool",
+      "accept": [
+        "mohamed salah",
+        "mo salah",
+        "salah"
+      ]
+    },
+    {
+      "id": "aguero",
+      "label": "Sergio Agüero",
+      "detail": "21 mark, Manchester City",
+      "accept": [
+        "sergio aguero",
+        "aguero"
+      ]
+    },
+    {
+      "id": "vardy",
+      "label": "Jamie Vardy",
+      "detail": "18 mörk, Leicester City",
+      "accept": [
+        "jamie vardy",
+        "vardy"
+      ]
+    },
+    {
+      "id": "kane",
+      "label": "Harry Kane",
+      "detail": "17 mörk, Tottenham Hotspur",
+      "accept": [
+        "harry kane",
+        "kane"
+      ]
+    },
+    {
+      "id": "sterling",
+      "label": "Raheem Sterling",
+      "detail": "17 mörk, Manchester City",
+      "accept": [
+        "raheem sterling",
+        "sterling"
+      ]
+    },
+    {
+      "id": "hazard",
+      "label": "Eden Hazard",
+      "detail": "16 mörk, Chelsea",
+      "accept": [
+        "eden hazard",
+        "hazard"
+      ]
+    },
+    {
+      "id": "callum-wilson",
+      "label": "Callum Wilson",
+      "detail": "14 mörk, Bournemouth",
+      "accept": [
+        "callum wilson",
+        "wilson"
+      ]
+    },
+    {
+      "id": "jimenez",
+      "label": "Raúl Jiménez",
+      "detail": "13 mörk, Wolverhampton Wanderers",
+      "accept": [
+        "raul jimenez",
+        "jimenez"
+      ]
+    },
+    {
+      "id": "lacazette",
+      "label": "Alexandre Lacazette",
+      "detail": "13 mörk, Arsenal",
+      "accept": [
+        "alexandre lacazette",
+        "lacazette"
+      ]
+    },
+    {
+      "id": "murray",
+      "label": "Glenn Murray",
+      "detail": "13 mörk, Brighton & Hove Albion",
+      "accept": [
+        "glenn murray",
+        "murray"
+      ]
+    },
+    {
+      "id": "pogba",
+      "label": "Paul Pogba",
+      "detail": "13 mörk, Manchester United",
+      "accept": [
+        "paul pogba",
+        "pogba"
+      ]
+    },
+    {
+      "id": "richarlison",
+      "label": "Richarlison",
+      "detail": "13 mörk, Everton",
+      "accept": [
+        "richarlison",
+        "richarlison de andrade"
+      ]
+    },
+    {
+      "id": "gylfi",
+      "label": "Gylfi Sigurðsson",
+      "detail": "13 mörk, Everton",
+      "accept": [
+        "gylfi sigurdsson",
+        "gylfi thor sigurdsson",
+        "gylfi",
+        "sigurdsson"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

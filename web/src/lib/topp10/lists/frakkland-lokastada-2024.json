@@ -1,0 +1,114 @@
+{
+  "id": "frakkland-lokastada-2024",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LIGUE 1",
+  "title": "Topp 10 2024/25",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum frönsku deildarinnar 2024/25.",
+  "context": "Lokastaða tímabilsins 2024/25. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2024-25 Ligue 1 table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1355617785"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "answers": [
+    {
+      "id": "psg",
+      "label": "Paris Saint-Germain",
+      "detail": "1. sæti, 84 stig",
+      "accept": [
+        "paris saint germain",
+        "paris sg",
+        "psg"
+      ]
+    },
+    {
+      "id": "marseille",
+      "label": "Marseille",
+      "detail": "2. sæti, 65 stig",
+      "accept": [
+        "marseille",
+        "olympique de marseille",
+        "om"
+      ]
+    },
+    {
+      "id": "monaco",
+      "label": "Monaco",
+      "detail": "3. sæti, 61 stig",
+      "accept": [
+        "monaco",
+        "as monaco"
+      ]
+    },
+    {
+      "id": "nice",
+      "label": "Nice",
+      "detail": "4. sæti, 60 stig",
+      "accept": [
+        "nice",
+        "ogc nice"
+      ]
+    },
+    {
+      "id": "lille",
+      "label": "Lille",
+      "detail": "5. sæti, 60 stig",
+      "accept": [
+        "lille",
+        "losc lille"
+      ]
+    },
+    {
+      "id": "lyon",
+      "label": "Lyon",
+      "detail": "6. sæti, 57 stig",
+      "accept": [
+        "lyon",
+        "olympique lyonnais"
+      ]
+    },
+    {
+      "id": "strasbourg",
+      "label": "Strasbourg",
+      "detail": "7. sæti, 57 stig",
+      "accept": [
+        "strasbourg",
+        "rc strasbourg alsace"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Lens",
+      "detail": "8. sæti, 52 stig",
+      "accept": [
+        "lens",
+        "rc lens"
+      ]
+    },
+    {
+      "id": "brest",
+      "label": "Brest",
+      "detail": "9. sæti, 50 stig",
+      "accept": [
+        "brest",
+        "stade brestois 29"
+      ]
+    },
+    {
+      "id": "toulouse",
+      "label": "Toulouse",
+      "detail": "10. sæti, 42 stig",
+      "accept": [
+        "toulouse",
+        "toulouse fc"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}

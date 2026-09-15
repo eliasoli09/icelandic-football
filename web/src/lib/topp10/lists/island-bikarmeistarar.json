@@ -1,0 +1,144 @@
+{
+  "id": "island-bikarmeistarar",
+  "region": "island",
+  "kind": "club",
+  "competition": "BIKARKEPPNIN",
+  "title": "Bikarmeistarar",
+  "question": "Nefndu 10 félög sem hafa orðið bikarmeistarar karla í fótbolta.",
+  "context": "Til og með bikarúrslitunum 2025.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Icelandic Men's Football Cup",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371395321"
+    },
+    {
+      "name": "is.wikipedia.org · Bikarkeppni karla í knattspyrnu",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1978925"
+    }
+  ],
+  "answers": [
+    {
+      "id": "kr",
+      "label": "KR",
+      "detail": "14 titlar, síðast 2014",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    },
+    {
+      "id": "valur",
+      "label": "Valur",
+      "detail": "11 titlar, síðast 2016",
+      "accept": [
+        "valur"
+      ]
+    },
+    {
+      "id": "ia",
+      "label": "ÍA",
+      "detail": "9 titlar, síðast 2003",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ]
+    },
+    {
+      "id": "fram",
+      "label": "Fram",
+      "detail": "8 titlar, síðast 2013",
+      "accept": [
+        "fram"
+      ]
+    },
+    {
+      "id": "ibv",
+      "label": "ÍBV",
+      "detail": "5 titlar, síðast 2017",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ]
+    },
+    {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "5 titlar, síðast 2023",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    },
+    {
+      "id": "keflavik",
+      "label": "Keflavík",
+      "detail": "4 titlar, síðast 2006",
+      "accept": [
+        "keflavik"
+      ]
+    },
+    {
+      "id": "fylkir",
+      "label": "Fylkir",
+      "detail": "2 titlar, síðast 2002",
+      "accept": [
+        "fylkir"
+      ]
+    },
+    {
+      "id": "fh",
+      "label": "FH",
+      "detail": "2 titlar, síðast 2010",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ]
+    },
+    {
+      "id": "iba",
+      "label": "ÍBA",
+      "detail": "1 titill, síðast 1969",
+      "accept": [
+        "iba",
+        "ib akureyri",
+        "ithrottabandalag akureyrar"
+      ]
+    },
+    {
+      "id": "breidablik",
+      "label": "Breiðablik",
+      "detail": "1 titill, síðast 2009",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ]
+    },
+    {
+      "id": "stjarnan",
+      "label": "Stjarnan",
+      "detail": "1 titill, síðast 2018",
+      "accept": [
+        "stjarnan"
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "KA",
+      "detail": "1 titill, síðast 2024",
+      "accept": [
+        "ka"
+      ]
+    },
+    {
+      "id": "vestri",
+      "label": "Vestri",
+      "detail": "1 titill, síðast 2025",
+      "accept": [
+        "vestri"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-15"
+}
