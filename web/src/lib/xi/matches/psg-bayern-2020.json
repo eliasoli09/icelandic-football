@@ -1,0 +1,198 @@
+{
+  "id": "psg-bayern-2020",
+  "region": "evropa",
+  "level": "easy",
+  "competition": "Meistaradeild Evrópu 2019/20",
+  "stage": "Úrslitaleikur",
+  "date": "2020-08-23",
+  "blurb": "Úrslitaleikurinn í Lissabon, leikinn án áhorfenda.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Paris Saint-Germain",
+    "color": "#000040",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Keylor Navas",
+        "word": "NAVAS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Thilo Kehrer",
+        "word": "KEHRER",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 2,
+        "name": "Thiago Silva",
+        "word": "SILVA",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 3,
+        "name": "Presnel Kimpembe",
+        "word": "KIMPEMBE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 14,
+        "name": "Juan Bernat",
+        "word": "BERNAT",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Ander Herrera",
+        "word": "HERRERA",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Marquinhos",
+        "word": "MARQUINHOS",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Leandro Paredes",
+        "word": "PAREDES",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Ángel Di María",
+        "word": "DIMARIA",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Kylian Mbappé",
+        "word": "MBAPPE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Neymar",
+        "word": "NEYMAR",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Bayern München",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Manuel Neuer",
+        "word": "NEUER",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 32,
+        "name": "Joshua Kimmich",
+        "word": "KIMMICH",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Jérôme Boateng",
+        "word": "BOATENG",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 27,
+        "name": "David Alaba",
+        "word": "ALABA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Alphonso Davies",
+        "word": "DAVIES",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Thiago Alcântara",
+        "word": "THIAGO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Leon Goretzka",
+        "word": "GORETZKA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Serge Gnabry",
+        "word": "GNABRY",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 25,
+        "name": "Thomas Müller",
+        "word": "MULLER",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 29,
+        "name": "Kingsley Coman",
+        "word": "COMAN",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Robert Lewandowski",
+        "word": "LEWANDOWSKI",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2020 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1359675478"
+    },
+    {
+      "name": "transfermarkt.com · Paris Saint-Germain - Bayern Munich",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3421017"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

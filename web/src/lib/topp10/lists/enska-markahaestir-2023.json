@@ -16,6 +16,7 @@
       "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2023-24"
     }
   ],
+  "level": "medium",
   "answers": [
     {
       "id": "haaland",
@@ -121,5 +122,5 @@
       ]
     }
   ],
-  "verifiedAt": "2026-09-15"
+  "verifiedAt": "2026-09-16"
 }

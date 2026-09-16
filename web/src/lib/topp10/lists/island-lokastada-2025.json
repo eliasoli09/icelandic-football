@@ -16,6 +16,7 @@
       "url": "https://islensk-fotbolti.vercel.app/tafla"
     }
   ],
+  "level": "medium",
   "answers": [
     {
       "id": "vikingur",
@@ -106,5 +107,5 @@
       ]
     }
   ],
-  "verifiedAt": "2026-09-15"
+  "verifiedAt": "2026-09-16"
 }

@@ -1,0 +1,115 @@
+{
+  "id": "enska-lokastada-2015",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2015/16",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2015/16.",
+  "context": "Lokastaða tímabilsins 2015/16. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2015-16 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373032674"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "leicester",
+      "label": "Leicester City",
+      "detail": "1. sæti, 81 stig",
+      "accept": [
+        "leicester city",
+        "leicester"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "2. sæti, 71 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "3. sæti, 70 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "4. sæti, 66 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "5. sæti, 66 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "southampton",
+      "label": "Southampton",
+      "detail": "6. sæti, 63 stig",
+      "accept": [
+        "southampton"
+      ]
+    },
+    {
+      "id": "westham",
+      "label": "West Ham United",
+      "detail": "7. sæti, 62 stig",
+      "accept": [
+        "west ham united",
+        "west ham"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "8. sæti, 60 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "stoke",
+      "label": "Stoke City",
+      "detail": "9. sæti, 51 stig",
+      "accept": [
+        "stoke city",
+        "stoke"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "10. sæti, 50 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

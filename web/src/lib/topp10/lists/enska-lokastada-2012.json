@@ -1,0 +1,116 @@
+{
+  "id": "enska-lokastada-2012",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2012/13",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2012/13.",
+  "context": "Lokastaða tímabilsins 2012/13. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2012-13 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372803510"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "1. sæti, 89 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "2. sæti, 78 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "3. sæti, 75 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "4. sæti, 73 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "5. sæti, 72 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "6. sæti, 63 stig",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "7. sæti, 61 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "westbrom",
+      "label": "West Bromwich Albion",
+      "detail": "8. sæti, 49 stig",
+      "accept": [
+        "west bromwich albion",
+        "west brom",
+        "wba"
+      ]
+    },
+    {
+      "id": "swansea",
+      "label": "Swansea City",
+      "detail": "9. sæti, 46 stig",
+      "accept": [
+        "swansea city",
+        "swansea"
+      ]
+    },
+    {
+      "id": "westham",
+      "label": "West Ham United",
+      "detail": "10. sæti, 46 stig",
+      "accept": [
+        "west ham united",
+        "west ham"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

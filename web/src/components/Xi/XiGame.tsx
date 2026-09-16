@@ -4,7 +4,8 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { ChevronLeft, ChevronRight, Flag, Share2, X } from 'lucide-react'
 import { MATCHES } from '@/lib/xi/matches'
 import { dayNumber } from '@/lib/topp10/daily'
-import { dailyMatch, giveUp, guessPlayer, guessResult, LAUNCH_DAY, MAX_TRIES, newState, puzzleNumber, restore, resultPoints, shareText, slot, solvedCount, storageKey, teamOver, type XiState } from '@/lib/xi/game'
+import { dailyMatch, giveUp, guessPlayer, guessResult, LAUNCH_DAY, LEVEL_KEY, newState, puzzleNumber, restore, resultPoints, shareText, showsFirstLetter, slot, solvedCount, storageKey, teamOver, triesFor, type XiState } from '@/lib/xi/game'
+import { LEVELS, isLevel, type Level } from '@/lib/level'
 import { rows } from '@/lib/xi/layout'
 import { ICELANDIC_LETTERS, letters, markGuess, type Mark } from '@/lib/xi/word'
 import type { Side, XiMatch, XiPlayer } from '@/lib/xi/types'
@@ -28,7 +29,8 @@ export function XiGame() {
   const [today, setToday] = useState(LAUNCH_DAY)
   const [viewDay, setViewDay] = useState(LAUNCH_DAY)
   const [chosen, setChosen] = useState<string | null>(null)
-  const match = useMemo(() => (chosen && MATCHES.find((m) => m.id === chosen)) || dailyMatch(MATCHES, viewDay), [chosen, viewDay])
+  const [level, setLevel] = useState<Level>('medium')
+  const match = useMemo(() => (chosen && MATCHES.find((m) => m.id === chosen)) || dailyMatch(MATCHES, viewDay, level), [chosen, viewDay, level])
   const [state, setState] = useState<XiState>(newState)
   const [side, setSide] = useState<Side>('home')
   const [open, setOpen] = useState<number | null>(null)
@@ -37,6 +39,7 @@ export function XiGame() {
 
   useEffect(() => {
     const d = dayNumber(new Date())
+    try { const saved = localStorage.getItem(LEVEL_KEY); if (isLevel(saved)) setLevel(saved) } catch { /* default level */ }
     setToday(d); setViewDay(d); setReady(true)
   }, [])
   useEffect(() => {
@@ -58,6 +61,14 @@ export function XiGame() {
 
   return (
     <div className={styles.shell}>
+      <div role="group" aria-label="Erfiðleikastig" className={styles.levels}>
+        {LEVELS.map((l) => (
+          <button key={l.id} className={styles.level} aria-pressed={!chosen && level === l.id} disabled={!ready}
+            onClick={() => { setLevel(l.id); setChosen(null); try { localStorage.setItem(LEVEL_KEY, l.id) } catch { /* not saved */ } }}>
+            {l.label}
+          </button>
+        ))}
+      </div>
       <p className={styles.eyebrow}>{match.competition} · {match.stage}</p>
       <div className={styles.head}>
         <TeamBadge name={match.home.name} color={match.home.color} />
@@ -84,7 +95,7 @@ export function XiGame() {
         {rows(team.players).map((row, i) => (
           <div key={i} className={styles.row}>
             {row.map((p) => (
-              <PlayerSpot key={p.number} player={p} color={team.color} ink={team.ink}
+              <PlayerSpot key={p.number} player={p} color={team.color} ink={team.ink} firstLetter={showsFirstLetter(match)}
                 slotState={slot(state, side, p.number)} revealed={state.gaveUp[side]}
                 onOpen={() => setOpen(p.number)} />
             ))}
@@ -108,7 +119,7 @@ export function XiGame() {
           onClick={() => { if (chosen) setChosen(null); else setViewDay(viewDay - 1) }}>
           <ChevronLeft size={16} style={{ display: 'inline' }} /> Fyrri
         </button>
-        <span className={styles.number}>{chosen ? 'Valinn leikur' : ready ? `#${puzzleNumber(viewDay)}` : ''}</span>
+        <span className={styles.number}>{chosen ? `Valinn leikur · ${LEVELS.find((l) => l.id === match.level)!.label}` : ready ? `#${puzzleNumber(viewDay)} · ${LEVELS.find((l) => l.id === level)!.label}` : ''}</span>
         <button className={styles.ghost} disabled={!ready || chosen !== null || viewDay >= today} aria-label="Næsti leikur" onClick={() => setViewDay(viewDay + 1)}>
           Næsti <ChevronRight size={16} style={{ display: 'inline' }} />
         </button>
@@ -118,7 +129,7 @@ export function XiGame() {
         {(['island', 'enska', 'evropa'] as const).map((r) => (
           <optgroup key={r} label={REGION_LABEL[r]}>
             {MATCHES.filter((m) => m.region === r).sort((a, b) => a.date.localeCompare(b.date)).map((m) => (
-              <option key={m.id} value={m.id}>{m.home.name} - {m.away.name}, {m.competition}</option>
+              <option key={m.id} value={m.id}>{m.home.name} - {m.away.name}, {m.competition} ({LEVELS.find((l) => l.id === m.level)!.label})</option>
             ))}
           </optgroup>
         ))}
@@ -185,8 +196,8 @@ function ResultGuess({ match, state, onGuess }: { match: XiMatch; state: XiState
   )
 }
 
-function PlayerSpot({ player, color, ink, slotState, revealed, onOpen }: {
-  player: XiPlayer; color: string; ink: string; slotState: { guesses: string[]; done: 'solved' | 'failed' | null }; revealed: boolean; onOpen: () => void
+function PlayerSpot({ player, color, ink, firstLetter, slotState, revealed, onOpen }: {
+  player: XiPlayer; color: string; ink: string; firstLetter: boolean; slotState: { guesses: string[]; done: 'solved' | 'failed' | null }; revealed: boolean; onOpen: () => void
 }) {
   const shown = slotState.done !== null || revealed
   const status = slotState.done === 'solved' ? styles.solved : slotState.done === 'failed' ? styles.failed : revealed ? styles.revealed : ''
@@ -200,7 +211,7 @@ function PlayerSpot({ player, color, ink, slotState, revealed, onOpen }: {
         {player.goals ? <span className={styles.ball} aria-label={`${player.goals} mörk`}>{'⚽'.repeat(Math.min(player.goals, 3))}</span> : null}
       </span>
       <span className={styles.label}>
-        <span className={styles.blank}>{shown ? player.word : '.'.repeat(player.word.length)}</span>
+        <span className={styles.blank}>{shown ? player.word : firstLetter ? player.word[0] + '.'.repeat(player.word.length - 1) : '.'.repeat(player.word.length)}</span>
         <span className={styles.tries}>{slotState.guesses.length}</span>
       </span>
     </button>
@@ -271,7 +282,7 @@ function WordleDialog({ match, side, player, state, onGuess, onClose }: {
           <button className={styles.ghost} onClick={onClose} aria-label="Loka"><X size={18} /></button>
         </div>
         <div className={styles.grid} style={{ ['--tile' as string]: tile }}>
-          {Array.from({ length: MAX_TRIES }, (_, r) => {
+          {Array.from({ length: triesFor(match) }, (_, r) => {
             const guess = current.guesses[r]
             const marks = guess ? markGuess(guess, player.word) : null
             const live = !guess && r === current.guesses.length && !finished
@@ -287,7 +298,7 @@ function WordleDialog({ match, side, player, state, onGuess, onClose }: {
           })}
         </div>
         <p className={styles.message} aria-live="polite">
-          {current.done === 'solved' ? `Rétt! ${player.name}` : finished ? `Þetta var ${player.name}` : message}
+          {current.done === 'solved' ? `Rétt! ${player.name}` : finished ? `Þetta var ${player.name}` : message || (showsFirstLetter(match) ? `Byrjar á ${player.word[0]}` : '')}
         </p>
         {!finished && (
           <div className={styles.keyboard}>

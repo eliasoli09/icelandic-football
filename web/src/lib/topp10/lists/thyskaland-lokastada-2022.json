@@ -1,0 +1,123 @@
+{
+  "id": "thyskaland-lokastada-2022",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "BUNDESLIGA",
+  "title": "Topp 10 2022/23",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum þýsku deildarinnar 2022/23.",
+  "context": "Lokastaða tímabilsins 2022/23. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2022-23 Bundesliga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1268563662"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "bayern",
+      "label": "Bayern München",
+      "detail": "1. sæti, 71 stig",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "fc bayern munchen",
+        "bayern",
+        "fc bayern"
+      ]
+    },
+    {
+      "id": "dortmund",
+      "label": "Borussia Dortmund",
+      "detail": "2. sæti, 71 stig",
+      "accept": [
+        "borussia dortmund",
+        "dortmund",
+        "bvb"
+      ]
+    },
+    {
+      "id": "leipzig",
+      "label": "RB Leipzig",
+      "detail": "3. sæti, 66 stig",
+      "accept": [
+        "rb leipzig",
+        "leipzig"
+      ]
+    },
+    {
+      "id": "union",
+      "label": "Union Berlin",
+      "detail": "4. sæti, 62 stig",
+      "accept": [
+        "union berlin",
+        "1 fc union berlin"
+      ]
+    },
+    {
+      "id": "freiburg",
+      "label": "SC Freiburg",
+      "detail": "5. sæti, 59 stig",
+      "accept": [
+        "sc freiburg",
+        "freiburg"
+      ]
+    },
+    {
+      "id": "leverkusen",
+      "label": "Bayer Leverkusen",
+      "detail": "6. sæti, 50 stig",
+      "accept": [
+        "bayer leverkusen",
+        "leverkusen",
+        "bayer 04 leverkusen"
+      ]
+    },
+    {
+      "id": "frankfurt",
+      "label": "Eintracht Frankfurt",
+      "detail": "7. sæti, 50 stig",
+      "accept": [
+        "eintracht frankfurt",
+        "frankfurt",
+        "ein frankfurt",
+        "eintracht"
+      ]
+    },
+    {
+      "id": "wolfsburg",
+      "label": "VfL Wolfsburg",
+      "detail": "8. sæti, 49 stig",
+      "accept": [
+        "vfl wolfsburg",
+        "wolfsburg"
+      ]
+    },
+    {
+      "id": "mainz",
+      "label": "Mainz 05",
+      "detail": "9. sæti, 46 stig",
+      "accept": [
+        "mainz 05",
+        "mainz",
+        "1 fsv mainz 05"
+      ]
+    },
+    {
+      "id": "gladbach",
+      "label": "Borussia Mönchengladbach",
+      "detail": "10. sæti, 43 stig",
+      "accept": [
+        "borussia monchengladbach",
+        "monchengladbach",
+        "m gladbach",
+        "gladbach"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

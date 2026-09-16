@@ -1,0 +1,115 @@
+{
+  "id": "enska-lokastada-2014",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2014/15",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2014/15.",
+  "context": "Lokastaða tímabilsins 2014/15. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2014-15 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372365929"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "1. sæti, 87 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "2. sæti, 79 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "3. sæti, 75 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "4. sæti, 70 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "5. sæti, 64 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "6. sæti, 62 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "southampton",
+      "label": "Southampton",
+      "detail": "7. sæti, 60 stig",
+      "accept": [
+        "southampton"
+      ]
+    },
+    {
+      "id": "swansea",
+      "label": "Swansea City",
+      "detail": "8. sæti, 56 stig",
+      "accept": [
+        "swansea city",
+        "swansea"
+      ]
+    },
+    {
+      "id": "stoke",
+      "label": "Stoke City",
+      "detail": "9. sæti, 54 stig",
+      "accept": [
+        "stoke city",
+        "stoke"
+      ]
+    },
+    {
+      "id": "palace",
+      "label": "Crystal Palace",
+      "detail": "10. sæti, 48 stig",
+      "accept": [
+        "crystal palace",
+        "palace"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

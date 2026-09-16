@@ -1,0 +1,200 @@
+{
+  "id": "psg-arsenal-2026",
+  "region": "evropa",
+  "level": "easy",
+  "competition": "Meistaradeild Evrópu 2025/26",
+  "stage": "Úrslitaleikur",
+  "date": "2026-05-30",
+  "blurb": "Úrslitaleikurinn í Búdapest.",
+  "score": {
+    "home": 1,
+    "away": 1,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 4-3."
+  },
+  "home": {
+    "name": "Paris Saint-Germain",
+    "color": "#091150",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 39,
+        "name": "Matvey Safonov",
+        "word": "SAFONOV",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Achraf Hakimi",
+        "word": "HAKIMI",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Marquinhos",
+        "word": "MARQUINHOS",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 51,
+        "name": "Willian Pacho",
+        "word": "PACHO",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 25,
+        "name": "Nuno Mendes",
+        "word": "MENDES",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 87,
+        "name": "João Neves",
+        "word": "NEVES",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 17,
+        "name": "Vitinha",
+        "word": "VITINHA",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Fabián Ruiz",
+        "word": "RUIZ",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Désiré Doué",
+        "word": "DOUE",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Ousmane Dembélé",
+        "word": "DEMBELE",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Khvicha Kvaratskhelia",
+        "word": "KVARATSKHELIA",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Arsenal",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "David Raya",
+        "word": "RAYA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Cristhian Mosquera",
+        "word": "MOSQUERA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 2,
+        "name": "William Saliba",
+        "word": "SALIBA",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Gabriel Magalhães",
+        "word": "GABRIEL",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Piero Hincapié",
+        "word": "HINCAPIE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 41,
+        "name": "Declan Rice",
+        "word": "RICE",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 49,
+        "name": "Myles Lewis-Skelly",
+        "word": "LEWISSKELLY",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Bukayo Saka",
+        "word": "SAKA",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "Martin Ødegaard",
+        "word": "ODEGAARD",
+        "line": 4,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Leandro Trossard",
+        "word": "TROSSARD",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 29,
+        "name": "Kai Havertz",
+        "word": "HAVERTZ",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2026 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371197921"
+    },
+    {
+      "name": "transfermarkt.com · Paris Saint-Germain - Arsenal FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4814382"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

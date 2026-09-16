@@ -282,7 +282,8 @@ export function parseWikiMatch(wt: string, date: string, pick?: (home: string, a
     // the position is a bare code or wrapped in {{abbr|RB|Right-back}}
     const row = line.match(/^\|\s*(?:\{\{\s*abbr\s*\|\s*)?([A-Z]{2,3})(?:\s*\|[^}]*\}\})?\s*\|\|\s*'''\s*(\d+)\s*'''\s*\|\|(.*)$/)
     if (!row || subs) continue
-    const cell = splitTop(row[3], '||')[0]
+    // {{flagathlete|[[Kepa Arrizabalaga]]|ESP}} wraps the name in the flag template
+    const cell = splitTop(row[3], '||')[0].replace(/\{\{\s*flagathlete\s*\|\s*(\[\[[^\]]+\]\])\s*\|[^}]*\}\}/gi, '$1')
     teams[team].push({
       number: Number(row[2]),
       name: shownName(cell.replace(/\(\s*\[\[[^\]]*\|\s*c\s*\]\]\s*\)|\{\{[^}]*\}\}/g, '')),

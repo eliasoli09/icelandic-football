@@ -1,0 +1,110 @@
+{
+  "id": "championship-lokastada-2025",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA B-DEILDIN",
+  "title": "Topp 10 2025/26",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku B-deildarinnar 2025/26.",
+  "context": "Lokastaða tímabilsins 2025/26. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025-26 EFL Championship",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371971948"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "coventry",
+      "label": "Coventry City",
+      "detail": "1. sæti, 95 stig",
+      "accept": [
+        "coventry city",
+        "coventry"
+      ]
+    },
+    {
+      "id": "ipswich",
+      "label": "Ipswich Town",
+      "detail": "2. sæti, 84 stig",
+      "accept": [
+        "ipswich town",
+        "ipswich",
+        "ipswich town f c"
+      ]
+    },
+    {
+      "id": "millwall",
+      "label": "Millwall",
+      "detail": "3. sæti, 83 stig",
+      "accept": [
+        "millwall"
+      ]
+    },
+    {
+      "id": "southampton",
+      "label": "Southampton",
+      "detail": "4. sæti, 80 stig",
+      "accept": [
+        "southampton"
+      ]
+    },
+    {
+      "id": "middlesbrough",
+      "label": "Middlesbrough",
+      "detail": "5. sæti, 80 stig",
+      "accept": [
+        "middlesbrough"
+      ]
+    },
+    {
+      "id": "hull",
+      "label": "Hull City",
+      "detail": "6. sæti, 73 stig",
+      "accept": [
+        "hull city",
+        "hull"
+      ]
+    },
+    {
+      "id": "wrexham",
+      "label": "Wrexham",
+      "detail": "7. sæti, 71 stig",
+      "accept": [
+        "wrexham"
+      ]
+    },
+    {
+      "id": "derby",
+      "label": "Derby County",
+      "detail": "8. sæti, 69 stig",
+      "accept": [
+        "derby county",
+        "derby"
+      ]
+    },
+    {
+      "id": "norwich",
+      "label": "Norwich City",
+      "detail": "9. sæti, 65 stig",
+      "accept": [
+        "norwich city",
+        "norwich"
+      ]
+    },
+    {
+      "id": "birmingham",
+      "label": "Birmingham City",
+      "detail": "10. sæti, 64 stig",
+      "accept": [
+        "birmingham city",
+        "birmingham"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

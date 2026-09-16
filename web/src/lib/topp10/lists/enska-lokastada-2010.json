@@ -1,0 +1,114 @@
+{
+  "id": "enska-lokastada-2010",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2010/11",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2010/11.",
+  "context": "Lokastaða tímabilsins 2010/11. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2010-11 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373577757"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "1. sæti, 80 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "2. sæti, 71 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "3. sæti, 71 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "4. sæti, 68 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "5. sæti, 62 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "6. sæti, 58 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "7. sæti, 54 stig",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "fulham",
+      "label": "Fulham",
+      "detail": "8. sæti, 49 stig",
+      "accept": [
+        "fulham"
+      ]
+    },
+    {
+      "id": "astonvilla",
+      "label": "Aston Villa",
+      "detail": "9. sæti, 48 stig",
+      "accept": [
+        "aston villa",
+        "villa",
+        "aston villa fc"
+      ]
+    },
+    {
+      "id": "sunderland",
+      "label": "Sunderland",
+      "detail": "10. sæti, 47 stig",
+      "accept": [
+        "sunderland"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

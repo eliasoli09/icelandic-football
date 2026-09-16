@@ -1,0 +1,115 @@
+{
+  "id": "frakkland-lokastada-2023",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LIGUE 1",
+  "title": "Topp 10 2023/24",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum frönsku deildarinnar 2023/24.",
+  "context": "Lokastaða tímabilsins 2023/24. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2023-24 Ligue 1 table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1286818139"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "psg",
+      "label": "Paris Saint-Germain",
+      "detail": "1. sæti, 76 stig",
+      "accept": [
+        "paris saint germain",
+        "paris sg",
+        "psg"
+      ]
+    },
+    {
+      "id": "monaco",
+      "label": "Monaco",
+      "detail": "2. sæti, 67 stig",
+      "accept": [
+        "monaco",
+        "as monaco"
+      ]
+    },
+    {
+      "id": "brest",
+      "label": "Brest",
+      "detail": "3. sæti, 61 stig",
+      "accept": [
+        "brest",
+        "stade brestois 29"
+      ]
+    },
+    {
+      "id": "lille",
+      "label": "Lille",
+      "detail": "4. sæti, 59 stig",
+      "accept": [
+        "lille",
+        "losc lille"
+      ]
+    },
+    {
+      "id": "nice",
+      "label": "Nice",
+      "detail": "5. sæti, 55 stig",
+      "accept": [
+        "nice",
+        "ogc nice"
+      ]
+    },
+    {
+      "id": "lyon",
+      "label": "Lyon",
+      "detail": "6. sæti, 53 stig",
+      "accept": [
+        "lyon",
+        "olympique lyonnais"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Lens",
+      "detail": "7. sæti, 51 stig",
+      "accept": [
+        "lens",
+        "rc lens"
+      ]
+    },
+    {
+      "id": "marseille",
+      "label": "Marseille",
+      "detail": "8. sæti, 50 stig",
+      "accept": [
+        "marseille",
+        "olympique de marseille",
+        "om"
+      ]
+    },
+    {
+      "id": "reims",
+      "label": "Reims",
+      "detail": "9. sæti, 47 stig",
+      "accept": [
+        "reims",
+        "stade de reims"
+      ]
+    },
+    {
+      "id": "rennes",
+      "label": "Rennes",
+      "detail": "10. sæti, 46 stig",
+      "accept": [
+        "rennes",
+        "stade rennais"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -1,0 +1,198 @@
+{
+  "id": "palace-manutd-2016",
+  "region": "enska",
+  "level": "medium",
+  "competition": "Enski bikarinn 2015/16",
+  "stage": "Úrslitaleikur",
+  "date": "2016-05-21",
+  "blurb": "Úrslitaleikur enska bikarsins á Wembley.",
+  "score": {
+    "home": 1,
+    "away": 2
+  },
+  "home": {
+    "name": "Crystal Palace",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 13,
+        "name": "Wayne Hennessey",
+        "word": "HENNESSEY",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Joel Ward",
+        "word": "WARD",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Scott Dann",
+        "word": "DANN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 27,
+        "name": "Damien Delaney",
+        "word": "DELANEY",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Pape Souaré",
+        "word": "SOUARE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Mile Jedinak",
+        "word": "JEDINAK",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 18,
+        "name": "James McArthur",
+        "word": "MCARTHUR",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Wilfried Zaha",
+        "word": "ZAHA",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Yohan Cabaye",
+        "word": "CABAYE",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Yannick Bolasie",
+        "word": "BOLASIE",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Connor Wickham",
+        "word": "WICKHAM",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Manchester United",
+    "color": "#8a94a6",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "David de Gea",
+        "word": "DEGEA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 25,
+        "name": "Antonio Valencia",
+        "word": "VALENCIA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 12,
+        "name": "Chris Smalling",
+        "word": "SMALLING",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 17,
+        "name": "Daley Blind",
+        "word": "BLIND",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Marcos Rojo",
+        "word": "ROJO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Michael Carrick",
+        "word": "CARRICK",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Wayne Rooney",
+        "word": "ROONEY",
+        "line": 3,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Juan Mata",
+        "word": "MATA",
+        "line": 4,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 27,
+        "name": "Marouane Fellaini",
+        "word": "FELLAINI",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Anthony Martial",
+        "word": "MARTIAL",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 39,
+        "name": "Marcus Rashford",
+        "word": "RASHFORD",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2016 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1356334922"
+    },
+    {
+      "name": "transfermarkt.com · Crystal Palace - Manchester United",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2685107"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

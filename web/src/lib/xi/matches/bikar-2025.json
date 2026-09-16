@@ -1,0 +1,198 @@
+{
+  "id": "bikar-2025",
+  "region": "island",
+  "level": "medium",
+  "competition": "Bikarkeppni karla 2025",
+  "stage": "Úrslitaleikur",
+  "date": "2025-08-22",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Valur",
+    "color": "#dc2422",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 18,
+        "name": "Frederik August Albrecht Schram",
+        "word": "FREDERIK",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Markus Lund Nakkim",
+        "word": "NAKKIM",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Bjarni Mark Antonsson",
+        "word": "BJARNI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Jónatan Ingi Jónsson",
+        "word": "JONATAN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Patrick Pedersen",
+        "word": "PEDERSEN",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Kristinn Freyr Sigurðsson",
+        "word": "KRISTINN",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 12,
+        "name": "Tryggvi Hrafn Haraldsson",
+        "word": "TRYGGVI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Albin Skoglund",
+        "word": "SKOGLUND",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Hólmar Örn Eyjólfsson",
+        "word": "HOLMAR",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Orri Sigurður Ómarsson",
+        "word": "ORRI",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 22,
+        "name": "Marius Lundemo",
+        "word": "LUNDEMO",
+        "line": 2,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Vestri",
+    "color": "#2a3b61",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 12,
+        "name": "Guy Smit",
+        "word": "SMIT",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Anton Kralj",
+        "word": "KRALJ",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Fatai Adebowale Gbadamosi",
+        "word": "GBADAMOSI",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Thibang Sindile Theophilius",
+        "word": "PHETE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Gunnar Jónas Hauksson",
+        "word": "GUNNAR",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Vladimir Tufegdzic",
+        "word": "TUFEGDZIC",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Ágúst Eðvald Hlynsson",
+        "word": "AGUST",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Diego Montiel",
+        "word": "MONTIEL",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 28,
+        "name": "Jeppe Pedersen",
+        "word": "PEDERSEN",
+        "line": 2,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 32,
+        "name": "Eiður Aron Sigurbjörnsson",
+        "word": "EIÐUR",
+        "line": 1,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 40,
+        "name": "Gustav Kjeldsen",
+        "word": "KJELDSEN",
+        "line": 1,
+        "x": 1
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · Valur - Vestri, Bikarkeppni KSÍ - Mjólkurbikar karla 2025 / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=640210"
+    },
+    {
+      "name": "transfermarkt.com · Valur Reykjavík - Vestri Ísafjördur",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4713176"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

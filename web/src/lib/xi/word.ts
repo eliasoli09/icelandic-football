@@ -19,7 +19,7 @@ export function surname(name: string): string {
 export function letters(text: string, icelandic: boolean): string {
   let s = text.toUpperCase()
   if (!icelandic) s = s.replace(/Þ/g, 'TH').replace(/Ð/g, 'D').replace(/Æ/g, 'AE').replace(/Ö/g, 'O')
-  s = s.replace(/Ø/g, 'O').replace(/ß/g, 'SS').replace(/Œ/g, 'OE').replace(/Ł/g, 'L').replace(/İ/g, 'I').replace(/ẞ/g, 'SS')
+  s = s.replace(/Ø/g, 'O').replace(/ß/g, 'SS').replace(/Œ/g, 'OE').replace(/Ł/g, 'L').replace(/Đ/g, 'D').replace(/İ/g, 'I').replace(/ẞ/g, 'SS')
   const keep = icelandic ? /[A-ZÞÐÆÖ]/ : /[A-Z]/
   return [...s].map((ch) => (keep.test(ch) ? ch : ch.normalize('NFD').replace(/[̀-ͯ]/g, '')))
     .join('').replace(icelandic ? /[^A-ZÞÐÆÖ]/g : /[^A-Z]/g, '')

@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { firstName, letters, markGuess, surname, targetWord } from '../src/lib/xi/word'
 import { rows, tmLine, wikiLine } from '../src/lib/xi/layout'
-import { MAX_TRIES, dailyMatch, giveUp, guessPlayer, guessResult, newState, puzzleNumber, restore, resultPoints, shareText, slot, solvedCount, teamOver, LAUNCH_DAY } from '../src/lib/xi/game'
+import { dailyMatch, giveUp, guessPlayer, guessResult, newState, puzzleNumber, restore, resultPoints, shareText, showsFirstLetter, slot, solvedCount, teamOver, triesFor, LAUNCH_DAY } from '../src/lib/xi/game'
+import { LEVELS } from '../src/lib/level'
 import { MATCHES } from '../src/lib/xi/matches'
 import type { XiMatch } from '../src/lib/xi/types'
 
@@ -91,9 +92,9 @@ describe('game', () => {
     expect(guessPlayer(match, s, 'home', kaka.number, 'dida').error).toBe('repeat')
   })
 
-  it(`fails a player after ${MAX_TRIES} wrong tries and then accepts nothing`, () => {
+  it(`fails a player after ${triesFor(match)} wrong tries and then accepts nothing`, () => {
     let s = newState()
-    for (const w of ['AAAA', 'BBBB', 'CCCC', 'DDDD', 'EEEE', 'FFFF']) s = guessPlayer(match, s, 'home', kaka.number, w).state
+    for (const w of ['AAAA', 'BBBB', 'CCCC', 'DDDD', 'EEEE', 'FFFF'].slice(0, triesFor(match))) s = guessPlayer(match, s, 'home', kaka.number, w).state
     expect(slot(s, 'home', kaka.number).done).toBe('failed')
     expect(guessPlayer(match, s, 'home', kaka.number, 'KAKA').error).toBe('done')
   })
@@ -135,8 +136,26 @@ describe('game', () => {
 
   it('numbers the daily puzzles from launch and gives everyone the same one', () => {
     expect(puzzleNumber(LAUNCH_DAY)).toBe(1)
-    expect(dailyMatch(MATCHES, LAUNCH_DAY + 5).id).toBe(dailyMatch([...MATCHES].reverse(), LAUNCH_DAY + 5).id)
+    expect(dailyMatch(MATCHES, LAUNCH_DAY + 5, 'medium').id).toBe(dailyMatch([...MATCHES].reverse(), LAUNCH_DAY + 5, 'medium').id)
   })
+
+  it('allows fewer tries on hard matches and shows first letters on easy ones', () => {
+    const hard = MATCHES.find((m) => m.level === 'hard')!, easy = MATCHES.find((m) => m.level === 'easy')!
+    expect(triesFor(hard)).toBeLessThan(triesFor(easy))
+    expect(showsFirstLetter(easy)).toBe(true)
+    expect(showsFirstLetter(hard)).toBe(false)
+    const player = hard.home.players[0]
+    let s = newState()
+    for (let i = 0; i < triesFor(hard); i++) s = guessPlayer(hard, s, 'home', player.number, String.fromCharCode(65 + i).repeat(player.word.length)).state
+    expect(slot(s, 'home', player.number).done).toBe(player.word === 'A'.repeat(player.word.length) ? 'solved' : 'failed')
+  })
+
+  for (const { id: level } of LEVELS) {
+    it(`has a daily ${level} match and enough of them for a week`, () => {
+      expect(dailyMatch(MATCHES, LAUNCH_DAY, level).level).toBe(level)
+      expect(MATCHES.filter((m) => m.level === level).length).toBeGreaterThanOrEqual(7)
+    })
+  }
 })
 
 describe('verified matches', () => {

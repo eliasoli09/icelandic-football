@@ -1,0 +1,200 @@
+{
+  "id": "mancity-watford-2019",
+  "region": "enska",
+  "level": "medium",
+  "competition": "Enski bikarinn 2018/19",
+  "stage": "Úrslitaleikur",
+  "date": "2019-05-18",
+  "blurb": "Úrslitaleikur enska bikarsins á Wembley.",
+  "score": {
+    "home": 6,
+    "away": 0
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#6cabdd",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 31,
+        "name": "Ederson",
+        "word": "EDERSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Kyle Walker",
+        "word": "WALKER",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Vincent Kompany",
+        "word": "KOMPANY",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 14,
+        "name": "Aymeric Laporte",
+        "word": "LAPORTE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 35,
+        "name": "Oleksandr Zinchenko",
+        "word": "ZINCHENKO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Bernardo Silva",
+        "word": "SILVA",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "İlkay Gündoğan",
+        "word": "GUNDOGAN",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "David Silva",
+        "word": "SILVA",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 26,
+        "name": "Riyad Mahrez",
+        "word": "MAHREZ",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 33,
+        "name": "Gabriel Jesus",
+        "word": "JESUS",
+        "line": 5,
+        "x": 1,
+        "goals": 2
+      },
+      {
+        "number": 7,
+        "name": "Raheem Sterling",
+        "word": "STERLING",
+        "line": 5,
+        "x": 0,
+        "goals": 2
+      }
+    ]
+  },
+  "away": {
+    "name": "Watford",
+    "color": "#fbee23",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Heurelho Gomes",
+        "word": "GOMES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Kiko Femenía",
+        "word": "FEMENIA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Adrian Mariappa",
+        "word": "MARIAPPA",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Craig Cathcart",
+        "word": "CATHCART",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 25,
+        "name": "José Holebas",
+        "word": "HOLEBAS",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Will Hughes",
+        "word": "HUGHES",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 16,
+        "name": "Abdoulaye Doucouré",
+        "word": "DOUCOURE",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 29,
+        "name": "Étienne Capoue",
+        "word": "CAPOUE",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 37,
+        "name": "Roberto Pereyra",
+        "word": "PEREYRA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Gerard Deulofeu",
+        "word": "DEULOFEU",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Troy Deeney",
+        "word": "DEENEY",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2019 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1356334931"
+    },
+    {
+      "name": "transfermarkt.com · Manchester City - Watford FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3174643"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

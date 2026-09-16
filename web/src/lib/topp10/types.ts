@@ -1,3 +1,5 @@
+import type { Level } from '../level'
+
 /** Where a question belongs. */
 export type Region = 'island' | 'enska' | 'evropa'
 
@@ -25,6 +27,7 @@ export interface Answer {
 export interface Topp10List {
   id: string
   region: Region
+  level: Level
   kind: Kind
   /** the competition, above the game title */
   competition: string

@@ -97,7 +97,7 @@ const EN: Record<string, string> = {
   'Frakkland': 'France', 'QPR': 'Queens Park Rangers', 'Bayern München': 'Bayern Munich', 'Víkingur R.': 'Víkingur',
   'Tottenham': 'Tottenham Hotspur', 'Króatía': 'Croatia', 'Holland': 'Netherlands', 'Spánn': 'Spain', 'Ítalía': 'Italy',
   'Portúgal': 'Portugal', 'Austurríki': 'Austria', 'Ungverjaland': 'Hungary', 'Inter': 'Inter Milan', 'Newcastle': 'Newcastle United',
-  'Atlético Madrid': 'Atletico Madrid', 'Leiknir R.': 'Leiknir',
+  'Atlético Madrid': 'Atletico Madrid', 'Leiknir R.': 'Leiknir', 'Nígería': 'Nigeria', 'Stoke': 'Stoke City', 'Leicester': 'Leicester City',
 }
 
 function mustAgree(problems: string[], what: string) {
@@ -310,7 +310,7 @@ async function build(spec: MatchSpec): Promise<XiMatch> {
   mustAgree(problems, 'heimildir ósammála')
 
   return {
-    id: spec.id, region: spec.region, competition: spec.competition, stage: spec.stage, date: spec.date, blurb: spec.blurb,
+    id: spec.id, region: spec.region, level: spec.level, competition: spec.competition, stage: spec.stage, date: spec.date, blurb: spec.blurb,
     score: { home: primary.score[0], away: primary.score[1], ...(note ? { note } : {}) },
     home: teams.home, away: teams.away,
     layout: primary.layout === 'wiki' ? 'Stöður í leiknum samkvæmt Wikipedia' : tmFormation ? 'Uppstilling í leiknum samkvæmt Transfermarkt' : 'Línur í leiknum samkvæmt Transfermarkt',

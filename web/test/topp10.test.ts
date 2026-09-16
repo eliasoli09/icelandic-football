@@ -5,7 +5,7 @@ import { dailyList, dailyOrder, dayNumber } from '../src/lib/topp10/daily'
 import type { Topp10List } from '../src/lib/topp10/types'
 
 const list = (answers: Topp10List['answers']): Topp10List => ({
-  id: 'prof', region: 'island', kind: 'club', competition: 'PRÓF', title: 'Próf', question: 'Nefndu?', context: '',
+  id: 'prof', region: 'island', level: 'medium', kind: 'club', competition: 'PRÓF', title: 'Próf', question: 'Nefndu?', context: '',
   answers, sources: [{ name: 'a', url: 'x' }, { name: 'b', url: 'y' }], verifiedAt: '2026-09-15',
 })
 const ans = (id: string, label: string, accept: string[]) => ({ id, label, detail: '', accept: accept.map(normalise) })

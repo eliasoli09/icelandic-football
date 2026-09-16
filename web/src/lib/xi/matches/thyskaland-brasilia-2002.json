@@ -1,0 +1,198 @@
+{
+  "id": "thyskaland-brasilia-2002",
+  "region": "evropa",
+  "level": "hard",
+  "competition": "HM 2002",
+  "stage": "Úrslitaleikur",
+  "date": "2002-06-30",
+  "blurb": "Úrslitaleikur HM í Yokohama.",
+  "score": {
+    "home": 0,
+    "away": 2
+  },
+  "home": {
+    "name": "Þýskaland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Oliver Kahn",
+        "word": "KAHN",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 2,
+        "name": "Thomas Linke",
+        "word": "LINKE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Carsten Ramelow",
+        "word": "RAMELOW",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Christoph Metzelder",
+        "word": "METZELDER",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Torsten Frings",
+        "word": "FRINGS",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 8,
+        "name": "Dietmar Hamann",
+        "word": "HAMANN",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 16,
+        "name": "Jens Jeremies",
+        "word": "JEREMIES",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Marco Bode",
+        "word": "BODE",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Bernd Schneider",
+        "word": "SCHNEIDER",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Miroslav Klose",
+        "word": "KLOSE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Oliver Neuville",
+        "word": "NEUVILLE",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Brasilía",
+    "color": "#ffff00",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Marcos",
+        "word": "MARCOS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Lúcio",
+        "word": "LUCIO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Edmílson",
+        "word": "EDMILSON",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Roque Júnior",
+        "word": "ROQUEJUNIOR",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Cafu",
+        "word": "CAFU",
+        "line": 2,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Roberto Carlos",
+        "word": "ROBERTOCARLOS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Gilberto Silva",
+        "word": "SILVA",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 15,
+        "name": "José Kléberson",
+        "word": "KLEBERSON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Ronaldinho",
+        "word": "RONALDINHO",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Rivaldo",
+        "word": "RIVALDO",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0,
+        "goals": 2
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2002 FIFA World Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373920272"
+    },
+    {
+      "name": "transfermarkt.com · Germany - Brazil",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/987578"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

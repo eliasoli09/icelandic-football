@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-09-15",
+  "builtAt": "2026-09-16",
   "shipped": [
     "island-meistarar",
     "island-bikarmeistarar",
@@ -11,6 +11,12 @@
     "island-lokastada-2025",
     "island-lid-2026",
     "enska-lokastada-2009",
+    "enska-lokastada-2010",
+    "enska-lokastada-2011",
+    "enska-lokastada-2012",
+    "enska-lokastada-2013",
+    "enska-lokastada-2014",
+    "enska-lokastada-2015",
     "enska-lokastada-2016",
     "enska-lokastada-2017",
     "enska-lokastada-2018",
@@ -21,6 +27,10 @@
     "enska-lokastada-2023",
     "enska-lokastada-2024",
     "enska-lokastada-2025",
+    "championship-lokastada-2024",
+    "championship-lokastada-2025",
+    "island-lid-2025",
+    "enska-lid-2025",
     "enska-markahaestir-2016",
     "enska-markahaestir-2018",
     "enska-markahaestir-2019",
@@ -33,12 +43,19 @@
     "evropa-meistarar",
     "evropa-meistaradeildin",
     "evropa-baedi-timabil",
+    "spann-lokastada-2023",
     "spann-lokastada-2024",
     "spann-lokastada-2025",
+    "italia-lokastada-2022",
+    "italia-lokastada-2023",
     "italia-lokastada-2024",
     "italia-lokastada-2025",
+    "thyskaland-lokastada-2022",
+    "thyskaland-lokastada-2023",
     "thyskaland-lokastada-2024",
     "thyskaland-lokastada-2025",
+    "frakkland-lokastada-2022",
+    "frakkland-lokastada-2023",
     "frakkland-lokastada-2024",
     "frakkland-lokastada-2025"
   ],
@@ -78,6 +95,10 @@
     {
       "id": "evropa-markahaestir",
       "reason": "markahæstu í Meistaradeildinni: ronaldo: 140 á ensku, 142 á íslensku; mbappe: 71 á ensku, 70 á íslensku; haaland: 59 á ensku, 57 á íslensku; kane: 55 á ensku, 53 á íslensku"
+    },
+    {
+      "id": "spann-lokastada-2022",
+      "reason": "tafla og úrslit ósammála: Girona, Rayo Vallecano, Sevilla eru jöfn að stigum"
     }
   ]
 }

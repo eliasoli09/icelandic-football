@@ -16,6 +16,7 @@
       "url": "https://islensk-fotbolti.vercel.app/leikir"
     }
   ],
+  "level": "easy",
   "answers": [
     {
       "id": "arsenal",
@@ -201,5 +202,5 @@
       ]
     }
   ],
-  "verifiedAt": "2026-09-15"
+  "verifiedAt": "2026-09-16"
 }

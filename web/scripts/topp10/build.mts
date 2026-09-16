@@ -15,6 +15,7 @@ import { tmpdir } from 'os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import type { Answer, Kind, Topp10List } from '../../src/lib/topp10/types'
+import type { Level } from '../../src/lib/level'
 import type { Entity } from './names'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -218,7 +219,22 @@ function answerFor(kind: Kind, e: Entity, detail: string): Draft {
   return { id: e.id, label: e.label, detail, accept: [...fixed], loose: [...loose] }
 }
 
-type Meta = Omit<Topp10List, 'answers' | 'verifiedAt'>
+type Meta = Omit<Topp10List, 'answers' | 'verifiedAt' | 'level'>
+
+/**
+ * How hard a question is, decided by what it asks rather than by feel: the
+ * clubs playing now and Europe's champions are easy; recent tables and the
+ * Icelandic honours are medium; older seasons, scorers and smaller leagues hard.
+ */
+export function levelOf(id: string): Level {
+  if (/-lid-\d{4}$/.test(id) || ['evropa-meistarar', 'evropa-meistaradeildin'].includes(id)) return 'easy'
+  const year = Number(id.match(/(\d{4})$/)?.[1] ?? 0)
+  if (/^enska-lokastada-/.test(id)) return year >= 2023 ? 'easy' : year >= 2016 ? 'medium' : 'hard'
+  if (/^enska-markahaestir-/.test(id)) return year >= 2023 ? 'medium' : 'hard'
+  if (/^(spann|italia|thyskaland|frakkland|island)-lokastada-/.test(id)) return year >= 2024 ? 'medium' : 'hard'
+  if (['island-meistarar', 'island-bikarmeistarar'].includes(id)) return 'medium'
+  return 'hard'
+}
 
 function finish(meta: Meta, drafts: Draft[]): Topp10List {
   const ids = drafts.map((d) => d.id)
@@ -229,7 +245,7 @@ function finish(meta: Meta, drafts: Draft[]): Topp10List {
     ...a, accept: [...a.accept, ...loose.filter((k) => owners.get(k)!.size === 1)],
   }))
   const { note, ...rest } = meta
-  const list: Topp10List = { ...rest, answers, verifiedAt: today, ...(note ? { note } : {}) }
+  const list: Topp10List = { ...rest, level: levelOf(meta.id), answers, verifiedAt: today, ...(note ? { note } : {}) }
   const clash = ambiguousAliases(list)
   if (clash.length) throw new Error(`sama stafsetning opnar tvö ólík svör: ${clash.join(', ')}`)
   if (answers.length < 10) throw new Error(`aðeins ${answers.length} gild svör`)
@@ -324,6 +340,7 @@ const LEAGUES = {
   seriea: { page: 'Serie A', teams: 20, region: 'evropa', competition: 'SERIE A', of: 'ítölsku deildarinnar', id: 'italia', tiebreak: 'h2h' },
   bundesliga: { page: 'Bundesliga', teams: 18, region: 'evropa', competition: 'BUNDESLIGA', of: 'þýsku deildarinnar', id: 'thyskaland', tiebreak: 'gd' },
   ligue1: { page: 'Ligue 1', teams: 18, region: 'evropa', competition: 'LIGUE 1', of: 'frönsku deildarinnar', id: 'frakkland', tiebreak: 'gd' },
+  championship: { page: 'EFL Championship', teams: 24, region: 'enska', competition: 'ENSKA B-DEILDIN', of: 'ensku B-deildarinnar', id: 'championship', tiebreak: 'gd' },
 } as const
 
 async function leagueTable(league: keyof typeof LEAGUES, y: number): Promise<Topp10List> {
@@ -339,7 +356,8 @@ async function leagueTable(league: keyof typeof LEAGUES, y: number): Promise<Top
     if (!first) throw new Error(`engin Sports table í Template:${t[1].trim()}`)
   }
   const rows: TableRow[] = W.readSportsTable(first)
-  if (rows.length !== L.teams) throw new Error(`${rows.length} lið í töflunni`)
+  // the league's size changes over the years (Ligue 1 went from 20 to 18); the count is checked against our results
+  if (rows.length < 16) throw new Error(`${rows.length} lið í töflunni`)
   const top = verifyTable([rows], await ourSeason(league, y, ['main']), 10, L.tiebreak)
   return finish({
     id: `${L.id}-lokastada-${y}`, region: L.region, kind: 'club', competition: L.competition,
@@ -709,7 +727,18 @@ const BUILDERS: [string, () => Promise<Topp10List>][] = [
   })],
 
   ['enska-lokastada-2009', () => leagueTable('premier', 2009)],
-  ...range(2016, 2025).map((y) => [`enska-lokastada-${y}`, () => leagueTable('premier', y)] as [string, () => Promise<Topp10List>]),
+  ...range(2010, 2025).map((y) => [`enska-lokastada-${y}`, () => leagueTable('premier', y)] as [string, () => Promise<Topp10List>]),
+  ...[2024, 2025].map((y) => [`championship-lokastada-${y}`, () => leagueTable('championship', y)] as [string, () => Promise<Topp10List>]),
+  ['island-lid-2025', () => clubsInSeason({
+    id: 'island-lid-2025', league: 'besta', season: 2025, page: '2025 Besta deild karla', teams: 12,
+    region: 'island', competition: 'BESTA DEILDIN', title: 'Liðin 2025',
+    question: 'Nefndu 10 af 12 liðum Bestu deildar karla 2025.', context: 'Tímabilið 2025.',
+  })],
+  ['enska-lid-2025', () => clubsInSeason({
+    id: 'enska-lid-2025', league: 'premier', season: 2025, page: '2025–26 Premier League', teams: 20,
+    region: 'enska', competition: 'ENSKA ÚRVALSDEILDIN', title: 'Liðin 2025/26',
+    question: 'Nefndu 10 af 20 liðum ensku úrvalsdeildarinnar 2025/26.', context: 'Tímabilið 2025/26.',
+  })],
   ...range(2016, 2025).map((y) => [`enska-markahaestir-${y}`, () => premierScorers(y)] as [string, () => Promise<Topp10List>]),
   ['enska-lid-2026', () => clubsInSeason({
     id: 'enska-lid-2026', league: 'premier', season: 2026, page: '2026–27 Premier League', teams: 20,
@@ -735,7 +764,7 @@ const BUILDERS: [string, () => Promise<Topp10List>][] = [
   })],
   ['evropa-evropudeildin', uefaCup],
   ['evropa-markahaestir', uclScorers],
-  ...(['laliga', 'seriea', 'bundesliga', 'ligue1'] as const).flatMap((league) => [2024, 2025].map((y) =>
+  ...(['laliga', 'seriea', 'bundesliga', 'ligue1'] as const).flatMap((league) => [2022, 2023, 2024, 2025].map((y) =>
     [`${LEAGUES[league].id}-lokastada-${y}`, () => leagueTable(league, y)] as [string, () => Promise<Topp10List>])),
 ]
 

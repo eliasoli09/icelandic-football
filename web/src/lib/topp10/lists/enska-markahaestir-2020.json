@@ -16,6 +16,7 @@
       "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2020-21"
     }
   ],
+  "level": "hard",
   "answers": [
     {
       "id": "kane",
@@ -112,5 +113,5 @@
       ]
     }
   ],
-  "verifiedAt": "2026-09-15"
+  "verifiedAt": "2026-09-16"
 }

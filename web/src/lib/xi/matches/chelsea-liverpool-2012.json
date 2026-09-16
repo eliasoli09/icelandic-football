@@ -1,0 +1,199 @@
+{
+  "id": "chelsea-liverpool-2012",
+  "region": "enska",
+  "level": "medium",
+  "competition": "Enski bikarinn 2011/12",
+  "stage": "Úrslitaleikur",
+  "date": "2012-05-05",
+  "blurb": "Úrslitaleikur enska bikarsins á Wembley.",
+  "score": {
+    "home": 2,
+    "away": 1
+  },
+  "home": {
+    "name": "Chelsea",
+    "color": "#0000ff",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Petr Čech",
+        "word": "CECH",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "José Bosingwa",
+        "word": "BOSINGWA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 2,
+        "name": "Branislav Ivanović",
+        "word": "IVANOVIC",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 26,
+        "name": "John Terry",
+        "word": "TERRY",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 3,
+        "name": "Ashley Cole",
+        "word": "COLE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Mikel John Obi",
+        "word": "MIKEL",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Frank Lampard",
+        "word": "LAMPARD",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Ramires",
+        "word": "RAMIRES",
+        "line": 4,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Juan Mata",
+        "word": "MATA",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Salomon Kalou",
+        "word": "KALOU",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Didier Drogba",
+        "word": "DROGBA",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Liverpool",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 25,
+        "name": "Pepe Reina",
+        "word": "REINA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Glen Johnson",
+        "word": "JOHNSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 37,
+        "name": "Martin Škrtel",
+        "word": "SKRTEL",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Daniel Agger",
+        "word": "AGGER",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "José Enrique",
+        "word": "ENRIQUE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Jordan Henderson",
+        "word": "HENDERSON",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Jay Spearing",
+        "word": "SPEARING",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 39,
+        "name": "Craig Bellamy",
+        "word": "BELLAMY",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "Steven Gerrard",
+        "word": "GERRARD",
+        "line": 4,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Stewart Downing",
+        "word": "DOWNING",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Luis Suárez",
+        "word": "SUAREZ",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2012 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1360880005"
+    },
+    {
+      "name": "transfermarkt.com · Chelsea FC - Liverpool FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2204974"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

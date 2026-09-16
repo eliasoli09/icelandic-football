@@ -1,16 +1,21 @@
-import { dailyList } from '../topp10/daily'
+import { dailyList, dailyOrder } from '../topp10/daily'
 import { matchGuess } from '../topp10/match'
 import { normalise } from '../topp10/normalise'
+import type { Level } from '../level'
 import { QUESTIONS, QUESTION_BY_ID, type Question } from './data'
 
 export const TARGET = 10
-export const LIVES = 3
+/** wrong answers allowed: more on the easy questions, fewer on the hard */
+export const LIVES_BY_LEVEL: Record<Level, number> = { easy: 5, medium: 3, hard: 2 }
+export const livesFor = (q: Question) => LIVES_BY_LEVEL[q.level]
+/** the level last chosen in this browser */
+export const LEVEL_KEY = 'tenaball:level'
 /** a free round, kept in this tab */
 export const SAVE_KEY = 'tenaball:round:v2'
 /** whether this tab was last playing the daily question or free rounds */
 export const MODE_KEY = 'tenaball:mode'
-/** the daily round, kept in this browser for the rest of the day */
-export const dailyKey = (day: number) => `tenaball:daily:${day}`
+/** the daily round at a level, kept in this browser for the rest of the day */
+export const dailyKey = (day: number, level: Level) => `tenaball:daily:${day}:${level}`
 
 const DAY = 86_400_000
 
@@ -25,18 +30,30 @@ export interface Round {
 export interface Feedback { kind: 'correct' | 'incorrect' | 'duplicate' | 'empty' | 'over' | 'ignored'; answerId?: string }
 
 export function newRound(q: Question): Round {
-  return { questionId: q.id, found: [], lives: LIVES, status: 'playing', lastSubmission: null }
+  return { questionId: q.id, found: [], lives: livesFor(q), status: 'playing', lastSubmission: null }
 }
 
-/** Everyone gets the same question on a given day (days counted in UTC). */
-export function dailyQuestion(day: number): Question {
-  return dailyList(QUESTIONS, new Date(day * DAY))!
+const byLevel = new Map<Level, Question[]>()
+/** A level's questions in the order its daily question walks through them. */
+export function questionsAt(level: Level): Question[] {
+  if (!byLevel.has(level)) byLevel.set(level, dailyOrder(QUESTIONS.filter((q) => q.level === level)))
+  return byLevel.get(level)!
 }
 
-/** Free play walks back through earlier days' questions, so it never gives away tomorrow's. */
+/** Everyone gets the same question at a level on a given day (days counted in UTC). */
+export function dailyQuestion(day: number, level: Level): Question {
+  return dailyList(questionsAt(level), new Date(day * DAY))!
+}
+
+/**
+ * Free play walks back through earlier days' questions at the same level, so
+ * it never gives away tomorrow's.
+ */
 export function nextQuestion(id: string): Question {
-  const i = QUESTIONS.findIndex((q) => q.id === id)
-  return QUESTIONS[(i - 1 + QUESTIONS.length) % QUESTIONS.length]
+  const level = QUESTION_BY_ID[id]?.level ?? 'medium'
+  const pool = questionsAt(level)
+  const i = pool.findIndex((q) => q.id === id)
+  return pool[(i - 1 + pool.length) % pool.length]
 }
 
 export function submitAnswer(q: Question, state: Round, text: string, submission: string): { state: Round; feedback: Feedback } {
@@ -64,7 +81,7 @@ export function restoreRound(raw: string | null, expected?: string): Round | nul
     if (!q || (expected !== undefined && s.questionId !== expected)) return null
     const ids = new Set(q.answers.map((a) => a.id))
     if (!Array.isArray(s.found) || s.found.length > TARGET || new Set(s.found).size !== s.found.length || !s.found.every((id) => ids.has(id))) return null
-    if (!Number.isInteger(s.lives) || s.lives < 0 || s.lives > LIVES || (s.lastSubmission !== null && typeof s.lastSubmission !== 'string')) return null
+    if (!Number.isInteger(s.lives) || s.lives < 0 || s.lives > livesFor(q) || (s.lastSubmission !== null && typeof s.lastSubmission !== 'string')) return null
     if (s.found.length === TARGET && s.lives === 0) return null
     const status = s.found.length === TARGET ? 'won' : s.lives === 0 ? 'lost' : 'playing'
     return s.status === status ? s : null

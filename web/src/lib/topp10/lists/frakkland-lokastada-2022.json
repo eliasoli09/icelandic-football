@@ -1,0 +1,114 @@
+{
+  "id": "frakkland-lokastada-2022",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LIGUE 1",
+  "title": "Topp 10 2022/23",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum frönsku deildarinnar 2022/23.",
+  "context": "Lokastaða tímabilsins 2022/23. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2022-23 Ligue 1 table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1343948660"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "psg",
+      "label": "Paris Saint-Germain",
+      "detail": "1. sæti, 85 stig",
+      "accept": [
+        "paris saint germain",
+        "paris sg",
+        "psg"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Lens",
+      "detail": "2. sæti, 84 stig",
+      "accept": [
+        "lens",
+        "rc lens"
+      ]
+    },
+    {
+      "id": "marseille",
+      "label": "Marseille",
+      "detail": "3. sæti, 73 stig",
+      "accept": [
+        "marseille",
+        "olympique de marseille",
+        "om"
+      ]
+    },
+    {
+      "id": "rennes",
+      "label": "Rennes",
+      "detail": "4. sæti, 68 stig",
+      "accept": [
+        "rennes",
+        "stade rennais"
+      ]
+    },
+    {
+      "id": "lille",
+      "label": "Lille",
+      "detail": "5. sæti, 67 stig",
+      "accept": [
+        "lille",
+        "losc lille"
+      ]
+    },
+    {
+      "id": "monaco",
+      "label": "Monaco",
+      "detail": "6. sæti, 65 stig",
+      "accept": [
+        "monaco",
+        "as monaco"
+      ]
+    },
+    {
+      "id": "lyon",
+      "label": "Lyon",
+      "detail": "7. sæti, 62 stig",
+      "accept": [
+        "lyon",
+        "olympique lyonnais"
+      ]
+    },
+    {
+      "id": "clermont",
+      "label": "Clermont",
+      "detail": "8. sæti, 59 stig",
+      "accept": [
+        "clermont",
+        "clermont foot"
+      ]
+    },
+    {
+      "id": "nice",
+      "label": "Nice",
+      "detail": "9. sæti, 58 stig",
+      "accept": [
+        "nice",
+        "ogc nice"
+      ]
+    },
+    {
+      "id": "lorient",
+      "label": "Lorient",
+      "detail": "10. sæti, 55 stig",
+      "accept": [
+        "lorient"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

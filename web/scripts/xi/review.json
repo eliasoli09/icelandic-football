@@ -45,7 +45,31 @@
     "mancity-manutd-2023",
     "mancity-manutd-2024",
     "manutd-newcastle-1999",
-    "liverpool-arsenal-1989"
+    "liverpool-arsenal-1989",
+    "barcelona-manutd-2011",
+    "dortmund-bayern-2013",
+    "juventus-barcelona-2015",
+    "realmadrid-atletico-2016",
+    "psg-bayern-2020",
+    "mancity-chelsea-2021",
+    "dortmund-realmadrid-2024",
+    "psg-inter-2025",
+    "psg-arsenal-2026",
+    "brasilia-frakkland-1998",
+    "thyskaland-brasilia-2002",
+    "italia-frakkland-2006",
+    "thyskaland-spann-2008",
+    "spann-italia-2012",
+    "nigeria-island-2018",
+    "island-kroatia-2018",
+    "mancity-stoke-2011",
+    "chelsea-liverpool-2012",
+    "palace-manutd-2016",
+    "mancity-watford-2019",
+    "chelsea-leicester-2021",
+    "bikar-2012",
+    "bikar-2014",
+    "bikar-2025"
   ],
   "review": [
     {
@@ -55,6 +79,10 @@
     {
       "id": "realmadrid-barcelona-2014",
       "reason": "Transfermarkt: enginn leikur 2014-04-15 hjá real-madrid"
+    },
+    {
+      "id": "bikar-2011",
+      "reason": "Transfermarkt: treyjunúmer vantar hjá Srdjan Rajkovic"
     }
   ]
 }

@@ -1,0 +1,198 @@
+{
+  "id": "thyskaland-spann-2008",
+  "region": "evropa",
+  "level": "medium",
+  "competition": "EM 2008",
+  "stage": "Úrslitaleikur",
+  "date": "2008-06-29",
+  "blurb": "Úrslitaleikur EM í Vín.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Þýskaland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Jens Lehmann",
+        "word": "LEHMANN",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Arne Friedrich",
+        "word": "FRIEDRICH",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Per Mertesacker",
+        "word": "MERTESACKER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 21,
+        "name": "Christoph Metzelder",
+        "word": "METZELDER",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Philipp Lahm",
+        "word": "LAHM",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Torsten Frings",
+        "word": "FRINGS",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 15,
+        "name": "Thomas Hitzlsperger",
+        "word": "HITZLSPERGER",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Bastian Schweinsteiger",
+        "word": "SCHWEINSTEIGER",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 13,
+        "name": "Michael Ballack",
+        "word": "BALLACK",
+        "line": 4,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Lukas Podolski",
+        "word": "PODOLSKI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Miroslav Klose",
+        "word": "KLOSE",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Spánn",
+    "color": "#d40000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Iker Casillas",
+        "word": "CASILLAS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 15,
+        "name": "Sergio Ramos",
+        "word": "RAMOS",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Carlos Marchena",
+        "word": "MARCHENA",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Carles Puyol",
+        "word": "PUYOL",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Joan Capdevila",
+        "word": "CAPDEVILA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Marcos Senna",
+        "word": "SENNA",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Andrés Iniesta",
+        "word": "INIESTA",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 8,
+        "name": "Xavi",
+        "word": "XAVI",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Cesc Fàbregas",
+        "word": "FABREGAS",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "David Silva",
+        "word": "SILVA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Fernando Torres",
+        "word": "TORRES",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2008 final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1335641268"
+    },
+    {
+      "name": "transfermarkt.com · Germany - Spain",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/910204"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

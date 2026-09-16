@@ -1,0 +1,127 @@
+{
+  "id": "island-lid-2025",
+  "region": "island",
+  "kind": "club",
+  "competition": "BESTA DEILDIN",
+  "title": "Liðin 2025",
+  "question": "Nefndu 10 af 12 liðum Bestu deildar karla 2025.",
+  "context": "Tímabilið 2025.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025 Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1337561080"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "afturelding",
+      "label": "Afturelding",
+      "detail": "",
+      "accept": [
+        "afturelding"
+      ]
+    },
+    {
+      "id": "breidablik",
+      "label": "Breiðablik",
+      "detail": "",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ]
+    },
+    {
+      "id": "fh",
+      "label": "FH",
+      "detail": "",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ]
+    },
+    {
+      "id": "fram",
+      "label": "Fram",
+      "detail": "",
+      "accept": [
+        "fram"
+      ]
+    },
+    {
+      "id": "ia",
+      "label": "ÍA",
+      "detail": "",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ]
+    },
+    {
+      "id": "ibv",
+      "label": "ÍBV",
+      "detail": "",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "KA",
+      "detail": "",
+      "accept": [
+        "ka"
+      ]
+    },
+    {
+      "id": "kr",
+      "label": "KR",
+      "detail": "",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    },
+    {
+      "id": "stjarnan",
+      "label": "Stjarnan",
+      "detail": "",
+      "accept": [
+        "stjarnan"
+      ]
+    },
+    {
+      "id": "valur",
+      "label": "Valur",
+      "detail": "",
+      "accept": [
+        "valur"
+      ]
+    },
+    {
+      "id": "vestri",
+      "label": "Vestri",
+      "detail": "",
+      "accept": [
+        "vestri"
+      ]
+    },
+    {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

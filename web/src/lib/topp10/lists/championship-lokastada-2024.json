@@ -1,0 +1,109 @@
+{
+  "id": "championship-lokastada-2024",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA B-DEILDIN",
+  "title": "Topp 10 2024/25",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku B-deildarinnar 2024/25.",
+  "context": "Lokastaða tímabilsins 2024/25. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2024-25 EFL Championship",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373970605"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "leeds",
+      "label": "Leeds United",
+      "detail": "1. sæti, 100 stig",
+      "accept": [
+        "leeds united",
+        "leeds"
+      ]
+    },
+    {
+      "id": "burnley",
+      "label": "Burnley",
+      "detail": "2. sæti, 100 stig",
+      "accept": [
+        "burnley"
+      ]
+    },
+    {
+      "id": "sheffutd",
+      "label": "Sheffield United",
+      "detail": "3. sæti, 90 stig",
+      "accept": [
+        "sheffield united",
+        "sheffield utd"
+      ]
+    },
+    {
+      "id": "sunderland",
+      "label": "Sunderland",
+      "detail": "4. sæti, 76 stig",
+      "accept": [
+        "sunderland"
+      ]
+    },
+    {
+      "id": "coventry",
+      "label": "Coventry City",
+      "detail": "5. sæti, 69 stig",
+      "accept": [
+        "coventry city",
+        "coventry"
+      ]
+    },
+    {
+      "id": "bristolcity",
+      "label": "Bristol City",
+      "detail": "6. sæti, 68 stig",
+      "accept": [
+        "bristol city"
+      ]
+    },
+    {
+      "id": "blackburn",
+      "label": "Blackburn Rovers",
+      "detail": "7. sæti, 66 stig",
+      "accept": [
+        "blackburn rovers",
+        "blackburn"
+      ]
+    },
+    {
+      "id": "millwall",
+      "label": "Millwall",
+      "detail": "8. sæti, 66 stig",
+      "accept": [
+        "millwall"
+      ]
+    },
+    {
+      "id": "westbrom",
+      "label": "West Bromwich Albion",
+      "detail": "9. sæti, 64 stig",
+      "accept": [
+        "west bromwich albion",
+        "west brom",
+        "wba"
+      ]
+    },
+    {
+      "id": "middlesbrough",
+      "label": "Middlesbrough",
+      "detail": "10. sæti, 64 stig",
+      "accept": [
+        "middlesbrough"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

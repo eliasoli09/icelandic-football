@@ -1,3 +1,5 @@
+import type { Level } from '../level'
+
 export type Side = 'home' | 'away'
 
 export interface XiPlayer {
@@ -30,6 +32,7 @@ export interface XiTeam {
 export interface XiMatch {
   id: string
   region: 'island' | 'enska' | 'evropa'
+  level: Level
   competition: string
   stage: string
   date: string

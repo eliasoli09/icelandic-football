@@ -3,7 +3,8 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { ArrowRight, CalendarDays, Check, ChevronDown, Info, RotateCcw, Share2, X } from 'lucide-react'
 import { QUESTIONS, QUESTION_BY_ID, REGIONS, words } from '@/lib/tenaball/data'
-import { LIVES, MODE_KEY, SAVE_KEY, dailyKey, dailyQuestion, newRound, nextQuestion, restoreRound, shareText, submitAnswer, type Feedback, type Round } from '@/lib/tenaball/game'
+import { LEVEL_KEY, MODE_KEY, SAVE_KEY, dailyKey, dailyQuestion, livesFor, newRound, nextQuestion, restoreRound, shareText, submitAnswer, type Feedback, type Round } from '@/lib/tenaball/game'
+import { LEVELS, isLevel, type Level } from '@/lib/level'
 import { dayNumber } from '@/lib/topp10/daily'
 import { normalise } from '@/lib/topp10/normalise'
 import { TenaballScene } from './TenaballScene'
@@ -33,6 +34,8 @@ export function Topp10Game() {
   const [ready, setReady] = useState(false)
   const [mode, setMode] = useState<Mode>('daily')
   const modeRef = useRef<Mode>('daily')
+  const [level, setLevel] = useState<Level>('medium')
+  const levelRef = useRef<Level>('medium')
   const [day, setDay] = useState(0)
   const dayRef = useRef(0)
   const [text, setText] = useState('')
@@ -60,8 +63,12 @@ export function Topp10Game() {
     dayRef.current = today
     setDay(today)
     const free = read('session', MODE_KEY) === 'free' ? restoreRound(read('session', SAVE_KEY)) : null
-    const daily = dailyQuestion(today)
-    const start = free ?? restoreRound(read('local', dailyKey(today)), daily.id) ?? newRound(daily)
+    const saved = read('local', LEVEL_KEY)
+    const lvl: Level = free ? QUESTION_BY_ID[free.questionId].level : isLevel(saved) ? saved : 'medium'
+    levelRef.current = lvl
+    setLevel(lvl)
+    const daily = dailyQuestion(today, lvl)
+    const start = free ?? restoreRound(read('local', dailyKey(today, lvl)), daily.id) ?? newRound(daily)
     modeRef.current = free ? 'free' : 'daily'
     setMode(modeRef.current)
     current.current = start
@@ -88,7 +95,7 @@ export function Topp10Game() {
   const update = (next: Round) => {
     current.current = next
     setState(next)
-    if (modeRef.current === 'daily') write('local', dailyKey(dayRef.current), JSON.stringify(next))
+    if (modeRef.current === 'daily') write('local', dailyKey(dayRef.current, levelRef.current), JSON.stringify(next))
     else write('session', SAVE_KEY, JSON.stringify(next))
   }
   const play = (next: Round, nextMode: Mode) => {
@@ -129,11 +136,24 @@ export function Topp10Game() {
     if (response.state.status === 'playing') input.current?.focus({ preventScroll: true })
   }
   const next = () => play(newRound(nextQuestion(current.current.questionId)), 'free')
-  const toDaily = () => {
-    const daily = dailyQuestion(dayRef.current)
-    play(restoreRound(read('local', dailyKey(dayRef.current)), daily.id) ?? newRound(daily), 'daily')
+  const rememberLevel = (next: Level) => {
+    levelRef.current = next
+    setLevel(next)
+    write('local', LEVEL_KEY, next)
   }
-  const choose = (id: string) => { if (QUESTION_BY_ID[id]) play(newRound(QUESTION_BY_ID[id]), 'free') }
+  const toDaily = () => {
+    const daily = dailyQuestion(dayRef.current, levelRef.current)
+    play(restoreRound(read('local', dailyKey(dayRef.current, levelRef.current)), daily.id) ?? newRound(daily), 'daily')
+  }
+  const chooseLevel = (next: Level) => { rememberLevel(next); toDaily() }
+  const choose = (id: string) => {
+    const q = QUESTION_BY_ID[id]
+    if (!q) return
+    rememberLevel(q.level)
+    play(newRound(q), 'free')
+  }
+  const levelLabel = LEVELS.find(l => l.id === level)!.label
+  const lives = livesFor(question)
   const share = async () => {
     const body = shareText(question, current.current, mode === 'daily' ? dateLabel : null, `${location.origin}/topp10`)
     if (navigator.share) { try { await navigator.share({ text: body }) } catch { /* cancelled */ } return }
@@ -152,15 +172,24 @@ export function Topp10Game() {
     <section className={styles.arena} aria-labelledby="tenaball-title" data-status={state.status}>
       <TenaballScene/>
       <div className={styles.toolbar} style={{ flexWrap: 'wrap' }}>
-        <span className={styles.roundTag}><span/> {!ready ? 'ÞRAUT DAGSINS' : mode === 'daily' ? `ÞRAUT DAGSINS · ${dateLabel.toUpperCase()}` : `ÞRAUT ${pad(QUESTIONS.indexOf(question) + 1)} / ${pad(QUESTIONS.length)}`}</span>
+        <span className={styles.roundTag}><span/> {!ready ? 'ÞRAUT DAGSINS' : mode === 'daily' ? `ÞRAUT DAGSINS · ${levelLabel.toUpperCase()} · ${dateLabel.toUpperCase()}` : `${levelLabel.toUpperCase()} · ÞRAUT ${pad(QUESTIONS.indexOf(question) + 1)} / ${pad(QUESTIONS.length)}`}</span>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div role="group" aria-label="Erfiðleikastig" style={{ display: 'flex', gap: 4 }}>
+            {LEVELS.map(l => (
+              <button key={l.id} className={styles.helpButton} aria-pressed={level === l.id} disabled={!ready}
+                onClick={() => chooseLevel(l.id)}
+                style={level === l.id ? { background: '#16c9ff', color: '#031746', borderColor: '#16c9ff' } : undefined}>
+                {l.label}
+              </button>
+            ))}
+          </div>
           {mode === 'free' && <button className={styles.helpButton} onClick={toDaily}><CalendarDays size={16}/> Þraut dagsins</button>}
           <select className={styles.helpButton} aria-label="Veldu þraut" value="" onChange={e => choose(e.target.value)} disabled={!ready}
             style={{ background: '#031746', maxWidth: 190, cursor: 'pointer' }}>
             <option value="">Allar þrautir</option>
             {REGIONS.map(r => <optgroup key={r.id} label={r.label}>
               {QUESTIONS.filter(x => x.region === r.id)
-                .map(x => ({ id: x.id, label: optionLabel(x.competition, x.title) }))
+                .map(x => ({ id: x.id, label: `${optionLabel(x.competition, x.title)} (${LEVELS.find(l => l.id === x.level)!.label})` }))
                 .sort((a, b) => a.label.localeCompare(b.label, 'is'))
                 .map(x => <option key={x.id} value={x.id}>{x.label}</option>)}
             </optgroup>)}
@@ -169,7 +198,7 @@ export function Topp10Game() {
         </div>
       </div>
       {help && <aside id="tenaball-help" className={styles.help}>
-        <strong>Tíu svör. Þrjár tilraunir.</strong>
+        <strong>Tíu svör. Létt: 5 tilraunir, Miðlungs: 3, Erfitt: 2.</strong>
         <p>Skrifaðu eitt svar í einu og ýttu á Enter eða Svara. Hvert nýtt rétt svar fyllir næsta þrep. Þú mátt svara í hvaða röð sem er. Rangt svar kostar tilraun; tómt eða endurtekið svar kostar ekkert. Ný þraut dagsins birtist á miðnætti, og undir Allar þrautir getur þú spilað hinar.</p>
         <button onClick={() => setHelp(false)}>Loka leiðbeiningum <X size={16}/></button>
       </aside>}
@@ -201,7 +230,7 @@ export function Topp10Game() {
             </p>
             <div className={styles.progress}>
               <div><strong key={state.found.length} className={animated.length ? styles.progressPop : ''}>{state.found.length} <span>/ 10</span></strong><span>rétt svör</span></div>
-              <div className={styles.lives}><span>{state.lives} {state.lives === 1 ? 'tilraun eftir' : 'tilraunir eftir'}</span><span role="img" aria-label={`${state.lives} af 3 tilraunum eftir`} className={styles.dots}>{Array.from({ length: LIVES }, (_, i) => <i key={`${i}-${i < state.lives}`} className={i < state.lives ? styles.filled : styles.spent}/>)}</span></div>
+              <div className={styles.lives}><span>{state.lives} {state.lives === 1 ? 'tilraun eftir' : 'tilraunir eftir'}</span><span role="img" aria-label={`${state.lives} af ${lives} tilraunum eftir`} className={styles.dots}>{Array.from({ length: lives }, (_, i) => <i key={`${i}-${i < state.lives}`} className={i < state.lives ? styles.filled : styles.spent}/>)}</span></div>
             </div>
             <div className={styles.progressTrack} aria-hidden><span style={{ width: `${state.found.length * 10}%` }}/></div>
           </>}
@@ -225,7 +254,7 @@ export function Topp10Game() {
           {celebrate && <div className={styles.confetti} aria-hidden>{Array.from({ length: 28 }, (_, i) => <span key={i} style={{ '--i': i, '--x': `${(i * 37) % 100}%`, '--drift': `${(i % 2 ? 1 : -1) * (25 + i * 3)}px` } as CSSProperties}>✦</span>)}</div>}
         </div>
       </div>
-      <div className={styles.arenaFooter}><span><span className={styles.tinyStar}>✦</span> ÞÍN ÞEKKING. TÍU SVÖR.</span><span>10 {w.many} <i/> 3 tilraunir <i/> Engin tímamörk</span></div>
+      <div className={styles.arenaFooter}><span><span className={styles.tinyStar}>✦</span> ÞÍN ÞEKKING. TÍU SVÖR.</span><span>10 {w.many} <i/> {lives} tilraunir <i/> Engin tímamörk</span></div>
     </section>
     {reveal && <section id="possible-answers" className={styles.answers}><h2>Möguleg svör sem þú fannst ekki</h2><p>Þetta eru gild svör við þessari spurningu. Hvaða tíu ólík gild svör sem er duga.</p><ul>{question.answers.filter(a => !state.found.includes(a.id)).map(a => <li key={a.id}>{a.label}{a.detail && <span style={{ color: '#8fa0b8' }}> · {a.detail}</span>}</li>)}</ul></section>}
     <div className={styles.below}>

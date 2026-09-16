@@ -14,6 +14,10 @@ export function normalise(text: string): string {
     .replace(/æ/g, 'ae')
     .replace(/ø/g, 'o')
     .replace(/ß/g, 'ss')
+    // letters that carry no separate accent to strip: Błaszczykowski, Đoković
+    .replace(/ł/g, 'l')
+    .replace(/đ/g, 'd')
+    .replace(/ı/g, 'i')
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9]+/g, ' ')

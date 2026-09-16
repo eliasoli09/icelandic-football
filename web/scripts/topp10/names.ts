@@ -83,6 +83,16 @@ export const CLUBS: Entity[] = [
   club('cardiff', 'Cardiff City', ['Cardiff']),
   club('norwich', 'Norwich City', ['Norwich']),
   club('middlesbrough', 'Middlesbrough'),
+  club('bristolcity', 'Bristol City'),
+  club('millwall', 'Millwall'),
+  club('preston', 'Preston North End', ['Preston']),
+  club('derby', 'Derby County', ['Derby']),
+  club('qpr', 'Queens Park Rangers', ['QPR']),
+  club('sheffwed', 'Sheffield Wednesday', ['Sheffield Weds']),
+  club('oxford', 'Oxford United', ['Oxford']),
+  club('plymouth', 'Plymouth Argyle', ['Plymouth']),
+  club('wrexham', 'Wrexham'),
+  club('charlton', 'Charlton Athletic', ['Charlton']),
 
   // Spánn
   club('realmadrid', 'Real Madrid'),
@@ -168,6 +178,9 @@ export const CLUBS: Entity[] = [
   club('lorient', 'Lorient'),
   club('metz', 'Metz'),
   club('parisfc', 'Paris FC'),
+  club('reims', 'Reims', ['Stade de Reims']),
+  club('clermont', 'Clermont', ['Clermont Foot']),
+  club('montpellier', 'Montpellier', ['Montpellier HSC']),
 
   // Evrópa annars staðar
   club('ajax', 'Ajax', ['Ajax Amsterdam', 'Ajax FC']),
