@@ -1,15 +1,12 @@
 import { LISTS } from '../topp10/lists'
 import { dailyOrder } from '../topp10/daily'
-import type { Kind, Region, Topp10List } from '../topp10/types'
+import { orderedQuestion, type OrderedQuestion } from './order'
+import type { Kind, Region } from '../topp10/types'
 
-export type Question = Topp10List
+export type Question = OrderedQuestion
 
-/**
- * Every question scripts/topp10/build.mts verified against two sources, in
- * the order the daily question walks through them. Any ten different answers
- * from a question's set win the round.
- */
-export const QUESTIONS: Question[] = dailyOrder(LISTS)
+/** Ten fixed, ordered answers derived from the full verified source sets. */
+export const QUESTIONS: Question[] = dailyOrder(LISTS).map(orderedQuestion)
 export const QUESTION_BY_ID: Record<string, Question> = Object.fromEntries(QUESTIONS.map((q) => [q.id, q]))
 
 export const REGIONS: { id: Region; label: string }[] = [

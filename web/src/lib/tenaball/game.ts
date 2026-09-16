@@ -11,26 +11,27 @@ export const livesFor = (q: Question) => LIVES_BY_LEVEL[q.level]
 /** the level last chosen in this browser */
 export const LEVEL_KEY = 'tenaball:level'
 /** a free round, kept in this tab */
-export const SAVE_KEY = 'tenaball:round:v2'
+export const SAVE_KEY = 'tenaball:round:v3'
 /** whether this tab was last playing the daily question or free rounds */
 export const MODE_KEY = 'tenaball:mode'
 /** the daily round at a level, kept in this browser for the rest of the day */
-export const dailyKey = (day: number, level: Level) => `tenaball:daily:${day}:${level}`
+export const dailyKey = (day: number, level: Level) => `tenaball:daily:v2:${day}:${level}`
 
 const DAY = 86_400_000
 
 export interface Round {
   questionId: string
-  /** answer ids, in the order they were found */
+  /** answer ids, in the question’s fixed order */
   found: string[]
   lives: number
+  hints: Record<string, number>
   status: 'playing' | 'won' | 'lost'
   lastSubmission: string | null
 }
 export interface Feedback { kind: 'correct' | 'incorrect' | 'duplicate' | 'empty' | 'over' | 'ignored'; answerId?: string }
 
 export function newRound(q: Question): Round {
-  return { questionId: q.id, found: [], lives: livesFor(q), status: 'playing', lastSubmission: null }
+  return { questionId: q.id, found: [], hints: {}, lives: livesFor(q), status: 'playing', lastSubmission: null }
 }
 
 const byLevel = new Map<Level, Question[]>()
@@ -68,7 +69,7 @@ export function submitAnswer(q: Question, state: Round, text: string, submission
     return { state: { ...state, lives, status: lives ? 'playing' : 'lost', lastSubmission: submission }, feedback: { kind: 'incorrect' } }
   }
   if (state.found.includes(answer.id)) return { state: { ...state, lastSubmission: submission }, feedback: { kind: 'duplicate', answerId: answer.id } }
-  const found = [...state.found, answer.id]
+  const found = q.answers.filter(a => a.id === answer.id || state.found.includes(a.id)).map(a => a.id)
   return { state: { ...state, found, status: found.length === TARGET ? 'won' : 'playing', lastSubmission: submission }, feedback: { kind: 'correct', answerId: answer.id } }
 }
 
@@ -82,9 +83,13 @@ export function restoreRound(raw: string | null, expected?: string): Round | nul
     const ids = new Set(q.answers.map((a) => a.id))
     if (!Array.isArray(s.found) || s.found.length > TARGET || new Set(s.found).size !== s.found.length || !s.found.every((id) => ids.has(id))) return null
     if (!Number.isInteger(s.lives) || s.lives < 0 || s.lives > livesFor(q) || (s.lastSubmission !== null && typeof s.lastSubmission !== 'string')) return null
+    // Old saves predate hints; adding an empty map preserves their progress.
+    if (s.hints === undefined) s.hints = {}
+    if (!s.hints || typeof s.hints !== 'object' || Array.isArray(s.hints)
+      || Object.entries(s.hints).some(([id, stage]) => !ids.has(id) || !Number.isInteger(stage) || stage < 1 || stage > 3)) return null
     if (s.found.length === TARGET && s.lives === 0) return null
     const status = s.found.length === TARGET ? 'won' : s.lives === 0 ? 'lost' : 'playing'
-    return s.status === status ? s : null
+    return s.status === status ? { ...s, found: q.answers.filter(a => s.found.includes(a.id)).map(a => a.id) } : null
   } catch { return null }
 }
 

@@ -106,3 +106,28 @@
 .ballPedestal { position:absolute; z-index:-1; bottom:1%; left:10%; width:80%; height:12%; border:1px solid #43dbff70; border-radius:50%; background:radial-gradient(ellipse,#23cfff55,transparent 70%); box-shadow:0 0 9px #196dff88; animation:ballBreath 6s ease-in-out infinite reverse; }
 .rotatingBall[data-running='false'] * { animation-play-state:paused !important; }
 @keyframes ballBreath { 0%,100% { opacity:.65; transform:scale(.93); } 50% { opacity:1; transform:scale(1.07); } }
+
+/* Progressive clues belong to a fixed, still-hidden pyramid slot. */
+.questionBlock > .ordering { margin-top:9px; color:#b7c9e8; line-height:1.6; }
+.hints { margin-top:8px; border:1px solid #315894; border-radius:10px; background:linear-gradient(125deg,#102044a6,#16123980); padding:12px; }
+.hintHeading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:9px; }
+.hintHeading > span { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:650; color:#d4caff; }
+.hintHeading > small { color:#94a9cd; font-size:9px; }
+.hintControls { display:flex; gap:8px; }
+.hintControls select, .hintControls button { min-height:44px; border:1px solid #5276af; border-radius:7px; color:#e4ecff; background:#0b1d42; font-size:11px; }
+.hintControls select { width:40%; min-width:0; padding:0 6px; }
+.hintControls button { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; background:linear-gradient(135deg,#263777,#372266); font-weight:650; }
+.hintControls button:hover:not(:disabled) { border-color:#b58aff; background:#3b2c7c; }
+.hintControls button:disabled { opacity:.55; cursor:default; }
+.hintContent > p { margin:9px 0 0; font-size:10px; color:#9eb4d4; }
+.hintContent ol { display:flex; flex-direction:column; gap:7px; list-style:none; padding:0; margin:7px 0 0; }
+.hintContent li { display:flex; align-items:center; gap:9px; }
+.hintContent li > span { display:grid; place-items:center; flex-shrink:0; width:21px; height:21px; border:1px solid #6575aa; border-radius:50%; color:#b5bfff; font-size:10px; }
+.hintContent small { display:block; color:#a6b8d7; font-size:9px; }
+.hintContent strong { display:block; color:#ebeeff; font-size:13px; font-weight:600; overflow-wrap:anywhere; }
+.hintFor { display:block; margin-top:10px; color:#b9a8f6; font-size:10px; }
+.hintTarget { border-color:#aa80ff; box-shadow:0 0 10px #7c4dff42; }
+.hintedLetter { color:#cfbcff; }.hintedLetter > span { color:#7e79a6; }
+.revealed { border-color:#a94c76; background:#29142f; }.revealed svg { color:#e58ba8; }
+.shell select:focus-visible { outline:2px solid #9ff8ff; outline-offset:3px; }
+@media(max-width:360px) { .hints { padding:9px; }.hintControls { flex-wrap:wrap; }.hintControls select { width:100%; }.hintControls button { width:100%; }.hintHeading > small { font-size:8px; } }

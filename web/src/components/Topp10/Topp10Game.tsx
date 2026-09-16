@@ -1,9 +1,10 @@
 'use client'
 
 import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
-import { ArrowRight, CalendarDays, Check, ChevronDown, Info, RotateCcw, Share2, X } from 'lucide-react'
+import { ArrowRight, CalendarDays, Check, ChevronDown, Info, Lightbulb, RotateCcw, Share2, X } from 'lucide-react'
 import { QUESTIONS, QUESTION_BY_ID, REGIONS, words } from '@/lib/tenaball/data'
 import { LEVEL_KEY, MODE_KEY, SAVE_KEY, dailyKey, dailyQuestion, livesFor, newRound, nextQuestion, restoreRound, shareText, submitAnswer, type Feedback, type Round } from '@/lib/tenaball/game'
+import { hintDetails, requestHint } from '@/lib/tenaball/hints'
 import { LEVELS, isLevel, type Level } from '@/lib/level'
 import { dayNumber } from '@/lib/topp10/daily'
 import { normalise } from '@/lib/topp10/normalise'
@@ -48,6 +49,7 @@ export function Topp10Game() {
   const [help, setHelp] = useState(false)
   const [reveal, setReveal] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [hintSelection, setHintSelection] = useState<string | null>(null)
   const input = useRef<HTMLInputElement>(null)
   const result = useRef<HTMLHeadingElement>(null)
   const lastInput = useRef({ value: '', time: -Infinity })
@@ -55,6 +57,11 @@ export function Topp10Game() {
   const question = QUESTION_BY_ID[state.questionId]
   const answers = useMemo(() => new Map(question.answers.map(a => [a.id, a])), [question])
   const w = words(question.kind)
+  const missing = question.answers.filter(a => !state.found.includes(a.id))
+  const hintAnswer = missing.find(a => a.id === hintSelection) ?? missing[0]
+  const hintStage = hintAnswer ? state.hints[hintAnswer.id] ?? 0 : 0
+  const hints = hintAnswer ? hintDetails(question, hintAnswer) : []
+  const hintSlot = hintAnswer ? question.answers.findIndex(a => a.id === hintAnswer.id) + 1 : 0
   // the day is read in the browser, after hydration, so the server never picks it
   const dateLabel = ready ? dayLabel(day) : ''
 
@@ -103,7 +110,7 @@ export function Topp10Game() {
     setMode(nextMode)
     write('session', MODE_KEY, nextMode)
     update(next)
-    setText(''); setFeedback(null); setAnimated([]); setCelebrate(false); setReveal(false); setCopied(false)
+    setText(''); setFeedback(null); setAnimated([]); setCelebrate(false); setReveal(false); setCopied(false); setHintSelection(null)
     setShowResult(next.status !== 'playing')
     lastInput.current = { value: '', time: -Infinity }
     setRoundNumber(n => n + 1)
@@ -162,7 +169,7 @@ export function Topp10Game() {
 
   const answer = feedback?.answerId ? answers.get(feedback.answerId) : null
   const message = feedback?.kind === 'correct' ? `Rétt! ${answer?.label} bætist við.`
-    : feedback?.kind === 'incorrect' ? 'Ekki rétt. Reyndu aftur.'
+    : feedback?.kind === 'incorrect' ? 'Ekki eitt af tíu svörunum. Reyndu aftur.'
     : feedback?.kind === 'duplicate' ? `${answer?.label} ${w.already}.` : ''
   const kind = feedback?.kind ?? 'idle'
   const verified = question.verifiedAt.split('-').reverse().join('.')
@@ -199,7 +206,8 @@ export function Topp10Game() {
       </div>
       {help && <aside id="tenaball-help" className={styles.help}>
         <strong>Tíu svör. Létt: 5 tilraunir, Miðlungs: 3, Erfitt: 2.</strong>
-        <p>Skrifaðu eitt svar í einu og ýttu á Enter eða Svara. Hvert nýtt rétt svar fyllir næsta þrep. Þú mátt svara í hvaða röð sem er. Rangt svar kostar tilraun; tómt eða endurtekið svar kostar ekkert. Ný þraut dagsins birtist á miðnætti, og undir Allar þrautir getur þú spilað hinar.</p>
+        <p>Skrifaðu eitt svar í einu og ýttu á Enter eða Svara. Hvert rétt svar fer beint í sitt rétta sæti í pýramídanum. Þú mátt svara í hvaða röð sem er. Rangt svar kostar tilraun; tómt eða endurtekið svar kostar ekkert. Ný þraut dagsins birtist á miðnætti, og undir Allar þrautir getur þú spilað hinar.</p>
+        <p>Veldu ófundið sæti undir Vísbendingar. Fyrsta vísbending sýnir fyrsta staf, önnur þjóðerni leikmanns eða land félags og þriðja félag leikmanns á tímabili þrautarinnar eða heimaborg félags. Vísbendingar kosta ekki tilraun.</p>
         <button onClick={() => setHelp(false)}>Loka leiðbeiningum <X size={16}/></button>
       </aside>}
       <div className={styles.gameLayout} key={roundNumber}>
@@ -208,6 +216,7 @@ export function Topp10Game() {
           <span className={styles.eyebrow}>{ready ? question.title : ' '}</span>
           <h2>{ready ? question.question : ' '}</h2>
           <p>{ready ? question.context : ' '}</p>
+          {ready && <p className={styles.ordering}>{question.ordering}</p>}
         </div>}
         <div className={`${styles.answerPanel} ${styles[kind] ?? ''}`} data-result={showResult}>
           {showResult ? <div className={styles.result}>
@@ -228,6 +237,21 @@ export function Topp10Game() {
             <p id="tenaball-feedback" className={styles.feedback} aria-live="polite" aria-atomic="true">
               {message ? <span key={feedback?.event}>{kind === 'correct' ? <Check size={18}/> : kind === 'incorrect' ? <X size={18}/> : <Info size={18}/>} {message}</span> : <span className={styles.prompt}>{w.prompt}</span>}
             </p>
+            {hintAnswer && <section className={styles.hints} aria-label="Vísbendingar">
+              <div className={styles.hintHeading}><span><Lightbulb size={16}/> Vísbendingar</span><small>Kosta ekki tilraun</small></div>
+              <div className={styles.hintControls}>
+                <label className={styles.srOnly} htmlFor="tenaball-hint-slot">Sæti fyrir vísbendingu</label>
+                <select id="tenaball-hint-slot" value={hintAnswer.id} onChange={e => setHintSelection(e.target.value)} disabled={!ready || state.status !== 'playing'}>
+                  {missing.map(a => <option key={a.id} value={a.id}>Sæti {question.answers.indexOf(a) + 1} · {state.hints[a.id] ?? 0}/3</option>)}
+                </select>
+                <button type="button" onClick={() => update(requestHint(question, current.current, hintAnswer.id))} disabled={!ready || state.status !== 'playing' || hintStage >= 3}>
+                  <Lightbulb size={15}/>{hintStage < 3 ? `Vísbending ${hintStage + 1} / 3` : 'Allar 3 sýndar'}
+                </button>
+              </div>
+              <div className={styles.hintContent} aria-live="polite" aria-atomic="true">
+                {hintStage > 0 ? <><span className={styles.hintFor}>Vísbendingar fyrir sæti {hintSlot}</span><ol>{hints.slice(0, hintStage).map((hint, i) => <li key={hint.label}><span>{i + 1}</span><div><small>{hint.label}</small><strong>{hint.value}</strong></div></li>)}</ol></> : <p>Veldu sæti og fáðu fyrsta stafinn.</p>}
+              </div>
+            </section>}
             <div className={styles.progress}>
               <div><strong key={state.found.length} className={animated.length ? styles.progressPop : ''}>{state.found.length} <span>/ 10</span></strong><span>rétt svör</span></div>
               <div className={styles.lives}><span>{state.lives} {state.lives === 1 ? 'tilraun eftir' : 'tilraunir eftir'}</span><span role="img" aria-label={`${state.lives} af ${lives} tilraunum eftir`} className={styles.dots}>{Array.from({ length: lives }, (_, i) => <i key={`${i}-${i < state.lives}`} className={i < state.lives ? styles.filled : styles.spent}/>)}</span></div>
@@ -239,14 +263,16 @@ export function Topp10Game() {
           <svg className={styles.pyramidOutline} viewBox="0 0 500 600" preserveAspectRatio="none" aria-hidden><path d="M125 10 H375 L486 546 Q501 570 486 585 Q480 592 466 592 H34 Q20 592 14 585 Q-1 570 14 546 Z"/></svg>
           <RotatingStarBall className={styles.crown}/>
           <ol role="list">{Array.from({ length: 10 }, (_, i) => {
-            const id = state.found[i]
-            const found = id ? answers.get(id) : null
+            const answer = question.answers[i]
+            const id = answer.id
+            const found = state.found.includes(id) ? answer : null
+            const shown = found ?? (reveal ? answer : null)
             return <li key={i} style={{ '--step': i, '--row-width': `${46 + i * 4.4}%` } as CSSProperties} className={styles.step}>
-              <div className={`${styles.stepSurface} ${found ? styles.found : ''}`}>
+              <div className={`${styles.stepSurface} ${found ? styles.found : ''} ${!found && hintAnswer?.id === id && hintStage > 0 ? styles.hintTarget : ''} ${reveal && !found ? styles.revealed : ''}`} title={shown?.detail}>
                 {found && animated.includes(id) && <span className={styles.correctSweep} aria-hidden/>}
                 {feedback?.kind === 'duplicate' && highlight === id && <span key={feedback.event} className={styles.duplicateSweep} aria-hidden/>}
-                <span className={styles.stepNumber}>{i + 1}</span><span className={styles.clubName}>{found?.label ?? <span className={styles.emptyLine}/>}</span>
-                {found ? <Check className={animated.includes(id) ? styles.checkDraw : ''} size={19} aria-label="Rétt svar"/> : <span className={styles.emptyDot} aria-hidden/>}
+                <span className={styles.stepNumber}>{i + 1}</span><span className={styles.clubName}>{shown?.label ?? (state.hints[id] ? <span className={styles.hintedLetter}>{Array.from(answer.label)[0]}<span> …</span></span> : <span className={styles.emptyLine}/>)}</span>
+                {found ? <Check className={animated.includes(id) ? styles.checkDraw : ''} size={19} aria-label="Rétt svar"/> : reveal ? <X size={16} aria-label="Ófundið svar"/> : <span className={styles.emptyDot} aria-hidden/>}
               </div>
             </li>
           })}</ol>
@@ -256,7 +282,7 @@ export function Topp10Game() {
       </div>
       <div className={styles.arenaFooter}><span><span className={styles.tinyStar}>✦</span> ÞÍN ÞEKKING. TÍU SVÖR.</span><span>10 {w.many} <i/> {lives} tilraunir <i/> Engin tímamörk</span></div>
     </section>
-    {reveal && <section id="possible-answers" className={styles.answers}><h2>Möguleg svör sem þú fannst ekki</h2><p>Þetta eru gild svör við þessari spurningu. Hvaða tíu ólík gild svör sem er duga.</p><ul>{question.answers.filter(a => !state.found.includes(a.id)).map(a => <li key={a.id}>{a.label}{a.detail && <span style={{ color: '#8fa0b8' }}> · {a.detail}</span>}</li>)}</ul></section>}
+    {reveal && <section id="possible-answers" className={styles.answers}><h2>Rétt svör sem þú fannst ekki</h2><p>{question.ordering}</p><ul>{question.answers.filter(a => !state.found.includes(a.id)).map(a => <li key={a.id}>{question.answers.indexOf(a) + 1}. {a.label}{a.detail && <span style={{ color: '#8fa0b8' }}> · {a.detail}</span>}</li>)}</ul></section>}
     <div className={styles.below}>
       <span><RotateCcw size={14}/> {mode === 'daily' ? 'Þraut dagsins vistast í þessum vafra. Ný þraut á miðnætti.' : 'Framvindan vistast í þessum vafraflipa.'}</span>
       <span style={{ flexWrap: 'wrap' }}>Heimildir, bornar saman og sammála {verified}:{question.sources.map((s, i) => <Fragment key={s.url}>{i > 0 && ' og '}<a href={s.url} target="_blank" rel="noreferrer">{s.name} ↗</a></Fragment>)}</span>

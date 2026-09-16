@@ -18,9 +18,10 @@ describe('Tenaball', () => {
     expect(play(a.state, 'Manchester United', '2').state.lives).toBe(livesFor(q))
     expect(play(s, 'Bayern Munchen', '3').feedback.kind).toBe('correct')
   })
-  it('accepts champions beyond the old top ten including Chelsea', () => {
-    for (const answer of ['Chelsea', 'Celtic', 'PSV', 'Aston Villa', 'Hamburg', 'Steaua Bucuresti', 'Red Star Belgrade', 'PSG']) {
-      expect(play(newRound(q), answer, answer).feedback.kind).toBe('correct')
+  it('accepts the fixed top ten and excludes answers below the documented cut-off', () => {
+    expect(play(newRound(q), 'Chelsea', '1').feedback.kind).toBe('correct')
+    for (const answer of ['Celtic', 'PSV', 'Aston Villa', 'Hamburg', 'Steaua Bucuresti', 'Red Star Belgrade', 'PSG']) {
+      expect(play(newRound(q), answer, answer).feedback.kind).toBe('incorrect')
     }
   })
   it('does not spend a life for empty input or accept ambiguous/fuzzy names', () => {
@@ -37,7 +38,7 @@ describe('Tenaball', () => {
     expect(s.lives).toBe(0)
     expect(play(s, 'Real Madrid', '4').state).toEqual(s)
   })
-  it('wins with any ten distinct valid answers in entry order', () => {
+  it('wins with all ten answers in their fixed order', () => {
     let s = newRound(q)
     for (const a of winning()) s = play(s, a.label, a.id).state
     expect(s.found).toEqual(winning().map((a) => a.id))
