@@ -1,0 +1,198 @@
+{
+  "id": "bikar-2015",
+  "region": "island",
+  "competition": "Bikarkeppni karla 2015",
+  "stage": "Úrslitaleikur",
+  "date": "2015-08-15",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 2,
+    "away": 0
+  },
+  "home": {
+    "name": "Valur",
+    "color": "#dc2422",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Ingvar Þór Kale",
+        "word": "INGVAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Thomas Guldborg Christensen",
+        "word": "CHRISTENSEN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Haukur Páll Sigurðsson",
+        "word": "HAUKUR",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Kristinn Ingi Halldórsson",
+        "word": "KRISTINN",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Patrick Pedersen",
+        "word": "PEDERSEN",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Kristinn Freyr Sigurðsson",
+        "word": "KRISTINN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Sigurður Egill Lárusson",
+        "word": "SIGURÐUR",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Orri Sigurður Ómarsson",
+        "word": "ORRI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 21,
+        "name": "Bjarni Ólafur Eiríksson",
+        "word": "BJARNI",
+        "line": 1,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 22,
+        "name": "Mathias Schlie",
+        "word": "SCHLIE",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Andri Fannar Stefánsson",
+        "word": "ANDRI",
+        "line": 1,
+        "x": 3
+      }
+    ]
+  },
+  "away": {
+    "name": "KR",
+    "color": "#16181d",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Stefán Logi Magnússon",
+        "word": "STEFAN",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Rasmus Steenberg Christiansen",
+        "word": "CHRISTIANSEN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Skúli Jón Friðgeirsson",
+        "word": "SKULI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Gunnar Þór Gunnarsson",
+        "word": "GUNNAR",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Jónas Guðni Sævarsson",
+        "word": "JONAS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Pálmi Rafn Pálmason",
+        "word": "PALMI",
+        "line": 3,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 11,
+        "name": "Almarr Ormarsson",
+        "word": "ALMARR",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Hólmbert Aron Friðjónsson",
+        "word": "HOLMBERT",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Aron Bjarki Jósepsson",
+        "word": "ARON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 20,
+        "name": "Jacob Toppel Schoop",
+        "word": "SCHOOP",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Óskar Örn Hauksson",
+        "word": "OSKAR",
+        "line": 4,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · Valur - KR, Bikarkeppni - Borgunarbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=639492"
+    },
+    {
+      "name": "transfermarkt.com · Valur Reykjavík - KR Reykjavík",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2608139"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

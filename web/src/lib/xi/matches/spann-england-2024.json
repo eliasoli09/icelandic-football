@@ -1,0 +1,197 @@
+{
+  "id": "spann-england-2024",
+  "region": "evropa",
+  "competition": "EM 2024",
+  "stage": "Úrslitaleikur",
+  "date": "2024-07-14",
+  "blurb": "Úrslitaleikur EM í Berlín.",
+  "score": {
+    "home": 2,
+    "away": 1
+  },
+  "home": {
+    "name": "Spánn",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 23,
+        "name": "Unai Simón",
+        "word": "SIMON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Dani Carvajal",
+        "word": "CARVAJAL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 3,
+        "name": "Robin Le Normand",
+        "word": "LENORMAND",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Aymeric Laporte",
+        "word": "LAPORTE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 24,
+        "name": "Marc Cucurella",
+        "word": "CUCURELLA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Rodri",
+        "word": "RODRI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Fabián Ruiz",
+        "word": "RUIZ",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Lamine Yamal",
+        "word": "YAMAL",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Dani Olmo",
+        "word": "OLMO",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Nico Williams",
+        "word": "WILLIAMS",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Álvaro Morata",
+        "word": "MORATA",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "away": {
+    "name": "England",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Jordan Pickford",
+        "word": "PICKFORD",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Kyle Walker",
+        "word": "WALKER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "John Stones",
+        "word": "STONES",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Marc Guéhi",
+        "word": "GUEHI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Bukayo Saka",
+        "word": "SAKA",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 26,
+        "name": "Kobbie Mainoo",
+        "word": "MAINOO",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Declan Rice",
+        "word": "RICE",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Luke Shaw",
+        "word": "SHAW",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Phil Foden",
+        "word": "FODEN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Jude Bellingham",
+        "word": "BELLINGHAM",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Harry Kane",
+        "word": "KANE",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2024 final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374029048"
+    },
+    {
+      "name": "transfermarkt.com · Spain - England",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4359342"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

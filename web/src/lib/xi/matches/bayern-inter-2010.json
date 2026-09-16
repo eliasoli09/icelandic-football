@@ -1,0 +1,197 @@
+{
+  "id": "bayern-inter-2010",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2009/10",
+  "stage": "Úrslitaleikur",
+  "date": "2010-05-22",
+  "blurb": "Úrslitaleikurinn á Santiago Bernabéu í Madríd.",
+  "score": {
+    "home": 0,
+    "away": 2
+  },
+  "home": {
+    "name": "Bayern München",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 22,
+        "name": "Hans-Jörg Butt",
+        "word": "BUTT",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Philipp Lahm",
+        "word": "LAHM",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Daniel Van Buyten",
+        "word": "VANBUYTEN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Martín Demichelis",
+        "word": "DEMICHELIS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 28,
+        "name": "Holger Badstuber",
+        "word": "BADSTUBER",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Mark van Bommel",
+        "word": "VANBOMMEL",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 31,
+        "name": "Bastian Schweinsteiger",
+        "word": "SCHWEINSTEIGER",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Arjen Robben",
+        "word": "ROBBEN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Hamit Altıntop",
+        "word": "ALTINTOP",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 25,
+        "name": "Thomas Müller",
+        "word": "MULLER",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Ivica Olić",
+        "word": "OLIC",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Inter",
+    "color": "#000000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 12,
+        "name": "Júlio César",
+        "word": "JULIOCESAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 13,
+        "name": "Maicon",
+        "word": "MAICON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Lúcio",
+        "word": "LUCIO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 25,
+        "name": "Walter Samuel",
+        "word": "SAMUEL",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Cristian Chivu",
+        "word": "CHIVU",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Javier Zanetti",
+        "word": "ZANETTI",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Esteban Cambiasso",
+        "word": "CAMBIASSO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Wesley Sneijder",
+        "word": "SNEIJDER",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Samuel Eto'o",
+        "word": "ETOO",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 22,
+        "name": "Diego Milito",
+        "word": "MILITO",
+        "line": 5,
+        "x": 1,
+        "goals": 2
+      },
+      {
+        "number": 27,
+        "name": "Goran Pandev",
+        "word": "PANDEV",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2010 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371113180"
+    },
+    {
+      "name": "transfermarkt.com · Inter Milan - Bayern Munich",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/1016825"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

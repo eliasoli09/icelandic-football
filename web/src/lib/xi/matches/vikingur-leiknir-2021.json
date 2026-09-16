@@ -1,0 +1,198 @@
+{
+  "id": "vikingur-leiknir-2021",
+  "region": "island",
+  "competition": "Pepsi Max-deild karla 2021",
+  "stage": "Lokaumferð",
+  "date": "2021-09-25",
+  "blurb": "Lokaumferðin. Heimaliðið varð Íslandsmeistari.",
+  "score": {
+    "home": 2,
+    "away": 0
+  },
+  "home": {
+    "name": "Víkingur R.",
+    "color": "#c8102e",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Ingvar Jónsson",
+        "word": "INGVAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Erlingur Agnarsson",
+        "word": "ERLINGUR",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 8,
+        "name": "Sölvi Geir Ottesen",
+        "word": "SÖLVI",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Pablo Oshan Punyed Dubon",
+        "word": "PUNYED",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Halldór Smári Sigurðsson",
+        "word": "HALLDOR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 13,
+        "name": "Viktor Örlygur Andrason",
+        "word": "VIKTOR",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Atli Barkarson",
+        "word": "ATLI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Júlíus Magnússon",
+        "word": "JULIUS",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Karl Friðleifur Gunnarsson",
+        "word": "KARL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 23,
+        "name": "Nikolaj Andreas Hansen",
+        "word": "HANSEN",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 80,
+        "name": "Kristall Máni Ingason",
+        "word": "KRISTALL",
+        "line": 4,
+        "x": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Leiknir R.",
+    "color": "#2a2b6b",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 12,
+        "name": "Guy Smit",
+        "word": "SMIT",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Bjarki Aðalsteinsson",
+        "word": "BJARKI",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 5,
+        "name": "Daði Bærings Halldórsson",
+        "word": "DAÐI",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Árni Elvar Árnason",
+        "word": "ARNI",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Brynjar Hlöðversson",
+        "word": "BRYNJAR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 18,
+        "name": "Henrik Emil Hahne Berger",
+        "word": "BERGER",
+        "line": 2,
+        "x": 2
+      },
+      {
+        "number": 19,
+        "name": "Andres Ramiro Escobar Diaz",
+        "word": "DIAZ",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Loftur Páll Eiríksson",
+        "word": "LOFTUR",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Dagur Austmann Hilmarsson",
+        "word": "DAGUR",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 24,
+        "name": "Daníel Finns Matthíasson",
+        "word": "DANIEL",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Hjalti Sigurðsson",
+        "word": "HJALTI",
+        "line": 3,
+        "x": 1
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · Víkingur R. - Leiknir R., Pepsi max deild karla 2021 / 22. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=684203"
+    },
+    {
+      "name": "transfermarkt.com · Víkingur Reykjavík - Leiknir Reykjavík",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3523555"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

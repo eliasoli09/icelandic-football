@@ -121,6 +121,7 @@ export function parseTmLineups(html: string): TmLineups {
       const number = row.match(/<div class="rn_nummer">\s*(\d+)\s*<\/div>/)
       const position = row.match(/^[^"]*"\s*title="([^"]*)"/)
       const name = row.match(/class="wichtig"[^>]*>([^<]+)<\/a>/)
+      if (name && !number) throw new Error(`Transfermarkt: treyjunúmer vantar hjá ${decode(name[1]).trim()}`)
       if (!number || !name) throw new Error('Transfermarkt: ólesanleg röð í byrjunarliði')
       return {
         number: Number(number[1]),
@@ -223,7 +224,10 @@ const COUNTRY: Record<string, string> = {
 
 /** "{{fb-rt|BRA}}" and its relatives name a country by code. */
 function teamName(raw: string): string {
-  const code = raw.match(/\{\{\s*(?:fb(?:-rt)?|#invoke:\s*flagg[^}]*?)\|\s*([A-Z]{3})\s*(?:\|[^}]*)?\}\}/)
+  // a crest flag beside a club's name is not the team: {{#invoke:flag|fbaicon|ENG}}, {{fbaicon|ENG}}
+  raw = raw.replace(/\{\{\s*(?:#invoke:\s*flag\s*\|\s*)?fbaicon\s*\|[^}]*\}\}/g, '')
+  // a national team: {{fb|ISL}}, {{fb-rt|ENG}}, {{#invoke:flag|fb-rt|ESP}}, {{#invoke:flagg|main|unpre|avar=fb|ARG}}
+  const code = raw.match(/\{\{\s*(?:fb(?:-rt)?|#invoke:\s*flag\s*\|\s*fb(?:-rt)?|#invoke:\s*flagg\s*\|[^}]*?avar=fb[^}|]*)\s*\|\s*([A-Z]{3})\s*(?:\|[^}]*)?\}\}/)
   if (code) {
     if (!COUNTRY[code[1]]) throw new Error(`Wikipedia: óþekktur landskóði ${code[1]}`)
     return COUNTRY[code[1]]
@@ -275,7 +279,8 @@ export function parseWikiMatch(wt: string, date: string, pick?: (home: string, a
     if (team > 1) break
     if (/Substitut(?:es|ions)/.test(line)) { subs = true; continue }
     if (subs && /^\s*\{\|/.test(line)) { team++; subs = false; continue }
-    const row = line.match(/^\|\s*([A-Z]{2,3})\s*\|\|\s*'''\s*(\d+)\s*'''\s*\|\|(.*)$/)
+    // the position is a bare code or wrapped in {{abbr|RB|Right-back}}
+    const row = line.match(/^\|\s*(?:\{\{\s*abbr\s*\|\s*)?([A-Z]{2,3})(?:\s*\|[^}]*\}\})?\s*\|\|\s*'''\s*(\d+)\s*'''\s*\|\|(.*)$/)
     if (!row || subs) continue
     const cell = splitTop(row[3], '||')[0]
     teams[team].push({

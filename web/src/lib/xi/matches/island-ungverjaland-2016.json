@@ -1,0 +1,197 @@
+{
+  "id": "island-ungverjaland-2016",
+  "region": "island",
+  "competition": "EM 2016",
+  "stage": "Riðlakeppni",
+  "date": "2016-06-18",
+  "blurb": "Annar leikur Íslands á EM 2016, í Marseille.",
+  "score": {
+    "home": 1,
+    "away": 1
+  },
+  "home": {
+    "name": "Ísland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HANNES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "BIRKIR",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "RAGNAR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Kári Árnason",
+        "word": "KARI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Ari Freyr Skúlason",
+        "word": "ARI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Berg Guðmundsson",
+        "word": "JOHANN",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "GYLFI",
+        "line": 3,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "ARON",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BIRKIR",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Kolbeinn Sigþórsson",
+        "word": "KOLBEINN",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 15,
+        "name": "Jón Daði Böðvarsson",
+        "word": "JON",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Ungverjaland",
+    "color": "#8a94a6",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Gábor Király",
+        "word": "KIRALY",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Ádám Lang",
+        "word": "LANG",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 20,
+        "name": "Richárd Guzmics",
+        "word": "GUZMICS",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 23,
+        "name": "Roland Juhász",
+        "word": "JUHASZ",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Tamás Kádár",
+        "word": "KADAR",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "László Kleinheisler",
+        "word": "KLEINHEISLER",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Zoltán Gera",
+        "word": "GERA",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Ádám Nagy",
+        "word": "NAGY",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Zoltán Stieber",
+        "word": "STIEBER",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Balázs Dzsudzsák",
+        "word": "DZSUDZSAK",
+        "line": 4,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Tamás Priskin",
+        "word": "PRISKIN",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2016 Group F",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1359154497"
+    },
+    {
+      "name": "transfermarkt.com · Iceland - Hungary",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2645656"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

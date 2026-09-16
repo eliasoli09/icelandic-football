@@ -1,0 +1,196 @@
+{
+  "id": "thyskaland-argentina-2014",
+  "region": "evropa",
+  "competition": "HM 2014",
+  "stage": "Úrslitaleikur",
+  "date": "2014-07-13",
+  "blurb": "Úrslitaleikur HM á Maracanã í Rio de Janeiro.",
+  "score": {
+    "home": 1,
+    "away": 0
+  },
+  "home": {
+    "name": "Þýskaland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Manuel Neuer",
+        "word": "NEUER",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Philipp Lahm",
+        "word": "LAHM",
+        "line": 1,
+        "x": 3,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Jérôme Boateng",
+        "word": "BOATENG",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Mats Hummels",
+        "word": "HUMMELS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Benedikt Höwedes",
+        "word": "HOWEDES",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Christoph Kramer",
+        "word": "KRAMER",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Bastian Schweinsteiger",
+        "word": "SCHWEINSTEIGER",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 13,
+        "name": "Thomas Müller",
+        "word": "MULLER",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 11,
+        "name": "Miroslav Klose",
+        "word": "KLOSE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Mesut Özil",
+        "word": "OZIL",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Argentína",
+    "color": "#001363",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Sergio Romero",
+        "word": "ROMERO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Pablo Zabaleta",
+        "word": "ZABALETA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 15,
+        "name": "Martín Demichelis",
+        "word": "DEMICHELIS",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 2,
+        "name": "Ezequiel Garay",
+        "word": "GARAY",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Marcos Rojo",
+        "word": "ROJO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Javier Mascherano",
+        "word": "MASCHERANO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Lucas Biglia",
+        "word": "BIGLIA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Enzo Pérez",
+        "word": "PEREZ",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Lionel Messi",
+        "word": "MESSI",
+        "line": 4,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 22,
+        "name": "Ezequiel Lavezzi",
+        "word": "LAVEZZI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Gonzalo Higuaín",
+        "word": "HIGUAIN",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2014 FIFA World Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370477527"
+    },
+    {
+      "name": "transfermarkt.com · Germany - Argentina",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2466308"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

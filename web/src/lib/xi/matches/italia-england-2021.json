@@ -1,0 +1,199 @@
+{
+  "id": "italia-england-2021",
+  "region": "evropa",
+  "competition": "EM 2020",
+  "stage": "Úrslitaleikur",
+  "date": "2021-07-11",
+  "blurb": "Úrslitaleikur EM á Wembley, ári síðar en til stóð.",
+  "score": {
+    "home": 1,
+    "away": 1,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 3-2."
+  },
+  "home": {
+    "name": "Ítalía",
+    "color": "#113ed7",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 21,
+        "name": "Gianluigi Donnarumma",
+        "word": "DONNARUMMA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Giovanni Di Lorenzo",
+        "word": "DILORENZO",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 19,
+        "name": "Leonardo Bonucci",
+        "word": "BONUCCI",
+        "line": 1,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 3,
+        "name": "Giorgio Chiellini",
+        "word": "CHIELLINI",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 13,
+        "name": "Emerson Palmieri",
+        "word": "EMERSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Jorginho",
+        "word": "JORGINHO",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Nicolò Barella",
+        "word": "BARELLA",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Marco Verratti",
+        "word": "VERRATTI",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Federico Chiesa",
+        "word": "CHIESA",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Lorenzo Insigne",
+        "word": "INSIGNE",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Ciro Immobile",
+        "word": "IMMOBILE",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "England",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Jordan Pickford",
+        "word": "PICKFORD",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Kyle Walker",
+        "word": "WALKER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "John Stones",
+        "word": "STONES",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Harry Maguire",
+        "word": "MAGUIRE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Kieran Trippier",
+        "word": "TRIPPIER",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Luke Shaw",
+        "word": "SHAW",
+        "line": 2,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 14,
+        "name": "Kalvin Phillips",
+        "word": "PHILLIPS",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Declan Rice",
+        "word": "RICE",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Raheem Sterling",
+        "word": "STERLING",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Mason Mount",
+        "word": "MOUNT",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Harry Kane",
+        "word": "KANE",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2020 final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1366126814"
+    },
+    {
+      "name": "transfermarkt.com · Italy - England",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3605575"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

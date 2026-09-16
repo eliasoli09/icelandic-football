@@ -95,7 +95,9 @@ function scorer(players: SourcePlayer[], name: string): SourcePlayer | undefined
 const EN: Record<string, string> = {
   'Ísland': 'Iceland', 'Argentína': 'Argentina', 'Brasilía': 'Brazil', 'Þýskaland': 'Germany',
   'Frakkland': 'France', 'QPR': 'Queens Park Rangers', 'Bayern München': 'Bayern Munich', 'Víkingur R.': 'Víkingur',
-  'Tottenham': 'Tottenham Hotspur',
+  'Tottenham': 'Tottenham Hotspur', 'Króatía': 'Croatia', 'Holland': 'Netherlands', 'Spánn': 'Spain', 'Ítalía': 'Italy',
+  'Portúgal': 'Portugal', 'Austurríki': 'Austria', 'Ungverjaland': 'Hungary', 'Inter': 'Inter Milan', 'Newcastle': 'Newcastle United',
+  'Atlético Madrid': 'Atletico Madrid', 'Leiknir R.': 'Leiknir',
 }
 
 function mustAgree(problems: string[], what: string) {
@@ -156,6 +158,8 @@ async function fromKsi(spec: MatchSpec): Promise<Primary> {
   }
   return {
     date: report.date, home: report.home, away: report.away, score: report.score,
+    // KSÍ prints no "after extra time", but a goal or card after the 90th minute shows it
+    extraTime: events.some((e: { minute: number }) => e.minute > 90),
     lineups: report.lineups, goals, kits: {},
     source: { name: `ksi.is · ${report.home} - ${report.away}, ${report.competition}`, url: base },
     layout: 'tm',
@@ -219,7 +223,8 @@ async function build(spec: MatchSpec): Promise<XiMatch> {
 
   if (tmReport.date !== spec.date) problems.push(`Transfermarkt segir ${tmReport.date}`)
   if (tmScore[0] !== primary.score[0] || tmScore[1] !== primary.score[1]) problems.push(`úrslit ${primary.score.join('-')} og ${tmScore.join('-')} á Transfermarkt`)
-  if (Boolean(primary.penalties) !== Boolean(tmPens) && !spec.ksi) problems.push('aðeins önnur heimildin nefnir vítaspyrnukeppni')
+  // KSÍ does not report shoot-outs, so a cup final decided on penalties cannot be confirmed twice
+  if (Boolean(primary.penalties) !== Boolean(tmPens)) problems.push('aðeins önnur heimildin nefnir vítaspyrnukeppni')
   // a shoot-out's kicks are shown only where both count them the same
   const note = primary.penalties && tmPens
     ? primary.penalties.join() === tmPens.join()
@@ -294,10 +299,10 @@ async function build(spec: MatchSpec): Promise<XiMatch> {
         .sort((a, b) => a.pos.lateral - b.pos.lateral || (primary.layout === 'wiki' ? b.index - a.index : a.index - b.index))
         .forEach((x, i) => { x.player.x = i })
     }
-    const color = spec.colors?.[side] ?? primary.kits[side] ?? await dbColor(primary[side])
-    if (!color) problems.push(`${spec.names[side]}: enginn búningalitur`)
+    // a shirt colour is decoration, not an answer: without a source it is a neutral grey, never a guess
+    const color = spec.colors?.[side] ?? primary.kits[side] ?? await dbColor(primary[side]) ?? '#8a94a6'
     teams[side] = {
-      name: spec.names[side], color: color ?? '#5a6577', ink: ink(color ?? '#5a6577'),
+      name: spec.names[side], color, ink: ink(color),
       icelandic: spec.icelandic.includes(side),
       players: placed.map((x) => x.player),
     }

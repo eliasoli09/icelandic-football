@@ -1,0 +1,198 @@
+{
+  "id": "liverpool-arsenal-1989",
+  "region": "enska",
+  "competition": "Efsta deild Englands 1988/89",
+  "stage": "Síðasti leikur tímabilsins",
+  "date": "1989-05-26",
+  "blurb": "Síðasti leikur tímabilsins á Anfield. Titillinn var í húfi.",
+  "score": {
+    "home": 0,
+    "away": 2
+  },
+  "home": {
+    "name": "Liverpool",
+    "color": "#dd0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Bruce Grobbelaar",
+        "word": "GROBBELAAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Gary Ablett",
+        "word": "ABLETT",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Steve Nicol",
+        "word": "NICOL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Alan Hansen",
+        "word": "HANSEN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Steve Staunton",
+        "word": "STAUNTON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Ray Houghton",
+        "word": "HOUGHTON",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Ronnie Whelan",
+        "word": "WHELAN",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 11,
+        "name": "Steve McMahon",
+        "word": "MCMAHON",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "John Barnes",
+        "word": "BARNES",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "John Aldridge",
+        "word": "ALDRIDGE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Ian Rush",
+        "word": "RUSH",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Arsenal",
+    "color": "#f5d618",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "John Lukic",
+        "word": "LUKIC",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "David O'Leary",
+        "word": "OLEARY",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 2,
+        "name": "Lee Dixon",
+        "word": "DIXON",
+        "line": 1,
+        "x": 4
+      },
+      {
+        "number": 6,
+        "name": "Tony Adams",
+        "word": "ADAMS",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Steve Bould",
+        "word": "BOULD",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Nigel Winterburn",
+        "word": "WINTERBURN",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Michael Thomas",
+        "word": "THOMAS",
+        "line": 3,
+        "x": 3,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "David Rocastle",
+        "word": "ROCASTLE",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "Kevin Richardson",
+        "word": "RICHARDSON",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Paul Merson",
+        "word": "MERSON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Alan Smith",
+        "word": "SMITH",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Liverpool 0-2 Arsenal (1989)",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1362401049"
+    },
+    {
+      "name": "transfermarkt.com · Liverpool FC - Arsenal FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2557444"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

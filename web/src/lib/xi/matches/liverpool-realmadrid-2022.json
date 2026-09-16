@@ -1,0 +1,197 @@
+{
+  "id": "liverpool-realmadrid-2022",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2021/22",
+  "stage": "Úrslitaleikur",
+  "date": "2022-05-28",
+  "blurb": "Úrslitaleikurinn á Stade de France.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Liverpool",
+    "color": "#dd0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Alisson",
+        "word": "ALISSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 66,
+        "name": "Trent Alexander-Arnold",
+        "word": "ALEXANDERARNOLD",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Ibrahima Konaté",
+        "word": "KONATE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Virgil van Dijk",
+        "word": "VANDIJK",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Andrew Robertson",
+        "word": "ROBERTSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Jordan Henderson",
+        "word": "HENDERSON",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 3,
+        "name": "Fabinho",
+        "word": "FABINHO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Thiago Alcântara",
+        "word": "THIAGO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Mohamed Salah",
+        "word": "SALAH",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Sadio Mané",
+        "word": "MANE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Luis Díaz",
+        "word": "DIAZ",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Real Madrid",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Thibaut Courtois",
+        "word": "COURTOIS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Dani Carvajal",
+        "word": "CARVAJAL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 3,
+        "name": "Éder Militão",
+        "word": "MILITAO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "David Alaba",
+        "word": "ALABA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Ferland Mendy",
+        "word": "MENDY",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Luka Modrić",
+        "word": "MODRIC",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Casemiro",
+        "word": "CASEMIRO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Federico Valverde",
+        "word": "VALVERDE",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 9,
+        "name": "Karim Benzema",
+        "word": "BENZEMA",
+        "line": 5,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Vinícius Júnior",
+        "word": "VINICIUS",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2022 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1364919610"
+    },
+    {
+      "name": "transfermarkt.com · Liverpool FC - Real Madrid",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3812391"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

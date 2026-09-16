@@ -1,0 +1,196 @@
+{
+  "id": "bikar-2021",
+  "region": "island",
+  "competition": "Bikarkeppni karla 2021",
+  "stage": "Úrslitaleikur",
+  "date": "2021-10-16",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 0,
+    "away": 3
+  },
+  "home": {
+    "name": "ÍA",
+    "color": "#f8b718",
+    "ink": "#111111",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Árni Marinó Einarsson",
+        "word": "ARNI",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Óttar Bjarni Guðmundsson",
+        "word": "OTTAR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Aron Kristófer Lárusson",
+        "word": "ARON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Wout Droste",
+        "word": "DROSTE",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 7,
+        "name": "Sindri Snær Magnússon",
+        "word": "SINDRI",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Viktor Jónsson",
+        "word": "VIKTOR",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Steinar Þorsteinsson",
+        "word": "STEINAR",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Gísli Laxdal Unnarsson",
+        "word": "GISLI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Ísak Snær Þorvaldsson",
+        "word": "ISAK",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Hákon Ingi Jónsson",
+        "word": "HAKON",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 44,
+        "name": "Alexander Davey",
+        "word": "DAVEY",
+        "line": 1,
+        "x": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Víkingur R.",
+    "color": "#c8102e",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Ingvar Jónsson",
+        "word": "INGVAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Erlingur Agnarsson",
+        "word": "ERLINGUR",
+        "line": 3,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 8,
+        "name": "Sölvi Geir Ottesen",
+        "word": "SÖLVI",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 10,
+        "name": "Pablo Oshan Punyed Dubon",
+        "word": "PUNYED",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Halldór Smári Sigurðsson",
+        "word": "HALLDOR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 13,
+        "name": "Viktor Örlygur Andrason",
+        "word": "VIKTOR",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Atli Barkarson",
+        "word": "ATLI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Júlíus Magnússon",
+        "word": "JULIUS",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Kári Árnason",
+        "word": "KARI",
+        "line": 1,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 23,
+        "name": "Nikolaj Andreas Hansen",
+        "word": "HANSEN",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 80,
+        "name": "Kristall Máni Ingason",
+        "word": "KRISTALL",
+        "line": 3,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · ÍA - Víkingur R., Bikarkeppni - Mjólkurbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=639707"
+    },
+    {
+      "name": "transfermarkt.com · ÍA Akranes - Víkingur Reykjavík",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3673424"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

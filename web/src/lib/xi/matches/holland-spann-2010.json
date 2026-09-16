@@ -1,0 +1,197 @@
+{
+  "id": "holland-spann-2010",
+  "region": "evropa",
+  "competition": "HM 2010",
+  "stage": "Úrslitaleikur",
+  "date": "2010-07-11",
+  "blurb": "Úrslitaleikur HM í Jóhannesarborg.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Holland",
+    "color": "#ff5f00",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Maarten Stekelenburg",
+        "word": "STEKELENBURG",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Gregory van der Wiel",
+        "word": "VANDERWIEL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 3,
+        "name": "John Heitinga",
+        "word": "HEITINGA",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Joris Mathijsen",
+        "word": "MATHIJSEN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Giovanni van Bronckhorst",
+        "word": "VANBRONCKHORST",
+        "line": 1,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Mark van Bommel",
+        "word": "VANBOMMEL",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Nigel de Jong",
+        "word": "DEJONG",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Arjen Robben",
+        "word": "ROBBEN",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Wesley Sneijder",
+        "word": "SNEIJDER",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Dirk Kuyt",
+        "word": "KUYT",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Robin van Persie",
+        "word": "VANPERSIE",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Spánn",
+    "color": "#003366",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Iker Casillas",
+        "word": "CASILLAS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 15,
+        "name": "Sergio Ramos",
+        "word": "RAMOS",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 3,
+        "name": "Gerard Piqué",
+        "word": "PIQUE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Carles Puyol",
+        "word": "PUYOL",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Joan Capdevila",
+        "word": "CAPDEVILA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Sergio Busquets",
+        "word": "BUSQUETS",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 14,
+        "name": "Xabi Alonso",
+        "word": "ALONSO",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Xavi",
+        "word": "XAVI",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Andrés Iniesta",
+        "word": "INIESTA",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 18,
+        "name": "Pedro",
+        "word": "PEDRO",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "David Villa",
+        "word": "VILLA",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2010 FIFA World Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370477459"
+    },
+    {
+      "name": "transfermarkt.com · Netherlands - Spain",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/1030710"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

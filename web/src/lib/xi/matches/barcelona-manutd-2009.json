@@ -1,0 +1,198 @@
+{
+  "id": "barcelona-manutd-2009",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2008/09",
+  "stage": "Úrslitaleikur",
+  "date": "2009-05-27",
+  "blurb": "Úrslitaleikurinn í Róm.",
+  "score": {
+    "home": 2,
+    "away": 0
+  },
+  "home": {
+    "name": "Barcelona",
+    "color": "#a50044",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Víctor Valdés",
+        "word": "VALDES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Carles Puyol",
+        "word": "PUYOL",
+        "line": 1,
+        "x": 3,
+        "captain": true
+      },
+      {
+        "number": 24,
+        "name": "Yaya Touré",
+        "word": "TOURE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Gerard Piqué",
+        "word": "PIQUE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Sylvinho",
+        "word": "SYLVINHO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 28,
+        "name": "Sergio Busquets",
+        "word": "BUSQUETS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Xavi",
+        "word": "XAVI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Andrés Iniesta",
+        "word": "INIESTA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Lionel Messi",
+        "word": "MESSI",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 14,
+        "name": "Thierry Henry",
+        "word": "HENRY",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Samuel Eto'o",
+        "word": "ETOO",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Manchester United",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Edwin van der Sar",
+        "word": "VANDERSAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "John O'Shea",
+        "word": "OSHEA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Rio Ferdinand",
+        "word": "FERDINAND",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Nemanja Vidić",
+        "word": "VIDIC",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Patrice Evra",
+        "word": "EVRA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Anderson",
+        "word": "ANDERSON",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 16,
+        "name": "Michael Carrick",
+        "word": "CARRICK",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Ryan Giggs",
+        "word": "GIGGS",
+        "line": 3,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 13,
+        "name": "Park Ji-sung",
+        "word": "PARK",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Wayne Rooney",
+        "word": "ROONEY",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2009 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1367164189"
+    },
+    {
+      "name": "transfermarkt.com · FC Barcelona - Manchester United",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/946099"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

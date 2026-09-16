@@ -1,0 +1,202 @@
+{
+  "id": "frakkland-island-2016",
+  "region": "island",
+  "competition": "EM 2016",
+  "stage": "8 liða úrslit",
+  "date": "2016-07-03",
+  "blurb": "8 liða úrslit EM 2016 á Stade de France.",
+  "score": {
+    "home": 5,
+    "away": 2
+  },
+  "home": {
+    "name": "Frakkland",
+    "color": "#115ab9",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hugo Lloris",
+        "word": "LLORIS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Bacary Sagna",
+        "word": "SAGNA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 22,
+        "name": "Samuel Umtiti",
+        "word": "UMTITI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 21,
+        "name": "Laurent Koscielny",
+        "word": "KOSCIELNY",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Patrice Evra",
+        "word": "EVRA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Paul Pogba",
+        "word": "POGBA",
+        "line": 3,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 14,
+        "name": "Blaise Matuidi",
+        "word": "MATUIDI",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Moussa Sissoko",
+        "word": "SISSOKO",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Antoine Griezmann",
+        "word": "GRIEZMANN",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 8,
+        "name": "Dimitri Payet",
+        "word": "PAYET",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Olivier Giroud",
+        "word": "GIROUD",
+        "line": 5,
+        "x": 0,
+        "goals": 2
+      }
+    ]
+  },
+  "away": {
+    "name": "Ísland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HANNES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "BIRKIR",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Kári Árnason",
+        "word": "KARI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "RAGNAR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Ari Freyr Skúlason",
+        "word": "ARI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Berg Guðmundsson",
+        "word": "JOHANN",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "ARON",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "GYLFI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BIRKIR",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Kolbeinn Sigþórsson",
+        "word": "KOLBEINN",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 15,
+        "name": "Jón Daði Böðvarsson",
+        "word": "JON",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2016 knockout stage",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372894154"
+    },
+    {
+      "name": "transfermarkt.com · France - Iceland",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2703265"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

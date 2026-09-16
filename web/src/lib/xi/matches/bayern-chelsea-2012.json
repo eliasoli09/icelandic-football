@@ -1,0 +1,199 @@
+{
+  "id": "bayern-chelsea-2012",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2011/12",
+  "stage": "Úrslitaleikur",
+  "date": "2012-05-19",
+  "blurb": "Úrslitaleikurinn í München.",
+  "score": {
+    "home": 1,
+    "away": 1,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 3-4."
+  },
+  "home": {
+    "name": "Bayern München",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Manuel Neuer",
+        "word": "NEUER",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Philipp Lahm",
+        "word": "LAHM",
+        "line": 1,
+        "x": 3,
+        "captain": true
+      },
+      {
+        "number": 17,
+        "name": "Jérôme Boateng",
+        "word": "BOATENG",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 44,
+        "name": "Anatoliy Tymoshchuk",
+        "word": "TYMOSHCHUK",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Diego Contento",
+        "word": "CONTENTO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 31,
+        "name": "Bastian Schweinsteiger",
+        "word": "SCHWEINSTEIGER",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 39,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Arjen Robben",
+        "word": "ROBBEN",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 25,
+        "name": "Thomas Müller",
+        "word": "MULLER",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Franck Ribéry",
+        "word": "RIBERY",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 33,
+        "name": "Mario Gómez",
+        "word": "GOMEZ",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Chelsea",
+    "color": "#0000ff",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Petr Čech",
+        "word": "CECH",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "José Bosingwa",
+        "word": "BOSINGWA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "David Luiz",
+        "word": "DAVIDLUIZ",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 24,
+        "name": "Gary Cahill",
+        "word": "CAHILL",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Ashley Cole",
+        "word": "COLE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Mikel John Obi",
+        "word": "MIKEL",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Frank Lampard",
+        "word": "LAMPARD",
+        "line": 3,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 21,
+        "name": "Salomon Kalou",
+        "word": "KALOU",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Juan Mata",
+        "word": "MATA",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 34,
+        "name": "Ryan Bertrand",
+        "word": "BERTRAND",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Didier Drogba",
+        "word": "DROGBA",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2012 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371171265"
+    },
+    {
+      "name": "transfermarkt.com · Bayern Munich - Chelsea FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2208062"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

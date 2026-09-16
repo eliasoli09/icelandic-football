@@ -1,0 +1,198 @@
+{
+  "id": "portugal-island-2016",
+  "region": "island",
+  "competition": "EM 2016",
+  "stage": "Riðlakeppni",
+  "date": "2016-06-14",
+  "blurb": "Fyrsti leikur Íslands á stórmóti, í Saint-Étienne.",
+  "score": {
+    "home": 1,
+    "away": 1
+  },
+  "home": {
+    "name": "Portúgal",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Rui Patrício",
+        "word": "PATRICIO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Vieirinha",
+        "word": "VIEIRINHA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Ricardo Carvalho",
+        "word": "CARVALHO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Pepe",
+        "word": "PEPE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Raphaël Guerreiro",
+        "word": "GUERREIRO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "João Mário",
+        "word": "JOAOMARIO",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 13,
+        "name": "Danilo Pereira",
+        "word": "DANILO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 15,
+        "name": "André Gomes",
+        "word": "GOMES",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "João Moutinho",
+        "word": "MOUTINHO",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Nani",
+        "word": "NANI",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "away": {
+    "name": "Ísland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HANNES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "BIRKIR",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "RAGNAR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Kári Árnason",
+        "word": "KARI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Ari Freyr Skúlason",
+        "word": "ARI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Berg Guðmundsson",
+        "word": "JOHANN",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "ARON",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "GYLFI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BIRKIR",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Kolbeinn Sigþórsson",
+        "word": "KOLBEINN",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 15,
+        "name": "Jón Daði Böðvarsson",
+        "word": "JON",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2016 Group F",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1359154497"
+    },
+    {
+      "name": "transfermarkt.com · Portugal - Iceland",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2645645"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

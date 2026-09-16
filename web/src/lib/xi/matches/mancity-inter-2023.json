@@ -1,0 +1,197 @@
+{
+  "id": "mancity-inter-2023",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2022/23",
+  "stage": "Úrslitaleikur",
+  "date": "2023-06-10",
+  "blurb": "Úrslitaleikurinn í Istanbúl.",
+  "score": {
+    "home": 1,
+    "away": 0
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#77bbff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 31,
+        "name": "Ederson",
+        "word": "EDERSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 25,
+        "name": "Manuel Akanji",
+        "word": "AKANJI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Rúben Dias",
+        "word": "DIAS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Nathan Aké",
+        "word": "AKE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "John Stones",
+        "word": "STONES",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Rodri",
+        "word": "RODRI",
+        "line": 2,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 20,
+        "name": "Bernardo Silva",
+        "word": "SILVA",
+        "line": 4,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Kevin De Bruyne",
+        "word": "DEBRUYNE",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "İlkay Gündoğan",
+        "word": "GUNDOGAN",
+        "line": 4,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Jack Grealish",
+        "word": "GREALISH",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Erling Haaland",
+        "word": "HAALAND",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Inter",
+    "color": "#0000ff",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 24,
+        "name": "André Onana",
+        "word": "ONANA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 36,
+        "name": "Matteo Darmian",
+        "word": "DARMIAN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Francesco Acerbi",
+        "word": "ACERBI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 95,
+        "name": "Alessandro Bastoni",
+        "word": "BASTONI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Denzel Dumfries",
+        "word": "DUMFRIES",
+        "line": 3,
+        "x": 4
+      },
+      {
+        "number": 23,
+        "name": "Nicolò Barella",
+        "word": "BARELLA",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 77,
+        "name": "Marcelo Brozović",
+        "word": "BROZOVIC",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Hakan Çalhanoğlu",
+        "word": "CALHANOGLU",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 32,
+        "name": "Federico Dimarco",
+        "word": "DIMARCO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Lautaro Martínez",
+        "word": "MARTINEZ",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Edin Džeko",
+        "word": "DZEKO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2023 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1359037784"
+    },
+    {
+      "name": "transfermarkt.com · Manchester City - Inter Milan",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4077814"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

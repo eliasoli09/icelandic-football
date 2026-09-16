@@ -1,0 +1,198 @@
+{
+  "id": "realmadrid-liverpool-2018",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2017/18",
+  "stage": "Úrslitaleikur",
+  "date": "2018-05-26",
+  "blurb": "Úrslitaleikurinn í Kænugarði.",
+  "score": {
+    "home": 3,
+    "away": 1
+  },
+  "home": {
+    "name": "Real Madrid",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Keylor Navas",
+        "word": "NAVAS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Dani Carvajal",
+        "word": "CARVAJAL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Raphaël Varane",
+        "word": "VARANE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Sergio Ramos",
+        "word": "RAMOS",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 12,
+        "name": "Marcelo",
+        "word": "MARCELO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Casemiro",
+        "word": "CASEMIRO",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Luka Modrić",
+        "word": "MODRIC",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Isco",
+        "word": "ISCO",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Karim Benzema",
+        "word": "BENZEMA",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Liverpool",
+    "color": "#dd0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Loris Karius",
+        "word": "KARIUS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 66,
+        "name": "Trent Alexander-Arnold",
+        "word": "ALEXANDERARNOLD",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Dejan Lovren",
+        "word": "LOVREN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Virgil van Dijk",
+        "word": "VANDIJK",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Andy Robertson",
+        "word": "ROBERTSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "James Milner",
+        "word": "MILNER",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Jordan Henderson",
+        "word": "HENDERSON",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 5,
+        "name": "Georginio Wijnaldum",
+        "word": "WIJNALDUM",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Mohamed Salah",
+        "word": "SALAH",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 9,
+        "name": "Roberto Firmino",
+        "word": "FIRMINO",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Sadio Mané",
+        "word": "MANE",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2018 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374334988"
+    },
+    {
+      "name": "transfermarkt.com · Real Madrid - Liverpool FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3038747"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

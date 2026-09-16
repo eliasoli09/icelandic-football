@@ -1,0 +1,198 @@
+{
+  "id": "mancity-manutd-2024",
+  "region": "enska",
+  "competition": "Enski bikarinn 2023/24",
+  "stage": "Úrslitaleikur",
+  "date": "2024-05-25",
+  "blurb": "Manchester-slagur í úrslitaleik enska bikarsins á Wembley.",
+  "score": {
+    "home": 1,
+    "away": 2
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#98c5e9",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 18,
+        "name": "Stefan Ortega",
+        "word": "ORTEGA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Kyle Walker",
+        "word": "WALKER",
+        "line": 1,
+        "x": 3,
+        "captain": true
+      },
+      {
+        "number": 5,
+        "name": "John Stones",
+        "word": "STONES",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Nathan Aké",
+        "word": "AKE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 24,
+        "name": "Joško Gvardiol",
+        "word": "GVARDIOL",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Rodri",
+        "word": "RODRI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Mateo Kovačić",
+        "word": "KOVACIC",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Bernardo Silva",
+        "word": "SILVA",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 17,
+        "name": "Kevin De Bruyne",
+        "word": "DEBRUYNE",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 47,
+        "name": "Phil Foden",
+        "word": "FODEN",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Erling Haaland",
+        "word": "HAALAND",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Manchester United",
+    "color": "#e20e0e",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 24,
+        "name": "André Onana",
+        "word": "ONANA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 29,
+        "name": "Aaron Wan-Bissaka",
+        "word": "WANBISSAKA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 19,
+        "name": "Raphaël Varane",
+        "word": "VARANE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Lisandro Martínez",
+        "word": "MARTINEZ",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Diogo Dalot",
+        "word": "DALOT",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 37,
+        "name": "Kobbie Mainoo",
+        "word": "MAINOO",
+        "line": 2,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 4,
+        "name": "Sofyan Amrabat",
+        "word": "AMRABAT",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Alejandro Garnacho",
+        "word": "GARNACHO",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Marcus Rashford",
+        "word": "RASHFORD",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Bruno Fernandes",
+        "word": "FERNANDES",
+        "line": 5,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 39,
+        "name": "Scott McTominay",
+        "word": "MCTOMINAY",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2024 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1356335185"
+    },
+    {
+      "name": "transfermarkt.com · Manchester City - Manchester United",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4334126"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -1,0 +1,199 @@
+{
+  "id": "juventus-realmadrid-2017",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2016/17",
+  "stage": "Úrslitaleikur",
+  "date": "2017-06-03",
+  "blurb": "Úrslitaleikurinn í Cardiff.",
+  "score": {
+    "home": 1,
+    "away": 4
+  },
+  "home": {
+    "name": "Juventus",
+    "color": "#222222",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Gianluigi Buffon",
+        "word": "BUFFON",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 15,
+        "name": "Andrea Barzagli",
+        "word": "BARZAGLI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 19,
+        "name": "Leonardo Bonucci",
+        "word": "BONUCCI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Giorgio Chiellini",
+        "word": "CHIELLINI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Dani Alves",
+        "word": "ALVES",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Miralem Pjanić",
+        "word": "PJANIC",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Sami Khedira",
+        "word": "KHEDIRA",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 12,
+        "name": "Alex Sandro",
+        "word": "ALEXSANDRO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Paulo Dybala",
+        "word": "DYBALA",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Gonzalo Higuaín",
+        "word": "HIGUAIN",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Mario Mandžukić",
+        "word": "MANDZUKIC",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Real Madrid",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Keylor Navas",
+        "word": "NAVAS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Dani Carvajal",
+        "word": "CARVAJAL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Sergio Ramos",
+        "word": "RAMOS",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 5,
+        "name": "Raphaël Varane",
+        "word": "VARANE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 12,
+        "name": "Marcelo",
+        "word": "MARCELO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Casemiro",
+        "word": "CASEMIRO",
+        "line": 2,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 8,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Luka Modrić",
+        "word": "MODRIC",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Isco",
+        "word": "ISCO",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 9,
+        "name": "Karim Benzema",
+        "word": "BENZEMA",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0,
+        "goals": 2
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2017 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373864667"
+    },
+    {
+      "name": "transfermarkt.com · Juventus FC - Real Madrid",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2853591"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -1,0 +1,199 @@
+{
+  "id": "bikar-2022",
+  "region": "island",
+  "competition": "Bikarkeppni karla 2022",
+  "stage": "Úrslitaleikur",
+  "date": "2022-10-01",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 2,
+    "away": 3,
+    "note": "Eftir framlengingu."
+  },
+  "home": {
+    "name": "FH",
+    "color": "#1d1d1f",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 32,
+        "name": "Atli Gunnar Guðmundsson",
+        "word": "ATLI",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Ástbjörn Þórðarson",
+        "word": "ASTBJÖRN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Ólafur Guðmundsson",
+        "word": "OLAFUR",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Eggert Gunnþór Jónsson",
+        "word": "EGGERT",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 9,
+        "name": "Matthías Vilhjálmsson",
+        "word": "MATTHIAS",
+        "line": 2,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Björn Daníel Sverrisson",
+        "word": "BJÖRN",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Davíð Snær Jóhannsson",
+        "word": "DAVIÐ",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Guðmundur Kristjánsson",
+        "word": "GUÐMUNDUR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Oliver Heiðarsson",
+        "word": "OLIVER",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 29,
+        "name": "Vuk Oskar Dimitrijevic",
+        "word": "VUK",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 33,
+        "name": "Úlfur Ágúst Björnsson",
+        "word": "ULFUR",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Víkingur R.",
+    "color": "#c8102e",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Ingvar Jónsson",
+        "word": "INGVAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Logi Tómasson",
+        "word": "LOGI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Peter Oliver Ekroth",
+        "word": "EKROTH",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Kyle Douglas Mc Lagan",
+        "word": "MCLAGAN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Erlingur Agnarsson",
+        "word": "ERLINGUR",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Viktor Örlygur Andrason",
+        "word": "VIKTOR",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 10,
+        "name": "Pablo Oshan Punyed Dubon",
+        "word": "PUNYED",
+        "line": 3,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 17,
+        "name": "Ari Sigurpálsson",
+        "word": "ARI",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Birnir Snær Ingason",
+        "word": "BIRNIR",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Danijel Dejan Djuric",
+        "word": "DANIJEL",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Júlíus Magnússon",
+        "word": "JULIUS",
+        "line": 2,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · FH - Víkingur R., Bikarkeppni KSÍ - Mjólkurbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=640415"
+    },
+    {
+      "name": "transfermarkt.com · FH Hafnarfjördur - Víkingur Reykjavík",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3927344"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

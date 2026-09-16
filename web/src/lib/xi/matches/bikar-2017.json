@@ -1,0 +1,197 @@
+{
+  "id": "bikar-2017",
+  "region": "island",
+  "competition": "Bikarkeppni karla 2017",
+  "stage": "Úrslitaleikur",
+  "date": "2017-08-12",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 1,
+    "away": 0
+  },
+  "home": {
+    "name": "ÍBV",
+    "color": "#2b2d31",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 22,
+        "name": "Derby Rafael Carrillo",
+        "word": "CARRILLO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Matt Nicholas Paul Garner",
+        "word": "GARNER",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "David Atkinson",
+        "word": "ATKINSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Pablo Oshan Punyed Dubon",
+        "word": "PUNYED",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Kaj Leo Í Bartalstovu",
+        "word": "KAJLEO",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Mikkel Maigaard Jakobsen",
+        "word": "JAKOBSEN",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Sindri Snær Magnússon",
+        "word": "SINDRI",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 12,
+        "name": "Jónas Tór Næs",
+        "word": "JONAS",
+        "line": 1,
+        "x": 4
+      },
+      {
+        "number": 27,
+        "name": "Brian Stuart McLean",
+        "word": "MCLEAN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 30,
+        "name": "Atli Arnarson",
+        "word": "ATLI",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 34,
+        "name": "Gunnar Heiðar Þorvaldsson",
+        "word": "GUNNAR",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "FH",
+    "color": "#1d1d1f",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Gunnar Nielsen",
+        "word": "NIELSEN",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Pétur Viðarsson",
+        "word": "PETUR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Bergsveinn Ólafsson",
+        "word": "BERGSVEINN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 7,
+        "name": "Steven Lennon",
+        "word": "LENNON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Emil Pálsson",
+        "word": "EMIL",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Þórarinn Ingi Valdimarsson",
+        "word": "ÞORARINN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Davíð Þór Viðarsson",
+        "word": "DAVIÐ",
+        "line": 2,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 11,
+        "name": "Atli Guðnason",
+        "word": "ATLI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Kristján Flóki Finnbogason",
+        "word": "KRISTJAN",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Kassim Doumbia",
+        "word": "DOUMBIA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Böðvar Böðvarsson",
+        "word": "BÖÐVAR",
+        "line": 1,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · ÍBV - FH, Bikarkeppni - Borgunarbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=640392"
+    },
+    {
+      "name": "transfermarkt.com · ÍBV Vestmannaeyjar - FH Hafnarfjördur",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2905490"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

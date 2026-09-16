@@ -1,0 +1,196 @@
+{
+  "id": "portugal-frakkland-2016",
+  "region": "evropa",
+  "competition": "EM 2016",
+  "stage": "Úrslitaleikur",
+  "date": "2016-07-10",
+  "blurb": "Úrslitaleikur EM á Stade de France.",
+  "score": {
+    "home": 1,
+    "away": 0
+  },
+  "home": {
+    "name": "Portúgal",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Rui Patrício",
+        "word": "PATRICIO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Cédric Soares",
+        "word": "CEDRIC",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 3,
+        "name": "Pepe",
+        "word": "PEPE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "José Fonte",
+        "word": "FONTE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Raphaël Guerreiro",
+        "word": "GUERREIRO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "William Carvalho",
+        "word": "CARVALHO",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Renato Sanches",
+        "word": "SANCHES",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 23,
+        "name": "Adrien Silva",
+        "word": "SILVA",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "João Mário",
+        "word": "JOAOMARIO",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Nani",
+        "word": "NANI",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "away": {
+    "name": "Frakkland",
+    "color": "#115ab9",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hugo Lloris",
+        "word": "LLORIS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Bacary Sagna",
+        "word": "SAGNA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 21,
+        "name": "Laurent Koscielny",
+        "word": "KOSCIELNY",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 22,
+        "name": "Samuel Umtiti",
+        "word": "UMTITI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Patrice Evra",
+        "word": "EVRA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Moussa Sissoko",
+        "word": "SISSOKO",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 15,
+        "name": "Paul Pogba",
+        "word": "POGBA",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Blaise Matuidi",
+        "word": "MATUIDI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Dimitri Payet",
+        "word": "PAYET",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Antoine Griezmann",
+        "word": "GRIEZMANN",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Olivier Giroud",
+        "word": "GIROUD",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2016 final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1367354979"
+    },
+    {
+      "name": "transfermarkt.com · Portugal - France",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2711570"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

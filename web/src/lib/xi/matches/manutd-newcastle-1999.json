@@ -1,0 +1,197 @@
+{
+  "id": "manutd-newcastle-1999",
+  "region": "enska",
+  "competition": "Enski bikarinn 1998/99",
+  "stage": "Úrslitaleikur",
+  "date": "1999-05-22",
+  "blurb": "Úrslitaleikur enska bikarsins á gamla Wembley.",
+  "score": {
+    "home": 2,
+    "away": 0
+  },
+  "home": {
+    "name": "Manchester United",
+    "color": "#e20e0e",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Peter Schmeichel",
+        "word": "SCHMEICHEL",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Gary Neville",
+        "word": "NEVILLE",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "David May",
+        "word": "MAY",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Ronny Johnsen",
+        "word": "JOHNSEN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 12,
+        "name": "Phil Neville",
+        "word": "NEVILLE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "David Beckham",
+        "word": "BECKHAM",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 16,
+        "name": "Roy Keane",
+        "word": "KEANE",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 18,
+        "name": "Paul Scholes",
+        "word": "SCHOLES",
+        "line": 3,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 11,
+        "name": "Ryan Giggs",
+        "word": "GIGGS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Andy Cole",
+        "word": "COLE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Ole Gunnar Solskjær",
+        "word": "SOLSKJAER",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Newcastle",
+    "color": "#8a94a6",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 13,
+        "name": "Steve Harper",
+        "word": "HARPER",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 38,
+        "name": "Andy Griffin",
+        "word": "GRIFFIN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 34,
+        "name": "Nikos Dabizas",
+        "word": "DABIZAS",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 16,
+        "name": "Laurent Charvet",
+        "word": "CHARVET",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Didier Domi",
+        "word": "DOMI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Rob Lee",
+        "word": "LEE",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 12,
+        "name": "Dietmar Hamann",
+        "word": "HAMANN",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 11,
+        "name": "Gary Speed",
+        "word": "SPEED",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 24,
+        "name": "Nolberto Solano",
+        "word": "SOLANO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Temur Ketsbaia",
+        "word": "KETSBAIA",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Alan Shearer",
+        "word": "SHEARER",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 1999 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372651224"
+    },
+    {
+      "name": "transfermarkt.com · Manchester United - Newcastle United",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2301417"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

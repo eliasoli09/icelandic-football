@@ -1,0 +1,197 @@
+{
+  "id": "island-austurriki-2016",
+  "region": "island",
+  "competition": "EM 2016",
+  "stage": "Riðlakeppni",
+  "date": "2016-06-22",
+  "blurb": "Síðasti leikur riðilsins, á Stade de France.",
+  "score": {
+    "home": 2,
+    "away": 1
+  },
+  "home": {
+    "name": "Ísland",
+    "color": "#0b29f6",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HANNES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "BIRKIR",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Kári Árnason",
+        "word": "KARI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "RAGNAR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Ari Freyr Skúlason",
+        "word": "ARI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Berg Guðmundsson",
+        "word": "JOHANN",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "ARON",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "GYLFI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BIRKIR",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Jón Daði Böðvarsson",
+        "word": "JON",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Kolbeinn Sigþórsson",
+        "word": "KOLBEINN",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Austurríki",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Robert Almer",
+        "word": "ALMER",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Aleksandar Dragović",
+        "word": "DRAGOVIC",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 15,
+        "name": "Sebastian Prödl",
+        "word": "PRODL",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Martin Hinteregger",
+        "word": "HINTEREGGER",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Christian Fuchs",
+        "word": "FUCHS",
+        "line": 1,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Stefan Ilsanker",
+        "word": "ILSANKER",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 14,
+        "name": "Julian Baumgartlinger",
+        "word": "BAUMGARTLINGER",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Florian Klein",
+        "word": "KLEIN",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "David Alaba",
+        "word": "ALABA",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Marko Arnautović",
+        "word": "ARNAUTOVIC",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Marcel Sabitzer",
+        "word": "SABITZER",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2016 Group F",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1359154497"
+    },
+    {
+      "name": "transfermarkt.com · Iceland - Austria",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2645669"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

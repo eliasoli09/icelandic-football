@@ -17,7 +17,44 @@
     "argentina-frakkland-2022",
     "liverpool-westham-2006",
     "wigan-mancity-2013",
-    "mancity-qpr-2012"
+    "mancity-qpr-2012",
+    "vikingur-leiknir-2021",
+    "bikar-2015",
+    "bikar-2016",
+    "bikar-2017",
+    "bikar-2021",
+    "bikar-2022",
+    "portugal-island-2016",
+    "island-ungverjaland-2016",
+    "island-austurriki-2016",
+    "frakkland-island-2016",
+    "barcelona-manutd-2009",
+    "bayern-inter-2010",
+    "bayern-chelsea-2012",
+    "realmadrid-atletico-2014",
+    "juventus-realmadrid-2017",
+    "realmadrid-liverpool-2018",
+    "liverpool-realmadrid-2022",
+    "mancity-inter-2023",
+    "thyskaland-argentina-2014",
+    "frakkland-kroatia-2018",
+    "holland-spann-2010",
+    "portugal-frakkland-2016",
+    "italia-england-2021",
+    "spann-england-2024",
+    "mancity-manutd-2023",
+    "mancity-manutd-2024",
+    "manutd-newcastle-1999",
+    "liverpool-arsenal-1989"
   ],
-  "review": []
+  "review": [
+    {
+      "id": "stjarnan-breidablik-2010",
+      "reason": "Transfermarkt: treyjunúmer vantar hjá Bjarni Thórdur Halldórsson"
+    },
+    {
+      "id": "realmadrid-barcelona-2014",
+      "reason": "Transfermarkt: enginn leikur 2014-04-15 hjá real-madrid"
+    }
+  ]
 }

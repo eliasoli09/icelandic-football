@@ -1,0 +1,201 @@
+{
+  "id": "frakkland-kroatia-2018",
+  "region": "evropa",
+  "competition": "HM 2018",
+  "stage": "Úrslitaleikur",
+  "date": "2018-07-15",
+  "blurb": "Úrslitaleikur HM í Moskvu.",
+  "score": {
+    "home": 4,
+    "away": 2
+  },
+  "home": {
+    "name": "Frakkland",
+    "color": "#112855",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hugo Lloris",
+        "word": "LLORIS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 2,
+        "name": "Benjamin Pavard",
+        "word": "PAVARD",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Raphaël Varane",
+        "word": "VARANE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Samuel Umtiti",
+        "word": "UMTITI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Lucas Hernandez",
+        "word": "HERNANDEZ",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Paul Pogba",
+        "word": "POGBA",
+        "line": 3,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 13,
+        "name": "N'Golo Kanté",
+        "word": "KANTE",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Kylian Mbappé",
+        "word": "MBAPPE",
+        "line": 4,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Antoine Griezmann",
+        "word": "GRIEZMANN",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 14,
+        "name": "Blaise Matuidi",
+        "word": "MATUIDI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Olivier Giroud",
+        "word": "GIROUD",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Króatía",
+    "color": "#f40000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 23,
+        "name": "Danijel Subašić",
+        "word": "SUBASIC",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Šime Vrsaljko",
+        "word": "VRSALJKO",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Dejan Lovren",
+        "word": "LOVREN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 21,
+        "name": "Domagoj Vida",
+        "word": "VIDA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Ivan Strinić",
+        "word": "STRINIC",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Ivan Rakitić",
+        "word": "RAKITIC",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Marcelo Brozović",
+        "word": "BROZOVIC",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Ante Rebić",
+        "word": "REBIC",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Luka Modrić",
+        "word": "MODRIC",
+        "line": 4,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 4,
+        "name": "Ivan Perišić",
+        "word": "PERISIC",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 17,
+        "name": "Mario Mandžukić",
+        "word": "MANDZUKIC",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2018 FIFA World Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370477615"
+    },
+    {
+      "name": "transfermarkt.com · France - Croatia",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3072773"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

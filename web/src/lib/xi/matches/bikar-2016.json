@@ -1,0 +1,197 @@
+{
+  "id": "bikar-2016",
+  "region": "island",
+  "competition": "Bikarkeppni karla 2016",
+  "stage": "Úrslitaleikur",
+  "date": "2016-08-13",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 2,
+    "away": 0
+  },
+  "home": {
+    "name": "Valur",
+    "color": "#dc2422",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 25,
+        "name": "Anton Ari Einarsson",
+        "word": "ANTON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Andreas Albech",
+        "word": "ALBECH",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 3,
+        "name": "Kristian Gaarde",
+        "word": "GAARDE",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Haukur Páll Sigurðsson",
+        "word": "HAUKUR",
+        "line": 2,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Kristinn Ingi Halldórsson",
+        "word": "KRISTINN",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Kristinn Freyr Sigurðsson",
+        "word": "KRISTINN",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Sigurður Egill Lárusson",
+        "word": "SIGURÐUR",
+        "line": 4,
+        "x": 0,
+        "goals": 2
+      },
+      {
+        "number": 13,
+        "name": "Rasmus Steenberg Christiansen",
+        "word": "CHRISTIANSEN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Andri Adolphsson",
+        "word": "ANDRI",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Orri Sigurður Ómarsson",
+        "word": "ORRI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 21,
+        "name": "Bjarni Ólafur Eiríksson",
+        "word": "BJARNI",
+        "line": 1,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "ÍBV",
+    "color": "#2b2d31",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 22,
+        "name": "Derby Rafael Carrillo",
+        "word": "CARRILLO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Hafsteinn Briem",
+        "word": "HAFSTEINN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Avni Pepa",
+        "word": "PEPA",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Pablo Oshan Punyed Dubon",
+        "word": "PUNYED",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Mikkel Maigaard Jakobsen",
+        "word": "JAKOBSEN",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Jonathan Patrick Barden",
+        "word": "BARDEN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 18,
+        "name": "Sören Andreasen",
+        "word": "ANDREASEN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Simon Kollerup Smidt",
+        "word": "SMIDT",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Mees Junior Siers",
+        "word": "SIERS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 26,
+        "name": "Felix Örn Friðriksson",
+        "word": "FELIX",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 34,
+        "name": "Gunnar Heiðar Þorvaldsson",
+        "word": "GUNNAR",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · Valur - ÍBV, Bikarkeppni - Borgunarbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=639415"
+    },
+    {
+      "name": "transfermarkt.com · Valur Reykjavík - ÍBV Vestmannaeyjar",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2735447"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -101,6 +101,14 @@ describe('Wikipedia', () => {
     ])
   })
 
+  it('tells a national team template from a crest flag beside a club', () => {
+    const one = (t1: string, t2: string) => parseWikiMatch(box('10 June 2023', t1, t2, '1–0'), '2023-06-10')
+    expect([one('[[Manchester City F.C.|Manchester City]] {{#invoke:flag|fbaicon|ENG}}', '{{#invoke:flag|fbaicon|ITA}} [[Inter Milan]]').home, one('x', '{{#invoke:flag|fbaicon|ITA}} [[Inter Milan]]').away])
+      .toEqual(['Manchester City', 'Inter Milan'])
+    expect([one('{{#invoke:flag|fb-rt|ESP}}', '{{#invoke:flag|fb|ENG}}').home, one('{{#invoke:flagg|main|unpre|avar=fb|ARG}}', '{{fb|FRA}}').away])
+      .toEqual(['Spain', 'France'])
+  })
+
   it('reads country codes as team names and refuses an ambiguous date', () => {
     expect(parseWikiMatch(wt, '2005-05-25', (h, a) => h === 'England' && a === 'Iceland').score).toEqual([1, 2])
     expect(() => parseWikiMatch(wt, '2005-05-25')).toThrow(/2 leikir/)

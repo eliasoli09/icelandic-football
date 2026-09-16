@@ -1,0 +1,198 @@
+{
+  "id": "mancity-manutd-2023",
+  "region": "enska",
+  "competition": "Enski bikarinn 2022/23",
+  "stage": "Úrslitaleikur",
+  "date": "2023-06-03",
+  "blurb": "Manchester-slagur í úrslitaleik enska bikarsins á Wembley.",
+  "score": {
+    "home": 2,
+    "away": 1
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#77bbff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 18,
+        "name": "Stefan Ortega",
+        "word": "ORTEGA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Kyle Walker",
+        "word": "WALKER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Rúben Dias",
+        "word": "DIAS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 25,
+        "name": "Manuel Akanji",
+        "word": "AKANJI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "John Stones",
+        "word": "STONES",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Rodri",
+        "word": "RODRI",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Bernardo Silva",
+        "word": "SILVA",
+        "line": 4,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Kevin De Bruyne",
+        "word": "DEBRUYNE",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "İlkay Gündoğan",
+        "word": "GUNDOGAN",
+        "line": 4,
+        "x": 1,
+        "captain": true,
+        "goals": 2
+      },
+      {
+        "number": 10,
+        "name": "Jack Grealish",
+        "word": "GREALISH",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Erling Haaland",
+        "word": "HAALAND",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Manchester United",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "David de Gea",
+        "word": "DEGEA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 29,
+        "name": "Aaron Wan-Bissaka",
+        "word": "WANBISSAKA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 19,
+        "name": "Raphaël Varane",
+        "word": "VARANE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 2,
+        "name": "Victor Lindelöf",
+        "word": "LINDELOF",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 23,
+        "name": "Luke Shaw",
+        "word": "SHAW",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Casemiro",
+        "word": "CASEMIRO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Fred",
+        "word": "FRED",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Bruno Fernandes",
+        "word": "FERNANDES",
+        "line": 4,
+        "x": 2,
+        "captain": true,
+        "goals": 1
+      },
+      {
+        "number": 14,
+        "name": "Christian Eriksen",
+        "word": "ERIKSEN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 25,
+        "name": "Jadon Sancho",
+        "word": "SANCHO",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Marcus Rashford",
+        "word": "RASHFORD",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2023 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1361631039"
+    },
+    {
+      "name": "transfermarkt.com · Manchester City - Manchester United",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4064735"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}
