@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { letters, markGuess, surname, targetWord } from '../src/lib/xi/word'
+import { firstName, letters, markGuess, surname, targetWord } from '../src/lib/xi/word'
 import { rows, tmLine, wikiLine } from '../src/lib/xi/layout'
 import { MAX_TRIES, dailyMatch, giveUp, guessPlayer, guessResult, newState, puzzleNumber, restore, resultPoints, shareText, slot, solvedCount, teamOver, LAUNCH_DAY } from '../src/lib/xi/game'
 import { MATCHES } from '../src/lib/xi/matches'
@@ -17,6 +17,12 @@ describe('word', () => {
     expect(targetWord('R. Óskarsson', true)).toBe('OSKARSSON')
     expect(targetWord('G. Þórðarson', true)).toBe('ÞORÐARSON')
     expect(letters('Böðvarsson', true)).toBe('BÖÐVARSSON')
+  })
+
+  it("takes an Icelander's first name", () => {
+    expect(firstName('Róbert Örn Óskarsson')).toBe('Róbert')
+    expect(letters(firstName('Þorri Geir Rúnarsson'), true)).toBe('ÞORRI')
+    expect(letters(firstName('Böðvar Böðvarsson'), true)).toBe('BÖÐVAR')
   })
 
   it('writes everyone else in plain A to Z', () => {
@@ -134,6 +140,15 @@ describe('game', () => {
 })
 
 describe('verified matches', () => {
+  const word = (id: string, side: 'home' | 'away', n: number) => MATCHES.find((m) => m.id === id)![side].players.find((p) => p.number === n)!.word
+
+  it('asks for Icelanders by first name and for others by surname', () => {
+    expect(word('fh-stjarnan-2014', 'home', 1)).toBe('ROBERT')
+    expect(word('fh-stjarnan-2014', 'home', 19)).toBe('LENNON')
+    expect(word('england-island-2016', 'away', 1)).toBe('HANNES')
+    expect(word('england-island-2016', 'home', 1)).toBe('HART')
+  })
+
   it('has matches from Iceland, England and Europe', () => {
     for (const region of ['island', 'enska', 'evropa']) expect(MATCHES.some((m) => m.region === region)).toBe(true)
   })
@@ -156,9 +171,10 @@ describe('verified matches', () => {
       for (const text of [m.competition, m.stage, m.blurb, m.score.note ?? '', m.layout, ...m.sources.map((s) => s.name)]) {
         expect(text).not.toMatch(/[–—]/)
       }
-      // the blurb must not give away anyone in either eleven
+      // the blurb must not give away anyone in either eleven, word for word
+      const blurbWords = new Set(m.blurb.split(/\s+/).flatMap((w) => [letters(w, true), letters(w, false)]))
       for (const p of [...m.home.players, ...m.away.players]) {
-        expect(m.blurb.toUpperCase()).not.toContain(p.word)
+        expect(blurbWords.has(p.word)).toBe(false)
       }
     })
   }

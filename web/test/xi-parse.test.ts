@@ -36,14 +36,15 @@ describe('Transfermarkt', () => {
   it('reads line-ups with numbers, positions and the captain', () => {
     const row = (n: number, pos: string, name: string, captain = false) =>
       `<tr><td \n class="zentriert rueckennummer bg_x"\n title="${pos}"\n ><div class="rn_nummer"> ${n} </div></td>
-       <td><a title="${name}" class="wichtig" href="/x">${name}</a>${captain ? '<span title="Team captain" class="kapitaenicon-table"></span>' : ''}</td></tr>`
+       <td><a title="${name}" class="wichtig" href="/x">${name}</a>${captain ? '<span title="Team captain" class="kapitaenicon-table"></span>' : ''}</td>
+       <td class="zentriert"><img src="f.png" alt="Iceland" title="Iceland" class="flaggenrahmen"></td></tr>`
     const html = `<a title="FH Hafnarfjördur" href="/fh/startseite/verein/1185"></a>Starting Line-up ${row(1, 'Goalkeeper', 'Róbert Örn Óskarsson')}${row(22, 'Central Midfield', 'Ólafur Páll Snorrason', true)} Substitutes ${row(12, 'Goalkeeper', 'Sub')}
       <a title="Stjarnan Gardabaer" href="/s/startseite/verein/21875"></a>Starting Line-up ${row(1, 'Goalkeeper', 'Ingvar Jónsson')} Substitutes`
     const l = parseTmLineups(html)
     expect(l.home.team).toBe('FH Hafnarfjördur')
     expect(l.home.players).toEqual([
-      { number: 1, name: 'Róbert Örn Óskarsson', position: 'Goalkeeper', goalkeeper: true, captain: false },
-      { number: 22, name: 'Ólafur Páll Snorrason', position: 'Central Midfield', goalkeeper: false, captain: true },
+      { number: 1, name: 'Róbert Örn Óskarsson', position: 'Goalkeeper', goalkeeper: true, captain: false, nations: ['Iceland'] },
+      { number: 22, name: 'Ólafur Páll Snorrason', position: 'Central Midfield', goalkeeper: false, captain: true, nations: ['Iceland'] },
     ])
     expect(l.away.players.map((p) => p.number)).toEqual([1])
   })

@@ -17,6 +17,8 @@ export interface SourcePlayer {
   captain: boolean
   /** KSÍ's player id, which its match events refer to */
   ksiId?: number
+  /** nationalities, as Transfermarkt's flags name them */
+  nations?: string[]
 }
 
 export interface SourceGoal { name: string; side: 'home' | 'away'; ownGoal: boolean; ksiId?: number }
@@ -126,6 +128,7 @@ export function parseTmLineups(html: string): TmLineups {
         position: position ? decode(position[1]) : undefined,
         goalkeeper: position ? /goalkeeper/i.test(position[1]) : false,
         captain: /kapitaenicon/.test(row),
+        nations: [...row.matchAll(/<img[^>]*title="([^"]+)"[^>]*class="flaggenrahmen"/g)].map((m) => decode(m[1])),
       }
     })
     return { team: team ? decode(team[1]) : '', players }

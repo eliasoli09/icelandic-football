@@ -18,7 +18,7 @@
       {
         "number": 1,
         "name": "Ingvar Jónsson",
-        "word": "JONSSON",
+        "word": "INGVAR",
         "line": 0,
         "x": 0
       },
@@ -39,28 +39,28 @@
       {
         "number": 7,
         "name": "Erlingur Agnarsson",
-        "word": "AGNARSSON",
+        "word": "ERLINGUR",
         "line": 3,
         "x": 1
       },
       {
         "number": 11,
         "name": "Gísli Gottskálk Þórðarson",
-        "word": "ÞORÐARSON",
+        "word": "GISLI",
         "line": 2,
         "x": 0
       },
       {
         "number": 17,
         "name": "Ari Sigurpálsson",
-        "word": "SIGURPALSSON",
+        "word": "ARI",
         "line": 3,
         "x": 0
       },
       {
         "number": 19,
         "name": "Danijel Dejan Djuric",
-        "word": "DJURIC",
+        "word": "DANIJEL",
         "line": 4,
         "x": 1
       },
@@ -74,14 +74,14 @@
       {
         "number": 21,
         "name": "Aron Elís Þrándarson",
-        "word": "ÞRANDARSON",
+        "word": "ARON",
         "line": 2,
         "x": 1
       },
       {
         "number": 22,
         "name": "Karl Friðleifur Gunnarsson",
-        "word": "GUNNARSSON",
+        "word": "KARL",
         "line": 1,
         "x": 3
       },
@@ -104,21 +104,21 @@
       {
         "number": 1,
         "name": "Anton Ari Einarsson",
-        "word": "EINARSSON",
+        "word": "ANTON",
         "line": 0,
         "x": 0
       },
       {
         "number": 4,
         "name": "Damir Muminovic",
-        "word": "MUMINOVIC",
+        "word": "DAMIR",
         "line": 1,
         "x": 2
       },
       {
         "number": 7,
         "name": "Höskuldur Gunnlaugsson",
-        "word": "GUNNLAUGSSON",
+        "word": "HÖSKULDUR",
         "line": 3,
         "x": 0,
         "captain": true
@@ -126,14 +126,14 @@
       {
         "number": 8,
         "name": "Viktor Karl Einarsson",
-        "word": "EINARSSON",
+        "word": "VIKTOR",
         "line": 3,
         "x": 1
       },
       {
         "number": 11,
         "name": "Aron Bjarnason",
-        "word": "BJARNASON",
+        "word": "ARON",
         "line": 4,
         "x": 1,
         "goals": 1
@@ -141,28 +141,28 @@
       {
         "number": 18,
         "name": "Davíð Ingvarsson",
-        "word": "INGVARSSON",
+        "word": "DAVIÐ",
         "line": 4,
         "x": 0
       },
       {
         "number": 19,
         "name": "Kristinn Jónsson",
-        "word": "JONSSON",
+        "word": "KRISTINN",
         "line": 1,
         "x": 0
       },
       {
         "number": 21,
         "name": "Viktor Örn Margeirsson",
-        "word": "MARGEIRSSON",
+        "word": "VIKTOR",
         "line": 1,
         "x": 1
       },
       {
         "number": 22,
         "name": "Ísak Snær Þorvaldsson",
-        "word": "ÞORVALDSSON",
+        "word": "ISAK",
         "line": 5,
         "x": 0,
         "goals": 2
@@ -170,14 +170,14 @@
       {
         "number": 24,
         "name": "Arnór Gauti Jónsson",
-        "word": "JONSSON",
+        "word": "ARNOR",
         "line": 2,
         "x": 0
       },
       {
         "number": 30,
         "name": "Andri Rafn Yeoman",
-        "word": "YEOMAN",
+        "word": "ANDRI",
         "line": 1,
         "x": 3
       }

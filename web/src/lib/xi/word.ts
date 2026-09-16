@@ -27,6 +27,11 @@ export function letters(text: string, icelandic: boolean): string {
 
 export const targetWord = (name: string, icelandic: boolean) => letters(surname(name), icelandic)
 
+/** Icelanders go by their first name: "Róbert Örn Óskarsson" is Róbert. */
+export function firstName(name: string): string {
+  return name.replace(/^(?:[A-ZÁÐÉÍÓÚÝÞÆÖ]\.\s*)+/, '').trim().split(/\s+/)[0]
+}
+
 export type Mark = 'hit' | 'near' | 'miss'
 
 /** Wordle's marking: right place, elsewhere in the word, or not there, counting repeats. */

@@ -18,7 +18,7 @@
       {
         "number": 13,
         "name": "Steinþór Már Auðunsson",
-        "word": "AUÐUNSSON",
+        "word": "STEINÞOR",
         "line": 0,
         "x": 0
       },
@@ -32,7 +32,7 @@
       {
         "number": 5,
         "name": "Ívar Örn Árnason",
-        "word": "ARNASON",
+        "word": "IVAR",
         "line": 1,
         "x": 1,
         "captain": true
@@ -47,49 +47,49 @@
       {
         "number": 7,
         "name": "Daníel Hafsteinsson",
-        "word": "HAFSTEINSSON",
+        "word": "DANIEL",
         "line": 3,
         "x": 0
       },
       {
         "number": 10,
         "name": "Hallgrímur Mar Steingrímsson",
-        "word": "STEINGRIMSSON",
+        "word": "HALLGRIMUR",
         "line": 4,
         "x": 0
       },
       {
         "number": 22,
         "name": "Hrannar Björn Steingrímsson",
-        "word": "STEINGRIMSSON",
+        "word": "HRANNAR",
         "line": 1,
         "x": 3
       },
       {
         "number": 23,
         "name": "Viðar Örn Kjartansson",
-        "word": "KJARTANSSON",
+        "word": "VIÐAR",
         "line": 5,
         "x": 0
       },
       {
         "number": 28,
         "name": "Hans Viktor Guðmundsson",
-        "word": "GUÐMUNDSSON",
+        "word": "HANS",
         "line": 1,
         "x": 2
       },
       {
         "number": 29,
         "name": "Jakob Snær Árnason",
-        "word": "ARNASON",
+        "word": "JAKOB",
         "line": 4,
         "x": 1
       },
       {
         "number": 77,
         "name": "Bjarni Aðalsteinsson",
-        "word": "AÐALSTEINSSON",
+        "word": "BJARNI",
         "line": 2,
         "x": 0
       }
@@ -104,7 +104,7 @@
       {
         "number": 1,
         "name": "Ingvar Jónsson",
-        "word": "JONSSON",
+        "word": "INGVAR",
         "line": 0,
         "x": 0
       },
@@ -118,7 +118,7 @@
       {
         "number": 5,
         "name": "Jón Guðni Fjóluson",
-        "word": "FJOLUSON",
+        "word": "JON",
         "line": 1,
         "x": 0
       },
@@ -132,14 +132,14 @@
       {
         "number": 7,
         "name": "Erlingur Agnarsson",
-        "word": "AGNARSSON",
+        "word": "ERLINGUR",
         "line": 4,
         "x": 1
       },
       {
         "number": 8,
         "name": "Viktor Örlygur Andrason",
-        "word": "ANDRASON",
+        "word": "VIKTOR",
         "line": 2,
         "x": 1,
         "captain": true
@@ -147,35 +147,35 @@
       {
         "number": 11,
         "name": "Gísli Gottskálk Þórðarson",
-        "word": "ÞORÐARSON",
+        "word": "GISLI",
         "line": 2,
         "x": 0
       },
       {
         "number": 17,
         "name": "Ari Sigurpálsson",
-        "word": "SIGURPALSSON",
+        "word": "ARI",
         "line": 4,
         "x": 0
       },
       {
         "number": 21,
         "name": "Aron Elís Þrándarson",
-        "word": "ÞRANDARSON",
+        "word": "ARON",
         "line": 5,
         "x": 0
       },
       {
         "number": 22,
         "name": "Karl Friðleifur Gunnarsson",
-        "word": "GUNNARSSON",
+        "word": "KARL",
         "line": 1,
         "x": 3
       },
       {
         "number": 25,
         "name": "Valdimar Þór Ingimundarson",
-        "word": "INGIMUNDARSON",
+        "word": "VALDIMAR",
         "line": 3,
         "x": 0
       }

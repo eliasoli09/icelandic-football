@@ -18,7 +18,7 @@
       {
         "number": 16,
         "name": "Þórður Ingason",
-        "word": "INGASON",
+        "word": "ÞORÐUR",
         "line": 0,
         "x": 0
       },
@@ -39,7 +39,7 @@
       {
         "number": 7,
         "name": "Erlingur Agnarsson",
-        "word": "AGNARSSON",
+        "word": "ERLINGUR",
         "line": 3,
         "x": 1
       },
@@ -53,21 +53,21 @@
       {
         "number": 18,
         "name": "Birnir Snær Ingason",
-        "word": "INGASON",
+        "word": "BIRNIR",
         "line": 3,
         "x": 0
       },
       {
         "number": 19,
         "name": "Danijel Dejan Djuric",
-        "word": "DJURIC",
+        "word": "DANIJEL",
         "line": 4,
         "x": 1
       },
       {
         "number": 21,
         "name": "Aron Elís Þrándarson",
-        "word": "ÞRANDARSON",
+        "word": "ARON",
         "line": 2,
         "x": 0,
         "goals": 1
@@ -83,14 +83,14 @@
       {
         "number": 24,
         "name": "Davíð Örn Atlason",
-        "word": "ATLASON",
+        "word": "DAVIÐ",
         "line": 1,
         "x": 3
       },
       {
         "number": 27,
         "name": "Matthías Vilhjálmsson",
-        "word": "VILHJALMSSON",
+        "word": "MATTHIAS",
         "line": 1,
         "x": 2,
         "goals": 1
@@ -127,7 +127,7 @@
       {
         "number": 5,
         "name": "Ívar Örn Árnason",
-        "word": "ARNASON",
+        "word": "IVAR",
         "line": 1,
         "x": 0,
         "captain": true,
@@ -143,35 +143,35 @@
       {
         "number": 7,
         "name": "Daníel Hafsteinsson",
-        "word": "HAFSTEINSSON",
+        "word": "DANIEL",
         "line": 2,
         "x": 1
       },
       {
         "number": 9,
         "name": "Elfar Árni Aðalsteinsson",
-        "word": "AÐALSTEINSSON",
+        "word": "ELFAR",
         "line": 5,
         "x": 0
       },
       {
         "number": 10,
         "name": "Hallgrímur Mar Steingrímsson",
-        "word": "STEINGRIMSSON",
+        "word": "HALLGRIMUR",
         "line": 4,
         "x": 0
       },
       {
         "number": 22,
         "name": "Hrannar Björn Steingrímsson",
-        "word": "STEINGRIMSSON",
+        "word": "HRANNAR",
         "line": 1,
         "x": 3
       },
       {
         "number": 30,
         "name": "Sveinn Margeir Hauksson",
-        "word": "HAUKSSON",
+        "word": "SVEINN",
         "line": 2,
         "x": 0
       },

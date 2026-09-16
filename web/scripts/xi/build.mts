@@ -26,7 +26,7 @@ const P = await import(join(here, 'parse.ts'))
 const { MATCHES } = await import(join(here, 'matches.ts'))
 const { normalise } = await import(join(webDir, 'src/lib/topp10/normalise.ts'))
 const { parseEvents } = await import(join(webDir, 'src/lib/ksiEvents.ts'))
-const { targetWord } = await import(join(webDir, 'src/lib/xi/word.ts'))
+const { targetWord, firstName, letters } = await import(join(webDir, 'src/lib/xi/word.ts'))
 const { wikiLine, tmLine } = await import(join(webDir, 'src/lib/xi/layout.ts'))
 const { db } = await import(join(webDir, 'src/lib/db.ts'))
 
@@ -268,7 +268,12 @@ async function build(spec: MatchSpec): Promise<XiMatch> {
       }
       const override = spec.words?.[`${side}:${p.number}`]
       const icelandic = spec.icelandic.includes(side)
-      const word = override ?? targetWord(primary.layout === 'wiki' ? p.name : (p.short ?? p.name), icelandic)
+      if (icelandic && !q!.nations?.length) throw new Error(`${spec.names[side]} nr. ${p.number}: þjóðerni vantar á Transfermarkt`)
+      // Icelanders are guessed by their first name, everyone else by the surname
+      const fullName = primary.layout === 'wiki' ? (p.short ?? p.name) : p.name
+      const word = override ?? (q!.nations?.includes('Iceland')
+        ? letters(firstName(fullName), icelandic)
+        : targetWord(primary.layout === 'wiki' ? p.name : (p.short ?? p.name), icelandic))
       if (word.length < 2) throw new Error(`${spec.names[side]} nr. ${p.number}: ólesanlegt orð úr ${p.name}`)
       return {
         index, pos, player: {

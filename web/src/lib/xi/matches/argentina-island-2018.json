@@ -105,49 +105,49 @@
       {
         "number": 1,
         "name": "Hannes Þór Halldórsson",
-        "word": "HALLDORSSON",
+        "word": "HANNES",
         "line": 0,
         "x": 0
       },
       {
         "number": 2,
         "name": "Birkir Már Sævarsson",
-        "word": "SÆVARSSON",
+        "word": "BIRKIR",
         "line": 1,
         "x": 3
       },
       {
         "number": 14,
         "name": "Kári Árnason",
-        "word": "ARNASON",
+        "word": "KARI",
         "line": 1,
         "x": 2
       },
       {
         "number": 6,
         "name": "Ragnar Sigurðsson",
-        "word": "SIGURÐSSON",
+        "word": "RAGNAR",
         "line": 1,
         "x": 1
       },
       {
         "number": 18,
         "name": "Hörður Björgvin Magnússon",
-        "word": "MAGNUSSON",
+        "word": "HÖRÐUR",
         "line": 1,
         "x": 0
       },
       {
         "number": 10,
         "name": "Gylfi Sigurðsson",
-        "word": "SIGURÐSSON",
+        "word": "GYLFI",
         "line": 2,
         "x": 0
       },
       {
         "number": 17,
         "name": "Aron Gunnarsson",
-        "word": "GUNNARSSON",
+        "word": "ARON",
         "line": 3,
         "x": 1,
         "captain": true
@@ -155,28 +155,28 @@
       {
         "number": 20,
         "name": "Emil Hallfreðsson",
-        "word": "HALLFREÐSSON",
+        "word": "EMIL",
         "line": 3,
         "x": 0
       },
       {
         "number": 7,
         "name": "Jóhann Berg Guðmundsson",
-        "word": "GUÐMUNDSSON",
+        "word": "JOHANN",
         "line": 4,
         "x": 1
       },
       {
         "number": 8,
         "name": "Birkir Bjarnason",
-        "word": "BJARNASON",
+        "word": "BIRKIR",
         "line": 4,
         "x": 0
       },
       {
         "number": 11,
         "name": "Alfreð Finnbogason",
-        "word": "FINNBOGASON",
+        "word": "ALFREÐ",
         "line": 5,
         "x": 0,
         "goals": 1

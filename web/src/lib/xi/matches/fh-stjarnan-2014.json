@@ -18,42 +18,42 @@
       {
         "number": 1,
         "name": "Róbert Örn Óskarsson",
-        "word": "OSKARSSON",
+        "word": "ROBERT",
         "line": 0,
         "x": 0
       },
       {
         "number": 5,
         "name": "Pétur Viðarsson",
-        "word": "VIÐARSSON",
+        "word": "PETUR",
         "line": 1,
         "x": 0
       },
       {
         "number": 7,
         "name": "Ingimundur Níels Óskarsson",
-        "word": "OSKARSSON",
+        "word": "INGIMUNDUR",
         "line": 5,
         "x": 0
       },
       {
         "number": 10,
         "name": "Davíð Þór Viðarsson",
-        "word": "VIÐARSSON",
+        "word": "DAVIÐ",
         "line": 2,
         "x": 0
       },
       {
         "number": 11,
         "name": "Atli Guðnason",
-        "word": "GUÐNASON",
+        "word": "ATLI",
         "line": 5,
         "x": 1
       },
       {
         "number": 16,
         "name": "Jón Ragnar Jónsson",
-        "word": "JONSSON",
+        "word": "JON",
         "line": 1,
         "x": 2
       },
@@ -75,7 +75,7 @@
       {
         "number": 22,
         "name": "Ólafur Páll Snorrason",
-        "word": "SNORRASON",
+        "word": "OLAFUR",
         "line": 3,
         "x": 0,
         "captain": true
@@ -83,7 +83,7 @@
       {
         "number": 25,
         "name": "Hólmar Örn Rúnarsson",
-        "word": "RUNARSSON",
+        "word": "HOLMAR",
         "line": 3,
         "x": 1
       },
@@ -105,7 +105,7 @@
       {
         "number": 1,
         "name": "Ingvar Jónsson",
-        "word": "JONSSON",
+        "word": "INGVAR",
         "line": 0,
         "x": 0
       },
@@ -119,21 +119,21 @@
       {
         "number": 7,
         "name": "Atli Jóhannsson",
-        "word": "JOHANNSSON",
+        "word": "ATLI",
         "line": 3,
         "x": 0
       },
       {
         "number": 9,
         "name": "Daníel Laxdal",
-        "word": "LAXDAL",
+        "word": "DANIEL",
         "line": 1,
         "x": 2
       },
       {
         "number": 10,
         "name": "Veigar Páll Gunnarsson",
-        "word": "GUNNARSSON",
+        "word": "VEIGAR",
         "line": 5,
         "x": 0,
         "captain": true
@@ -141,28 +141,28 @@
       {
         "number": 11,
         "name": "Arnar Már Björgvinsson",
-        "word": "BJÖRGVINSSON",
+        "word": "ARNAR",
         "line": 5,
         "x": 2
       },
       {
         "number": 14,
         "name": "Hörður Árnason",
-        "word": "ARNASON",
+        "word": "HÖRÐUR",
         "line": 1,
         "x": 0
       },
       {
         "number": 16,
         "name": "Þorri Geir Rúnarsson",
-        "word": "RUNARSSON",
+        "word": "ÞORRI",
         "line": 3,
         "x": 1
       },
       {
         "number": 17,
         "name": "Ólafur Karl Finsen",
-        "word": "FINSEN",
+        "word": "OLAFUR",
         "line": 4,
         "x": 0,
         "goals": 2

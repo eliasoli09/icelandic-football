@@ -18,28 +18,28 @@
       {
         "number": 1,
         "name": "Þórður Ingason",
-        "word": "INGASON",
+        "word": "ÞORÐUR",
         "line": 0,
         "x": 0
       },
       {
         "number": 3,
         "name": "Logi Tómasson",
-        "word": "TOMASSON",
+        "word": "LOGI",
         "line": 1,
         "x": 0
       },
       {
         "number": 6,
         "name": "Halldór Smári Sigurðsson",
-        "word": "SIGURÐSSON",
+        "word": "HALLDOR",
         "line": 1,
         "x": 1
       },
       {
         "number": 8,
         "name": "Sölvi Geir Ottesen",
-        "word": "OTTESEN",
+        "word": "SÖLVI",
         "line": 1,
         "x": 2,
         "captain": true
@@ -47,14 +47,14 @@
       {
         "number": 9,
         "name": "Erlingur Agnarsson",
-        "word": "AGNARSSON",
+        "word": "ERLINGUR",
         "line": 2,
         "x": 0
       },
       {
         "number": 10,
         "name": "Óttar Magnús Karlsson",
-        "word": "KARLSSON",
+        "word": "OTTAR",
         "line": 5,
         "x": 0,
         "goals": 1
@@ -62,21 +62,21 @@
       {
         "number": 20,
         "name": "Júlíus Magnússon",
-        "word": "MAGNUSSON",
+        "word": "JULIUS",
         "line": 2,
         "x": 1
       },
       {
         "number": 21,
         "name": "Guðmundur Andri Tryggvason",
-        "word": "TRYGGVASON",
+        "word": "GUÐMUNDUR",
         "line": 4,
         "x": 0
       },
       {
         "number": 22,
         "name": "Ágúst Eðvald Hlynsson",
-        "word": "HLYNSSON",
+        "word": "AGUST",
         "line": 3,
         "x": 0
       },
@@ -90,7 +90,7 @@
       {
         "number": 24,
         "name": "Davíð Örn Atlason",
-        "word": "ATLASON",
+        "word": "DAVIÐ",
         "line": 1,
         "x": 3
       }
@@ -105,7 +105,7 @@
       {
         "number": 24,
         "name": "Daði Freyr Arnarsson",
-        "word": "ARNARSSON",
+        "word": "DAÐI",
         "line": 0,
         "x": 0
       },
@@ -119,14 +119,14 @@
       {
         "number": 4,
         "name": "Pétur Viðarsson",
-        "word": "VIÐARSSON",
+        "word": "PETUR",
         "line": 1,
         "x": 1
       },
       {
         "number": 6,
         "name": "Björn Daníel Sverrisson",
-        "word": "SVERRISSON",
+        "word": "BJÖRN",
         "line": 3,
         "x": 1
       },
@@ -140,14 +140,14 @@
       {
         "number": 9,
         "name": "Jónatan Ingi Jónsson",
-        "word": "JONSSON",
+        "word": "JONATAN",
         "line": 4,
         "x": 1
       },
       {
         "number": 10,
         "name": "Davíð Þór Viðarsson",
-        "word": "VIÐARSSON",
+        "word": "DAVIÐ",
         "line": 2,
         "x": 0,
         "captain": true
@@ -162,14 +162,14 @@
       {
         "number": 15,
         "name": "Þórður Þorsteinsson Þórðarson",
-        "word": "ÞORÐARSON",
+        "word": "ÞORÐUR",
         "line": 1,
         "x": 0
       },
       {
         "number": 16,
         "name": "Guðmundur Kristjánsson",
-        "word": "KRISTJANSSON",
+        "word": "GUÐMUNDUR",
         "line": 1,
         "x": 2
       },
