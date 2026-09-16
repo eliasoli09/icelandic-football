@@ -1,7 +1,7 @@
 'use client'
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, Flag, Share2, X } from 'lucide-react'
+import { ArrowUpRight, CalendarDays, Check, ChevronLeft, ChevronRight, Flag, Share2, ShieldCheck, Trophy, X } from 'lucide-react'
 import { MATCHES } from '@/lib/xi/matches'
 import { dayNumber } from '@/lib/topp10/daily'
 import { dailyMatch, giveUp, guessPlayer, guessResult, LAUNCH_DAY, LEVEL_KEY, newState, puzzleNumber, restore, resultPoints, shareText, showsFirstLetter, slot, solvedCount, storageKey, teamOver, triesFor, type XiState } from '@/lib/xi/game'
@@ -52,6 +52,8 @@ export function XiGame() {
   const team = match[side]
   const over = teamOver(match, state, side)
   const number = chosen ? null : puzzleNumber(viewDay)
+  const solved = solvedCount(match, state, side)
+  const formation = rows(team.players).slice(0, -1).reverse().map((row) => row.length).join('–')
 
   const share = async () => {
     const body = shareText(match, state, side, number, `${location.origin}/byrjunarlid`)
@@ -61,85 +63,125 @@ export function XiGame() {
 
   return (
     <div className={styles.shell}>
-      <div role="group" aria-label="Erfiðleikastig" className={styles.levels}>
-        {LEVELS.map((l) => (
-          <button key={l.id} className={styles.level} aria-pressed={!chosen && level === l.id} disabled={!ready}
-            onClick={() => { setLevel(l.id); setChosen(null); try { localStorage.setItem(LEVEL_KEY, l.id) } catch { /* not saved */ } }}>
-            {l.label}
-          </button>
-        ))}
-      </div>
-      <p className={styles.eyebrow}>{match.competition} · {match.stage}</p>
-      <div className={styles.head}>
-        <TeamBadge name={match.home.name} color={match.home.color} />
-        <div className={styles.score} aria-live="polite">
-          {state.result ? `${match.score.home}-${match.score.away}` : '?-?'}
+      <header className={styles.intro}>
+        <div>
+          <p className={styles.kicker}><span /> {chosen ? 'ÚR FÓTBOLTASÖGUNNI' : 'LEIKUR DAGSINS'}</p>
+          <h1>Manstu byrjunarliðið?</h1>
+          <p className={styles.subtitle}>Frægir leikir. Ellefu nöfn. Hvað manst þú?</p>
         </div>
-        <TeamBadge name={match.away.name} color={match.away.color} />
-      </div>
-      <p className={styles.date}>{dateLabel(match.date)}</p>
-      {state.result && match.score.note && <p className={styles.note}>{match.score.note}</p>}
-      <p className={styles.blurb}>{match.blurb}</p>
-
-      {ready && <ResultGuess key={match.id} match={match} state={state} onGuess={(h, a) => update(guessResult(state, h, a))} />}
-
-      <div role="tablist" aria-label="Lið" className={styles.tabs}>
-        {(['home', 'away'] as Side[]).map((s) => (
-          <button key={s} role="tab" aria-selected={side === s} className={styles.tab} onClick={() => { setSide(s); setConfirmGiveUp(false) }}>
-            {match[s].name} · {solvedCount(match, state, s)}/11
-          </button>
-        ))}
-      </div>
-
-      <div className={styles.pitch} aria-label={`Byrjunarlið ${team.name}`}>
-        {rows(team.players).map((row, i) => (
-          <div key={i} className={styles.row}>
-            {row.map((p) => (
-              <PlayerSpot key={p.number} player={p} color={team.color} ink={team.ink} firstLetter={showsFirstLetter(match)}
-                slotState={slot(state, side, p.number)} revealed={state.gaveUp[side]}
-                onOpen={() => setOpen(p.number)} />
+        <div className={styles.difficulty}>
+          <span className={styles.controlLabel}>Erfiðleikastig</span>
+          <div role="group" aria-label="Erfiðleikastig" className={styles.levels}>
+            {LEVELS.map((l) => (
+              <button key={l.id} className={styles.level} aria-pressed={!chosen && level === l.id} disabled={!ready}
+                onClick={() => { setLevel(l.id); setChosen(null); try { localStorage.setItem(LEVEL_KEY, l.id) } catch { /* not saved */ } }}>
+                {l.label}
+              </button>
             ))}
           </div>
-        ))}
-      </div>
+        </div>
+      </header>
 
-      <div className={styles.footer}>
-        <span className={styles.count}>{solvedCount(match, state, side)}<small>/11</small></span>
-        {!over && (confirmGiveUp
-          ? <span style={{ display: 'flex', gap: 6 }}>
-              <button className={styles.primary} onClick={() => { update(giveUp(state, side)); setConfirmGiveUp(false) }}>Já, sýna liðið</button>
-              <button className={styles.ghost} onClick={() => setConfirmGiveUp(false)}>Hætta við</button>
-            </span>
-          : <button className={styles.ghost} onClick={() => setConfirmGiveUp(true)}><Flag size={15} style={{ display: 'inline', marginRight: 6 }} />Gefast upp</button>)}
-        {over && <button className={styles.primary} onClick={share}><Share2 size={15} style={{ display: 'inline', marginRight: 6 }} />{copied ? 'Afritað' : 'Deila'}</button>}
-      </div>
+      <section className={styles.matchCard} aria-label="Leikurinn">
+        <p className={styles.eyebrow}><Trophy size={13} aria-hidden /> {match.competition} <span>·</span> {match.stage}</p>
+        <div className={styles.head}>
+          <TeamBadge name={match.home.name} color={match.home.color} />
+          <div className={styles.score} aria-live="polite">
+            {state.result ? `${match.score.home} : ${match.score.away}` : '? : ?'}
+            <span>{state.result ? 'LOKATÖLUR' : 'MANSTU ÚRSLITIN?'}</span>
+          </div>
+          <TeamBadge name={match.away.name} color={match.away.color} />
+        </div>
+        <div className={styles.matchMeta}>
+          <span><CalendarDays size={13} aria-hidden /> {dateLabel(match.date)}</span>
+          <span className={styles.metaDivider}>/</span>
+          <span>{match.blurb}</span>
+        </div>
+        {state.result && match.score.note && <p className={styles.note}>{match.score.note}</p>}
+      </section>
 
-      <div className={styles.nav}>
-        <button className={styles.ghost} disabled={!ready || (!chosen && puzzleNumber(viewDay) <= 1)} aria-label="Fyrri leikur"
-          onClick={() => { if (chosen) setChosen(null); else setViewDay(viewDay - 1) }}>
-          <ChevronLeft size={16} style={{ display: 'inline' }} /> Fyrri
-        </button>
-        <span className={styles.number}>{chosen ? `Valinn leikur · ${LEVELS.find((l) => l.id === match.level)!.label}` : ready ? `#${puzzleNumber(viewDay)} · ${LEVELS.find((l) => l.id === level)!.label}` : ''}</span>
-        <button className={styles.ghost} disabled={!ready || chosen !== null || viewDay >= today} aria-label="Næsti leikur" onClick={() => setViewDay(viewDay + 1)}>
-          Næsti <ChevronRight size={16} style={{ display: 'inline' }} />
-        </button>
-      </div>
-      <select className={styles.select} aria-label="Velja leik" value={chosen ?? ''} onChange={(e) => setChosen(e.target.value || null)}>
-        <option value="">Leikur dagsins</option>
-        {(['island', 'enska', 'evropa'] as const).map((r) => (
-          <optgroup key={r} label={REGION_LABEL[r]}>
-            {MATCHES.filter((m) => m.region === r).sort((a, b) => a.date.localeCompare(b.date)).map((m) => (
-              <option key={m.id} value={m.id}>{m.home.name} - {m.away.name}, {m.competition} ({LEVELS.find((l) => l.id === m.level)!.label})</option>
+      <div className={styles.workspace}>
+        <section className={styles.board} aria-label="Finndu byrjunarliðið">
+          <div role="tablist" aria-label="Lið" className={styles.tabs}>
+            {(['home', 'away'] as Side[]).map((s) => (
+              <button key={s} role="tab" aria-selected={side === s} aria-controls="xi-pitch" id={`xi-tab-${s}`} className={styles.tab} onClick={() => { setSide(s); setConfirmGiveUp(false) }}>
+                <span className={styles.teamDot} style={{ background: match[s].color }} />
+                <span>{match[s].name}</span><small>{solvedCount(match, state, s)}/11</small>
+              </button>
             ))}
-          </optgroup>
-        ))}
-      </select>
+          </div>
+          <div className={styles.pitchHeading}><span>BYRJUNARLIÐIÐ</span><span>{formation}</span></div>
+          <div id="xi-pitch" role="tabpanel" aria-labelledby={`xi-tab-${side}`}>
+            <div className={styles.pitch} aria-label={`Byrjunarlið ${team.name}`}>
+              <div className={styles.pitchLines} aria-hidden="true"><i /><b /><span /></div>
+              {rows(team.players).map((row, i) => (
+                <div key={i} className={styles.row}>
+                  {row.map((p) => (
+                    <PlayerSpot key={p.number} player={p} color={team.color} ink={team.ink} firstLetter={showsFirstLetter(match)}
+                      slotState={slot(state, side, p.number)} revealed={state.gaveUp[side]}
+                      onOpen={() => setOpen(p.number)} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className={styles.footer}>
+            <div className={styles.legend}><span><i /> Rétt</span><span><i /> Ófundið</span></div>
+            {!over && (confirmGiveUp
+              ? <div className={styles.confirmActions}>
+                  <button className={styles.primary} onClick={() => { update(giveUp(state, side)); setConfirmGiveUp(false) }}>Já, sýna liðið</button>
+                  <button className={styles.ghost} onClick={() => setConfirmGiveUp(false)}>Hætta við</button>
+                </div>
+              : <button className={styles.ghost} onClick={() => setConfirmGiveUp(true)}><Flag size={14} aria-hidden /> Gefast upp</button>)}
+            {over && <button className={styles.primary} onClick={share}><Share2 size={15} aria-hidden />{copied ? 'Afritað' : 'Deila'}</button>}
+          </div>
+        </section>
 
-      <p className={styles.sources}>
-        Byrjunarlið, númer og úrslit borin saman í tveimur heimildum og sammála, staðfest {match.verifiedAt.split('-').reverse().join('.')}:{' '}
-        {match.sources.map((s, i) => <Fragment key={s.url}>{i > 0 && ' og '}<a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></Fragment>)}.
-        {' '}{match.layout}. Fyrirliðaband og mörk sjást aðeins þar sem báðar heimildir eru sammála.
-      </p>
+        <aside className={styles.sidebar} aria-label="Framvinda og úrslit">
+          <section className={`${styles.panel} ${styles.progressPanel}`}>
+            <div className={styles.panelHeading}><h2>Þín framvinda</h2><span className={styles.puzzleBadge}>{chosen ? 'VALINN LEIKUR' : `#${ready ? number : '—'}`}</span></div>
+            <p className={styles.progressTeam}>{team.name}</p>
+            <div className={styles.progressValue} aria-live="polite">{solved}<span>/ 11</span><span className={styles.progressCaption}>leikmenn fundnir</span></div>
+            <progress className={styles.progress} value={solved} max={11} aria-label={`Fundnir leikmenn ${team.name}`} />
+            <p className={styles.progressHint}>{solved === 11 ? 'Allir ellefu! Vel gert.' : over ? 'Liðið er upplýst. Prófaðu hitt liðið eða annan leik.' : 'Smelltu á treyju til að finna næsta leikmann.'}</p>
+          </section>
+          {ready && <ResultGuess key={match.id} match={match} state={state} onGuess={(h, a) => update(guessResult(state, h, a))} />}
+          <section className={`${styles.panel} ${styles.instructions}`}>
+            <h2>Svona spilarðu</h2>
+            <ol>
+              <li><span>1</span>Veldu treyju og giskaðu á nafn leikmannsins.</li>
+              <li><span>2</span>Grænn stafur er réttur. Gulur stafur er á öðrum stað.</li>
+              <li><span>3</span>Þú færð {triesFor(match)} tilraunir á hvern leikmann.{showsFirstLetter(match) ? ' Fyrsti stafurinn er gefinn.' : ''}</li>
+            </ol>
+          </section>
+        </aside>
+      </div>
+
+      <section className={styles.archive} aria-label="Veldu annan leik">
+        <div className={styles.archiveTitle}><CalendarDays size={18} aria-hidden /><div><h2>Annar leikur?</h2><p>Rifjaðu upp fleiri eftirminnilega leiki.</p></div></div>
+        <div className={styles.nav}>
+          <button className={styles.ghost} disabled={!ready || (!chosen && puzzleNumber(viewDay) <= 1)} aria-label="Fyrri leikur"
+            onClick={() => { if (chosen) setChosen(null); else setViewDay(viewDay - 1) }}><ChevronLeft size={16} aria-hidden /></button>
+          <span className={styles.number}>{chosen ? 'Valinn leikur' : ready ? `Leikur #${puzzleNumber(viewDay)}` : 'Leikur dagsins'}</span>
+          <button className={styles.ghost} disabled={!ready || chosen !== null || viewDay >= today} aria-label="Næsti leikur" onClick={() => setViewDay(viewDay + 1)}><ChevronRight size={16} aria-hidden /></button>
+        </div>
+        <select className={styles.select} aria-label="Velja leik" value={chosen ?? ''} disabled={!ready} onChange={(e) => setChosen(e.target.value || null)}>
+          <option value="">Leikur dagsins</option>
+          {(['island', 'enska', 'evropa'] as const).map((r) => (
+            <optgroup key={r} label={REGION_LABEL[r]}>
+              {MATCHES.filter((m) => m.region === r).sort((a, b) => a.date.localeCompare(b.date)).map((m) => (
+                <option key={m.id} value={m.id}>{m.home.name} - {m.away.name}, {m.competition} ({LEVELS.find((l) => l.id === m.level)!.label})</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </section>
+      <details className={styles.sources}>
+        <summary><ShieldCheck size={14} aria-hidden /> Staðfestar heimildir <span>Gögn og uppstilling</span></summary>
+        <p>Byrjunarlið, númer og úrslit borin saman í tveimur heimildum og sammála, staðfest {match.verifiedAt.split('-').reverse().join('.')}:{' '}
+          {match.sources.map((s, i) => <Fragment key={s.url}>{i > 0 && ' og '}<a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></Fragment>)}.
+          {' '}{match.layout}. Fyrirliðaband og mörk sjást aðeins þar sem báðar heimildir eru sammála.</p>
+      </details>
 
       {open !== null && (
         <WordleDialog key={`${match.id}:${side}:${open}`} match={match} side={side} player={team.players.find((p) => p.number === open)!} state={state}
@@ -168,7 +210,7 @@ function ResultGuess({ match, state, onGuess }: { match: XiMatch; state: XiState
     const points = resultPoints(state.result, match.score)
     return (
       <div className={styles.panel}>
-        <h2>Rétt úrslit</h2>
+        <div className={styles.panelHeading}><h2>Rétt úrslit</h2><Trophy size={16} aria-hidden /></div>
         <p style={{ margin: 0, fontSize: 14 }}>
           Þú giskaðir á {state.result.home}-{state.result.away}.{' '}
           {points === 3 ? 'Hárrétt, 3 stig!' : points === 1 ? 'Rétt úrslit en ekki markatalan, 1 stig.' : 'Ekki rétt, 0 stig.'}
@@ -185,12 +227,13 @@ function ResultGuess({ match, state, onGuess }: { match: XiMatch; state: XiState
   )
   return (
     <div className={styles.panel}>
-      <h2>Hvernig fór leikurinn?</h2>
+      <div className={styles.panelHeading}><h2>Hvernig fór leikurinn?</h2><Trophy size={16} aria-hidden /></div>
+      <p className={styles.panelDescription}>Giskaðu á lokatöluna. Allt að 3 stig í boði.</p>
       <div className={styles.stepperRow}>
-        {stepper(match.home.name, home, setHome)}
+        <div className={styles.scoreInput}><span>{match.home.name}</span>{stepper(match.home.name, home, setHome)}</div>
         <span style={{ fontWeight: 900 }}>-</span>
-        {stepper(match.away.name, away, setAway)}
-        <button className={styles.primary} onClick={() => onGuess(home, away)}>Giska</button>
+        <div className={styles.scoreInput}><span>{match.away.name}</span>{stepper(match.away.name, away, setAway)}</div>
+        <button className={styles.primary} onClick={() => onGuess(home, away)}>Giska á úrslit <ArrowUpRight size={15} aria-hidden /></button>
       </div>
     </div>
   )
@@ -212,7 +255,7 @@ function PlayerSpot({ player, color, ink, firstLetter, slotState, revealed, onOp
       </span>
       <span className={styles.label}>
         <span className={styles.blank}>{shown ? player.word : firstLetter ? player.word[0] + '.'.repeat(player.word.length - 1) : '.'.repeat(player.word.length)}</span>
-        <span className={styles.tries}>{slotState.guesses.length}</span>
+        <span className={styles.tries}>{slotState.done === 'solved' ? <Check size={11} aria-hidden /> : slotState.done === 'failed' ? <X size={11} aria-hidden /> : slotState.guesses.length}</span>
       </span>
     </button>
   )
