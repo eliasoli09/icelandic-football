@@ -1,0 +1,196 @@
+{
+  "id": "wigan-mancity-2013",
+  "region": "enska",
+  "competition": "Enski bikarinn 2012/13",
+  "stage": "Úrslitaleikur",
+  "date": "2013-05-11",
+  "blurb": "Úrslitaleikur enska bikarsins á Wembley.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#6cabdd",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Joe Hart",
+        "word": "HART",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Pablo Zabaleta",
+        "word": "ZABALETA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Vincent Kompany",
+        "word": "KOMPANY",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 33,
+        "name": "Matija Nastasić",
+        "word": "NASTASIC",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Gaël Clichy",
+        "word": "CLICHY",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "David Silva",
+        "word": "SILVA",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 42,
+        "name": "Yaya Touré",
+        "word": "TOURE",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 18,
+        "name": "Gareth Barry",
+        "word": "BARRY",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Samir Nasri",
+        "word": "NASRI",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Sergio Agüero",
+        "word": "AGUERO",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 32,
+        "name": "Carlos Tevez",
+        "word": "TEVEZ",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Wigan",
+    "color": "#1d59af",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Joel Robles",
+        "word": "ROBLES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Emmerson Boyce",
+        "word": "BOYCE",
+        "line": 1,
+        "x": 3,
+        "captain": true
+      },
+      {
+        "number": 33,
+        "name": "Paul Scharner",
+        "word": "SCHARNER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Antolín Alcaraz",
+        "word": "ALCARAZ",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Roger Espinoza",
+        "word": "ESPINOZA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "James McCarthy",
+        "word": "MCCARTHY",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 16,
+        "name": "James McArthur",
+        "word": "MCARTHUR",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 14,
+        "name": "Jordi Gómez",
+        "word": "GOMEZ",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Callum McManaman",
+        "word": "MCMANAMAN",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 2,
+        "name": "Arouna Koné",
+        "word": "KONE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Shaun Maloney",
+        "word": "MALONEY",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2013 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1344774088"
+    },
+    {
+      "name": "transfermarkt.com · Wigan Athletic - Manchester City",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2312295"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

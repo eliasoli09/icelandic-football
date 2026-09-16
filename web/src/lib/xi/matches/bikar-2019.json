@@ -1,0 +1,197 @@
+{
+  "id": "bikar-2019",
+  "region": "island",
+  "competition": "Bikarkeppni karla 2019",
+  "stage": "Úrslitaleikur",
+  "date": "2019-09-14",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 1,
+    "away": 0
+  },
+  "home": {
+    "name": "Víkingur R.",
+    "color": "#c8102e",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Þórður Ingason",
+        "word": "INGASON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Logi Tómasson",
+        "word": "TOMASSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Halldór Smári Sigurðsson",
+        "word": "SIGURÐSSON",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Sölvi Geir Ottesen",
+        "word": "OTTESEN",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 9,
+        "name": "Erlingur Agnarsson",
+        "word": "AGNARSSON",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Óttar Magnús Karlsson",
+        "word": "KARLSSON",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 20,
+        "name": "Júlíus Magnússon",
+        "word": "MAGNUSSON",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Guðmundur Andri Tryggvason",
+        "word": "TRYGGVASON",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Ágúst Eðvald Hlynsson",
+        "word": "HLYNSSON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Nikolaj Andreas Hansen",
+        "word": "HANSEN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 24,
+        "name": "Davíð Örn Atlason",
+        "word": "ATLASON",
+        "line": 1,
+        "x": 3
+      }
+    ]
+  },
+  "away": {
+    "name": "FH",
+    "color": "#1d1d1f",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 24,
+        "name": "Daði Freyr Arnarsson",
+        "word": "ARNARSSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Cedric Stephane Alfred D´ulivo",
+        "word": "DULIVO",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Pétur Viðarsson",
+        "word": "VIÐARSSON",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Björn Daníel Sverrisson",
+        "word": "SVERRISSON",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Steven Lennon",
+        "word": "LENNON",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Jónatan Ingi Jónsson",
+        "word": "JONSSON",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Davíð Þór Viðarsson",
+        "word": "VIÐARSSON",
+        "line": 2,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 14,
+        "name": "Morten Beck Andersen",
+        "word": "ANDERSEN",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Þórður Þorsteinsson Þórðarson",
+        "word": "ÞORÐARSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Guðmundur Kristjánsson",
+        "word": "KRISTJANSSON",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 27,
+        "name": "Brandur Hendriksson Olsen",
+        "word": "OLSEN",
+        "line": 3,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · Víkingur R. - FH, Bikarkeppni - Mjólkurbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=641157"
+    },
+    {
+      "name": "transfermarkt.com · FH Hafnarfjördur - Víkingur Reykjavík",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3245181"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

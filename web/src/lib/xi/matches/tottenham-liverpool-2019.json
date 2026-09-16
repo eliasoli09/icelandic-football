@@ -1,0 +1,197 @@
+{
+  "id": "tottenham-liverpool-2019",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2018/19",
+  "stage": "Úrslitaleikur",
+  "date": "2019-06-01",
+  "blurb": "Enskur úrslitaleikur í Madríd.",
+  "score": {
+    "home": 0,
+    "away": 2
+  },
+  "home": {
+    "name": "Tottenham",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hugo Lloris",
+        "word": "LLORIS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 2,
+        "name": "Kieran Trippier",
+        "word": "TRIPPIER",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Toby Alderweireld",
+        "word": "ALDERWEIRELD",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Jan Vertonghen",
+        "word": "VERTONGHEN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Danny Rose",
+        "word": "ROSE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Moussa Sissoko",
+        "word": "SISSOKO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Harry Winks",
+        "word": "WINKS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Dele Alli",
+        "word": "ALLI",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 23,
+        "name": "Christian Eriksen",
+        "word": "ERIKSEN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Son Heung-min",
+        "word": "SON",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Harry Kane",
+        "word": "KANE",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Liverpool",
+    "color": "#dd0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 13,
+        "name": "Alisson Becker",
+        "word": "ALISSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 66,
+        "name": "Trent Alexander-Arnold",
+        "word": "ALEXANDERARNOLD",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 32,
+        "name": "Joël Matip",
+        "word": "MATIP",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Virgil van Dijk",
+        "word": "VANDIJK",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Andy Robertson",
+        "word": "ROBERTSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Jordan Henderson",
+        "word": "HENDERSON",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 3,
+        "name": "Fabinho",
+        "word": "FABINHO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Georginio Wijnaldum",
+        "word": "WIJNALDUM",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Mohamed Salah",
+        "word": "SALAH",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Roberto Firmino",
+        "word": "FIRMINO",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Sadio Mané",
+        "word": "MANE",
+        "line": 4,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2019 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370837496"
+    },
+    {
+      "name": "transfermarkt.com · Tottenham Hotspur - Liverpool FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3183105"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

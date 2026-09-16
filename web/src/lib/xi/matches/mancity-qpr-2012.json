@@ -1,0 +1,200 @@
+{
+  "id": "mancity-qpr-2012",
+  "region": "enska",
+  "competition": "Enska úrvalsdeildin 2011/12",
+  "stage": "Lokaumferð",
+  "date": "2012-05-13",
+  "blurb": "Síðasti leikur tímabilsins á Etihad. Titillinn var í húfi.",
+  "score": {
+    "home": 3,
+    "away": 2
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#6cabdd",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 25,
+        "name": "Joe Hart",
+        "word": "HART",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Pablo Zabaleta",
+        "word": "ZABALETA",
+        "line": 1,
+        "x": 3,
+        "goals": 1
+      },
+      {
+        "number": 4,
+        "name": "Vincent Kompany",
+        "word": "KOMPANY",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Joleon Lescott",
+        "word": "LESCOTT",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Gaël Clichy",
+        "word": "CLICHY",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Samir Nasri",
+        "word": "NASRI",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 42,
+        "name": "Yaya Touré",
+        "word": "TOURE",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 18,
+        "name": "Gareth Barry",
+        "word": "BARRY",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "David Silva",
+        "word": "SILVA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 32,
+        "name": "Carlos Tevez",
+        "word": "TEVEZ",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Sergio Agüero",
+        "word": "AGUERO",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "QPR",
+    "color": "#005cab",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Paddy Kenny",
+        "word": "KENNY",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 42,
+        "name": "Nedum Onuoha",
+        "word": "ONUOHA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 35,
+        "name": "Anton Ferdinand",
+        "word": "FERDINAND",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Clint Hill",
+        "word": "HILL",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 34,
+        "name": "Taye Taiwo",
+        "word": "TAIWO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Jamie Mackie",
+        "word": "MACKIE",
+        "line": 3,
+        "x": 3,
+        "goals": 1
+      },
+      {
+        "number": 4,
+        "name": "Shaun Derry",
+        "word": "DERRY",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 17,
+        "name": "Joey Barton",
+        "word": "BARTON",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 32,
+        "name": "Shaun Wright-Phillips",
+        "word": "WRIGHTPHILLIPS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Djibril Cissé",
+        "word": "CISSE",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 52,
+        "name": "Bobby Zamora",
+        "word": "ZAMORA",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Manchester City F.C. 3-2 Queens Park Rangers F.C.",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1368008005"
+    },
+    {
+      "name": "transfermarkt.com · Manchester City - Queens Park Rangers",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/1131719"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

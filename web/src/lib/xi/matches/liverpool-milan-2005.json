@@ -1,0 +1,201 @@
+{
+  "id": "liverpool-milan-2005",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2004/05",
+  "stage": "Úrslitaleikur",
+  "date": "2005-05-25",
+  "blurb": "Úrslitaleikurinn í Istanbúl.",
+  "score": {
+    "home": 3,
+    "away": 3,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 2-3."
+  },
+  "home": {
+    "name": "AC Milan",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Dida",
+        "word": "DIDA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Cafu",
+        "word": "CAFU",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 31,
+        "name": "Jaap Stam",
+        "word": "STAM",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 13,
+        "name": "Alessandro Nesta",
+        "word": "NESTA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Paolo Maldini",
+        "word": "MALDINI",
+        "line": 1,
+        "x": 0,
+        "captain": true,
+        "goals": 1
+      },
+      {
+        "number": 21,
+        "name": "Andrea Pirlo",
+        "word": "PIRLO",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Gennaro Gattuso",
+        "word": "GATTUSO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Clarence Seedorf",
+        "word": "SEEDORF",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Kaká",
+        "word": "KAKA",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Andriy Shevchenko",
+        "word": "SHEVCHENKO",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Hernán Crespo",
+        "word": "CRESPO",
+        "line": 5,
+        "x": 0,
+        "goals": 2
+      }
+    ]
+  },
+  "away": {
+    "name": "Liverpool",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Jerzy Dudek",
+        "word": "DUDEK",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Steve Finnan",
+        "word": "FINNAN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 23,
+        "name": "Jamie Carragher",
+        "word": "CARRAGHER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Sami Hyypiä",
+        "word": "HYYPIA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Djimi Traoré",
+        "word": "TRAORE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Xabi Alonso",
+        "word": "ALONSO",
+        "line": 2,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Luis García",
+        "word": "GARCIA",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "Steven Gerrard",
+        "word": "GERRARD",
+        "line": 3,
+        "x": 1,
+        "captain": true,
+        "goals": 1
+      },
+      {
+        "number": 6,
+        "name": "John Arne Riise",
+        "word": "RIISE",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Harry Kewell",
+        "word": "KEWELL",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Milan Baroš",
+        "word": "BAROS",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2005 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371187564"
+    },
+    {
+      "name": "transfermarkt.com · AC Milan - Liverpool FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/31195"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

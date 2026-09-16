@@ -1,0 +1,200 @@
+{
+  "id": "argentina-frakkland-2022",
+  "region": "evropa",
+  "competition": "HM 2022",
+  "stage": "Úrslitaleikur",
+  "date": "2022-12-18",
+  "blurb": "Úrslitaleikur HM í Katar.",
+  "score": {
+    "home": 3,
+    "away": 3,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 4-2."
+  },
+  "home": {
+    "name": "Argentína",
+    "color": "#75aadb",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 23,
+        "name": "Emiliano Martínez",
+        "word": "MARTINEZ",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 26,
+        "name": "Nahuel Molina",
+        "word": "MOLINA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 13,
+        "name": "Cristian Romero",
+        "word": "ROMERO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 19,
+        "name": "Nicolás Otamendi",
+        "word": "OTAMENDI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Nicolás Tagliafico",
+        "word": "TAGLIAFICO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 24,
+        "name": "Enzo Fernández",
+        "word": "FERNANDEZ",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Alexis Mac Allister",
+        "word": "MACALLISTER",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Rodrigo De Paul",
+        "word": "DEPAUL",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Lionel Messi",
+        "word": "MESSI",
+        "line": 5,
+        "x": 2,
+        "captain": true,
+        "goals": 2
+      },
+      {
+        "number": 9,
+        "name": "Julián Alvarez",
+        "word": "ALVAREZ",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Ángel Di María",
+        "word": "DIMARIA",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Frakkland",
+    "color": "#221f4e",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hugo Lloris",
+        "word": "LLORIS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 5,
+        "name": "Jules Koundé",
+        "word": "KOUNDE",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Raphaël Varane",
+        "word": "VARANE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 18,
+        "name": "Dayot Upamecano",
+        "word": "UPAMECANO",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Théo Hernandez",
+        "word": "HERNANDEZ",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Aurélien Tchouaméni",
+        "word": "TCHOUAMENI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 14,
+        "name": "Adrien Rabiot",
+        "word": "RABIOT",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Ousmane Dembélé",
+        "word": "DEMBELE",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Antoine Griezmann",
+        "word": "GRIEZMANN",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Kylian Mbappé",
+        "word": "MBAPPE",
+        "line": 4,
+        "x": 0,
+        "goals": 3
+      },
+      {
+        "number": 9,
+        "name": "Olivier Giroud",
+        "word": "GIROUD",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2022 FIFA World Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374381222"
+    },
+    {
+      "name": "transfermarkt.com · Argentina - France",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3975879"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

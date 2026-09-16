@@ -7,7 +7,7 @@
  */
 
 /** Index just past the "}}" or "]]" closing the bracket pair that opens at `start`. */
-function closeOf(text: string, start: number): number {
+export function closeOf(text: string, start: number): number {
   let depth = 0
   for (let i = start; i < text.length - 1; i++) {
     const two = text.slice(i, i + 2)

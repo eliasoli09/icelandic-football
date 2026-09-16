@@ -1,0 +1,198 @@
+{
+  "id": "argentina-island-2018",
+  "region": "island",
+  "competition": "HM 2018",
+  "stage": "Riðlakeppni",
+  "date": "2018-06-16",
+  "blurb": "Fyrsti leikur Íslands á heimsmeistaramóti.",
+  "score": {
+    "home": 1,
+    "away": 1
+  },
+  "home": {
+    "name": "Argentína",
+    "color": "#75aadb",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 23,
+        "name": "Willy Caballero",
+        "word": "CABALLERO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Eduardo Salvio",
+        "word": "SALVIO",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Nicolás Otamendi",
+        "word": "OTAMENDI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 16,
+        "name": "Marcos Rojo",
+        "word": "ROJO",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Nicolás Tagliafico",
+        "word": "TAGLIAFICO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Javier Mascherano",
+        "word": "MASCHERANO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Lucas Biglia",
+        "word": "BIGLIA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 13,
+        "name": "Maximiliano Meza",
+        "word": "MEZA",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Lionel Messi",
+        "word": "MESSI",
+        "line": 4,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 11,
+        "name": "Ángel Di María",
+        "word": "DIMARIA",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Sergio Agüero",
+        "word": "AGUERO",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Ísland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HALLDORSSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "SÆVARSSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Kári Árnason",
+        "word": "ARNASON",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "SIGURÐSSON",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Hörður Björgvin Magnússon",
+        "word": "MAGNUSSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "SIGURÐSSON",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "GUNNARSSON",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Emil Hallfreðsson",
+        "word": "HALLFREÐSSON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Berg Guðmundsson",
+        "word": "GUÐMUNDSSON",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BJARNASON",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Alfreð Finnbogason",
+        "word": "FINNBOGASON",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2018 FIFA World Cup Group D",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372523086"
+    },
+    {
+      "name": "transfermarkt.com · Argentina - Iceland",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2977701"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

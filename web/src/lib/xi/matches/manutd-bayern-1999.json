@@ -1,0 +1,197 @@
+{
+  "id": "manutd-bayern-1999",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 1998/99",
+  "stage": "Úrslitaleikur",
+  "date": "1999-05-26",
+  "blurb": "Úrslitaleikurinn í Barcelona.",
+  "score": {
+    "home": 2,
+    "away": 1
+  },
+  "home": {
+    "name": "Manchester United",
+    "color": "#e20e0e",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Peter Schmeichel",
+        "word": "SCHMEICHEL",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 2,
+        "name": "Gary Neville",
+        "word": "NEVILLE",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Ronny Johnsen",
+        "word": "JOHNSEN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Jaap Stam",
+        "word": "STAM",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Denis Irwin",
+        "word": "IRWIN",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Ryan Giggs",
+        "word": "GIGGS",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 7,
+        "name": "David Beckham",
+        "word": "BECKHAM",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "Nicky Butt",
+        "word": "BUTT",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 15,
+        "name": "Jesper Blomqvist",
+        "word": "BLOMQVIST",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Dwight Yorke",
+        "word": "YORKE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Andy Cole",
+        "word": "COLE",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Bayern München",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Oliver Kahn",
+        "word": "KAHN",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Lothar Matthäus",
+        "word": "MATTHAUS",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 2,
+        "name": "Markus Babbel",
+        "word": "BABBEL",
+        "line": 1,
+        "x": 4
+      },
+      {
+        "number": 25,
+        "name": "Thomas Linke",
+        "word": "LINKE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Samuel Kuffour",
+        "word": "KUFFOUR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Michael Tarnat",
+        "word": "TARNAT",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Stefan Effenberg",
+        "word": "EFFENBERG",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Jens Jeremies",
+        "word": "JEREMIES",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Mario Basler",
+        "word": "BASLER",
+        "line": 5,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 19,
+        "name": "Carsten Jancker",
+        "word": "JANCKER",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Alexander Zickler",
+        "word": "ZICKLER",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 1999 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1359973788"
+    },
+    {
+      "name": "transfermarkt.com · Manchester United - Bayern Munich",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/983044"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

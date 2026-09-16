@@ -1,0 +1,201 @@
+{
+  "id": "liverpool-westham-2006",
+  "region": "enska",
+  "competition": "Enski bikarinn 2005/06",
+  "stage": "Úrslitaleikur",
+  "date": "2006-05-13",
+  "blurb": "Úrslitaleikur enska bikarsins í Cardiff.",
+  "score": {
+    "home": 3,
+    "away": 3,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 3-1."
+  },
+  "home": {
+    "name": "Liverpool",
+    "color": "#ff0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 25,
+        "name": "Pepe Reina",
+        "word": "REINA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Steve Finnan",
+        "word": "FINNAN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 23,
+        "name": "Jamie Carragher",
+        "word": "CARRAGHER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Sami Hyypiä",
+        "word": "HYYPIA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "John Arne Riise",
+        "word": "RIISE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Steven Gerrard",
+        "word": "GERRARD",
+        "line": 3,
+        "x": 3,
+        "captain": true,
+        "goals": 2
+      },
+      {
+        "number": 14,
+        "name": "Xabi Alonso",
+        "word": "ALONSO",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 22,
+        "name": "Mohamed Sissoko",
+        "word": "SISSOKO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Harry Kewell",
+        "word": "KEWELL",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Peter Crouch",
+        "word": "CROUCH",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Djibril Cissé",
+        "word": "CISSE",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "West Ham",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 34,
+        "name": "Shaka Hislop",
+        "word": "HISLOP",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Lionel Scaloni",
+        "word": "SCALONI",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Anton Ferdinand",
+        "word": "FERDINAND",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Danny Gabbidon",
+        "word": "GABBIDON",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Paul Konchesky",
+        "word": "KONCHESKY",
+        "line": 1,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 15,
+        "name": "Yossi Benayoun",
+        "word": "BENAYOUN",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 20,
+        "name": "Nigel Reo-Coker",
+        "word": "REOCOKER",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Carl Fletcher",
+        "word": "FLETCHER",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Matthew Etherington",
+        "word": "ETHERINGTON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Marlon Harewood",
+        "word": "HAREWOOD",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Dean Ashton",
+        "word": "ASHTON",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2006 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1351858497"
+    },
+    {
+      "name": "transfermarkt.com · Liverpool FC - West Ham United",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/945554"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

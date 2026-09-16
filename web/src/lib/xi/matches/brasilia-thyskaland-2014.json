@@ -1,0 +1,201 @@
+{
+  "id": "brasilia-thyskaland-2014",
+  "region": "evropa",
+  "competition": "HM 2014",
+  "stage": "Undanúrslit",
+  "date": "2014-07-08",
+  "blurb": "Undanúrslit HM 2014 í Belo Horizonte.",
+  "score": {
+    "home": 1,
+    "away": 7
+  },
+  "home": {
+    "name": "Brasilía",
+    "color": "#ffcc00",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 12,
+        "name": "Júlio César",
+        "word": "JULIOCESAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Maicon Sisenando",
+        "word": "MAICON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "David Luiz",
+        "word": "DAVIDLUIZ",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 13,
+        "name": "Dante",
+        "word": "DANTE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Marcelo",
+        "word": "MARCELO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Luiz Gustavo",
+        "word": "LUIZGUSTAVO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Fernandinho",
+        "word": "FERNANDINHO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Hulk",
+        "word": "HULK",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 11,
+        "name": "Oscar",
+        "word": "OSCAR",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 20,
+        "name": "Bernard",
+        "word": "BERNARD",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Fred",
+        "word": "FRED",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Þýskaland",
+    "color": "#b0122a",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Manuel Neuer",
+        "word": "NEUER",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Philipp Lahm",
+        "word": "LAHM",
+        "line": 1,
+        "x": 3,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Jérôme Boateng",
+        "word": "BOATENG",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Mats Hummels",
+        "word": "HUMMELS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Benedikt Höwedes",
+        "word": "HOWEDES",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Sami Khedira",
+        "word": "KHEDIRA",
+        "line": 3,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Bastian Schweinsteiger",
+        "word": "SCHWEINSTEIGER",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 13,
+        "name": "Thomas Müller",
+        "word": "MULLER",
+        "line": 4,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 18,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 4,
+        "x": 1,
+        "goals": 2
+      },
+      {
+        "number": 8,
+        "name": "Mesut Özil",
+        "word": "OZIL",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Miroslav Klose",
+        "word": "KLOSE",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Brazil v Germany (2014 FIFA World Cup)",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370477520"
+    },
+    {
+      "name": "transfermarkt.com · Brazil - Germany",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2464545"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

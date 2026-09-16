@@ -1,0 +1,199 @@
+{
+  "id": "england-island-2016",
+  "region": "island",
+  "competition": "EM 2016",
+  "stage": "16 liða úrslit",
+  "date": "2016-06-27",
+  "blurb": "Fyrsta stórmót Íslands. Sigurliðið fór í 8 liða úrslit.",
+  "score": {
+    "home": 1,
+    "away": 2
+  },
+  "home": {
+    "name": "England",
+    "color": "#f4f4f4",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Joe Hart",
+        "word": "HART",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Kyle Walker",
+        "word": "WALKER",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Gary Cahill",
+        "word": "CAHILL",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Chris Smalling",
+        "word": "SMALLING",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Danny Rose",
+        "word": "ROSE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Dele Alli",
+        "word": "ALLI",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 17,
+        "name": "Eric Dier",
+        "word": "DIER",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Wayne Rooney",
+        "word": "ROONEY",
+        "line": 3,
+        "x": 0,
+        "captain": true,
+        "goals": 1
+      },
+      {
+        "number": 15,
+        "name": "Daniel Sturridge",
+        "word": "STURRIDGE",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 9,
+        "name": "Harry Kane",
+        "word": "KANE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Raheem Sterling",
+        "word": "STERLING",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Ísland",
+    "color": "#1f4fa0",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HALLDORSSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "SÆVARSSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Kári Árnason",
+        "word": "ARNASON",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "SIGURÐSSON",
+        "line": 1,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 23,
+        "name": "Ari Freyr Skúlason",
+        "word": "SKULASON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Berg Guðmundsson",
+        "word": "GUÐMUNDSSON",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "SIGURÐSSON",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "GUNNARSSON",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BJARNASON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Kolbeinn Sigþórsson",
+        "word": "SIGÞORSSON",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 15,
+        "name": "Jón Daði Böðvarsson",
+        "word": "BÖÐVARSSON",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2016 knockout stage",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372894154"
+    },
+    {
+      "name": "transfermarkt.com · England - Iceland",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2701345"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -1,0 +1,196 @@
+{
+  "id": "bikar-2024",
+  "region": "island",
+  "competition": "Bikarkeppni karla 2024",
+  "stage": "Úrslitaleikur",
+  "date": "2024-09-21",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 2,
+    "away": 0
+  },
+  "home": {
+    "name": "KA",
+    "color": "#1094d8",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 13,
+        "name": "Steinþór Már Auðunsson",
+        "word": "AUÐUNSSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Rodrigo Gomes Mateo",
+        "word": "RODRI",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Ívar Örn Árnason",
+        "word": "ARNASON",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Darko Bulatovic",
+        "word": "BULATOVIC",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Daníel Hafsteinsson",
+        "word": "HAFSTEINSSON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Hallgrímur Mar Steingrímsson",
+        "word": "STEINGRIMSSON",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Hrannar Björn Steingrímsson",
+        "word": "STEINGRIMSSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 23,
+        "name": "Viðar Örn Kjartansson",
+        "word": "KJARTANSSON",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 28,
+        "name": "Hans Viktor Guðmundsson",
+        "word": "GUÐMUNDSSON",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 29,
+        "name": "Jakob Snær Árnason",
+        "word": "ARNASON",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 77,
+        "name": "Bjarni Aðalsteinsson",
+        "word": "AÐALSTEINSSON",
+        "line": 2,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Víkingur R.",
+    "color": "#c8102e",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Ingvar Jónsson",
+        "word": "JONSSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Peter Oliver Ekroth",
+        "word": "EKROTH",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 5,
+        "name": "Jón Guðni Fjóluson",
+        "word": "FJOLUSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Gunnar Vatnhamar",
+        "word": "VATNHAMAR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Erlingur Agnarsson",
+        "word": "AGNARSSON",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Viktor Örlygur Andrason",
+        "word": "ANDRASON",
+        "line": 2,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 11,
+        "name": "Gísli Gottskálk Þórðarson",
+        "word": "ÞORÐARSON",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Ari Sigurpálsson",
+        "word": "SIGURPALSSON",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Aron Elís Þrándarson",
+        "word": "ÞRANDARSON",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Karl Friðleifur Gunnarsson",
+        "word": "GUNNARSSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 25,
+        "name": "Valdimar Þór Ingimundarson",
+        "word": "INGIMUNDARSON",
+        "line": 3,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · KA - Víkingur R., Bikarkeppni KSÍ - Mjólkurbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=639352"
+    },
+    {
+      "name": "transfermarkt.com · KA Akureyri - Víkingur Reykjavík",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4460877"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

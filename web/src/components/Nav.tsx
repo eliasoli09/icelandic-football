@@ -14,6 +14,7 @@ const NAV = [
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
   { href: '/topp10', label: 'Tenaball' },
+  { href: '/byrjunarlid', label: 'Byrjunarlið' },
   { href: '/kort', label: 'Kort' },
   { href: '/leikmenn', label: 'Leikmenn' },
   { href: '/sludur', label: 'Slúður' },
@@ -23,8 +24,8 @@ const NAV = [
   { href: '/h2h', label: 'H2H' },
 ]
 
-const PRIMARY_NAV = NAV.slice(0, 6)
-const MORE_NAV = NAV.slice(6)
+const PRIMARY_NAV = NAV.slice(0, 7)
+const MORE_NAV = NAV.slice(7)
 
 export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
   const pathname = usePathname()

@@ -1,0 +1,199 @@
+{
+  "id": "manutd-chelsea-2008",
+  "region": "evropa",
+  "competition": "Meistaradeild Evrópu 2007/08",
+  "stage": "Úrslitaleikur",
+  "date": "2008-05-21",
+  "blurb": "Enskur úrslitaleikur í Moskvu.",
+  "score": {
+    "home": 1,
+    "away": 1,
+    "note": "Eftir framlengingu. Réðst í vítaspyrnukeppni."
+  },
+  "home": {
+    "name": "Manchester United",
+    "color": "#e20e0e",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Edwin van der Sar",
+        "word": "VANDERSAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Wes Brown",
+        "word": "BROWN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Rio Ferdinand",
+        "word": "FERDINAND",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 15,
+        "name": "Nemanja Vidić",
+        "word": "VIDIC",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Patrice Evra",
+        "word": "EVRA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Owen Hargreaves",
+        "word": "HARGREAVES",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 18,
+        "name": "Paul Scholes",
+        "word": "SCHOLES",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 16,
+        "name": "Michael Carrick",
+        "word": "CARRICK",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Wayne Rooney",
+        "word": "ROONEY",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 32,
+        "name": "Carlos Tevez",
+        "word": "TEVEZ",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Chelsea",
+    "color": "#0000ff",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Petr Čech",
+        "word": "CECH",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Michael Essien",
+        "word": "ESSIEN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Ricardo Carvalho",
+        "word": "CARVALHO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 26,
+        "name": "John Terry",
+        "word": "TERRY",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 3,
+        "name": "Ashley Cole",
+        "word": "COLE",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Claude Makélélé",
+        "word": "MAKELELE",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 13,
+        "name": "Michael Ballack",
+        "word": "BALLACK",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Frank Lampard",
+        "word": "LAMPARD",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Joe Cole",
+        "word": "COLE",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 15,
+        "name": "Florent Malouda",
+        "word": "MALOUDA",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Didier Drogba",
+        "word": "DROGBA",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2008 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1349353539"
+    },
+    {
+      "name": "transfermarkt.com · Manchester United - Chelsea FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/909764"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

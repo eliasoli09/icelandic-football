@@ -1,0 +1,21 @@
+// Written by scripts/xi/build.mts: only matches whose two sources agreed.
+import type { XiMatch } from '../types'
+import argentina_frakkland_2022 from './argentina-frakkland-2022.json'
+import argentina_island_2018 from './argentina-island-2018.json'
+import barcelona_realmadrid_2011 from './barcelona-realmadrid-2011.json'
+import bikar_2019 from './bikar-2019.json'
+import bikar_2023 from './bikar-2023.json'
+import bikar_2024 from './bikar-2024.json'
+import brasilia_thyskaland_2014 from './brasilia-thyskaland-2014.json'
+import england_island_2016 from './england-island-2016.json'
+import fh_stjarnan_2014 from './fh-stjarnan-2014.json'
+import liverpool_milan_2005 from './liverpool-milan-2005.json'
+import liverpool_westham_2006 from './liverpool-westham-2006.json'
+import mancity_qpr_2012 from './mancity-qpr-2012.json'
+import manutd_bayern_1999 from './manutd-bayern-1999.json'
+import manutd_chelsea_2008 from './manutd-chelsea-2008.json'
+import tottenham_liverpool_2019 from './tottenham-liverpool-2019.json'
+import vikingur_breidablik_2024 from './vikingur-breidablik-2024.json'
+import wigan_mancity_2013 from './wigan-mancity-2013.json'
+
+export const MATCHES = [argentina_frakkland_2022, argentina_island_2018, barcelona_realmadrid_2011, bikar_2019, bikar_2023, bikar_2024, brasilia_thyskaland_2014, england_island_2016, fh_stjarnan_2014, liverpool_milan_2005, liverpool_westham_2006, mancity_qpr_2012, manutd_bayern_1999, manutd_chelsea_2008, tottenham_liverpool_2019, vikingur_breidablik_2024, wigan_mancity_2013] as XiMatch[]

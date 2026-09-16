@@ -1,0 +1,197 @@
+{
+  "id": "barcelona-realmadrid-2011",
+  "region": "evropa",
+  "competition": "Spænski bikarinn 2010/11",
+  "stage": "Úrslitaleikur",
+  "date": "2011-04-20",
+  "blurb": "El Clásico í úrslitaleik bikarsins í Valencia.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Barcelona",
+    "color": "#bf0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 13,
+        "name": "José Manuel Pinto",
+        "word": "PINTO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Dani Alves",
+        "word": "ALVES",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Javier Mascherano",
+        "word": "MASCHERANO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Gerard Piqué",
+        "word": "PIQUE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Adriano",
+        "word": "ADRIANO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Sergio Busquets",
+        "word": "BUSQUETS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Xavi",
+        "word": "XAVI",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Andrés Iniesta",
+        "word": "INIESTA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Pedro",
+        "word": "PEDRO",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "David Villa",
+        "word": "VILLA",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Lionel Messi",
+        "word": "MESSI",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Real Madrid",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Iker Casillas",
+        "word": "CASILLAS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 17,
+        "name": "Álvaro Arbeloa",
+        "word": "ARBELOA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Sergio Ramos",
+        "word": "RAMOS",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 2,
+        "name": "Ricardo Carvalho",
+        "word": "CARVALHO",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 12,
+        "name": "Marcelo",
+        "word": "MARCELO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Pepe",
+        "word": "PEPE",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Xabi Alonso",
+        "word": "ALONSO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 24,
+        "name": "Sami Khedira",
+        "word": "KHEDIRA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Mesut Özil",
+        "word": "OZIL",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Ángel Di María",
+        "word": "DIMARIA",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2011 Copa del Rey final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1350821205"
+    },
+    {
+      "name": "transfermarkt.com · FC Barcelona - Real Madrid",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/1076632"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

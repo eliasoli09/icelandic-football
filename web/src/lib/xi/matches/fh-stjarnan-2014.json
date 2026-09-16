@@ -1,0 +1,198 @@
+{
+  "id": "fh-stjarnan-2014",
+  "region": "island",
+  "competition": "Pepsi-deild karla 2014",
+  "stage": "Lokaumferð",
+  "date": "2014-10-04",
+  "blurb": "Lokaumferðin réð úrslitum um titilinn. Sigurliðið varð Íslandsmeistari.",
+  "score": {
+    "home": 1,
+    "away": 2
+  },
+  "home": {
+    "name": "FH",
+    "color": "#1d1d1f",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Róbert Örn Óskarsson",
+        "word": "OSKARSSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Pétur Viðarsson",
+        "word": "VIÐARSSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Ingimundur Níels Óskarsson",
+        "word": "OSKARSSON",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Davíð Þór Viðarsson",
+        "word": "VIÐARSSON",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Atli Guðnason",
+        "word": "GUÐNASON",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Jón Ragnar Jónsson",
+        "word": "JONSSON",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 19,
+        "name": "Steven Lennon",
+        "word": "LENNON",
+        "line": 5,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 20,
+        "name": "Kassim Doumbia",
+        "word": "DOUMBIA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Ólafur Páll Snorrason",
+        "word": "SNORRASON",
+        "line": 3,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 25,
+        "name": "Hólmar Örn Rúnarsson",
+        "word": "RUNARSSON",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Jonathan Kevin C. Hendrickx",
+        "word": "HENDRICKX",
+        "line": 1,
+        "x": 3
+      }
+    ]
+  },
+  "away": {
+    "name": "Stjarnan",
+    "color": "#29318d",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Ingvar Jónsson",
+        "word": "JONSSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Niclas Vemmelund",
+        "word": "VEMMELUND",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Atli Jóhannsson",
+        "word": "JOHANNSSON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Daníel Laxdal",
+        "word": "LAXDAL",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Veigar Páll Gunnarsson",
+        "word": "GUNNARSSON",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 11,
+        "name": "Arnar Már Björgvinsson",
+        "word": "BJÖRGVINSSON",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Hörður Árnason",
+        "word": "ARNASON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Þorri Geir Rúnarsson",
+        "word": "RUNARSSON",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Ólafur Karl Finsen",
+        "word": "FINSEN",
+        "line": 4,
+        "x": 0,
+        "goals": 2
+      },
+      {
+        "number": 24,
+        "name": "Rolf Glavind Toft",
+        "word": "TOFT",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 29,
+        "name": "Martin Rauschenberg Brorsen",
+        "word": "BRORSEN",
+        "line": 1,
+        "x": 3
+      }
+    ]
+  },
+  "layout": "Línur í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · FH - Stjarnan, Pepsi deild karla 2014 / 22. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=621734"
+    },
+    {
+      "name": "transfermarkt.com · FH Hafnarfjördur - Stjarnan Gardabaer",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2448433"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}
