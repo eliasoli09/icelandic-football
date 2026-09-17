@@ -15,6 +15,7 @@ const NAV = [
   { href: '/leikir', label: 'Leikir' },
   { href: '/topp10', label: 'Tenaball' },
   { href: '/byrjunarlid', label: 'Byrjunarlið' },
+  { href: '/hver', label: 'Hver er maðurinn?' },
   { href: '/kort', label: 'Kort' },
   { href: '/leikmenn', label: 'Leikmenn' },
   { href: '/sludur', label: 'Slúður' },
@@ -62,7 +63,7 @@ export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
                 key={n.href}
                 href={n.href}
                 aria-current={active ? 'page' : undefined}
-                className="relative px-3 py-1.5"
+                className="relative px-3 py-1.5 whitespace-nowrap"
                 style={{ color: active ? 'var(--text)' : 'var(--text-2)' }}
               >
                 {active && (
