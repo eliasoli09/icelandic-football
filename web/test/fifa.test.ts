@@ -4,6 +4,12 @@ import { FIFA, lineOf, tier } from '../src/lib/fifa/ratings'
 describe('FIFA ratings', () => {
   const players = FIFA.players
 
+  it('spreads the top: a group at 90 or more, not one man', () => {
+    const top = players.filter((p) => p.rating >= 90).length
+    expect(top).toBeGreaterThanOrEqual(5)
+    expect(top).toBeLessThanOrEqual(20)
+  })
+
   it('rates every player once, the best at 94 and nobody above', () => {
     expect(new Set(players.map((p) => p.id)).size).toBe(players.length)
     expect(Math.max(...players.map((p) => p.rating))).toBe(94)
@@ -24,7 +30,7 @@ describe('FIFA ratings', () => {
 
   it('is sorted best first and was checked against ratings it did not see', () => {
     players.forEach((p, i) => { if (i) expect(players[i - 1].rating).toBeGreaterThanOrEqual(p.rating) })
-    expect(FIFA.model.crossValidation.auc).toBeGreaterThan(0.7)
+    expect(FIFA.model.crossValidation.establishedCorrelation).toBeGreaterThan(0.5)
   })
 
   it('maps positions to lines and ratings to card colours', () => {

@@ -8,6 +8,8 @@ import styles from './Fifa.module.css'
 const LINE_LABEL: Record<Line, string> = { GK: 'Markverðir', DEF: 'Varnarmenn', MID: 'Miðjumenn', FWD: 'Sóknarmenn' }
 const TEAMS = [...new Set(FIFA.players.map((p) => p.team))].sort((a, b) => a.localeCompare(b, 'is'))
 const date = (iso: string) => iso.split('-').reverse().join('.')
+/** Icelandic numbers ending in 1, but not 11, take the singular */
+const one = (n: number) => n % 10 === 1 && n % 100 !== 11
 
 function Card({ p }: { p: FifaPlayer }) {
   return (
@@ -19,9 +21,9 @@ function Card({ p }: { p: FifaPlayer }) {
       <div className={styles.cardName} title={p.name}>{p.name}</div>
       <div className={styles.cardMeta}>{p.team}</div>
       <div className={styles.cardStats}>
-        <span><b>{p.apps}</b>leikir</span>
-        <span><b>{p.goals}</b>mörk</span>
-        <span><b>{Math.round(p.minutes / 90)}</b>×90</span>
+        <span><b>{p.apps}</b>{one(p.apps) ? 'leikur' : 'leikir'}</span>
+        <span><b>{p.goals}</b>{one(p.goals) ? 'mark' : 'mörk'}</span>
+        <span><b>{p.assists ?? '-'}</b>stoðs.</span>
       </div>
     </div>
   )
@@ -87,6 +89,8 @@ export function FifaRatings() {
               <th className="text-right font-medium">Leikir</th>
               <th className="text-right font-medium">Mín.</th>
               <th className="text-right font-medium">Mörk</th>
+              <th className="text-right font-medium">Stoðs.</th>
+              <th className="text-right font-medium" title="Meðaleinkunn í leikjum">Meðaleink.</th>
             </tr>
           </thead>
           <tbody>
@@ -94,17 +98,19 @@ export function FifaRatings() {
               <tr key={p.id} className="trow">
                 <td className="py-1.5 muted num">{FIFA.players.indexOf(p) + 1}</td>
                 <td><span className={`${styles.badge} ${styles[tier(p.rating)]}`}>{p.rating}</span></td>
-                <td className="font-medium" title={p.basis === 'sofascore' ? 'Byggt á SofaScore-einkunn og líkani' : 'Byggt á líkani'}>
-                  {p.name}{p.basis !== 'sofascore' && <span className="muted" aria-hidden> °</span>}
+                <td className="font-medium" title={p.basis === 'meðaleinkunn' ? 'Byggt á meðaleinkunn og líkani' : 'Byggt á líkani, engin meðaleinkunn'}>
+                  {p.name}{p.basis === 'líkan' && <span className="muted" aria-hidden> °</span>}
                 </td>
                 <td className="num muted">{p.position ?? '-'}</td>
                 <td>{p.team}</td>
                 <td className="text-right num">{p.apps}</td>
                 <td className="text-right num muted">{p.minutes}</td>
                 <td className="text-right num">{p.goals}</td>
+                <td className="text-right num">{p.assists ?? '-'}</td>
+                <td className="text-right num muted">{p.average?.toFixed(2) ?? '-'}</td>
               </tr>
             ))}
-            {!rows.length && <tr><td colSpan={8} className="muted py-2">Enginn leikmaður fannst.</td></tr>}
+            {!rows.length && <tr><td colSpan={10} className="muted py-2">Enginn leikmaður fannst.</td></tr>}
           </tbody>
         </table>
         {rows.length > shown.length && (
@@ -113,11 +119,11 @@ export function FifaRatings() {
       </div>
 
       <p className="text-[11px] muted mt-2">
-        Einkunnin er metin út frá {FIFA.matches} leikskýrslum KSÍ (byrjunarlið, skiptingar, mörk og spjöld), styrk liðs (Elo) og
-        SofaScore-einkunnum ({date(FIFA.sofascoreSnapshot)}). SofaScore birtir aðeins 150 hæstu einkunnirnar (lægsta {FIFA.line.toFixed(2)}),
-        svo líkanið lærir bæði af þeim sem eru á listanum og af því að hinir eru undir línunni. Í krossprófun spáir það hverjir komast á listann
-        rétt í {Math.round(cv.auc * 100)}% tilvika. Sá besti fær 94 og hver 0,1 í SofaScore-einkunn neðar kostar 2 stig.
-        ° = án SofaScore-einkunnar, eingöngu líkan. Staða og nafn frá Transfermarkt. Uppfært {date(FIFA.updated)}.
+        Einkunnin byggir á meðaleinkunn hvers leikmanns í tölfræði deildarinnar og á {FIFA.matches} leikskýrslum KSÍ (mínútur, mörk og spjöld)
+        ásamt styrk liðs (Elo). Meðaleinkunn sem byggir á fáum leikjum er dregin að líkani sem spáir fyrir um einkunnina út frá mínútum,
+        mörkum og styrk liðs (fylgni {cv.establishedCorrelation.toFixed(2).replace('.', ',')} í krossprófun hjá fastamönnum).
+        Kvarðinn er jafn: sá besti fær 94 og aðrir raðast á feril niður á við, svo toppurinn er hópur en ekki einn maður.
+        ° = engin meðaleinkunn, eingöngu líkan. Staða og nafn frá Transfermarkt. Uppfært {date(FIFA.updated)}.
       </p>
     </section>
   )

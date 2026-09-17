@@ -8,11 +8,18 @@ export interface FifaPlayer {
   position: string | null
   nation: string | null
   born: number | null
-  basis: 'sofascore' | 'líkan' | 'líkan undir línu'
+  /** 'meðaleinkunn': his average match rating, weighed against the model; 'líkan': the model alone */
+  basis: 'meðaleinkunn' | 'líkan'
   apps: number
   starts: number
   minutes: number
   goals: number
+  assists: number | null
+  dribbles: number | null
+  tackles: number | null
+  passPct: number | null
+  /** average match rating in the supplied statistics */
+  average: number | null
   rating: number
 }
 
@@ -20,9 +27,9 @@ export const FIFA = data as unknown as {
   season: number
   updated: string
   matches: number
-  sofascoreSnapshot: string
-  line: number
-  model: { weights: Record<string, number>; sigma: number; crossValidation: { correlation: number; auc: number; players: number } }
+  statistics: string
+  model: { weights: Record<string, number>; crossValidation: { correlation: number; establishedCorrelation: number; players: number } }
+  scale: { top: number; spread: number; curve: number; established: number; priorMatches: number }
   players: FifaPlayer[]
 }
 
