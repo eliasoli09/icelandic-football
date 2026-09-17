@@ -65,15 +65,27 @@ export const teamRating = (draft: Draft) =>
 // ── the cup ──────────────────────────────────────────────────────────
 
 /**
- * The opponents on the way to the final, weaker to stronger: each round draws
- * from a band of the ranking, and the final is against one of the two greatest.
+ * The opponents on the way to the final, weaker to stronger. The sides are
+ * ranked best first and split into bands: the final against one of the two
+ * greatest, the semi-final against the next five, then eight, then ten, and
+ * the round of 32 against the rest. With all 41 sides that is ranks 1-2, 3-7,
+ * 8-15, 16-25 and 26-41.
  */
-export const BANDS: [number, number][] = [[26, 41], [16, 25], [8, 15], [3, 7], [1, 2]]
+export const BAND_SIZES = [2, 5, 8, 10] as const
+
+export function bands(count: number): [number, number][] {
+  const out: [number, number][] = []
+  let from = 1
+  for (const size of BAND_SIZES) { out.push([from, from + size - 1]); from += size }
+  out.push([from, count])
+  return out.reverse()
+}
+export const BANDS = bands(41)
 
 export function drawOpponents(sides: CupSide[], random: () => number): CupSide[] {
-  const ready = sides.filter((s) => s.strength !== null)
-  return BANDS.map(([from, to]) => {
-    const band = ready.filter((s) => s.rank >= from && s.rank <= to)
+  const ready = sides.filter((s) => s.strength !== null).sort((a, b) => a.rank - b.rank)
+  return bands(ready.length).map(([from, to]) => {
+    const band = ready.slice(from - 1, to)
     return band[Math.floor(random() * band.length)]
   })
 }
@@ -151,7 +163,7 @@ export function outcome(results: MatchResult[]): string {
   return `Úr leik í ${where}`
 }
 
-export function shareText(results: MatchResult[], formation: string, rating: number, url: string): string {
+export function shareText(results: MatchResult[], formation: string, rating: number, url: string, modeLabel: string | null = null): string {
   const marks = results.map((r) => (r.won ? '🟩' : '🟥')).join('')
-  return `Reyndu að verða bikarmeistari 🏆\n${outcome(results)}\n${marks} · ${formation} · styrkur ${rating}\n${url}`
+  return `Reyndu að verða bikarmeistari 🏆${modeLabel ? `\n${modeLabel}` : ''}\n${outcome(results)}\n${marks} · ${formation} · styrkur ${rating}\n${url}`
 }

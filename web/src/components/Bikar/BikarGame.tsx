@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, RotateCcw, Share2, Trophy } from 'lucide-react'
-import { SIDES, europeLine, honoursLine } from '@/lib/bikar/data'
+import { CHAMPIONS, CURRENT, SIDES, europeLine, honoursLine } from '@/lib/bikar/data'
 import {
   FORMATIONS, LINE_LABEL, ROUNDS, draftDone, drawOpponents, eligible, formationOf, newDraft, nextSide, offer,
   openSlots, outcome, pick, playMatch, rng, shareText, teamRating, type Draft, type MatchResult,
@@ -11,15 +11,22 @@ import type { CupPlayer, CupSide, Line } from '@/lib/bikar/types'
 import styles from './Bikar.module.css'
 
 type Stage = 'setup' | 'draft' | 'ready' | 'cup'
+/** 'saga': draft from the greatest sides; 'nutid': draft today's players against former champions */
+type Mode = 'saga' | 'nutid'
 const LINES: Line[] = ['FWD', 'MID', 'DEF', 'GK']
-const BEST_KEY = 'bikar:best'
-const sideById = new Map(SIDES.map((s) => [s.id, s]))
+const bestKey = (mode: Mode) => mode === 'saga' ? 'bikar:best' : 'bikar:best:nutid'
+const sideById = new Map([...SIDES, ...CURRENT].map((s) => [s.id, s]))
+const POOLS: Record<Mode, { draft: CupSide[]; opponents: CupSide[] }> = {
+  saga: { draft: SIDES, opponents: SIDES },
+  nutid: { draft: CURRENT, opponents: CHAMPIONS },
+}
 /** Icelandic numbers ending in 1 (but not 11) take the singular: 21 leikur, 1 mark */
 const count = (n: number, one: string, many: string) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? one : many}`
 
 export function BikarGame() {
   const [stage, setStage] = useState<Stage>('setup')
   const [hard, setHard] = useState(false)
+  const [mode, setMode] = useState<Mode>('saga')
   const [seed, setSeed] = useState(0)
   const [draft, setDraft] = useState<Draft | null>(null)
   const [current, setCurrent] = useState<CupSide | null>(null)
@@ -30,14 +37,15 @@ export function BikarGame() {
   const random = useMemo(() => rng(seed), [seed])
 
   useEffect(() => {
-    try { const b = Number(localStorage.getItem(BEST_KEY)); if (Number.isFinite(b) && b > 0) setBest(b) } catch { /* no record */ }
-  }, [])
+    setBest(null)
+    try { const b = Number(localStorage.getItem(bestKey(mode))); if (Number.isFinite(b) && b > 0) setBest(b) } catch { /* no record */ }
+  }, [mode])
 
   const start = (formation: string) => {
     const s = Math.floor(Math.random() * 2 ** 31)
     const r = rng(s)
     const d = newDraft(formation)
-    const first = nextSide(d, SIDES, r)
+    const first = nextSide(d, POOLS[mode].draft, r)
     setSeed(s); setDraft(offer(d, first)); setCurrent(first); setResults([]); setCopied(false)
     setStage('draft')
   }
@@ -46,11 +54,11 @@ export function BikarGame() {
     if (!draft || !current) return
     const d = pick(draft, current, player)
     if (draftDone(d)) { setDraft(d); setCurrent(null); setStage('ready'); return }
-    const next = nextSide(d, SIDES, random)
+    const next = nextSide(d, POOLS[mode].draft, random)
     setDraft(offer(d, next)); setCurrent(next)
   }
 
-  const beginCup = () => { setOpponents(drawOpponents(SIDES, random)); setResults([]); setStage('cup') }
+  const beginCup = () => { setOpponents(drawOpponents(POOLS[mode].opponents, random)); setResults([]); setStage('cup') }
 
   const playNext = () => {
     if (!draft) return
@@ -60,13 +68,13 @@ export function BikarGame() {
     setResults(all)
     const reached = all.filter((x) => x.won).length
     try {
-      if (reached > (best ?? 0)) { localStorage.setItem(BEST_KEY, String(reached)); setBest(reached) }
+      if (reached > (best ?? 0)) { localStorage.setItem(bestKey(mode), String(reached)); setBest(reached) }
     } catch { /* not saved */ }
   }
 
   const share = async () => {
     if (!draft) return
-    const body = shareText(results, draft.formation, teamRating(draft), `${location.origin}/bikar`)
+    const body = shareText(results, draft.formation, teamRating(draft), `${location.origin}/bikar`, mode === 'nutid' ? 'Núverandi leikmenn gegn gömlu meisturunum' : null)
     if (navigator.share) { try { await navigator.share({ text: body }) } catch { /* cancelled */ } return }
     try { await navigator.clipboard.writeText(body); setCopied(true) } catch { /* blocked */ }
   }
@@ -78,11 +86,18 @@ export function BikarGame() {
       <header className={styles.intro}>
         <p className={styles.kicker}><Trophy size={13} aria-hidden /> BIKARKEPPNIN</p>
         <h1>Reyndu að verða bikarmeistari</h1>
-        <p className={styles.subtitle}>Draftaðu ellefu menn úr bestu liðum í sögu efstu deildar og komdu þeim frá 32-liða úrslitum alla leið í úrslitaleikinn.</p>
+        <p className={styles.subtitle}>Draftaðu ellefu menn og komdu þeim frá 32-liða úrslitum alla leið í úrslitaleikinn, úr bestu liðum sögunnar eða úr Bestu deildinni í dag gegn gömlu meisturunum.</p>
       </header>
 
       {stage === 'setup' && (
         <section aria-label="Uppstilling">
+          <div className={styles.block}>
+            <span className={styles.label}>Leikhamur</span>
+            <div className={styles.toggle} role="group" aria-label="Leikhamur">
+              <button aria-pressed={mode === 'saga'} onClick={() => setMode('saga')}><strong>Goðsagnir</strong><small>Draftaðu úr bestu liðum sögunnar og mættu þeim</small></button>
+              <button aria-pressed={mode === 'nutid'} onClick={() => setMode('nutid')}><strong>Núverandi leikmenn</strong><small>Byggðu lið úr leikmönnum Bestu deildarinnar {CURRENT[0]?.year} og sigraðu gömlu Íslandsmeistarana</small></button>
+            </div>
+          </div>
           <div className={styles.block}>
             <span className={styles.label}>Erfiðleikastig</span>
             <div className={styles.toggle} role="group" aria-label="Erfiðleikastig">
@@ -111,7 +126,7 @@ export function BikarGame() {
           <section className={styles.pickPanel} aria-label="Veldu leikmann">
             <p className={styles.round}>Val {draft.picks.length + 1} af 11</p>
             <h2>Veldu leikmann úr <span>{current.label} {current.year}</span></h2>
-            <p className={styles.meta}>{honoursLine(current)}</p>
+            {mode === 'saga' ? <p className={styles.meta}>{honoursLine(current)}</p> : <p className={styles.meta}>Besta deildin {current.year} · FIFA-einkunnir leikmanna</p>}
             {europeLine(current.europeTies) && <p className={styles.meta}>{europeLine(current.europeTies)}</p>}
             <div className={styles.cards}>
               {eligible(draft, current).map((p) => (
@@ -133,7 +148,9 @@ export function BikarGame() {
           <section className={styles.pickPanel}>
             <h2>Liðið er klárt</h2>
             <p className={styles.meta}>Uppstilling {draft.formation} · styrkur {hard ? 'falinn' : teamRating(draft)}</p>
-            <p className={styles.meta}>Fimm leikir að bikarnum. Mótherjarnir verða sterkari í hverri umferð og í úrslitaleiknum bíður eitt af tveimur bestu liðum sögunnar.</p>
+            <p className={styles.meta}>{mode === 'saga'
+              ? 'Fimm leikir að bikarnum. Mótherjarnir verða sterkari í hverri umferð og í úrslitaleiknum bíður eitt af tveimur bestu liðum sögunnar.'
+              : 'Fimm leikir gegn fyrrverandi Íslandsmeisturum, sterkari í hverri umferð. Í úrslitaleiknum bíður annað af tveimur bestu meistaraliðum sögunnar.'}</p>
             <button className={styles.primary} onClick={beginCup}>Hefja bikarkeppnina <ArrowRight size={16} aria-hidden /></button>
           </section>
           <Team draft={draft} hard={false} />
@@ -187,7 +204,8 @@ export function BikarGame() {
       <p className={styles.sources}>
         Liðin eru meistarar efstu deildar 1986-2024 og lið sem komust í riðla- eða deildarkeppni í Evrópu. Þeim er raðað eftir stigum og markatölu á leik,
         forskoti á næsta lið, tvennu og Evrópugengi, og árangur hvers liðs er staðfestur úr leikskýrslum KSÍ og töflum ensku og íslensku Wikipedia.
-        Leikmenn eru byrjunarliðsmenn úr leikskýrslum KSÍ, með stöðu frá Transfermarkt. Einkunnir og úrslit eru leikur, ekki staðreyndir.
+        Leikmenn eru byrjunarliðsmenn úr leikskýrslum KSÍ, með stöðu frá Transfermarkt. Núverandi leikmenn bera FIFA-einkunnir sínar af síðunni Leikmenn.
+        Einkunnir og úrslit eru leikur, ekki staðreyndir.
       </p>
     </div>
   )

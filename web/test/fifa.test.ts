@@ -4,6 +4,17 @@ import { FIFA, lineOf, tier } from '../src/lib/fifa/ratings'
 describe('FIFA ratings', () => {
   const players = FIFA.players
 
+  it('rates a regular in every line alike: keepers, defenders and midfielders are not held below forwards', () => {
+    const regulars = players.filter((p) => p.minutes >= 900)
+    const median = (line: string) => {
+      const r = regulars.filter((p) => lineOf(p.position) === line).map((p) => p.rating).sort((a, b) => a - b)
+      return r.length % 2 ? r[(r.length - 1) / 2] : (r[r.length / 2 - 1] + r[r.length / 2]) / 2
+    }
+    const medians = ['GK', 'DEF', 'MID', 'FWD'].map(median)
+    expect(Math.max(...medians) - Math.min(...medians)).toBeLessThanOrEqual(5)
+    for (const line of ['GK', 'DEF', 'MID', 'FWD']) expect(Math.max(...regulars.filter((p) => lineOf(p.position) === line).map((p) => p.rating)), line).toBeGreaterThanOrEqual(88)
+  })
+
   it('spreads the top: a group at 90 or more, not one man', () => {
     const top = players.filter((p) => p.rating >= 90).length
     expect(top).toBeGreaterThanOrEqual(5)

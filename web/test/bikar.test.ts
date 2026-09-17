@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { BANDS, FORMATIONS, ROUNDS, draftDone, drawOpponents, eligible, expectedGoals, newDraft, nextSide, offer, openSlots, outcome, pick, playMatch, rng, shareText, teamRating, type MatchResult } from '../src/lib/bikar/game'
-import { SIDES, europeLine, honoursLine } from '../src/lib/bikar/data'
+import { BANDS, FORMATIONS, ROUNDS, bands, draftDone, drawOpponents, eligible, expectedGoals, newDraft, nextSide, offer, openSlots, outcome, pick, playMatch, rng, shareText, teamRating, type MatchResult } from '../src/lib/bikar/game'
+import { CHAMPIONS, CURRENT, SIDES, europeLine, honoursLine } from '../src/lib/bikar/data'
 import type { CupPlayer, CupSide, Line } from '../src/lib/bikar/types'
 
 const player = (id: number, line: Line, rating = 80): CupPlayer => ({ id, name: `Leikmaður ${id}`, line, position: line, rating, starts: 18, goals: line === 'FWD' ? 10 : 1 })
@@ -98,3 +98,37 @@ describe('the verified sides', () => {
     for (const [from, to] of BANDS) expect(SIDES.filter((s) => s.rank >= from && s.rank <= to).length).toBeGreaterThan(0)
   })
 })
+
+describe('núverandi leikmenn gegn gömlu meisturunum', () => {
+  it('splits any number of sides into five bands, strongest last', () => {
+    expect(bands(41)).toEqual([[26, 41], [16, 25], [8, 15], [3, 7], [1, 2]])
+    expect(bands(39)).toEqual([[26, 39], [16, 25], [8, 15], [3, 7], [1, 2]])
+    expect(BANDS).toEqual(bands(41))
+  })
+  it('meets only former champions, ranked among themselves', () => {
+    expect(CHAMPIONS.length).toBeGreaterThanOrEqual(25)
+    CHAMPIONS.forEach((c, i) => { expect(c.champion, c.id).toBe(true); expect(c.rank).toBe(i + 1) })
+    for (let seed = 1; seed <= 50; seed++) for (const o of drawOpponents(CHAMPIONS, rng(seed))) expect(o.champion).toBe(true)
+  })
+  it('drafts from this season\'s twelve clubs and can always fill every formation', () => {
+    expect(CURRENT).toHaveLength(12)
+    for (const f of FORMATIONS) {
+      for (let seed = 1; seed <= 30; seed++) {
+        const r = rng(seed)
+        let d = newDraft(f.id)
+        while (!draftDone(d)) {
+          const club = nextSide(d, CURRENT, r)
+          d = offer(d, club)
+          const options = eligible(d, club)
+          d = pick(d, club, options[Math.floor(r() * options.length)])
+        }
+        expect(d.picks, f.id).toHaveLength(11)
+      }
+    }
+  })
+  it('names the mode when shared', () => {
+    const won = { round: ROUNDS[0], opponent: 'x', ours: 1, theirs: 0, extraTime: false, penalties: null, won: true, goals: [] }
+    expect(shareText([won], '4-4-2', 85, 'u', 'Núverandi leikmenn gegn gömlu meisturunum').split('\n')[1]).toBe('Núverandi leikmenn gegn gömlu meisturunum')
+  })
+})
+

@@ -1,9 +1,29 @@
 import data from './sides.json'
-import type { CupSide, EuropeTie } from './types'
+import { FIFA, lineOf } from '../fifa/ratings'
+import type { CupPlayer, CupSide, EuropeTie } from './types'
 
 /** The verified greatest sides, best first. Built by scripts/bikar/teams.mts and squads.mts. */
 export const SIDES = (data as unknown as { sides: CupSide[] }).sides
 export const SOURCES = (data as unknown as { sources: { name: string; url: string }[] }).sources
+
+/** Former Icelandic champions only, ranked among themselves. */
+export const CHAMPIONS: CupSide[] = SIDES.filter((s) => s.champion).map((s, i) => ({ ...s, rank: i + 1 }))
+
+/**
+ * This season's clubs, with every player the FIFA ratings place in a line.
+ * They are drafted from in the "núverandi leikmenn" mode; they never play.
+ */
+export const CURRENT: CupSide[] = [...new Set(FIFA.players.map((p) => p.team))].sort((a, b) => a.localeCompare(b, 'is')).map((team) => {
+  const players: CupPlayer[] = FIFA.players
+    .filter((p) => p.team === team && p.apps >= 3 && lineOf(p.position))
+    .map((p) => ({ id: p.id, name: p.name, line: lineOf(p.position)!, position: p.position!, rating: p.rating, starts: p.apps, goals: p.goals }))
+    .sort((a, b) => b.rating - a.rating)
+  return {
+    id: `nu-${team}`, club: team, label: team, year: FIFA.season, rank: 0, score: 0, champion: false, position: 0, cupDouble: false,
+    record: { w: 0, d: 0, l: 0, gf: 0, ga: 0, games: 0, points: 0 }, basis: '', europe: { tiesWon: 0, mainPhase: false, knockout: false },
+    europeTies: [], strength: null, players,
+  }
+})
 
 const COMPETITION: Record<string, string> = {
   'European Cup / UEFA Champions League': 'Meistaradeildar Evrópu',

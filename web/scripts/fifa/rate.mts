@@ -12,7 +12,9 @@
  *    by how few matches it rests on: the full matches the statistics saw, judged
  *    from their own tackle and dribble counts (an 8.70 from a season with one
  *    tackle and one dribble recorded is not a season of 8.70).
- * 3. The FIFA scale, even rather than steep: the established players (five
+ * 3. Within the player's line: standardised against the others in his line,
+ *    since match ratings and goals favour forwards.
+ * 4. The FIFA scale, even rather than steep: the established players (five
  *    matches or more) are ranked, the best is 94 and the rest follow the curve
  *    94 - 32 * rank^0.62, so the top of the league is a group, not one man.
  *    (about ten players at 90 or more)
@@ -237,12 +239,30 @@ const rated = players.map((p) => {
   }
 })
 
+/**
+ * Quality within the player's line. Match ratings and goals favour forwards,
+ * so a centre-back's average of 6.9 says as much as a striker's 7.2. Each
+ * line is standardised against its own regulars, then all lines share one
+ * scale: an average starting defender, keeper, midfielder and forward stand
+ * level, and the best defender as high as the best forward.
+ */
+const lineStats = new Map<string, { mean: number; sd: number }>()
+for (const line of ['GK', 'DEF', 'MID', 'FWD']) {
+  // the reference is each line's regulars, half of the possible minutes or more, so a first-choice
+  // keeper is measured against first-choice keepers and a starting centre-back against starting defenders
+  const qs = rated.filter((r, i) => features(players[i])[1] >= 0.5 && lineOf(players[i]) === line).map((r) => r.q)
+  const mean = qs.reduce((a, b) => a + b, 0) / qs.length
+  lineStats.set(line, { mean, sd: Math.sqrt(qs.reduce((a, b) => a + (b - mean) ** 2, 0) / qs.length) || 1 })
+}
+rated.forEach((r, i) => { const { mean, sd } = lineStats.get(lineOf(players[i]))!; r.q = (r.q - mean) / sd })
+
 // the curve through the established players, and everyone placed on it by quality
 const anchors = rated.filter((r) => r.apps >= ESTABLISHED).map((r) => r.q).sort((a, b) => b - a)
 const onCurve = (i: number) => TOP - SPREAD * Math.pow(i / (anchors.length - 1), CURVE)
 function scale(q: number): number {
   if (q >= anchors[0]) return TOP
-  if (q <= anchors[anchors.length - 1]) return Math.max(FLOOR, onCurve(anchors.length - 1) - (anchors[anchors.length - 1] - q) * 30)
+  // below the weakest established player: about five points a standard deviation
+  if (q <= anchors[anchors.length - 1]) return Math.max(FLOOR, onCurve(anchors.length - 1) - (anchors[anchors.length - 1] - q) * 5)
   let i = 0
   while (anchors[i + 1] > q) i++
   const t = (anchors[i] - q) / (anchors[i] - anchors[i + 1])
