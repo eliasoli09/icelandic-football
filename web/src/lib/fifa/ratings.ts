@@ -20,6 +20,8 @@ export interface FifaPlayer {
   passPct: number | null
   /** average match rating in the supplied statistics */
   average: number | null
+  /** SofaScore averages from earlier Besta deild seasons that count towards the rating */
+  history: { year: number; rating: number }[]
   rating: number
 }
 

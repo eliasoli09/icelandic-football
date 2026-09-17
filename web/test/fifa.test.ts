@@ -15,6 +15,18 @@ describe('FIFA ratings', () => {
     for (const line of ['GK', 'DEF', 'MID', 'FWD']) expect(Math.max(...regulars.filter((p) => lineOf(p.position) === line).map((p) => p.rating)), line).toBeGreaterThanOrEqual(88)
   })
 
+  it('counts earlier seasons, so a poor year does not bury a proven player', () => {
+    const withPast = players.filter((p) => p.history.length)
+    expect(withPast.length).toBeGreaterThan(150)
+    for (const p of withPast) for (const h of p.history) {
+      expect([2023, 2024, 2025], p.name).toContain(h.year)
+      expect(h.rating, p.name).toBeGreaterThan(5)
+    }
+    const djuric = players.find((p) => p.name.includes('Djuric'))!
+    expect(djuric.history.map((h) => h.year)).toEqual([2024, 2023])
+    expect(djuric.rating).toBeGreaterThanOrEqual(74)
+  })
+
   it('spreads the top: a group at 90 or more, not one man', () => {
     const top = players.filter((p) => p.rating >= 90).length
     expect(top).toBeGreaterThanOrEqual(5)

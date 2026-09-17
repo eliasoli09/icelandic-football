@@ -98,7 +98,7 @@ export function FifaRatings() {
               <tr key={p.id} className="trow">
                 <td className="py-1.5 muted num">{FIFA.players.indexOf(p) + 1}</td>
                 <td><span className={`${styles.badge} ${styles[tier(p.rating)]}`}>{p.rating}</span></td>
-                <td className="font-medium" title={p.basis === 'meðaleinkunn' ? 'Byggt á meðaleinkunn og líkani' : 'Byggt á líkani, engin meðaleinkunn'}>
+                <td className="font-medium" title={`${p.basis === 'meðaleinkunn' ? 'Byggt á meðaleinkunn og líkani' : 'Byggt á líkani, engin meðaleinkunn'}${p.history.length ? ` · Fyrri tímabil: ${p.history.map((h) => `${h.year} ${h.rating.toFixed(2).replace('.', ',')}`).join(', ')}` : ''}`}>
                   {p.name}{p.basis === 'líkan' && <span className="muted" aria-hidden> °</span>}
                 </td>
                 <td className="num muted">{p.position ?? '-'}</td>
@@ -122,6 +122,7 @@ export function FifaRatings() {
         Einkunnin byggir á meðaleinkunn hvers leikmanns í tölfræði deildarinnar og á {FIFA.matches} leikskýrslum KSÍ (mínútur, mörk og spjöld)
         ásamt styrk liðs (Elo). Meðaleinkunn sem byggir á fáum leikjum er dregin að líkani sem spáir fyrir um einkunnina út frá mínútum,
         mörkum og styrk liðs (fylgni {cv.establishedCorrelation.toFixed(2).replace('.', ',')} í krossprófun hjá fastamönnum).
+        Fyrri tímabil í Bestu deildinni (SofaScore 2023-2025) vega líka, minna eftir því sem þau eru eldri, svo leikmaður sem hefur átt erfitt ár fellur ekki langt niður fyrir getu sína.
         Kvarðinn er jafn: sá besti fær 94 og aðrir raðast á feril niður á við, svo toppurinn er hópur en ekki einn maður.
         ° = engin meðaleinkunn, eingöngu líkan. Staða og nafn frá Transfermarkt. Uppfært {date(FIFA.updated)}.
       </p>

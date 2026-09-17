@@ -209,13 +209,64 @@ const FIFA_POSITION: Record<string, string> = {
 }
 const BROAD: Record<string, string> = { GK: 'GK', DF: 'DEF', MF: 'MID', FW: 'FWD' }
 
+// ── earlier seasons ──────────────────────────────────────────────────
+
+/**
+ * SofaScore's Besta deild seasons before this one (scripts/fifa/history, from
+ * Elias on 17 September 2026). 2025 lists every player with minutes; 2024 and
+ * 2023 only the fifty best average ratings, so a player missing from those
+ * years says nothing. They are evidence about a player, not profiles: a
+ * current player's past seasons count towards his quality, each weighed in
+ * full matches and discounted with age, so this season still decides.
+ */
+const HISTORY_WEIGHT: Record<number, number> = { 2025: 0.5, 2024: 0.3, 2023: 0.15 }
+/** A top-fifty rating in 2024 or 2023 needed a regular's season; counted as this many full matches. */
+const TOP_LIST_MATCHES = 15
+/** Past seasons may never count for more than this many full matches together. */
+const HISTORY_CAP = 12
+interface Past { year: number; rating: number; nineties: number }
+const history = new Map<number, Past[]>()
+{
+  const words = (x: string) => normalise(x).split(' ').filter(Boolean)
+  for (const year of [2025, 2024, 2023]) {
+    const [head, ...lines] = readFileSync(join(here, 'history', `sofascore-${year}.csv`), 'utf-8').trim().split('\n').map((l) => l.split(';'))
+    const col = (name: string) => head.indexOf(name)
+    const rows = lines.filter((c) => c[col('Sofascore-einkunn')]).map((c) => ({
+      name: words(c[col('Leikmaður')]),
+      rating: Number(c[col('Sofascore-einkunn')]),
+      nineties: col('Mínútur') >= 0 ? Number(c[col('Mínútur')]) / 90 : TOP_LIST_MATCHES,
+    }))
+    for (const p of players) {
+      const k = words(p.tm?.name ?? p.ksiName)
+      const alt = words(p.ksiName)
+      const same = (n: string[], x: string[]) => n.join(' ') === x.join(' ') || (n[0] === x[0] && n[n.length - 1] === x[x.length - 1])
+      // players move clubs, so any club; only a single unambiguous name counts
+      const hits = rows.filter((r) => same(r.name, k) || same(r.name, alt))
+      if (hits.length !== 1 || !(hits[0].rating > 0)) continue
+      history.set(p.ksiId, [...(history.get(p.ksiId) ?? []), { year, rating: hits[0].rating, nineties: hits[0].nineties }])
+    }
+  }
+}
+function pastEvidence(p: Raw): { rating: number; weight: number } | null {
+  const past = history.get(p.ksiId)
+  if (!past?.length) return null
+  let w = 0, sum = 0
+  for (const s of past) { const x = Math.min(s.nineties, 27) * HISTORY_WEIGHT[s.year]; w += x; sum += x * s.rating }
+  if (!(w > 0)) return null
+  const scale = Math.min(1, HISTORY_CAP / w)
+  return { rating: sum / w, weight: w * scale }
+}
+
 const rated = players.map((p) => {
   const mu = predict(beta, features(p))
   const st = stats.get(p.ksiId)
   const apps = p.log.length
   // how much his average rests on: the full matches the statistics saw
   const n = st && st.rating > 0 ? seen(p, st) : 0
-  const q = n > 0 ? (PRIOR_MATCHES * mu + n * st!.rating) / (PRIOR_MATCHES + n) : mu
+  // this season, the player's past seasons and the model, each by how much it rests on
+  const past = pastEvidence(p)
+  const hw = past?.weight ?? 0
+  const q = (PRIOR_MATCHES * mu + n * (st?.rating ?? 0) + hw * (past?.rating ?? 0)) / (PRIOR_MATCHES + n + hw)
   const position = p.tm ? FIFA_POSITION[p.tm.position] ?? null : p.keeperStarts > 0 ? 'GK' : p.sofa?.position ? BROAD[p.sofa.position] : null
   return {
     id: p.ksiId,
@@ -227,6 +278,7 @@ const rated = players.map((p) => {
     born: p.tm?.born ? +p.tm.born.slice(0, 4) : null,
     q,
     basis: (st && st.rating > 0 ? 'meðaleinkunn' : 'líkan') as 'meðaleinkunn' | 'líkan',
+    history: (history.get(p.ksiId) ?? []).map((h) => ({ year: h.year, rating: h.rating })),
     apps,
     starts: p.log.filter((l) => l.start).length,
     minutes: p.log.reduce((a, l) => a + l.minutes, 0),
