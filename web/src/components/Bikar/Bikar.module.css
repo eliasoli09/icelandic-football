@@ -31,6 +31,7 @@
 .card { position: relative; display: grid; justify-items: center; gap: 4px; padding: 18px 10px 12px; border-radius: 12px; border: 1px solid var(--border-strong); background: var(--panel-2); text-align: center; }
 .card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .card small { font-size: 10px; color: var(--text-2); }
+.visir { margin-top: 2px; padding: 1px 6px; border-radius: 999px; font-size: 8px; font-weight: 800; letter-spacing: .08em; color: var(--accent-ink); background: var(--accent); }
 .rating { font-size: 30px; font-weight: 900; line-height: 1; color: var(--win); font-variant-numeric: tabular-nums; }
 .name { font-size: 13px; font-weight: 700; line-height: 1.25; }
 .pos { display: inline-grid; place-items: center; min-width: 30px; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 800; letter-spacing: .04em; color: #fff; }

@@ -132,3 +132,21 @@ describe('núverandi leikmenn gegn gömlu meisturunum', () => {
   })
 })
 
+describe('Vísir\'s list of the greats', () => {
+  it('lifts the players on it to the top of the historical ratings', () => {
+    const all = SIDES.flatMap((s) => s.players)
+    const listed = all.filter((p) => p.visir)
+    expect(listed.length).toBeGreaterThan(100)
+    for (const p of listed) { expect(p.visir!).toBeGreaterThanOrEqual(1); expect(p.visir!).toBeLessThanOrEqual(60) }
+    const best = [...all].sort((a, b) => b.rating - a.rating).slice(0, 10)
+    expect(best.filter((p) => p.visir).length).toBeGreaterThanOrEqual(7)
+    expect(best[0].name).toContain('Tryggvi Guðmundsson')
+    // one scale, not a pile at the cap
+    expect(all.filter((p) => p.rating === 94).length).toBeLessThanOrEqual(3)
+    // the list names each player's clubs, so another man of the same name is not mistaken for him
+    const kr99 = SIDES.find((s) => s.id === 'kr-1999')!.players
+    expect(kr99.find((p) => p.name === 'Sigurður Örn Jónsson')?.visir).toBeUndefined()
+    expect(kr99.find((p) => p.name === 'Bjarki Gunnlaugsson')?.visir).toBe(20)
+  })
+})
+

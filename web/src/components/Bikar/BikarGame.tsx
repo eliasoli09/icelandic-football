@@ -135,6 +135,7 @@ export function BikarGame() {
                   <strong className={styles.rating}>{hard ? '?' : p.rating}</strong>
                   <span className={styles.name}>{p.name}</span>
                   <small>{count(p.starts, 'leikur', 'leikir')} · {count(p.goals, 'mark', 'mörk')}</small>
+                  {p.visir && <span className={styles.visir} title={`${p.visir}. sæti á lista Vísis yfir bestu leikmenn deildarinnar frá upphafi`}>VÍSIR #{p.visir}</span>}
                 </button>
               ))}
             </div>
@@ -204,7 +205,7 @@ export function BikarGame() {
       <p className={styles.sources}>
         Liðin eru meistarar efstu deildar 1986-2024 og lið sem komust í riðla- eða deildarkeppni í Evrópu. Þeim er raðað eftir stigum og markatölu á leik,
         forskoti á næsta lið, tvennu og Evrópugengi, og árangur hvers liðs er staðfestur úr leikskýrslum KSÍ og töflum ensku og íslensku Wikipedia.
-        Leikmenn eru byrjunarliðsmenn úr leikskýrslum KSÍ, með stöðu frá Transfermarkt. Núverandi leikmenn bera FIFA-einkunnir sínar af síðunni Leikmenn.
+        Leikmenn eru byrjunarliðsmenn úr leikskýrslum KSÍ, með stöðu frá Transfermarkt, og einkunnir sögulegu leikmannanna taka mið af lista Vísis yfir 60 bestu leikmenn deildarinnar frá upphafi. Núverandi leikmenn bera FIFA-einkunnir sínar af síðunni Leikmenn.
         Einkunnir og úrslit eru leikur, ekki staðreyndir.
       </p>
     </div>

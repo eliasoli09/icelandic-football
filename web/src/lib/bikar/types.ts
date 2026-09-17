@@ -10,6 +10,8 @@ export interface CupPlayer {
   rating: number
   starts: number
   goals: number
+  /** his place on Vísir's list of the sixty best players in the league's history */
+  visir?: number
 }
 
 export interface EuropeTie { season: string; club: string; round: string; opponent: string; aggregate: string; through: boolean }
