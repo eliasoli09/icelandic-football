@@ -4,8 +4,6 @@ import type { Level } from '../level'
 import { nameKeys } from './names'
 import type { WhoPlayer } from './types'
 
-/** guesses per player; every wrong one opens the next clue */
-export const TRIES = 5
 export const HINTS = [
   { id: 'position', label: 'Staða' },
   { id: 'born', label: 'Fæddur' },
@@ -13,6 +11,31 @@ export const HINTS = [
   { id: 'initials', label: 'Upphafsstafir' },
 ] as const
 export type HintId = (typeof HINTS)[number]['id']
+
+/**
+ * The career opens one club at a time, oldest first: the first club shows from
+ * the start and every wrong guess adds the next. Once the whole career is out,
+ * each wrong guess opens a clue instead. A player has as many guesses as there
+ * are clubs and clues, so the last guess is made with everything showing.
+ */
+export const triesFor = (player: WhoPlayer) => player.career.length + HINTS.length
+
+const wrongGuesses = (player: WhoPlayer, state: WhoState) => state.guesses.filter((g) => g !== player.name).length
+
+/** How many career rows show: all of them once the puzzle is over. */
+export function clubsShown(player: WhoPlayer, state: WhoState): number {
+  if (state.status !== 'playing') return player.career.length
+  return Math.min(player.career.length, 1 + wrongGuesses(player, state))
+}
+
+/** How many clues show: none until the whole career is out, all once the puzzle is over. */
+export function hintsOpen(player: WhoPlayer, state: WhoState): number {
+  if (state.status !== 'playing') return HINTS.length
+  return Math.max(0, Math.min(HINTS.length, wrongGuesses(player, state) - (player.career.length - 1)))
+}
+
+/** Which wrong guess opens clue i (counting from 1): the one after the last club came out, and so on. */
+export const hintOpensAfter = (player: WhoPlayer, i: number) => player.career.length - 1 + i
 
 /** the level last chosen in this browser */
 export const LEVEL_KEY = 'hver:level'
@@ -65,16 +88,10 @@ export function guess(player: WhoPlayer, state: WhoState, typed: string, index: 
   if (!name) return { state, outcome: 'unknown' }
   if (state.guesses.includes(name)) return { state, outcome: 'repeat' }
   const guesses = [...state.guesses, name]
-  return { state: { ...state, guesses, status: guesses.length >= TRIES ? 'lost' : 'playing' }, outcome: 'wrong' }
+  return { state: { ...state, guesses, status: guesses.length >= triesFor(player) ? 'lost' : 'playing' }, outcome: 'wrong' }
 }
 
 export const giveUp = (state: WhoState): WhoState => state.status === 'playing' ? { ...state, status: 'lost' } : state
-
-/** Clues open one per wrong guess; all of them once the puzzle is over. */
-export function hintsOpen(state: WhoState): number {
-  if (state.status !== 'playing') return HINTS.length
-  return Math.min(state.guesses.length, HINTS.length)
-}
 
 export function hintValue(player: WhoPlayer, id: HintId): string {
   const h = player.hints
@@ -87,9 +104,9 @@ export function restore(raw: string | null, player: WhoPlayer): WhoState | null 
   if (!raw) return null
   try {
     const s = JSON.parse(raw) as WhoState
-    if (s?.v !== 1 || !Array.isArray(s.guesses) || !s.guesses.every((g) => typeof g === 'string') || s.guesses.length > TRIES) return null
+    if (s?.v !== 1 || !Array.isArray(s.guesses) || !s.guesses.every((g) => typeof g === 'string') || s.guesses.length > triesFor(player)) return null
     const won = s.guesses[s.guesses.length - 1] === player.name
-    const status = won ? 'won' : s.guesses.length >= TRIES ? 'lost' : s.status === 'lost' ? 'lost' : 'playing'
+    const status = won ? 'won' : s.guesses.length >= triesFor(player) ? 'lost' : s.status === 'lost' ? 'lost' : 'playing'
     return s.status === status ? s : null
   } catch { return null }
 }
@@ -112,11 +129,16 @@ export function dailyPlayer(players: WhoPlayer[], day: number, level: Level): Wh
 
 export const puzzleNumber = (day: number) => day - LAUNCH_DAY + 1
 
-const SQUARE = { wrong: '🟥', right: '🟩', unused: '⬛' }
-
+/**
+ * Squares for the guesses, never names: red for a wrong guess, green for the
+ * right one, and how many clubs it took ("3 af 11 félögum").
+ */
 export function shareText(player: WhoPlayer, state: WhoState, day: number, levelLabel: string, url: string): string {
-  const marks = state.guesses.map((g) => g === player.name ? SQUARE.right : SQUARE.wrong)
-  while (marks.length < TRIES) marks.push(SQUARE.unused)
-  const score = state.status === 'won' ? `${state.guesses.length}/${TRIES}` : `X/${TRIES}`
-  return `Hver er maðurinn? #${puzzleNumber(day)} · ${levelLabel}\n${marks.join('')} ${score}\n${url}`
+  const marks = state.guesses.map((g) => g === player.name ? '🟩' : '🟥').join('')
+  const clubs = Math.min(player.career.length, state.guesses.length)
+  const extra = state.guesses.length - clubs
+  const score = state.status === 'won'
+    ? `Rétt eftir ${clubs} af ${player.career.length} félögum${extra === 1 ? ' og 1 vísbendingu' : extra > 1 ? ` og ${extra} vísbendingum` : ''}`
+    : `Náði honum ekki (${player.career.length} félög)`
+  return `Hver er maðurinn? #${puzzleNumber(day)} · ${levelLabel}\n${marks || '⬛'} ${score}\n${url}`
 }

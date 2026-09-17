@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react'
 import { ArrowUpRight, Check, ChevronLeft, ChevronRight, Flag, Lock, Search, Share2, X } from 'lucide-react'
 import { NAME_INDEX, NAMES, PLAYERS } from '@/lib/hver/data'
-import { HINTS, LEVEL_KEY, TRIES, dailyPlayer, giveUp, guess, hintValue, hintsOpen, newState, playersAt, puzzleNumber, restore, shareText, storageKey, suggest, type GuessOutcome, type WhoState } from '@/lib/hver/game'
+import { HINTS, LEVEL_KEY, clubsShown, dailyPlayer, giveUp, guess, hintOpensAfter, hintValue, hintsOpen, newState, playersAt, puzzleNumber, restore, shareText, storageKey, suggest, triesFor, type GuessOutcome, type WhoState } from '@/lib/hver/game'
 import { dayNumber } from '@/lib/topp10/daily'
 import { normalise } from '@/lib/topp10/normalise'
 import { LEVELS, isLevel, type Level } from '@/lib/level'
@@ -56,7 +56,10 @@ export function HverGame() {
   const options = useMemo(() => suggest(NAMES, typed), [typed])
   const cycle = playersAt(PLAYERS, level).length
   const over = state.status !== 'playing'
-  const open = hintsOpen(state)
+  const open = hintsOpen(player, state)
+  const shown = clubsShown(player, state)
+  const tries = triesFor(player)
+  const hidden = player.career.length - shown
   const isToday = day === today
 
   const update = (next: WhoState) => { setState(next); save(player, next) }
@@ -92,7 +95,7 @@ export function HverGame() {
 
   const message = !outcome ? null
     : outcome.kind === 'right' ? `Rétt! Þetta er ${player.name}.`
-    : outcome.kind === 'wrong' ? `Ekki ${outcome.name}.${over ? '' : ' Ný vísbending opnaðist.'}`
+    : outcome.kind === 'wrong' ? `Ekki ${outcome.name}.${over ? '' : open > 0 ? ' Ný vísbending opnaðist.' : ' Næsta félag bættist við ferilinn.'}`
     : outcome.kind === 'repeat' ? `Þú hefur þegar giskað á ${outcome.name}.`
     : outcome.kind === 'unknown' ? 'Það nafn er ekki á listanum. Veldu leikmann úr tillögunum.'
     : null
@@ -103,7 +106,7 @@ export function HverGame() {
         <div>
           <p className={styles.kicker}><span /> {isToday ? 'LEIKMAÐUR DAGSINS' : `ÞRAUT ${dayLabel(day).toUpperCase()}`}</p>
           <h1>Hver er maðurinn?</h1>
-          <p className={styles.subtitle}>Ferill leikmanns, félag fyrir félag. Hver er hann?</p>
+          <p className={styles.subtitle}>Eitt félag í einu. Hvert rangt gisk sýnir næsta félag á ferlinum.</p>
         </div>
         <div>
           <span className={styles.controlLabel}>Erfiðleikastig</span>
@@ -123,12 +126,19 @@ export function HverGame() {
             <span>#{ready ? puzzleNumber(day) : ''} · {ready ? dayLabel(day) : ''}</span>
           </div>
           <ol className={styles.career}>
-            {ready && player.career.map((r, i) => (
-              <li key={i} className={r.loan ? styles.loan : undefined} style={{ '--i': i } as CSSProperties}>
+            {ready && player.career.slice(0, shown).map((r, i) => (
+              // rows showing when the puzzle loads come in one after another; a new club comes in at once
+              <li key={i} className={r.loan ? styles.loan : undefined} style={{ '--i': state.guesses.length ? 0 : i } as CSSProperties}>
                 <span className={styles.years}>{span(r)}</span>
                 <span className={styles.club}>{r.loan && <span className={styles.arrow} aria-hidden>↳</span>}{r.club}{r.loan && <em>lán</em>}</span>
               </li>
             ))}
+            {ready && hidden > 0 && (
+              <li className={styles.nextClub} aria-label={`${hidden} félög í viðbót á ferlinum`}>
+                <span className={styles.years}><Lock size={13} aria-hidden /></span>
+                <span>{hidden === 1 ? 'Eitt félag í viðbót' : `${hidden} félög í viðbót`} · næsta birtist við rangt gisk</span>
+              </li>
+            )}
           </ol>
           {over && (
             <div className={styles.answer} aria-live="polite">
@@ -140,18 +150,23 @@ export function HverGame() {
         </section>
 
         <section className={styles.play} aria-label="Giska">
-          <div className={styles.tries} aria-label={`${state.guesses.length} af ${TRIES} giskum notuð`}>
-            {Array.from({ length: TRIES }, (_, i) => {
-              const g = state.guesses[i]
-              const right = g === player.name
-              return (
-                <div key={i} className={`${styles.try} ${g ? (right ? styles.tryRight : styles.tryWrong) : ''}`}>
-                  <span className={styles.tryIcon}>{g ? (right ? <Check size={14} aria-label="Rétt" /> : <X size={14} aria-label="Rangt" />) : i + 1}</span>
-                  <span>{g ?? ''}</span>
-                </div>
-              )
-            })}
+          <div className={styles.status}>
+            <span>GISK {state.guesses.length}/{tries}</span>
+            <span>{shown}/{player.career.length} FÉLÖG SÝND</span>
           </div>
+          {state.guesses.length > 0 && (
+            <ol className={styles.tries} aria-label="Gisk">
+              {state.guesses.map((g, i) => {
+                const right = g === player.name
+                return (
+                  <li key={i} className={`${styles.try} ${right ? styles.tryRight : styles.tryWrong}`}>
+                    <span className={styles.tryIcon}>{right ? <Check size={14} aria-label="Rétt" /> : <X size={14} aria-label="Rangt" />}</span>
+                    <span>{g}</span>
+                  </li>
+                )
+              })}
+            </ol>
+          )}
 
           {!over && (
             <form className={styles.form} onSubmit={onSubmit} role="search">
@@ -187,7 +202,7 @@ export function HverGame() {
               {HINTS.map((h, i) => (
                 <div key={h.id} className={`${styles.hint} ${i < open ? styles.hintOpen : ''}`}>
                   <small>{h.label}</small>
-                  {i < open ? <strong>{hintValue(player, h.id)}</strong> : <span className={styles.locked}><Lock size={12} aria-hidden /> Eftir {i + 1}. ranga gisk</span>}
+                  {i < open ? <strong>{hintValue(player, h.id)}</strong> : <span className={styles.locked}><Lock size={12} aria-hidden /> Eftir {hintOpensAfter(player, i + 1)}. ranga gisk</span>}
                 </div>
               ))}
             </div>

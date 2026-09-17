@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { HINTS, LAUNCH_DAY, TRIES, dailyPlayer, giveUp, guess, hintValue, hintsOpen, nameIndex, newState, playersAt, restore, shareText, suggest } from '../src/lib/hver/game'
+import { HINTS, LAUNCH_DAY, clubsShown, hintOpensAfter, dailyPlayer, giveUp, guess, hintValue, hintsOpen, nameIndex, newState, playersAt, restore, shareText, suggest, triesFor } from '../src/lib/hver/game'
 import { cleanName, initials, nameKeys } from '../src/lib/hver/names'
 import { NAMES, PLAYERS } from '../src/lib/hver/data'
 import { normalise } from '../src/lib/topp10/normalise'
@@ -13,7 +13,7 @@ const gylfi: WhoPlayer = {
   hints: { position: 'Sóknarsinnaður miðjumaður', born: 1989, national: 'Ísland', initials: 'G. Þ. S.' },
   sources: [], verifiedAt: '2026-09-16',
 }
-const names = ['Gylfi Þór Sigurðsson', 'Gylfi Einarsson', 'Aron Einar Gunnarsson', 'Eiður Smári Guðjohnsen', 'Birkir Bjarnason', 'Rúnar Kristinsson']
+const names = ['Gylfi Þór Sigurðsson', 'Gylfi Einarsson', 'Aron Einar Gunnarsson', 'Eiður Smári Guðjohnsen', 'Birkir Bjarnason', 'Rúnar Kristinsson', 'Hannes Þór Halldórsson', 'Ragnar Sigurðsson']
 const index = nameIndex(names, [gylfi])
 
 describe('names', () => {
@@ -37,25 +37,35 @@ describe('guessing', () => {
     const won = guess(gylfi, newState(), 'gylfi þór sigurðsson', index).state
     expect(won).toEqual({ v: 1, guesses: ['Gylfi Þór Sigurðsson'], status: 'won' })
   })
-  it('spends a guess only on a known, new, wrong name and opens a clue for each', () => {
+  it('spends a guess only on a known, new, wrong name', () => {
     let s = newState()
     expect(guess(gylfi, s, 'Gylfi', index).outcome).toBe('unknown')
     expect(guess(gylfi, s, '   ', index).outcome).toBe('empty')
     s = guess(gylfi, s, 'Birkir Bjarnason', index).state
-    expect(hintsOpen(s)).toBe(1)
     expect(guess(gylfi, s, 'birkir bjarnason', index)).toMatchObject({ outcome: 'repeat', state: s })
-    for (const n of ['Gylfi Einarsson', 'Aron Gunnarsson', 'Eiður Smári Guðjohnsen']) s = guess(gylfi, s, n, index).state
-    expect(s.guesses).toEqual(['Birkir Bjarnason', 'Gylfi Einarsson', 'Aron Einar Gunnarsson', 'Eiður Smári Guðjohnsen'])
-    expect(hintsOpen(s)).toBe(HINTS.length)
-    expect(s.status).toBe('playing')
+    expect(s.guesses).toEqual(['Birkir Bjarnason'])
   })
-  it('ends after the last wrong guess, or on giving up, and then shows every clue', () => {
+  it('shows the first club, then one more club per wrong guess, then the clues', () => {
+    let s = newState()
+    expect([clubsShown(gylfi, s), hintsOpen(gylfi, s)]).toEqual([1, 0])
+    const wrong = ['Birkir Bjarnason', 'Gylfi Einarsson', 'Aron Einar Gunnarsson', 'Eiður Smári Guðjohnsen', 'Rúnar Kristinsson', 'Hannes Þór Halldórsson']
+    const seen = [] as number[][]
+    for (const n of wrong) { s = guess(gylfi, s, n, index).state; seen.push([clubsShown(gylfi, s), hintsOpen(gylfi, s)]) }
+    // three clubs, then four clues
+    expect(seen).toEqual([[2, 0], [3, 0], [3, 1], [3, 2], [3, 3], [3, 4]])
+    // the labels promise exactly when each clue opens
+    HINTS.forEach((_, i) => expect(seen[hintOpensAfter(gylfi, i + 1) - 1][1]).toBe(i + 1))
+    expect(s.status).toBe('playing')
+    expect(triesFor(gylfi)).toBe(gylfi.career.length + HINTS.length)
+  })
+  it('ends after the last wrong guess, or on giving up, and then shows everything', () => {
     let lost = newState()
-    for (const n of ['Birkir Bjarnason', 'Gylfi Einarsson', 'Aron Einar Gunnarsson', 'Eiður Smári Guðjohnsen', 'Rúnar Kristinsson']) lost = guess(gylfi, lost, n, index).state
-    expect(lost.guesses).toHaveLength(TRIES)
+    for (const n of names.filter((x) => x !== gylfi.name)) lost = guess(gylfi, lost, n, index).state
+    expect(lost.guesses).toHaveLength(triesFor(gylfi))
     expect(lost.status).toBe('lost')
     expect(guess(gylfi, lost, 'Gylfi Sigurðsson', index).outcome).toBe('over')
-    expect(hintsOpen(giveUp(newState()))).toBe(HINTS.length)
+    const gaveUp = giveUp(newState())
+    expect([clubsShown(gylfi, gaveUp), hintsOpen(gylfi, gaveUp)]).toEqual([3, HINTS.length])
     expect(hintValue({ ...gylfi, hints: { ...gylfi.hints, national: null } }, 'national')).toBe('Enginn A-landsleikur')
   })
   it('restores a saved game only if it is consistent', () => {
@@ -68,7 +78,7 @@ describe('guessing', () => {
   it('shares squares, never names', () => {
     const s = guess(gylfi, guess(gylfi, newState(), 'Birkir Bjarnason', index).state, 'Gylfi Sigurðsson', index).state
     const text = shareText(gylfi, s, LAUNCH_DAY + 2, 'Létt', 'https://x/hver')
-    expect(text).toBe('Hver er maðurinn? #3 · Létt\n🟥🟩⬛⬛⬛ 2/5\nhttps://x/hver')
+    expect(text).toBe('Hver er maðurinn? #3 · Létt\n🟥🟩 Rétt eftir 2 af 3 félögum\nhttps://x/hver')
     expect(text).not.toContain('Gylfi')
   })
 })
