@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { agreeCareers, infobox, respell, linesOf, sameClubName, tmLines, tmMoves, tmProfile, tmSpells, wikiBirth, wikiCareer, wikiNationalTeams, years, type TmClub, type WikiSpell } from '../scripts/hver/parse'
+import { agreeCareers, agreeKsi, infobox, isKsiLeague, isKsiYouthTeam, ksiCareer, ksiSpells, respell, linesOf, sameClubName, tmLines, tmMoves, tmProfile, tmSpells, wikiBirth, wikiCareer, wikiNationalTeams, years, type TmClub, type WikiSpell } from '../scripts/hver/parse'
 
 describe('Wikipedia infobox', () => {
   const wt = `Intro {{Short description|x}}
@@ -172,3 +172,50 @@ describe('player names', () => {
   })
 })
 
+
+describe('KSÍ player page', () => {
+  const block = (team: string, year: number, games: number, comps: [string, number][]) =>
+    `<div>${team}</div><div>${year}</div><div>${games}</div><div>0</div><div>0</div><div>0</div>` + comps.map(([n, g]) => `<div>${n}</div><div>${g}</div><div>0</div><div>0</div><div>0</div>`).join('')
+  const html = `<a>Heim</a><a>Leikmenn</a><span>Ásgeir Helgi Orrason</span><span>2004</span>
+    <div>Ferill</div><div>Tímabil</div><div>Lið</div><div>Tímabil</div>` +
+    block('Breiðablik', 2026, 23, [['Besta deild karla 2026', 18], ['Mjólkurbikar karla 2026', 4]]) +
+    block('Breiðablik', 2025, 33, [['Íslandsmót KSÍ - Besta deild karla 2025', 15]]) +
+    block('U-21 landslið', 2025, 2, [['U21 karla - VL 2025', 2]]) +
+    block('Keflavík', 2024, 27, [['Íslandsmót KSÍ - Lengjudeild karla 2024', 21]]) +
+    block('Breiðablik', 2024, 6, [['Lengjubikarinn - A deild karla riðill 1', 5]]) +
+    block('Breiðablik/Augn/Smári U19 Karlar', 2024, 1, [['Faxaflóamót - 2. flokkur karla A lið riðill 1 23/24', 1]]) +
+    block('Víkingur R.', 2027, 8, [['2027 UEFA Champions League - First qualifying round', 2]]) + '<footer>Næstu leikir</footer>'
+
+  it('reads birth year, teams, years and competitions', () => {
+    const c = ksiCareer(html)
+    expect(c.born).toBe(2004)
+    expect(c.seasons.map((s) => `${s.team} ${s.year}`)).toEqual(['Breiðablik 2026', 'Breiðablik 2025', 'U-21 landslið 2025', 'Keflavík 2024', 'Breiðablik 2024', 'Breiðablik/Augn/Smári U19 Karlar 2024', 'Víkingur R. 2027'])
+    expect(c.seasons[0].competitions).toEqual([{ name: 'Besta deild karla 2026', games: 18 }, { name: 'Mjólkurbikar karla 2026', games: 4 }])
+  })
+  it('keeps only senior league seasons, grouped into spells, the last open', () => {
+    expect(ksiSpells(ksiCareer(html).seasons, 2026).map((s) => [s.club, s.from, s.to])).toEqual([['Keflavík', 2024, 2024], ['Breiðablik', 2025, null]])
+    expect(isKsiLeague('Lengjubikarinn - A deild karla riðill 1')).toBe(false)
+    expect(isKsiLeague('Íslandsmót KSÍ - 2. deild karla 2019')).toBe(true)
+    expect(isKsiYouthTeam('U-21 landslið')).toBe(true)
+  })
+})
+
+describe('KSÍ against Transfermarkt', () => {
+  const club = (name: string, id: string) => ({ name, slug: name.toLowerCase(), id, iceland: true, special: false })
+  const KR = club('KR Reykjavík', '3237'), KOR = club('Kórdrengir', '1'), FH = club('Hafnarfjördur', '1185')
+  const t = (from: string | null, to: string | null, c: typeof KR, loan = false, optional = false) => ({ from, after: null, to, club: c, loan, optional })
+  const s = (team: string, year: number, league = true) => ({ team, year, games: 20, competitions: [{ name: league ? `Íslandsmót KSÍ - Besta deild karla ${year}` : `Lengjubikar karla ${year}`, games: 5 }] })
+  const same = (tm: { id: string }, team: string) => ({ '3237': 'KR', '1': 'Kórdrengir', '1185': 'FH' } as Record<string, string>)[tm.id] === team
+
+  it('takes a loan in the middle of a spell, which KSÍ splits by year', () => {
+    const r = agreeKsi([s('KR', 2021), s('Kórdrengir', 2022), s('KR', 2023), s('FH', 2024), s('FH', 2026)],
+      [t('2020-11-01', '2024-01-10', KR), t('2022-04-01', '2022-10-01', KOR, true), t('2024-01-10', null, FH)], same, 2026)
+    expect(r.problems).toEqual([])
+    expect(r.rows.map((x) => `${x.club} ${x.from}-${x.to ?? ''}`)).toEqual(['KR 2021-2023', 'Kórdrengir 2022-2022', 'FH 2024-'])
+  })
+  it('leaves out a spell without league matches, and reports a league season Transfermarkt lacks', () => {
+    const r = agreeKsi([s('KR', 2021), s('FH', 2022, false), s('Kórdrengir', 2023)], [t('2020-11-01', '2022-01-01', KR), t('2022-01-01', null, FH)], same, 2023)
+    expect(r.rows.map((x) => x.club)).toEqual(['KR'])
+    expect(r.problems).toEqual(['KSÍ 2023 Kórdrengir finnst ekki á Transfermarkt'])
+  })
+})

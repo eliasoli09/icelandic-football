@@ -2,8 +2,8 @@
 
 import { Fragment, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react'
 import { ArrowUpRight, Check, ChevronLeft, ChevronRight, Flag, Lock, Search, Share2, X } from 'lucide-react'
-import { NAME_INDEX, NAMES, PLAYERS } from '@/lib/hver/data'
-import { HINTS, LEVEL_KEY, clubsShown, dailyPlayer, giveUp, guess, hintOpensAfter, hintValue, hintsOpen, newState, playersAt, puzzleNumber, restore, shareText, storageKey, suggest, triesFor, type GuessOutcome, type WhoState } from '@/lib/hver/game'
+import { NAME_INDEX, NAMES, PLAYERS, SCHEDULE } from '@/lib/hver/data'
+import { HINTS, LEVEL_KEY, clubsShown, dailyPlayer, giveUp, guess, hintOpensAfter, hintValue, hintsOpen, newState, playersAt, puzzleNumber, restore, shareText, storageKey, suggest, triesFor, untilMidnight, type GuessOutcome, type WhoState } from '@/lib/hver/game'
 import { dayNumber } from '@/lib/topp10/daily'
 import { normalise } from '@/lib/topp10/normalise'
 import { LEVELS, isLevel, type Level } from '@/lib/level'
@@ -13,6 +13,8 @@ import styles from './Hver.module.css'
 const MONTHS = ['janúar', 'febrúar', 'mars', 'apríl', 'maí', 'júní', 'júlí', 'ágúst', 'september', 'október', 'nóvember', 'desember']
 const DAY = 86_400_000
 const dayLabel = (day: number) => { const d = new Date(day * DAY); return `${d.getUTCDate()}. ${MONTHS[d.getUTCMonth()]}` }
+/** 3:07:09 */
+const clock = (ms: number) => { const t = Math.floor(ms / 1000); return `${Math.floor(t / 3600)}:${String(Math.floor(t / 60) % 60).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` }
 const span = (r: CareerRow) => r.to === null ? `${r.from}-` : r.to === r.from ? `${r.from}` : `${r.from}-${r.to}`
 const LEVEL_NOTE: Record<Level, string> = {
   easy: 'Þekktustu landsliðsmennirnir',
@@ -32,7 +34,7 @@ export function HverGame() {
   const [today, setToday] = useState(0)
   const [day, setDay] = useState(0)
   const [level, setLevel] = useState<Level>('easy')
-  const player = useMemo(() => dailyPlayer(PLAYERS, day, level), [day, level])
+  const player = useMemo(() => dailyPlayer(PLAYERS, day, level, SCHEDULE), [day, level])
   const [state, setState] = useState<WhoState>(newState)
   const [typed, setTyped] = useState('')
   const [active, setActive] = useState(-1)
@@ -47,6 +49,24 @@ export function HverGame() {
     try { const saved = localStorage.getItem(LEVEL_KEY); if (isLevel(saved)) setLevel(saved) } catch { /* default level */ }
     setToday(d); setDay(d); setReady(true)
   }, [])
+  // at midnight in Iceland the next player arrives, without a reload; someone looking at an older day stays there
+  const [left, setLeft] = useState<number | null>(null)
+  useEffect(() => {
+    if (!ready) return
+    const tick = () => {
+      const now = new Date()
+      const d = dayNumber(now)
+      setLeft(untilMidnight(now))
+      setToday((t) => {
+        if (d !== t) setDay((shown) => (shown === t ? d : shown))
+        return d
+      })
+    }
+    tick()
+    const timer = setInterval(tick, 1000)
+    return () => clearInterval(timer)
+  }, [ready])
+
   useEffect(() => {
     if (!ready) return
     setState(load(player) ?? newState())
@@ -220,7 +240,7 @@ export function HverGame() {
 
       <nav className={styles.days} aria-label="Fyrri þrautir">
         <button className={styles.ghost} disabled={!ready || today - day >= cycle - 1} onClick={() => setDay((d) => d - 1)}><ChevronLeft size={15} aria-hidden /> Fyrri</button>
-        <span>{isToday ? 'Þraut dagsins' : dayLabel(day)} · {LEVELS.find((l) => l.id === level)!.label}</span>
+        <span>{isToday ? 'Þraut dagsins' : dayLabel(day)} · {LEVELS.find((l) => l.id === level)!.label}{left !== null && <> · <span className={styles.countdown}>Nýr leikmaður eftir {clock(left)}</span></>}</span>
         <button className={styles.ghost} disabled={!ready || isToday} onClick={() => setDay((d) => d + 1)}>Næsta <ChevronRight size={15} aria-hidden /></button>
       </nav>
 

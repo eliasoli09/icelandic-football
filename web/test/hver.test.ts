@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { HINTS, LAUNCH_DAY, clubsShown, hintOpensAfter, dailyPlayer, giveUp, guess, hintValue, hintsOpen, nameIndex, newState, playersAt, restore, shareText, suggest, triesFor } from '../src/lib/hver/game'
+import { HINTS, LAUNCH_DAY, untilMidnight, clubsShown, hintOpensAfter, dailyPlayer, giveUp, guess, hintValue, hintsOpen, nameIndex, newState, playersAt, restore, shareText, suggest, triesFor } from '../src/lib/hver/game'
 import { cleanName, initials, nameKeys } from '../src/lib/hver/names'
-import { NAMES, PLAYERS } from '../src/lib/hver/data'
+import { NAMES, PLAYERS, SCHEDULE } from '../src/lib/hver/data'
 import { normalise } from '../src/lib/topp10/normalise'
 import { LEVELS } from '../src/lib/level'
 import type { WhoPlayer } from '../src/lib/hver/types'
@@ -110,3 +110,35 @@ describe('the verified players', () => {
     }
   })
 })
+
+describe('the daily schedule', () => {
+  it('names an existing player of the right level for every day from launch to a year ahead', () => {
+    const today = Math.floor(Date.now() / 86_400_000)
+    const ids = new Map(PLAYERS.map((p) => [p.id, p]))
+    expect(SCHEDULE.start).toBe(LAUNCH_DAY)
+    for (const l of LEVELS) {
+      const plan = SCHEDULE.days[l.id]!
+      expect(plan.length, l.id).toBeGreaterThan(today - LAUNCH_DAY + 300)
+      // days up to tomorrow are frozen and keep their player even if he has since changed level
+      plan.forEach((id, i) => {
+        expect(ids.has(id), `${l.id} dagur ${i}`).toBe(true)
+        if (LAUNCH_DAY + i > today + 1) expect(ids.get(id)?.level, `${l.id} dagur ${i}`).toBe(l.id)
+      })
+      expect(dailyPlayer(PLAYERS, today, l.id, SCHEDULE).id).toBe(plan[today - LAUNCH_DAY])
+    }
+  })
+  it('uses every player before repeating one', () => {
+    for (const l of LEVELS) {
+      const count = PLAYERS.filter((p) => p.level === l.id).length
+      expect(count, l.id).toBeGreaterThan(20)
+      const future = SCHEDULE.days[l.id]!.slice(SCHEDULE.days[l.id]!.length - 300)
+      const window = future.slice(0, Math.min(count, future.length))
+      expect(new Set(window).size, l.id).toBe(window.length)
+    }
+  })
+  it('counts down to midnight in Iceland', () => {
+    expect(untilMidnight(new Date('2026-09-17T23:59:00Z'))).toBe(60_000)
+    expect(untilMidnight(new Date('2026-09-18T00:00:00Z'))).toBe(86_400_000)
+  })
+})
+

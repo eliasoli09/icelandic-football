@@ -120,12 +120,28 @@ export function playersAt(players: WhoPlayer[], level: Level): WhoPlayer[] {
   return byLevel.get(key)!
 }
 
-/** The same player for everyone on a given day and level. */
-export function dailyPlayer(players: WhoPlayer[], day: number, level: Level): WhoPlayer {
+export interface Schedule { start: number; days: Partial<Record<Level, string[]>> }
+const byId = new WeakMap<WhoPlayer[], Map<string, WhoPlayer>>()
+
+/**
+ * The same player for everyone on a given day and level: the written schedule
+ * (scripts/hver/schedule.mts), so a deploy never changes a day's puzzle, and
+ * the scrambled order for any day it does not cover.
+ */
+export function dailyPlayer(players: WhoPlayer[], day: number, level: Level, schedule: Schedule | null = null): WhoPlayer {
+  if (schedule) {
+    if (!byId.has(players)) byId.set(players, new Map(players.map((p) => [p.id, p])))
+    const planned = schedule.days[level]?.[day - schedule.start]
+    const player = planned && byId.get(players)!.get(planned)
+    if (player) return player
+  }
   const order = playersAt(players, level)
   const n = order.length
   return order[(((day - LAUNCH_DAY) % n) + n) % n]
 }
+
+/** Milliseconds until the next puzzle: midnight UTC, which is midnight in Iceland. */
+export const untilMidnight = (now: Date) => 86_400_000 - (now.getTime() % 86_400_000)
 
 export const puzzleNumber = (day: number) => day - LAUNCH_DAY + 1
 

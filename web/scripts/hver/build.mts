@@ -9,7 +9,7 @@
  *
  * Usage: cd web && npx tsx scripts/hver/build.mts [--cache DIR] [--only QID] [--limit N] [--offline]
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -37,14 +37,14 @@ mkdirSync(cacheDir, { recursive: true })
 // ── the decisions, written down ─────────────────────────────────────
 
 /**
- * Wikipedia editions with an article: 20+ is the Euro 2016 and World Cup 2018
- * generation and the old greats, 10-19 national team players and professionals
- * abroad, fewer than 10 players known mostly at home. Split so each level has
- * enough players for weeks of daily puzzles.
+ * Wikipedia editions with an article: 14+ is the Euro 2016 and World Cup 2018
+ * generation, today's internationals and the old greats, 8-13 professionals
+ * abroad and squad players, fewer than 8 players known mostly at home. Split
+ * so each level has enough players for months of daily puzzles.
  */
 function levelOf(p: PoolPlayer): Level {
   if (LEVEL_OVERRIDES[p.qid]) return LEVEL_OVERRIDES[p.qid]
-  return p.sitelinks >= 20 ? 'easy' : p.sitelinks >= 10 ? 'medium' : 'hard'
+  return p.sitelinks >= 14 ? 'easy' : p.sitelinks >= 8 ? 'medium' : 'hard'
 }
 /** Players known differently in Iceland than their number of articles says. */
 const LEVEL_OVERRIDES: Record<string, Level> = {
@@ -169,7 +169,7 @@ const countryIs = (name: string) => COUNTRY[name.replace(/ national (?:football|
 // ── fetching, politely and honestly ────────────────────────────────────
 
 const UA = 'BestaSpain-Leikir/1.0 (https://islensk-fotbolti.vercel.app; checks player quiz answers)'
-const PAUSE: Record<string, number> = { 'www.transfermarkt.com': 5000, 'en.wikipedia.org': 1000 }
+const PAUSE: Record<string, number> = { 'www.transfermarkt.com': 5000, 'en.wikipedia.org': 1000, 'www.ksi.is': 1000 }
 /** only what is already in the cache; a player not fetched yet is left out */
 const offline = process.argv.includes('--offline')
 class NotCached extends Error {}
@@ -357,6 +357,106 @@ for (const p of candidates) {
     ],
     verifiedAt: today,
   })
+}
+
+/**
+ * A KSÍ career as it reads: oldest first, since KSÍ knows seasons and not the
+ * order of spells, and one club's seasons in a row are one spell, however
+ * Transfermarkt split them.
+ */
+function ksiCareerRows(rows: CareerRow[]): WhoPlayer['career'] {
+  const sorted = [...rows].sort((a, b) => a.from - b.from || (a.to ?? thisYear) - (b.to ?? thisYear))
+  const out: WhoPlayer['career'] = []
+  for (const r of sorted) {
+    const club = r.iceland && ICELANDIC_CLUB[r.tm.id] ? ICELANDIC_CLUB[r.tm.id] : r.club
+    const prev = out[out.length - 1]
+    if (prev && prev.club === club && prev.to !== null && r.from - prev.to <= 1) {
+      prev.to = r.to === null || prev.to === null ? r.to : Math.max(prev.to, r.to)
+      continue
+    }
+    out.push({ from: r.from, to: r.to, club, loan: false })
+  }
+  return out
+}
+
+// ── this season's Besta deild players, KSÍ against Transfermarkt ─────
+
+/**
+ * Most of today's Besta deild players have no Wikipedia article. For them the
+ * second source is their KSÍ player page, whose "Ferill" lists every team and
+ * season. KSÍ only knows Icelandic football, so a player qualifies this way
+ * only if every senior spell on Transfermarkt is at an Icelandic club; each
+ * must meet KSÍ's league seasons at that club, and each KSÍ league season a
+ * Transfermarkt spell. The years shown are KSÍ's seasons. The clues: birth
+ * year from both, the senior national team from both, and the position from
+ * Transfermarkt alone (KSÍ gives none).
+ */
+if (!only && limit === Infinity && !process.argv.includes('--no-ksi')) {
+  const fifa = JSON.parse(readFileSync(join(webDir, 'scripts/fifa/players.json'), 'utf-8'))
+  const fifaCache = join(tmpdir(), 'fifa-cache')
+  // Transfermarkt ids from the club squad pages the ratings were read from
+  const tmIds = new Map<string, string>()
+  for (const f of readdirSync(fifaCache).filter((f) => f.includes('kader_verein'))) {
+    const html = readFileSync(join(fifaCache, f), 'utf-8')
+    for (const m of html.matchAll(/<td class="hauptlink">\s*<a href="\/[^"]+\/profil\/spieler\/(\d+)">\s*([^<]+?)\s*(?:<span|<\/a>)/g)) tmIds.set(m[2].replace(/&#039;/g, "'").replace(/&amp;/g, '&'), m[1])
+  }
+  const known = new Set(players.map((x) => x.sources[0].url.match(/spieler\/(\d+)/)?.[1]))
+  const ksiLabel = new Map(Object.entries(ICELANDIC_CLUB).map(([id, label]) => [id, label]))
+  const sameKsiClub = (tm: TmClub, k: WikiSpell) => {
+    const label = ksiLabel.get(tm.id)
+    if (label) return normalise(label) === normalise(k.club)
+    return clubNames(tm).some((a) => P.sameClubName(a, k.club))
+  }
+  let checked = 0
+  for (const fp of fifa.players) {
+    const tmId = fp.tm ? tmIds.get(fp.tm.name) : undefined
+    if (!tmId || known.has(tmId)) continue
+    checked++
+    let ksi
+    try { ksi = P.ksiCareer(await get(`https://www.ksi.is/leikmenn/leikmadur?id=${fp.ksiId}`)) }
+    catch (err) { if (err instanceof NotCached) { skip('ekki sótt enn'); continue } review.push({ qid: `ksi-${fp.ksiId}`, name: fp.ksiName, problems: [`KSÍ: ${(err as Error).message}`] }); continue }
+    const ksiRows = P.ksiSpells(ksi.seasons, thisYear)
+    if (new Set(ksiRows.map((r: WikiSpell) => normalise(r.club))).size < MIN_CLUBS) { skip('KSÍ: færri en 3 félög'); continue }
+    const sameKsi = (tm: TmClub, club: string) => sameKsiClub(tm, { club, target: null, from: 0, to: null, loan: false })
+    let transfers
+    try { transfers = JSON.parse(await get(`https://www.transfermarkt.com/ceapi/transferHistory/list/${tmId}`)) }
+    catch (err) { if (err instanceof NotCached) { skip('ekki sótt enn'); continue } throw err }
+    const tm: TmSpell[] = P.tmSpells(P.tmMoves(transfers))
+    const abroad = tm.filter((t) => !t.optional && !t.club.iceland)
+    if (abroad.length) { skip('KSÍ: dvöl erlendis sem KSÍ nær ekki til'); continue }
+    const agreed: Agreement = P.agreeKsi(ksi.seasons, tm, sameKsi, thisYear)
+    const problems: string[] = [...agreed.problems]
+    if (new Set(agreed.rows.map((r) => normalise(r.club))).size < MIN_CLUBS) { skip('KSÍ: færri en 3 félög'); continue }
+    const name = cleanName(fp.ksiName.replace(/\s+[A-ZÁÐÉÍÓÚÝÞÆÖ]\.(?=\s)/g, ''))
+    if (problems.length) { review.push({ qid: `ksi-${fp.ksiId}`, name, problems }); continue }
+    let profile
+    try { profile = P.tmProfile(await get(`https://www.transfermarkt.com/x/profil/spieler/${tmId}`)) }
+    catch (err) { if (err instanceof NotCached) { skip('ekki sótt enn'); continue } throw err }
+    if (!profile.born || ksi.born !== +profile.born.slice(0, 4)) problems.push(`fæðingarár: Transfermarkt ${profile.born}, KSÍ ${ksi.born}`)
+    const position = profile.position ? POSITION[profile.position] : undefined
+    if (!position) problems.push(`staða Transfermarkt óþekkt: "${profile.position}"`)
+    const tmSenior = profile.international && !P.isYouthTeam(profile.international) ? countryIs(profile.international) ?? null : null
+    const ksiSenior = ksi.seasons.some((x: { team: string }) => x.team === 'A-landslið')
+    if ((tmSenior === 'Ísland') !== ksiSenior || (tmSenior && tmSenior !== 'Ísland')) problems.push(`landslið: Transfermarkt ${profile.international ?? 'ekkert'}, KSÍ ${ksiSenior ? 'A-landslið' : 'ekkert'}`)
+    if (problems.length) { review.push({ qid: `ksi-${fp.ksiId}`, name, problems }); continue }
+    const icelandic = fp.tm?.nations?.[0] === 'Iceland'
+    players.push({
+      id: `ksi-${fp.ksiId}`,
+      // today's league players, known to anyone who follows it; a senior international is a step easier
+      level: ksiSenior ? 'medium' : 'hard',
+      region: icelandic ? 'island' : 'erlendis',
+      name,
+      accept: [...new Set([name, fp.ksiName, profile.name, profile.headline].flatMap((x) => x ? nameKeys(cleanName(x)) : []))],
+      career: ksiCareerRows(agreed.rows),
+      hints: { position: position!, born: ksi.born!, national: ksiSenior ? 'Ísland' : null, initials: initials(name) },
+      sources: [
+        { name: 'Transfermarkt', url: `https://www.transfermarkt.com/x/profil/spieler/${tmId}` },
+        { name: `ksi.is · ${name}`, url: `https://www.ksi.is/leikmenn/leikmadur?id=${fp.ksiId}` },
+      ],
+      verifiedAt: today,
+    })
+  }
+  console.log(`KSÍ-leið: ${checked} núverandi leikmenn skoðaðir`)
 }
 
 if (!only && limit === Infinity) {

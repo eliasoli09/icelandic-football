@@ -92,3 +92,4 @@
 @media (prefers-reduced-motion: reduce) {
   .career li, .hint strong, .feedback > span { animation: none; }
 }
+.countdown { font-variant-numeric: tabular-nums; white-space: nowrap; }

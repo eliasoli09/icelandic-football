@@ -400,3 +400,122 @@ export function respell(known: string, home: string | null, title: string): stri
   }).join(' ')
 }
 
+
+// ── KSÍ player page ──────────────────────────────────────────────────
+
+export interface KsiSeason { team: string; year: number; games: number; competitions: { name: string; games: number }[] }
+
+const htmlText = (html: string) => html
+  .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '')
+  .replace(/<[^>]+>/g, '\n')
+  .replace(/&amp;/g, '&').replace(/&#0?39;/g, "'").replace(/&quot;/g, '"').replace(/&nbsp;/g, ' ')
+  .split('\n').map((l) => l.trim()).filter(Boolean)
+
+/** The "Ferill" list of a KSÍ player page: a row per team and year, and under it the competitions. */
+export function ksiCareer(html: string): { born: number | null; seasons: KsiSeason[] } {
+  const lines = htmlText(html)
+  const crumb = lines.findIndex((l, i) => l === 'Leikmenn' && /^\d{4}$/.test(lines[i + 2] ?? ''))
+  const born = crumb >= 0 ? Number(lines[crumb + 2]) : null
+  const start = lines.findIndex((l, i) => l === 'Ferill' && lines[i + 1] === 'Tímabil' && lines[i + 2] === 'Lið')
+  if (start < 0) throw new Error('KSÍ: ferill fannst ekki')
+  const rows = lines.slice(start + 4)
+  const num = (s: string | undefined) => s !== undefined && /^\d+$/.test(s)
+  const seasons: KsiSeason[] = []
+  for (let i = 0; i < rows.length;) {
+    if (/^\d{4}$/.test(rows[i + 1] ?? '') && [2, 3, 4, 5].every((k) => num(rows[i + k]))) {
+      seasons.push({ team: rows[i], year: Number(rows[i + 1]), games: Number(rows[i + 2]), competitions: [] })
+      i += 6
+    } else if (seasons.length && [1, 2, 3, 4].every((k) => num(rows[i + k]))) {
+      seasons[seasons.length - 1].competitions.push({ name: rows[i], games: Number(rows[i + 1]) })
+      i += 5
+    } else break
+  }
+  return { born, seasons }
+}
+
+/** A national side, a youth side or a youth age group rather than a club's senior team. */
+export const isKsiYouthTeam = (team: string) => /landslið|\bU-?\d{2}\b|flokk|karlar$/i.test(team)
+/** Competitions that are the league itself, not a cup, a pre-season tournament or European qualifying. */
+export const isKsiLeague = (name: string) =>
+  !/bikar|reykjavíkurmót|faxaflóamót|kjarnafæði|fótbolti\.net|meistarakeppni|uefa|flokk|æfingamót|umspil/i.test(name)
+  && /íslandsmót|deild karla|besta deild|lengjudeild|pepsi|landsbankadeild|símadeild/i.test(name)
+
+/**
+ * A player's senior league seasons at Icelandic clubs, grouped into spells:
+ * consecutive seasons at one club, a new spell when he played elsewhere in
+ * between or missed a season. The last spell is open while it reaches the
+ * current season.
+ */
+export function ksiSpells(seasons: KsiSeason[], currentSeason: number): WikiSpell[] {
+  const league = seasons
+    .filter((s) => !isKsiYouthTeam(s.team) && s.competitions.some((c) => isKsiLeague(c.name) && c.games > 0))
+    .sort((a, b) => a.year - b.year)
+  const spells: WikiSpell[] = []
+  for (const s of league) {
+    const open = spells.filter((x) => normalise(x.club) === normalise(s.team))
+    const last = open[open.length - 1]
+    const interrupted = last && spells.some((x) => x !== last && x.from > last.from && normalise(x.club) !== normalise(s.team) && x.from <= s.year)
+    if (last && !interrupted && s.year - (last.to ?? last.from) <= 1) last.to = s.year
+    else spells.push({ from: s.year, to: s.year, club: s.team, target: null, loan: false })
+  }
+  // a season of two clubs: order by year, the club he left first coming first
+  spells.sort((a, b) => a.from - b.from)
+  const lastSpell = spells[spells.length - 1]
+  if (lastSpell && lastSpell.to !== null && lastSpell.to >= currentSeason) lastSpell.to = null
+  return spells
+}
+
+/**
+ * A career from Transfermarkt's spells, checked season by season against KSÍ,
+ * which lists a club for every year rather than spells, so a loan in the
+ * middle of a spell splits it there but not on Transfermarkt.
+ *
+ * - Every KSÍ league season must fall inside a Transfermarkt spell at that club
+ *   (a year's leeway either side: a registration date against a season).
+ * - Every senior Transfermarkt spell must have KSÍ seasons at that club; one
+ *   where he never played a league match is left out of the career.
+ * - A spell reads with KSÍ's first and last league season, and stays open
+ *   while Transfermarkt has him there and KSÍ reaches the current season.
+ * - A loan only Transfermarkt calls a loan is shown as a plain spell.
+ */
+export function agreeKsi(seasons: KsiSeason[], tm: TmSpell[], same: (tm: TmClub, club: string) => boolean, currentSeason: number): Agreement {
+  const problems: string[] = []
+  const pairs: [string, string][] = []
+  const senior = seasons.filter((s) => !isKsiYouthTeam(s.team))
+  const league = senior.filter((s) => s.competitions.some((c) => isKsiLeague(c.name) && c.games > 0))
+  const yearOf = (d: string | null) => (d ? +d.slice(0, 4) : null)
+  const windows = tm.map((t) => ({
+    t,
+    from: yearOf(t.from) ?? (yearOf(t.after) ?? 1900),
+    to: yearOf(t.to) ?? currentSeason,
+  }))
+  // each KSÍ league season goes to the spell that holds it, a spell holding the year itself before one within a year of it
+  const claimed = new Map<number, KsiSeason[]>()
+  for (const s of league) {
+    const fits = windows.map((w, i) => ({ w, i })).filter(({ w }) => same(w.t.club, s.team))
+    const inside = fits.filter(({ w }) => s.year >= w.from && s.year <= w.to)
+    const near = fits.filter(({ w }) => s.year >= w.from - 1 && s.year <= w.to + 1)
+    // a loan inside a spell holds its own seasons; prefer the narrowest window
+    const pick = (inside.length ? inside : near).sort((a, b) => (a.w.to - a.w.from) - (b.w.to - b.w.from))[0]
+    if (!pick) { problems.push(`KSÍ ${s.year} ${s.team} finnst ekki á Transfermarkt`); continue }
+    claimed.set(pick.i, [...(claimed.get(pick.i) ?? []), s])
+  }
+  const rows: CareerRow[] = []
+  windows.forEach(({ t, from, to }, i) => {
+    const mine = claimed.get(i) ?? []
+    if (!mine.length) {
+      if (t.optional) return
+      const anySenior = senior.some((s) => same(t.club, s.team) && s.year >= from - 1 && s.year <= to + 1)
+      if (!anySenior) problems.push(`Transfermarkt ${t.from ?? `fyrir ${t.to}`} ${t.club.name}${t.loan ? ' (lán)' : ''} finnst ekki hjá KSÍ`)
+      return
+    }
+    const years = mine.map((s) => s.year)
+    const first = Math.min(...years), last = Math.max(...years)
+    pairs.push([t.club.name, mine[0].team])
+    rows.push({ from: first, to: t.to === null && last >= currentSeason ? null : last, club: mine[0].team, target: null, loan: false, iceland: t.club.iceland, tm: t.club })
+  })
+  const lastTm = tm.filter((t) => !t.loan && !t.optional).pop()
+  const lastLeague = league.reduce<KsiSeason | null>((a, s) => (!a || s.year > a.year ? s : a), null)
+  if (lastTm && lastTm.to === null && lastLeague && lastLeague.year < currentSeason - 1) problems.push(`ósammála um hvort ${lastTm.club.name} sé enn félag hans`)
+  return { rows, problems, pairs }
+}
