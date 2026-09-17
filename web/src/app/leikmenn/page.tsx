@@ -1,6 +1,7 @@
 import { playerEloTable, scorerSim, sofascorePlayers, editorialBonus } from '@/lib/queries'
 import { computeComposite, type CompositeBreakdown } from '@/lib/playerComposite'
 import { inferPositions, normalizeName, POSITION_LABELS, type Position } from '@/lib/positions'
+import { FifaRatings } from '@/components/Fifa/FifaRatings'
 
 export const revalidate = 300
 
@@ -19,7 +20,7 @@ export default async function LeikmennPage() {
       playerEloTable(200), scorerSim('goals'), scorerSim('assists'), scorerSim('goals', 'lengjudeild'), sofascorePlayers(), editorialBonus(),
     ])
   } catch {
-    return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
+    return <><FifaRatings /><p className="muted">Gagnagrunnur ekki tengdur enn.</p></>
   }
   const sofaByName = new Map(sofa.map((p) => [normalizeName(p.name), p]))
   const composite = computeComposite(sofa)
@@ -64,9 +65,11 @@ export default async function LeikmennPage() {
     .slice(0, 30)
   const lengju = elo.filter((p) => p.league === 'lengjudeild').slice(0, 15)
   return (
+    <>
+    <FifaRatings />
     <div className="grid gap-8 lg:grid-cols-2">
       <section>
-        <h1 className="display text-2xl font-black mb-5">Leikmannaeinkunn - Besta deildin</h1>
+        <h2 className="display text-2xl font-black mb-5">Leikmannaeinkunn - Besta deildin</h2>
         <BestaTable rows={besta} sofaByName={sofaByName} />
         <p className="text-[11px] muted mt-2 mb-8">
           Heild = Elo (atburðir KSÍ: mörk, spjöld, úrslit liðs, leik fyrir leik) + framlag
@@ -126,6 +129,7 @@ export default async function LeikmennPage() {
         </div>
       </section>
     </div>
+    </>
   )
 }
 
