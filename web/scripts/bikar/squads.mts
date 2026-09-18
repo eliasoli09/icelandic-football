@@ -80,6 +80,47 @@ function legendBonus(name: string, year: number, club: string): { level: number;
   }
 }
 
+/**
+ * Sofascore's season ratings for 2023, 2024 and 2025 (scripts/fifa/history,
+ * from the file Elias supplied), the only per-season measure of a player
+ * himself that reaches these sides: the reports say who started and who
+ * scored, and nothing else separates one man from another, which left the
+ * best player in the league of 2023 reading as an ordinary starter. A rating
+ * above seven, which is about an average season, lifts him; the files name
+ * only the fifty best of 2023 and 2024, so no one is pushed down by them.
+ */
+const SOFA = (() => {
+  const fold = (x: string) => normalise(x).replace(/ð/g, 'd').replace(/þ/g, 'th')
+  const out = new Map<string, number>()
+  for (const year of [2023, 2024, 2025]) {
+    const file = join(webDir, 'scripts/fifa/history', `sofascore-${year}.csv`)
+    const [head, ...lines] = readFileSync(file, 'utf-8').trim().split('\n')
+    const col = head.split(';')
+    const iName = col.indexOf('Leikmaður'), iClub = col.indexOf('Lið'), iRate = col.indexOf('Sofascore-einkunn')
+    for (const line of lines) {
+      const c = line.split(';')
+      const rating = Number(c[iRate]?.replace(',', '.'))
+      if (!rating) continue
+      const w = fold(c[iName]).split(' ').filter(Boolean)
+      out.set(`${year}|${w[0]} ${w[w.length - 1]}|${fold(c[iClub]).split(' ')[0]}`, rating)
+    }
+  }
+  return out
+})()
+/**
+ * A level of his own again, the way the list gives one to the greats: an
+ * average season of seven stands at this level and every further point of
+ * rating is worth this much, so the best player in the league reads as one
+ * whatever his side did.
+ */
+const SOFA_LEVEL = 78, SOFA_PER_POINT = 12
+function sofaLevel(name: string, year: number, club: string): number {
+  const fold = (x: string) => normalise(x).replace(/ð/g, 'd').replace(/þ/g, 'th')
+  const w = fold(name).split(' ').filter(Boolean)
+  const rating = SOFA.get(`${year}|${w[0]} ${w[w.length - 1]}|${fold(club).split(' ')[0]}`)
+  return rating ? SOFA_LEVEL + (rating - 7) * SOFA_PER_POINT : 0
+}
+
 const verified = JSON.parse(readFileSync(join(here, 'teams.json'), 'utf-8'))
 const cacheDir = join(tmpdir(), 'bikar-cache')
 mkdirSync(cacheDir, { recursive: true })
@@ -207,7 +248,9 @@ for (const [i, side] of ranked.entries()) {
     const share = p.starts / games
     const scoring = line === 'FWD' || line === 'MID' ? Math.min(10, 12 * p.goals / p.starts) : 0
     const legend = legendBonus(tm ? respell(tm.name, p.name, p.name) : p.name, side.year, side.label)
-    const raw = Math.max(level, legend?.level ?? 0) + 8 * (share - 0.7) + scoring + (legend?.extra ?? 0)
+    const named = tm ? respell(tm.name, p.name, p.name) : p.name
+    const raw = Math.max(level, legend?.level ?? 0, sofaLevel(named, side.year, side.label))
+      + 8 * (share - 0.7) + scoring + (legend?.extra ?? 0)
     pool.push({
       id: ksiId,
       name: tm ? respell(tm.name, p.name, p.name) : p.name,

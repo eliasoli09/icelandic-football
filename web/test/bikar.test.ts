@@ -162,6 +162,15 @@ describe('Vísir\'s list of the greats', () => {
     expect(Math.max(...others.map((p) => p.rating)) - damir.rating).toBeLessThanOrEqual(5)
   })
 
+  it('lets a measured season speak where one exists', () => {
+    // Birnir Snær Ingason was rated 8.10 by Sofascore in 2023, the best in the
+    // league, but read as an ordinary starter until that was allowed to count
+    const vik = SIDES.find((s) => s.id === 'vikingur-2023')!.players
+    expect(vik.find((p) => p.name.startsWith('Birnir Snær'))!.rating).toBeGreaterThanOrEqual(85)
+    const bre = SIDES.find((s) => s.id === 'breidablik-2023')!.players
+    expect(bre.find((p) => p.name.startsWith('Gísli Eyjólfs'))!.rating).toBeGreaterThanOrEqual(78)
+  })
+
   it('rates the lines against each other, not against the forwards', () => {
     // only a goal separates one player from another in a KSÍ report, so
     // without this every line but the forwards sat near the bottom
