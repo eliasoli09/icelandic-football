@@ -1,10 +1,13 @@
 'use client'
 
-import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
+import { Fragment, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from 'react'
 import { ArrowRight, CalendarDays, Check, ChevronDown, Info, Lightbulb, RotateCcw, Share2, X } from 'lucide-react'
 import { QUESTIONS, QUESTION_BY_ID, REGIONS, words } from '@/lib/tenaball/data'
 import { LEVEL_KEY, MODE_KEY, SAVE_KEY, dailyKey, dailyQuestion, livesFor, newRound, nextQuestion, restoreRound, shareText, submitAnswer, type Feedback, type Round } from '@/lib/tenaball/game'
 import { hintDetails, requestHint } from '@/lib/tenaball/hints'
+import { namePool, suggest } from '@/lib/tenaball/suggest'
+// the footballers the other game knows, so the answers do not stand out in the list
+import hverNames from '@/lib/hver/names.json'
 import { LEVELS, isLevel, type Level } from '@/lib/level'
 import { dayNumber } from '@/lib/topp10/daily'
 import { normalise } from '@/lib/topp10/normalise'
@@ -51,12 +54,17 @@ export function Topp10Game() {
   const [copied, setCopied] = useState(false)
   const [hintSelection, setHintSelection] = useState<string | null>(null)
   const input = useRef<HTMLInputElement>(null)
+  const listId = useId()
+  const [active, setActive] = useState(-1)
   const result = useRef<HTMLHeadingElement>(null)
   const lastInput = useRef({ value: '', time: -Infinity })
   const sequence = useRef(0)
   const question = QUESTION_BY_ID[state.questionId]
   const answers = useMemo(() => new Map(question.answers.map(a => [a.id, a])), [question])
   const w = words(question.kind)
+  // the same pool for every question of this kind, so the list gives nothing away
+  const pool = useMemo(() => namePool(QUESTIONS, question.kind, hverNames), [question.kind])
+  const options = useMemo(() => suggest(pool, text), [pool, text])
   const missing = question.answers.filter(a => !state.found.includes(a.id))
   const hintAnswer = missing.find(a => a.id === hintSelection) ?? missing[0]
   const hintStage = hintAnswer ? state.hints[hintAnswer.id] ?? 0 : 0
@@ -110,15 +118,13 @@ export function Topp10Game() {
     setMode(nextMode)
     write('session', MODE_KEY, nextMode)
     update(next)
-    setText(''); setFeedback(null); setAnimated([]); setCelebrate(false); setReveal(false); setCopied(false); setHintSelection(null)
+    setText(''); setActive(-1); setFeedback(null); setAnimated([]); setCelebrate(false); setReveal(false); setCopied(false); setHintSelection(null)
     setShowResult(next.status !== 'playing')
     lastInput.current = { value: '', time: -Infinity }
     setRoundNumber(n => n + 1)
   }
-  const submit = (event: FormEvent) => {
-    event.preventDefault()
+  const send = (value: string) => {
     if (!ready || current.current.status !== 'playing') return
-    const value = input.current?.value ?? text
     const normalized = normalise(value)
     if (!normalized) return
     const time = performance.now()
@@ -132,7 +138,7 @@ export function Topp10Game() {
     setFeedback({ ...response.feedback, event: sequence.current })
     if (response.feedback.kind === 'correct') {
       setAnimated(a => [...a, response.feedback.answerId!])
-      setText('')
+      setText(''); setActive(-1)
       if (input.current) input.current.value = ''
       if (response.state.status === 'won') setCelebrate(true)
     } else if (response.feedback.kind === 'incorrect') {
@@ -141,6 +147,16 @@ export function Topp10Game() {
       if (response.state.status === 'lost') setShowResult(true)
     }
     if (response.state.status === 'playing') input.current?.focus({ preventScroll: true })
+  }
+  const submit = (event: FormEvent) => {
+    event.preventDefault()
+    // a highlighted suggestion is the name meant, otherwise what stands in the field
+    send(active >= 0 && options[active] ? options[active] : input.current?.value ?? text)
+  }
+  const onKey = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'ArrowDown' && options.length) { event.preventDefault(); setActive(i => (i + 1) % options.length) }
+    else if (event.key === 'ArrowUp' && options.length) { event.preventDefault(); setActive(i => (i <= 0 ? options.length - 1 : i - 1)) }
+    else if (event.key === 'Escape' && options.length) { event.preventDefault(); setActive(-1); setText('') }
   }
   const next = () => play(newRound(nextQuestion(current.current.questionId)), 'free')
   const rememberLevel = (next: Level) => {
@@ -230,8 +246,13 @@ export function Topp10Game() {
             <form onSubmit={submit}>
               <label htmlFor="tenaball-answer">{w.field}</label>
               <div className={styles.inputRow}><div className={styles.inputWrap}>
-                <input ref={input} id="tenaball-answer" value={text} onChange={e => setText(e.target.value)} placeholder={w.placeholder} autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="send" disabled={!ready || state.status !== 'playing'} aria-describedby="tenaball-feedback" aria-invalid={kind === 'incorrect'}/>
+                <input ref={input} id="tenaball-answer" value={text} onChange={e => { setText(e.target.value); setActive(-1) }} onKeyDown={onKey} placeholder={w.placeholder} autoComplete="off" autoCorrect="off" spellCheck={false} enterKeyHint="send" disabled={!ready || state.status !== 'playing'} aria-describedby="tenaball-feedback" aria-invalid={kind === 'incorrect'}
+                  role="combobox" aria-expanded={options.length > 0} aria-controls={listId} aria-autocomplete="list" aria-activedescendant={active >= 0 ? `${listId}-${active}` : undefined}/>
                 {kind === 'incorrect' && <X className={styles.inputIcon} size={20} aria-hidden/>}
+                {options.length > 0 && state.status === 'playing' && <ul id={listId} role="listbox" className={styles.options}>
+                  {options.map((name, i) => <li key={name} id={`${listId}-${i}`} role="option" aria-selected={i === active}
+                    onMouseDown={e => { e.preventDefault(); send(name) }}>{name}</li>)}
+                </ul>}
               </div><button type="submit" className={styles.primary} disabled={!ready || state.status !== 'playing'}>Svara <ArrowRight size={17}/></button></div>
             </form>
             <p id="tenaball-feedback" className={styles.feedback} aria-live="polite" aria-atomic="true">

@@ -33,6 +33,9 @@
 .inputWrap input { width:100%; height:49px; border:1px solid #21b8f5; border-radius:8px; background:linear-gradient(#071b39,#020c22); padding:0 32px 0 13px; font-size:14px; color:white; box-shadow:inset 0 1px 4px #0d93fb15; }
 .inputWrap input::placeholder { color:#9eafce; }
 .inputIcon { position:absolute; right:10px; top:15px; color:#ff5372; pointer-events:none; }
+.options { position:absolute; z-index:6; left:0; right:0; top:calc(100% + 5px); list-style:none; margin:0; padding:4px; border:1px solid #21b8f5; border-radius:8px; background:#061634; box-shadow:0 16px 34px #000a; max-height:264px; overflow-y:auto; }
+.options li { padding:9px 11px; min-height:38px; border-radius:6px; font-size:14px; color:#dbe8ff; cursor:pointer; }
+.options li:hover, .options li[aria-selected='true'] { background:#0d2e5c; color:#7fd8ff; }
 .primary { display:inline-flex; justify-content:center; align-items:center; gap:10px; min-height:49px; border:1px solid #29c4ff; border-radius:9px; background:linear-gradient(160deg,#08c9ff,#0086fa 75%); color:white; font-size:14px; font-weight:750; padding:0 17px; box-shadow:inset 0 1px 5px #fff4,0 4px 18px #008cff28; cursor:pointer; }
 .primary:disabled { opacity:.55; cursor:default; }.primary:hover:not(:disabled) { filter:brightness(1.12); }
 .feedback { min-height:42px; padding-top:12px; font-size:12px; line-height:1.5; margin:0; }
