@@ -1,9 +1,10 @@
 {
-  "builtAt": "2026-09-16",
+  "builtAt": "2026-09-18",
   "shipped": [
     "island-meistarar",
     "island-bikarmeistarar",
     "island-markakongar",
+    "island-landsleikir",
     "island-lokastada-2021",
     "island-lokastada-2022",
     "island-lokastada-2023",
@@ -43,6 +44,7 @@
     "evropa-meistarar",
     "evropa-meistaradeildin",
     "evropa-baedi-timabil",
+    "evropa-gullknotturinn",
     "spann-lokastada-2023",
     "spann-lokastada-2024",
     "spann-lokastada-2025",

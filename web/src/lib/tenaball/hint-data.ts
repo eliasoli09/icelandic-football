@@ -138,8 +138,8 @@ const players = (country: string, ids: string) => {
   for (const id of ids.split(' ')) PLAYER_COUNTRIES[id] = country
 }
 players('England', 'alli bamford bowen callum-wilson calvert-lewin defoe foden gary-martin gibbs-white ings kane murray palmer rashford saka solanke sterling toney vardy watkins welbeck')
-players('Ísland', 'andri-runar-bjarnason benony-andresson emil-atlason gardar-gunnlaugsson gudmundur-magnusson gylfi nokkvi-thorisson')
-players('Argentína', 'aguero')
+players('Ísland', 'andri-runar-bjarnason aron-gunnarsson benony-andresson birkir-bjarnason birkir-mar-saevarsson eidur emil-atlason gardar-gunnlaugsson gudmundur-magnusson gylfi hermann-hreidarsson johann-berg kari-arnason nokkvi-thorisson ragnar-sigurdsson runar-kristinsson')
+players('Argentína', 'aguero messi')
 players('Gabon', 'aubameyang')
 players('Belgía', 'benteke de-bruyne hazard lukaku')
 players('Portúgal', 'bruno-fernandes jota ronaldo')
@@ -161,6 +161,17 @@ players('Skotland', 'steven-lennon')
 players('Fílabeinsströndin', 'zaha')
 
 /** Clubs in the Golden Boot years named in island-markakongar. */
+players('Þýskaland', 'matthaus sammer')
+players('Frakkland', 'papin zidane')
+players('Holland', 'van-basten')
+players('Ítalía', 'baggio cannavaro')
+players('Búlgaría', 'stoichkov')
+players('Líbería', 'weah')
+players('Brasilía', 'ronaldo-nazario rivaldo ronaldinho kaka')
+players('Portúgal', 'figo')
+players('Tékkland', 'nedved')
+players('Úkraína', 'shevchenko')
+
 export const GOLDEN_BOOT_CLUBS: Record<string, string> = {
   'gardar-gunnlaugsson': 'ÍA',
   'andri-runar-bjarnason': 'Grindavík',
@@ -172,4 +183,56 @@ export const GOLDEN_BOOT_CLUBS: Record<string, string> = {
   'gudmundur-magnusson': 'Fram',
   'emil-atlason': 'Stjarnan',
   'benony-andresson': 'KR',
+}
+
+/**
+ * Questions where the third hint cannot be a club of that season: what the
+ * hint says, and what it says for each answer. A man with a hundred caps
+ * played for many clubs, so his position is the honest hint; a Ballon d'Or
+ * names the club he was at when he won it.
+ *
+ * Positions come from Transfermarkt's record internationals for Iceland and
+ * the clubs from the winners table on en.wikipedia, the same sources the two
+ * questions were verified against.
+ */
+export const OTHER_HINTS: Record<string, { label: string; values: Record<string, string> }> = {
+  'island-landsleikir': {
+    label: 'Staða',
+    values: {
+      'birkir-bjarnason': 'Miðjumaður',
+      'aron-gunnarsson': 'Varnarsinnaður miðjumaður',
+      'runar-kristinsson': 'Sóknarsinnaður miðjumaður',
+      'birkir-mar-saevarsson': 'Hægri bakvörður',
+      'johann-berg': 'Hægri kantmaður',
+      'ragnar-sigurdsson': 'Miðvörður',
+      'kari-arnason': 'Miðvörður',
+      'hermann-hreidarsson': 'Vinstri bakvörður',
+      'eidur': 'Framherji',
+      'gylfi': 'Sóknarsinnaður miðjumaður',
+    },
+  },
+  'evropa-gullknotturinn': {
+    label: 'Félagið þegar hann vann',
+    values: {
+      matthaus: 'Inter',
+      papin: 'Marseille',
+      'van-basten': 'Milan',
+      baggio: 'Juventus',
+      stoichkov: 'Barcelona',
+      weah: 'Milan',
+      sammer: 'Borussia Dortmund',
+      'ronaldo-nazario': 'Inter / Real Madrid',
+      zidane: 'Juventus',
+      rivaldo: 'Barcelona',
+      figo: 'Real Madrid',
+      owen: 'Liverpool',
+      nedved: 'Juventus',
+      shevchenko: 'Milan',
+      ronaldinho: 'Barcelona',
+      cannavaro: 'Real Madrid',
+      kaka: 'Milan',
+      ronaldo: 'Manchester United',
+      messi: 'Barcelona',
+    },
+  },
 }

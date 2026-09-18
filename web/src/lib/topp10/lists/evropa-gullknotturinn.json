@@ -1,0 +1,201 @@
+{
+  "id": "evropa-gullknotturinn",
+  "region": "evropa",
+  "kind": "player",
+  "competition": "GULLKNÖTTURINN",
+  "title": "Gullknötturinn",
+  "question": "Nefndu 10 leikmenn sem unnu Gullknöttinn 1990-2009.",
+  "context": "Verðlaunaárin 1990-2009. Íslenska Wikipedia rekur verðlaunin til 2009, svo spurningin nær ekki lengra.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Ballon d'Or",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374148084"
+    },
+    {
+      "name": "is.wikipedia.org · Gullknötturinn",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1930058"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "matthaus",
+      "label": "Lothar Matthäus",
+      "detail": "Gullknötturinn 1990",
+      "accept": [
+        "lothar matthaus",
+        "matthaus"
+      ]
+    },
+    {
+      "id": "papin",
+      "label": "Jean-Pierre Papin",
+      "detail": "Gullknötturinn 1991",
+      "accept": [
+        "jean pierre papin",
+        "papin"
+      ]
+    },
+    {
+      "id": "van-basten",
+      "label": "Marco van Basten",
+      "detail": "Gullknötturinn 1992",
+      "accept": [
+        "marco van basten",
+        "van basten",
+        "basten",
+        "marco basten"
+      ]
+    },
+    {
+      "id": "baggio",
+      "label": "Roberto Baggio",
+      "detail": "Gullknötturinn 1993",
+      "accept": [
+        "roberto baggio",
+        "baggio"
+      ]
+    },
+    {
+      "id": "stoichkov",
+      "label": "Hristo Stoichkov",
+      "detail": "Gullknötturinn 1994",
+      "accept": [
+        "hristo stoichkov",
+        "hristo stoitsjkov",
+        "stoichkov"
+      ]
+    },
+    {
+      "id": "weah",
+      "label": "George Weah",
+      "detail": "Gullknötturinn 1995",
+      "accept": [
+        "george weah",
+        "weah"
+      ]
+    },
+    {
+      "id": "sammer",
+      "label": "Matthias Sammer",
+      "detail": "Gullknötturinn 1996",
+      "accept": [
+        "matthias sammer",
+        "sammer"
+      ]
+    },
+    {
+      "id": "ronaldo-nazario",
+      "label": "Ronaldo",
+      "detail": "Gullknötturinn 1997 og 2002",
+      "accept": [
+        "ronaldo",
+        "ronaldo luis nazario de lima",
+        "ronaldo nazario",
+        "r9"
+      ]
+    },
+    {
+      "id": "zidane",
+      "label": "Zinedine Zidane",
+      "detail": "Gullknötturinn 1998",
+      "accept": [
+        "zinedine zidane",
+        "zizou",
+        "zidane"
+      ]
+    },
+    {
+      "id": "rivaldo",
+      "label": "Rivaldo",
+      "detail": "Gullknötturinn 1999",
+      "accept": [
+        "rivaldo"
+      ]
+    },
+    {
+      "id": "figo",
+      "label": "Luís Figo",
+      "detail": "Gullknötturinn 2000",
+      "accept": [
+        "luis figo",
+        "figo"
+      ]
+    },
+    {
+      "id": "owen",
+      "label": "Michael Owen",
+      "detail": "Gullknötturinn 2001",
+      "accept": [
+        "michael owen",
+        "owen"
+      ]
+    },
+    {
+      "id": "nedved",
+      "label": "Pavel Nedvěd",
+      "detail": "Gullknötturinn 2003",
+      "accept": [
+        "pavel nedved",
+        "nedved"
+      ]
+    },
+    {
+      "id": "shevchenko",
+      "label": "Andriy Shevchenko",
+      "detail": "Gullknötturinn 2004",
+      "accept": [
+        "andriy shevchenko",
+        "andrei sjevtsjenko",
+        "andrij sjevtsjenko",
+        "sjevtsjenko",
+        "shevchenko"
+      ]
+    },
+    {
+      "id": "ronaldinho",
+      "label": "Ronaldinho",
+      "detail": "Gullknötturinn 2005",
+      "accept": [
+        "ronaldinho"
+      ]
+    },
+    {
+      "id": "cannavaro",
+      "label": "Fabio Cannavaro",
+      "detail": "Gullknötturinn 2006",
+      "accept": [
+        "fabio cannavaro",
+        "cannavaro"
+      ]
+    },
+    {
+      "id": "kaka",
+      "label": "Kaká",
+      "detail": "Gullknötturinn 2007",
+      "accept": [
+        "kaka"
+      ]
+    },
+    {
+      "id": "ronaldo",
+      "label": "Cristiano Ronaldo",
+      "detail": "Gullknötturinn 2008",
+      "accept": [
+        "cristiano ronaldo",
+        "cristiano ronaldo dos santos aveiro",
+        "cr7"
+      ]
+    },
+    {
+      "id": "messi",
+      "label": "Lionel Messi",
+      "detail": "Gullknötturinn 2009",
+      "accept": [
+        "lionel messi",
+        "messi"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-18"
+}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { QUESTIONS, QUESTION_BY_ID } from '../src/lib/tenaball/data'
 import { hintDetails, requestHint } from '../src/lib/tenaball/hints'
+import { OTHER_HINTS } from '../src/lib/tenaball/hint-data'
 import { newRound, restoreRound, submitAnswer } from '../src/lib/tenaball/game'
 
 const q = QUESTION_BY_ID['enska-lokastada-2023']
@@ -41,7 +42,8 @@ describe('progressive Tenaball hints', () => {
       expect(hints, `${question.id}/${answer.id}`).toHaveLength(3)
       expect(hints[0].value).toBe(Array.from(answer.label)[0])
       expect(hints[1].label).toBe(question.kind === 'club' ? 'Land' : 'Þjóðerni')
-      expect(hints[2].label).toBe(question.kind === 'club' ? 'Borg / bær' : 'Félag á tímabilinu')
+      expect(hints[2].label).toBe(question.kind === 'club' ? 'Borg / bær'
+        : OTHER_HINTS[question.id]?.label ?? 'Félag á tímabilinu')
       for (const hint of hints) expect(hint.value, `${question.id}/${answer.id}`).toBeTruthy()
     }
   })

@@ -1,0 +1,124 @@
+{
+  "id": "island-landsleikir",
+  "region": "island",
+  "kind": "player",
+  "competition": "A-LANDSLIÐ KARLA",
+  "title": "Flestir landsleikir",
+  "question": "Nefndu 10 leikmenn með flesta A-landsleiki fyrir Ísland.",
+  "context": "Staðan þegar heimildirnar voru lesnar. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Iceland national football team",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375435885"
+    },
+    {
+      "name": "Transfermarkt · Ísland, flestir landsleikir",
+      "url": "https://www.transfermarkt.com/island/rekordnationalspieler/verein/3574"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "birkir-bjarnason",
+      "label": "Birkir Bjarnason",
+      "detail": "113 landsleikir, 15 mörk",
+      "accept": [
+        "birkir bjarnason",
+        "birkir mar bjarnason",
+        "birkir",
+        "bjarnason"
+      ]
+    },
+    {
+      "id": "aron-gunnarsson",
+      "label": "Aron Gunnarsson",
+      "detail": "110 landsleikir, 5 mörk",
+      "accept": [
+        "aron gunnarsson",
+        "aron einar gunnarsson",
+        "aron",
+        "gunnarsson"
+      ]
+    },
+    {
+      "id": "runar-kristinsson",
+      "label": "Rúnar Kristinsson",
+      "detail": "104 landsleikir, 3 mörk",
+      "accept": [
+        "runar kristinsson",
+        "kristinsson"
+      ]
+    },
+    {
+      "id": "birkir-mar-saevarsson",
+      "label": "Birkir Már Sævarsson",
+      "detail": "103 landsleikir, 3 mörk",
+      "accept": [
+        "birkir mar saevarsson",
+        "saevarsson",
+        "birkir saevarsson"
+      ]
+    },
+    {
+      "id": "johann-berg",
+      "label": "Jóhann Berg Guðmundsson",
+      "detail": "102 landsleikir, 8 mörk",
+      "accept": [
+        "johann berg gudmundsson",
+        "johann berg",
+        "gudmundsson",
+        "johann gudmundsson"
+      ]
+    },
+    {
+      "id": "ragnar-sigurdsson",
+      "label": "Ragnar Sigurðsson",
+      "detail": "97 landsleikir, 5 mörk",
+      "accept": [
+        "ragnar sigurdsson"
+      ]
+    },
+    {
+      "id": "kari-arnason",
+      "label": "Kári Árnason",
+      "detail": "90 landsleikir, 6 mörk",
+      "accept": [
+        "kari arnason",
+        "arnason"
+      ]
+    },
+    {
+      "id": "hermann-hreidarsson",
+      "label": "Hermann Hreiðarsson",
+      "detail": "89 landsleikir, 5 mörk",
+      "accept": [
+        "hermann hreidarsson",
+        "hermann",
+        "hreidarsson"
+      ]
+    },
+    {
+      "id": "eidur",
+      "label": "Eiður Guðjohnsen",
+      "detail": "88 landsleikir, 26 mörk",
+      "accept": [
+        "eidur gudjohnsen",
+        "eidur smari gudjohnsen",
+        "eidur",
+        "eidur smari",
+        "gudjohnsen"
+      ]
+    },
+    {
+      "id": "gylfi",
+      "label": "Gylfi Sigurðsson",
+      "detail": "86 landsleikir, 28 mörk",
+      "accept": [
+        "gylfi sigurdsson",
+        "gylfi thor sigurdsson",
+        "gylfi"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-18"
+}

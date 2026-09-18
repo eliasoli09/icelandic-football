@@ -232,7 +232,7 @@ export function levelOf(id: string): Level {
   if (/^enska-lokastada-/.test(id)) return year >= 2023 ? 'easy' : year >= 2016 ? 'medium' : 'hard'
   if (/^enska-markahaestir-/.test(id)) return year >= 2023 ? 'medium' : 'hard'
   if (/^(spann|italia|thyskaland|frakkland|island)-lokastada-/.test(id)) return year >= 2024 ? 'medium' : 'hard'
-  if (['island-meistarar', 'island-bikarmeistarar'].includes(id)) return 'medium'
+  if (['island-meistarar', 'island-bikarmeistarar', 'island-landsleikir'].includes(id)) return 'medium'
   return 'hard'
 }
 
@@ -711,6 +711,105 @@ async function uclScorers(): Promise<Topp10List> {
   }, a.map((item) => answerFor('player', personOf(item.name), plural(item.goals, 'mark', 'mörk'))))
 }
 
+// ── Iceland's internationals ───────────────────────────────────────────
+
+/** A name as Wikipedia links it, without the disambiguation it needs for a title. */
+const unqualified = (name: string) => name.replace(/\s*\((?:footballer|fæddur|born)[^)]*\)\s*$/i, '').trim()
+
+/**
+ * Transfermarkt's record internationals for Iceland: a count of its own, kept
+ * by people who do not edit Wikipedia, which is what makes it worth asking.
+ */
+async function tmRecordPlayers(): Promise<{ rows: { name: string; caps: number; goals: number }[]; source: Source }> {
+  const url = 'https://www.transfermarkt.com/island/rekordnationalspieler/verein/3574'
+  const html = await fetchCached('tm-island-rekordnationalspieler.html', url)
+  const rows = html.split(/<tr class="(?:odd|even)">/).slice(1).flatMap((chunk) => {
+    const name = chunk.match(/\/profil\/spieler\/\d+"[^>]*>([^<]+)</)?.[1]
+    const numbers = [...chunk.matchAll(/nationalmannschaft\/spieler\/\d+">([^<]+)</g)].map((m) => Number(m[1]))
+    return name && Number.isInteger(numbers[0]) && Number.isInteger(numbers[1])
+      ? [{ name: name.trim(), caps: numbers[0], goals: numbers[1] }] : []
+  })
+  if (rows.length < 20) throw new Error(`Transfermarkt: aðeins ${rows.length} leikmenn lásust`)
+  return { rows, source: { name: 'Transfermarkt · Ísland, flestir landsleikir', url } }
+}
+
+async function icelandCaps(): Promise<Topp10List> {
+  const en = await wiki('en', 'Iceland national football team')
+  const tm = await tmRecordPlayers()
+  // two players level on caps share one rank cell, so the row is read from its
+  // first cell holding a name rather than by a fixed column
+  const wiki10: { person: Entity; caps: number; goals: number }[] = W.dataRows(W.tableAfter(en.wikitext, '===Most appearances===')).flatMap((r: string[]) => {
+    const cells: string[] = r.map((c) => W.plain(c))
+    const at = cells.findIndex((c) => /[A-Za-zÁÉÍÓÚÝÞÆÖáéíóúýþæöðÐ]{3}/.test(c))
+    if (at < 0) return []
+    return [{ person: personOf(unqualified(cells[at])), caps: Number(cells[at + 1]), goals: Number(cells[at + 2]) }]
+  })
+  if (wiki10.length < 10) throw new Error(`Wikipedia: aðeins ${wiki10.length} leikmenn`)
+  // only the players the question needs are looked up, so the rest of
+  // Transfermarkt's twenty-five need no entry in names.ts
+  const byTm = new Map(tm.rows.map((r) => [normalise(r.name), r]))
+  const tmFor = (e: Entity) => [e.label, ...e.names, ...(e.extra ?? [])].map(normalise).map((k) => byTm.get(k)).find(Boolean)
+  const problems: string[] = []
+  for (const w of wiki10) {
+    if (!Number.isInteger(w.caps)) { problems.push(`${w.person.label}: ólesanleg leikjatala`); continue }
+    const t = tmFor(w.person)
+    if (!t) problems.push(`${w.person.label} er ekki hjá Transfermarkt`)
+    else if (t.caps !== w.caps) problems.push(`${w.person.label}: ${w.caps} og ${t.caps} leikir`)
+  }
+  // and the other way, so a player one source has forgotten cannot slip through
+  for (const t of topWithTies(tm.rows, (r: { caps: number }) => r.caps)) {
+    if (!wiki10.some((w) => tmFor(w.person) === t)) problems.push(`${t.name} vantar hjá Wikipedia`)
+  }
+  mustAgree(problems, 'flestir landsleikir')
+  return finish({
+    id: 'island-landsleikir', region: 'island', kind: 'player', competition: 'A-LANDSLIÐ KARLA',
+    title: 'Flestir landsleikir',
+    question: 'Nefndu 10 leikmenn með flesta A-landsleiki fyrir Ísland.',
+    context: `Staðan þegar heimildirnar voru lesnar. Efstu tíu, og allir jafnir þeim tíunda.`,
+    sources: [en.source, tm.source],
+  }, wiki10.map((w) => answerFor('player', w.person, `${w.caps} landsleikir, ${plural(w.goals, 'mark', 'mörk')}`)))
+}
+
+// ── Ballon d'Or ────────────────────────────────────────────────────────
+
+async function ballonDor(from: number, to: number): Promise<Topp10List> {
+  const en = await wiki('en', "Ballon d'Or"), is = await wiki('is', 'Gullknötturinn')
+  // the English table gives the first three of every year, the Icelandic one the winner alone
+  const read = (table: string, nameAt: number, winner: (cells: string[]) => boolean) => {
+    const won = new Map<string, { person: Entity; years: number[] }>()
+    for (const row of W.dataRows(table) as string[][]) {
+      const r: string[] = row.map((c) => W.plain(c))
+      const year = Number(r[0]?.match(/^\d{4}$/)?.[0])
+      if (!(year >= from && year <= to) || !winner(r)) continue
+      // is.wikipedia writes "Marco van Basten (3)" for a third win
+      const name = unqualified((r[nameAt] ?? '').replace(/\s*\(\d+\)\s*$/, ''))
+      if (!name) throw new Error(`${year}: ekkert nafn`)
+      const person = personOf(name)
+      const w = won.get(person.id) ?? { person, years: [] }
+      w.years.push(year); won.set(person.id, w)
+    }
+    return won
+  }
+  // the first table under the heading is the legend that explains "(X)"
+  const a = read(W.tableAfter(en.wikitext, 'Denotes the number of times'), 2, (r) => r[1] === '1st')
+  const b = read(W.tableAfter(is.wikitext, '== Verðlaunahafar =='), 1, () => true)
+  const problems: string[] = []
+  for (const id of new Set([...a.keys(), ...b.keys()])) {
+    const x = a.get(id), y = b.get(id)
+    if (!x || !y) { problems.push(`${(x ?? y)!.person.label} er aðeins í annarri heimildinni`); continue }
+    if (x.years.join(',') !== y.years.join(',')) problems.push(`${x.person.label}: ${x.years.join('/')} og ${y.years.join('/')}`)
+  }
+  mustAgree(problems, 'Gullknötturinn')
+  return finish({
+    id: 'evropa-gullknotturinn', region: 'evropa', kind: 'player', competition: 'GULLKNÖTTURINN',
+    title: 'Gullknötturinn',
+    question: `Nefndu 10 leikmenn sem unnu Gullknöttinn ${from}-${to}.`,
+    context: `Verðlaunaárin ${from}-${to}. Íslenska Wikipedia rekur verðlaunin til 2009, svo spurningin nær ekki lengra.`,
+    sources: [en.source, is.source],
+  }, [...a.values()].map((w) => answerFor('player', w.person,
+    w.years.length > 1 ? `Gullknötturinn ${listYears(w.years)}` : `Gullknötturinn ${w.years[0]}`)))
+}
+
 // ── run ────────────────────────────────────────────────────────────────
 
 const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i)
@@ -719,6 +818,7 @@ const BUILDERS: [string, () => Promise<Topp10List>][] = [
   ['island-meistarar', islandTitles],
   ['island-bikarmeistarar', islandCup],
   ['island-markakongar', () => bestaScorers(2016, 2025)],
+  ['island-landsleikir', icelandCaps],
   ...range(2016, 2025).map((y) => [`island-lokastada-${y}`, () => bestaTable(y)] as [string, () => Promise<Topp10List>]),
   ['island-lid-2026', () => clubsInSeason({
     id: 'island-lid-2026', league: 'besta', season: 2026, page: '2026 Besta deild karla', teams: 12,
@@ -764,6 +864,7 @@ const BUILDERS: [string, () => Promise<Topp10List>][] = [
   })],
   ['evropa-evropudeildin', uefaCup],
   ['evropa-markahaestir', uclScorers],
+  ['evropa-gullknotturinn', () => ballonDor(1990, 2009)],
   ...(['laliga', 'seriea', 'bundesliga', 'ligue1'] as const).flatMap((league) => [2022, 2023, 2024, 2025].map((y) =>
     [`${LEAGUES[league].id}-lokastada-${y}`, () => leagueTable(league, y)] as [string, () => Promise<Topp10List>])),
 ]
