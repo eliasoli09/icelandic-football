@@ -148,5 +148,29 @@ describe('Vísir\'s list of the greats', () => {
     expect(kr99.find((p) => p.name === 'Sigurður Örn Jónsson')?.visir).toBeUndefined()
     expect(kr99.find((p) => p.name === 'Bjarki Gunnlaugsson')?.visir).toBe(20)
   })
+
+  it('carries a listed player whatever side he played for', () => {
+    // Damir Muminović, sixtieth on the list, was the best centre back of 2023
+    // by Sofascore's ratings, in the side ranked last of the forty-one here
+    const weakest = [...SIDES].sort((a, b) => a.rank - b.rank).at(-1)!
+    expect(weakest.id).toBe('breidablik-2023')
+    const damir = weakest.players.find((p) => p.name.startsWith('Damir'))!
+    expect(damir.rating).toBeGreaterThanOrEqual(80)
+    expect(damir.rating).toBeGreaterThan(weakest.strength!)
+    // and the same player reads the same in the seasons his side was stronger
+    const others = SIDES.flatMap((s) => s.players).filter((p) => p.name.startsWith('Damir'))
+    expect(Math.max(...others.map((p) => p.rating)) - damir.rating).toBeLessThanOrEqual(5)
+  })
+
+  it('rates the lines against each other, not against the forwards', () => {
+    // only a goal separates one player from another in a KSÍ report, so
+    // without this every line but the forwards sat near the bottom
+    const middle = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)]
+    const regulars = (line: string) => SIDES.flatMap((s) =>
+      s.players.filter((p) => p.line === line && p.starts >= s.record.games / 2).map((p) => p.rating))
+    const lines = ['GK', 'DEF', 'MID', 'FWD'].map((l) => middle(regulars(l)))
+    expect(Math.max(...lines) - Math.min(...lines)).toBeLessThanOrEqual(3)
+    for (const line of ['GK', 'DEF', 'MID', 'FWD']) expect(Math.max(...regulars(line))).toBeGreaterThanOrEqual(90)
+  })
 })
 

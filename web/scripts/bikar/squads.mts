@@ -57,21 +57,27 @@ const VISIR = (() => {
   }
   return out
 })()
-/** The best on the list is worth this much, the sixtieth a fifth of it. */
-const LEGEND_TOP = 7
+/** A level of his own: the first on the list stands here, the sixtieth here. */
+const LEGEND_BEST = 90, LEGEND_LAST = 82.5
 /**
- * What the list says about a player in a given season: his place on it, a
- * point for every two selections in the team of the year (up to three), and
- * one more in a season the list records him as a champion.
+ * What the list says about a player in a given season. His place on it gives
+ * him a level of his own, which carries him whatever side he played for: the
+ * best defender in the league is not a lesser player for having played in a
+ * side that finished third. On top of that come three fifths of a point for
+ * every selection in the team of the year, up to four, and one more in a
+ * season the list records him as a champion.
  */
-function legendBonus(name: string, year: number, club: string): { bonus: number; rank: number } | null {
+function legendBonus(name: string, year: number, club: string): { level: number; extra: number; rank: number } | null {
   const w = normalise(name).split(' ').filter(Boolean)
   const v = VISIR.get(`${w[0]} ${w[w.length - 1]}`)
   // the list names his clubs, which keeps another Sigurður Jónsson from being mistaken for the one on it
   if (!v || !v.clubs.includes(normalise(club).replace(/\b(r|o)$/, '').trim())) return null
   if (v.full !== w.join(' ') && w.length !== v.full.split(' ').length) return null
-  const place = LEGEND_TOP * (1 - 0.8 * (v.rank - 1) / 59)
-  return { bonus: place + Math.min(3, v.teamOfYear / 2) + (v.champion.includes(year) ? 1 : 0), rank: v.rank }
+  return {
+    level: LEGEND_LAST + (LEGEND_BEST - LEGEND_LAST) * (1 - (v.rank - 1) / 59),
+    extra: Math.min(4, v.teamOfYear * 0.6) + (v.champion.includes(year) ? 1 : 0),
+    rank: v.rank,
+  }
 }
 
 const verified = JSON.parse(readFileSync(join(here, 'teams.json'), 'utf-8'))
@@ -201,13 +207,13 @@ for (const [i, side] of ranked.entries()) {
     const share = p.starts / games
     const scoring = line === 'FWD' || line === 'MID' ? Math.min(10, 12 * p.goals / p.starts) : 0
     const legend = legendBonus(tm ? respell(tm.name, p.name, p.name) : p.name, side.year, side.label)
-    const raw = level + 8 * (share - 0.7) + scoring + (legend?.bonus ?? 0)
+    const raw = Math.max(level, legend?.level ?? 0) + 8 * (share - 0.7) + scoring + (legend?.extra ?? 0)
     pool.push({
       id: ksiId,
       name: tm ? respell(tm.name, p.name, p.name) : p.name,
       line,
       position: tm ? SHORT[tm.position] : 'GK',
-      raw, rating: 0, starts: p.starts, goals: p.goals,
+      raw, share, rating: 0, starts: p.starts, goals: p.goals,
       visir: legend?.rank,
     })
   }
@@ -219,6 +225,35 @@ for (const [i, side] of ranked.entries()) {
     europe: side.europeSummary, europeTies: side.europe, strength: Math.round(level), tmSeason: bestSeason, tmMatched: bestHits, players: pool,
   })
   console.log(`${i + 1}. ${side.label} ${side.year}: ${players.size} byrjuðu, ${pool.length} í draftinu (Transfermarkt ${bestSeason}, ${bestHits} fundust)`)
+}
+
+/**
+ * Goals are the only thing separating one player from another in a KSÍ report,
+ * and defenders and goalkeepers score almost none, so every line but the
+ * forwards sat low. Each line is therefore brought onto the common scale
+ * first: the median of its regulars is moved to the median of all regulars,
+ * and half the difference in spread is taken out, the way the FIFA ratings
+ * standardise a player within his line. Half, not all, because a forward's
+ * goals really are evidence and taking the whole spread out threw it away.
+ */
+const LINE_MIX = 0.5
+const median = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)]
+const spread = (xs: number[]) => {
+  const m = xs.reduce((a, x) => a + x, 0) / xs.length
+  return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / xs.length)
+}
+{
+  const all = sides.flatMap((s) => s.players)
+  // a regular, so that reserves do not drag a line's middle down
+  const regulars = all.filter((p) => p.share >= 0.5).map((p) => p.raw)
+  const middle = median(regulars), width = spread(regulars)
+  for (const line of ['GK', 'DEF', 'MID', 'FWD'] as const) {
+    const own = all.filter((p) => p.line === line && p.share >= 0.5).map((p) => p.raw)
+    const m = median(own), w = Math.max(1, spread(own))
+    const stretch = (1 - LINE_MIX) + LINE_MIX * width / w
+    for (const p of all) if (p.line === line) p.raw = middle + (p.raw - m) * stretch
+    console.log(`${line}: miðgildi ${m.toFixed(1)}, spönn ${w.toFixed(1)} -> teygt um ${stretch.toFixed(2)}`)
+  }
 }
 
 /**
@@ -240,7 +275,7 @@ const TOP = 94, SPREAD = 30, CURVE = 0.62
     const xi = [...side.players.filter((p) => p.line === 'GK').slice(0, 1), ...side.players.filter((p) => p.line !== 'GK').slice(0, 10)]
     // the best eleven's average; where Transfermarkt placed too few of them, the side's own level
     if (xi.length === 11) side.strength = Math.round(xi.reduce((a, p) => a + p.rating, 0) / 11)
-    for (const p of side.players) delete (p as { raw?: number }).raw
+    for (const p of side.players) { delete (p as { raw?: number }).raw; delete (p as { share?: number }).share }
   }
   console.log(`einkunnir: ${raws.length} leikmenn, ${sides.flatMap((s) => s.players).filter((p) => p.rating >= 90).length} yfir 90`)
 }
