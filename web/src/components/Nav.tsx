@@ -17,6 +17,7 @@ const NAV = [
   { href: '/byrjunarlid', label: 'Byrjunarlið' },
   { href: '/hver', label: 'Hver er maðurinn?' },
   { href: '/bikar', label: 'Bikarmeistari' },
+  { href: '/stigatafla', label: 'Stigatafla' },
   { href: '/kort', label: 'Kort' },
   { href: '/leikmenn', label: 'Leikmenn' },
   { href: '/sludur', label: 'Slúður' },

@@ -6,6 +6,8 @@ import { QUESTIONS, QUESTION_BY_ID, REGIONS, words } from '@/lib/tenaball/data'
 import { LEVEL_KEY, MODE_KEY, SAVE_KEY, dailyKey, dailyQuestion, livesFor, newRound, nextQuestion, restoreRound, shareText, submitAnswer, type Feedback, type Round } from '@/lib/tenaball/game'
 import { hintDetails, requestHint } from '@/lib/tenaball/hints'
 import { namePool, suggest } from '@/lib/tenaball/suggest'
+import { SaveResult } from '@/components/Leaderboard/SaveResult'
+import { KEY } from '@/lib/leaderboard/rank'
 // the footballers the other game knows, so the answers do not stand out in the list
 import hverNames from '@/lib/hver/names.json'
 import { LEVELS, isLevel, type Level } from '@/lib/level'
@@ -64,6 +66,11 @@ export function Topp10Game() {
   const w = words(question.kind)
   // the same pool for every question of this kind, so the list gives nothing away
   const pool = useMemo(() => namePool(QUESTIONS, question.kind, hverNames), [question.kind])
+  // a finished round goes on the leaderboard: each question counts once
+  const finished = state.status !== 'playing'
+  const boardResult = useMemo(() => finished
+    ? { game: 'tenaball' as const, puzzle: KEY.tenaball(question.id), won: state.status === 'won', detail: { found: state.found.length } }
+    : null, [finished, question.id, state.status, state.found.length])
   const options = useMemo(() => suggest(pool, text), [pool, text])
   const missing = question.answers.filter(a => !state.found.includes(a.id))
   const hintAnswer = missing.find(a => a.id === hintSelection) ?? missing[0]
@@ -242,6 +249,7 @@ export function Topp10Game() {
             <button className={styles.primary} onClick={next}>{mode === 'daily' ? 'Fleiri þrautir' : 'Næsta þraut'}<ArrowRight size={19}/></button>
             {mode === 'daily' && <button className={styles.revealButton} onClick={share}><Share2 size={17}/> {copied ? 'Afritað' : 'Deila niðurstöðu'}</button>}
             {state.status === 'lost' && <button className={styles.revealButton} aria-expanded={reveal} aria-controls="possible-answers" onClick={() => setReveal(!reveal)}>Sjá möguleg svör <ChevronDown size={17}/></button>}
+            <SaveResult result={boardResult} />
           </div> : <>
             <form onSubmit={submit}>
               <label htmlFor="tenaball-answer">{w.field}</label>

@@ -8,6 +8,8 @@ import { dayNumber } from '@/lib/topp10/daily'
 import { normalise } from '@/lib/topp10/normalise'
 import { LEVELS, isLevel, type Level } from '@/lib/level'
 import type { CareerRow, WhoPlayer } from '@/lib/hver/types'
+import { SaveResult } from '@/components/Leaderboard/SaveResult'
+import { KEY } from '@/lib/leaderboard/rank'
 import styles from './Hver.module.css'
 
 const MONTHS = ['janúar', 'febrúar', 'mars', 'apríl', 'maí', 'júní', 'júlí', 'ágúst', 'september', 'október', 'nóvember', 'desember']
@@ -81,6 +83,12 @@ export function HverGame() {
   const tries = triesFor(player)
   const hidden = player.career.length - shown
   const isToday = day === today
+
+  // a finished puzzle goes on the leaderboard: each player counts once
+  const result = useMemo(() => state.status === 'playing'
+    ? null
+    : { game: 'hver' as const, puzzle: KEY.hver(player.id, level), won: state.status === 'won', detail: { guesses: state.guesses.length } },
+    [state.status, state.guesses.length, player.id, level])
 
   const update = (next: WhoState) => { setState(next); save(player, next) }
   const submit = (text: string) => {
@@ -165,6 +173,7 @@ export function HverGame() {
               <span>{state.status === 'won' ? 'RÉTT SVAR' : 'SVARIÐ'}</span>
               <strong>{player.name}</strong>
               <a href={player.sources[0].url} target="_blank" rel="noreferrer">Sjá á Transfermarkt <ArrowUpRight size={13} aria-hidden /></a>
+              <SaveResult result={result} />
             </div>
           )}
         </section>

@@ -8,6 +8,8 @@ import {
   openSlots, outcome, pick, playMatch, rng, shareText, teamRating, type Draft, type MatchResult,
 } from '@/lib/bikar/game'
 import type { CupPlayer, CupSide, Line } from '@/lib/bikar/types'
+import { SaveResult } from '@/components/Leaderboard/SaveResult'
+import { KEY } from '@/lib/leaderboard/rank'
 import styles from './Bikar.module.css'
 
 type Stage = 'setup' | 'draft' | 'ready' | 'cup'
@@ -191,6 +193,7 @@ export function BikarGame() {
             {over && (
               <div className={styles.end} aria-live="polite">
                 <strong>{outcome(results)}</strong>
+                <SaveResult result={{ game: 'bikar', puzzle: KEY.bikar(mode, Math.floor(Date.now() / 86_400_000)), won: results.every((r) => r.won), detail: { sigrar: results.filter((r) => r.won).length } }} />
                 <div className={styles.actions}>
                   <button className={styles.primary} onClick={share}><Share2 size={15} aria-hidden /> {copied ? 'Afritað' : 'Deila'}</button>
                   <button className={styles.ghost} onClick={() => setStage('setup')}><RotateCcw size={15} aria-hidden /> Nýtt lið</button>
