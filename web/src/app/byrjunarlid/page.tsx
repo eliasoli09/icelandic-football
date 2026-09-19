@@ -1,5 +1,9 @@
 import type { Metadata } from 'next'
+import { Playfair_Display } from 'next/font/google'
 import { XiGame } from '@/components/Xi/XiGame'
+
+/** The headings are set in a serif, as the design asks; only this page loads it. */
+const serif = Playfair_Display({ variable: '--font-xi-serif', subsets: ['latin', 'latin-ext'], weight: ['700'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'Byrjunarliðið | Besta spáin',
@@ -7,5 +11,5 @@ export const metadata: Metadata = {
 }
 
 export default function ByrjunarlidPage() {
-  return <XiGame />
+  return <div className={serif.variable}><XiGame /></div>
 }
