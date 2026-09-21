@@ -13,6 +13,7 @@ const NAV = [
   { href: '/elo', label: 'Elo' },
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
+  { href: '/thin-spa', label: 'Þín spá' },
   { href: '/leikjaherbergi', label: 'Leikjaherbergið' },
   { href: '/topp10', label: 'Tenaball' },
   { href: '/byrjunarlid', label: 'Byrjunarlið' },
