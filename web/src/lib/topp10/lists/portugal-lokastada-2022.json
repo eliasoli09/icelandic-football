@@ -1,0 +1,116 @@
+{
+  "id": "portugal-lokastada-2022",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "PRIMEIRA LIGA",
+  "title": "Topp 10 2022/23",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum portúgölsku deildarinnar 2022/23.",
+  "context": "Lokastaða tímabilsins 2022/23. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2022-23 Primeira Liga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1357283892"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "benfica",
+      "label": "Benfica",
+      "detail": "1. sæti, 87 stig",
+      "accept": [
+        "benfica"
+      ]
+    },
+    {
+      "id": "porto",
+      "label": "Porto",
+      "detail": "2. sæti, 85 stig",
+      "accept": [
+        "porto",
+        "fc porto"
+      ]
+    },
+    {
+      "id": "braga",
+      "label": "Braga",
+      "detail": "3. sæti, 78 stig",
+      "accept": [
+        "braga",
+        "sc braga",
+        "sporting braga",
+        "sp braga"
+      ]
+    },
+    {
+      "id": "sporting",
+      "label": "Sporting",
+      "detail": "4. sæti, 74 stig",
+      "accept": [
+        "sporting",
+        "sporting cp",
+        "sporting lisbon",
+        "sp lisbon",
+        "sporting lissabon"
+      ]
+    },
+    {
+      "id": "arouca",
+      "label": "Arouca",
+      "detail": "5. sæti, 54 stig",
+      "accept": [
+        "arouca",
+        "fc arouca"
+      ]
+    },
+    {
+      "id": "vitoriaguimaraes",
+      "label": "Vitória Guimarães",
+      "detail": "6. sæti, 53 stig",
+      "accept": [
+        "vitoria guimaraes",
+        "vitoria de guimaraes",
+        "guimaraes"
+      ]
+    },
+    {
+      "id": "chaves",
+      "label": "Chaves",
+      "detail": "7. sæti, 46 stig",
+      "accept": [
+        "chaves",
+        "gd chaves"
+      ]
+    },
+    {
+      "id": "famalicao",
+      "label": "Famalicão",
+      "detail": "8. sæti, 44 stig",
+      "accept": [
+        "famalicao",
+        "fc famalicao"
+      ]
+    },
+    {
+      "id": "boavista",
+      "label": "Boavista",
+      "detail": "9. sæti, 44 stig",
+      "accept": [
+        "boavista"
+      ]
+    },
+    {
+      "id": "casapia",
+      "label": "Casa Pia",
+      "detail": "10. sæti, 41 stig",
+      "accept": [
+        "casa pia"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

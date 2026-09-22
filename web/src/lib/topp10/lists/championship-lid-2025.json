@@ -1,0 +1,234 @@
+{
+  "id": "championship-lid-2025",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA B-DEILDIN",
+  "title": "Liðin 2025/26",
+  "question": "Nefndu 10 af 24 liðum ensku B-deildarinnar 2025/26.",
+  "context": "Tímabilið 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025-26 EFL Championship",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1376145817"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "birmingham",
+      "label": "Birmingham City",
+      "detail": "",
+      "accept": [
+        "birmingham city",
+        "birmingham"
+      ]
+    },
+    {
+      "id": "blackburn",
+      "label": "Blackburn Rovers",
+      "detail": "",
+      "accept": [
+        "blackburn rovers",
+        "blackburn"
+      ]
+    },
+    {
+      "id": "bristolcity",
+      "label": "Bristol City",
+      "detail": "",
+      "accept": [
+        "bristol city"
+      ]
+    },
+    {
+      "id": "charlton",
+      "label": "Charlton Athletic",
+      "detail": "",
+      "accept": [
+        "charlton athletic",
+        "charlton"
+      ]
+    },
+    {
+      "id": "coventry",
+      "label": "Coventry City",
+      "detail": "",
+      "accept": [
+        "coventry city",
+        "coventry"
+      ]
+    },
+    {
+      "id": "derby",
+      "label": "Derby County",
+      "detail": "",
+      "accept": [
+        "derby county",
+        "derby"
+      ]
+    },
+    {
+      "id": "hull",
+      "label": "Hull City",
+      "detail": "",
+      "accept": [
+        "hull city",
+        "hull"
+      ]
+    },
+    {
+      "id": "ipswich",
+      "label": "Ipswich Town",
+      "detail": "",
+      "accept": [
+        "ipswich town",
+        "ipswich",
+        "ipswich town f c"
+      ]
+    },
+    {
+      "id": "leicester",
+      "label": "Leicester City",
+      "detail": "",
+      "accept": [
+        "leicester city",
+        "leicester"
+      ]
+    },
+    {
+      "id": "middlesbrough",
+      "label": "Middlesbrough",
+      "detail": "",
+      "accept": [
+        "middlesbrough"
+      ]
+    },
+    {
+      "id": "millwall",
+      "label": "Millwall",
+      "detail": "",
+      "accept": [
+        "millwall"
+      ]
+    },
+    {
+      "id": "norwich",
+      "label": "Norwich City",
+      "detail": "",
+      "accept": [
+        "norwich city",
+        "norwich"
+      ]
+    },
+    {
+      "id": "oxford",
+      "label": "Oxford United",
+      "detail": "",
+      "accept": [
+        "oxford united",
+        "oxford"
+      ]
+    },
+    {
+      "id": "portsmouth",
+      "label": "Portsmouth",
+      "detail": "",
+      "accept": [
+        "portsmouth"
+      ]
+    },
+    {
+      "id": "preston",
+      "label": "Preston North End",
+      "detail": "",
+      "accept": [
+        "preston north end",
+        "preston"
+      ]
+    },
+    {
+      "id": "qpr",
+      "label": "Queens Park Rangers",
+      "detail": "",
+      "accept": [
+        "queens park rangers",
+        "qpr"
+      ]
+    },
+    {
+      "id": "sheffutd",
+      "label": "Sheffield United",
+      "detail": "",
+      "accept": [
+        "sheffield united",
+        "sheffield utd"
+      ]
+    },
+    {
+      "id": "sheffwed",
+      "label": "Sheffield Wednesday",
+      "detail": "",
+      "accept": [
+        "sheffield wednesday",
+        "sheffield weds"
+      ]
+    },
+    {
+      "id": "southampton",
+      "label": "Southampton",
+      "detail": "",
+      "accept": [
+        "southampton"
+      ]
+    },
+    {
+      "id": "stoke",
+      "label": "Stoke City",
+      "detail": "",
+      "accept": [
+        "stoke city",
+        "stoke"
+      ]
+    },
+    {
+      "id": "swansea",
+      "label": "Swansea City",
+      "detail": "",
+      "accept": [
+        "swansea city",
+        "swansea"
+      ]
+    },
+    {
+      "id": "watford",
+      "label": "Watford",
+      "detail": "",
+      "accept": [
+        "watford"
+      ]
+    },
+    {
+      "id": "westbrom",
+      "label": "West Bromwich Albion",
+      "detail": "",
+      "accept": [
+        "west bromwich albion",
+        "west brom",
+        "wba"
+      ]
+    },
+    {
+      "id": "wrexham",
+      "label": "Wrexham",
+      "detail": "",
+      "accept": [
+        "wrexham"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

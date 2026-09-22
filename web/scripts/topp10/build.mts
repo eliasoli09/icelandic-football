@@ -231,7 +231,7 @@ export function levelOf(id: string): Level {
   const year = Number(id.match(/(\d{4})$/)?.[1] ?? 0)
   if (/^enska-lokastada-/.test(id)) return year >= 2023 ? 'easy' : year >= 2016 ? 'medium' : 'hard'
   if (/^enska-markahaestir-/.test(id)) return year >= 2023 ? 'medium' : 'hard'
-  if (/^(spann|italia|thyskaland|frakkland|island)-lokastada-/.test(id)) return year >= 2024 ? 'medium' : 'hard'
+  if (/^(spann|italia|thyskaland|frakkland|island|holland|portugal)-lokastada-/.test(id)) return year >= 2024 ? 'medium' : 'hard'
   if (['island-meistarar', 'island-bikarmeistarar', 'island-landsleikir'].includes(id)) return 'medium'
   return 'hard'
 }
@@ -341,6 +341,8 @@ const LEAGUES = {
   bundesliga: { page: 'Bundesliga', teams: 18, region: 'evropa', competition: 'BUNDESLIGA', of: 'þýsku deildarinnar', id: 'thyskaland', tiebreak: 'gd' },
   ligue1: { page: 'Ligue 1', teams: 18, region: 'evropa', competition: 'LIGUE 1', of: 'frönsku deildarinnar', id: 'frakkland', tiebreak: 'gd' },
   championship: { page: 'EFL Championship', teams: 24, region: 'enska', competition: 'ENSKA B-DEILDIN', of: 'ensku B-deildarinnar', id: 'championship', tiebreak: 'gd' },
+  eredivisie: { page: 'Eredivisie', teams: 18, region: 'evropa', competition: 'EREDIVISIE', of: 'hollensku deildarinnar', id: 'holland', tiebreak: 'gd' },
+  primeira: { page: 'Primeira Liga', teams: 18, region: 'evropa', competition: 'PRIMEIRA LIGA', of: 'portúgölsku deildarinnar', id: 'portugal', tiebreak: 'h2h' },
 } as const
 
 async function leagueTable(league: keyof typeof LEAGUES, y: number): Promise<Topp10List> {
@@ -395,8 +397,15 @@ async function clubsInSeason(o: {
   region: Topp10List['region']; competition: string; title: string; question: string; context: string
 }): Promise<Topp10List> {
   const page = await wiki('en', o.page)
-  const [first] = W.sportsTables(page.wikitext)
-  if (!first) throw new Error('engin Sports table á síðunni')
+  let source = page, [first] = W.sportsTables(page.wikitext)
+  if (!first) {
+    // several leagues keep the table in its own template, "{{2025–26 La Liga table}}"
+    const t = page.wikitext.match(/\{\{\s*([^{}|\n]*? table)\s*\}\}/)
+    if (!t) throw new Error('engin Sports table á síðunni')
+    source = await wiki('en', `Template:${t[1].trim()}`)
+    ;[first] = W.sportsTables(source.wikitext)
+    if (!first) throw new Error(`engin Sports table í Template:${t[1].trim()}`)
+  }
   // before a season is played the module generates the order itself, so the clubs are read from their names
   const names = [...first.entries()].filter(([k]) => /^name_/.test(k)).map(([, v]) => W.plain(v))
   const wikiClubs = new Map(names.map((n) => { const c = clubOf(n); return [c.id, c] }))
@@ -411,7 +420,7 @@ async function clubsInSeason(o: {
   return finish({
     id: o.id, region: o.region, kind: 'club', competition: o.competition,
     title: o.title, question: o.question, context: o.context,
-    sources: [page.source, OUR_FIXTURES],
+    sources: [source.source, OUR_FIXTURES],
   }, clubs.map((c) => answerFor('club', c, '')))
 }
 
@@ -865,8 +874,31 @@ const BUILDERS: [string, () => Promise<Topp10List>][] = [
   ['evropa-evropudeildin', uefaCup],
   ['evropa-markahaestir', uclScorers],
   ['evropa-gullknotturinn', () => ballonDor(1990, 2009)],
-  ...(['laliga', 'seriea', 'bundesliga', 'ligue1'] as const).flatMap((league) => [2022, 2023, 2024, 2025].map((y) =>
+  ...(['laliga', 'seriea', 'bundesliga', 'ligue1'] as const).flatMap((league) => [2020, 2021, 2022, 2023, 2024, 2025].map((y) =>
     [`${LEAGUES[league].id}-lokastada-${y}`, () => leagueTable(league, y)] as [string, () => Promise<Topp10List>])),
+  ...(['eredivisie', 'primeira'] as const).flatMap((league) => [2022, 2023, 2024, 2025].map((y) =>
+    [`${LEAGUES[league].id}-lokastada-${y}`, () => leagueTable(league, y)] as [string, () => Promise<Topp10List>])),
+  ...range(2011, 2015).map((y) => [`island-lokastada-${y}`, () => bestaTable(y)] as [string, () => Promise<Topp10List>]),
+  ...range(2005, 2008).map((y) => [`enska-lokastada-${y}`, () => leagueTable('premier', y)] as [string, () => Promise<Topp10List>]),
+
+  // the clubs of a season: the easiest question there is, and the level was short of them
+  ...([
+    ['spann', 'laliga', 'La Liga', 20, 'spænsku deildarinnar'],
+    ['italia', 'seriea', 'Serie A', 20, 'ítölsku deildarinnar'],
+    ['thyskaland', 'bundesliga', 'Bundesliga', 18, 'þýsku deildarinnar'],
+    ['frakkland', 'ligue1', 'Ligue 1', 18, 'frönsku deildarinnar'],
+    ['holland', 'eredivisie', 'Eredivisie', 18, 'hollensku deildarinnar'],
+    ['portugal', 'primeira', 'Primeira Liga', 18, 'portúgölsku deildarinnar'],
+    ['championship', 'championship', 'EFL Championship', 24, 'ensku B-deildarinnar'],
+  ] as const).flatMap(([id, league, page, teams, of]) => [2025, 2026].map((y) =>
+    [`${id}-lid-${y}`, () => clubsInSeason({
+      id: `${id}-lid-${y}`, league, season: y, page: `${enSeason(y)} ${page}`, teams,
+      region: LEAGUES[league as keyof typeof LEAGUES].region,
+      competition: LEAGUES[league as keyof typeof LEAGUES].competition,
+      title: `Liðin ${season(y)}`,
+      question: `Nefndu 10 af ${teams} liðum ${of} ${season(y)}.`,
+      context: `Tímabilið ${season(y)}.`,
+    })] as [string, () => Promise<Topp10List>])),
 ]
 
 mkdirSync(LISTS_DIR, { recursive: true })

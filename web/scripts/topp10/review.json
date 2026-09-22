@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-09-18",
+  "builtAt": "2026-09-22",
   "shipped": [
     "island-meistarar",
     "island-bikarmeistarar",
@@ -45,21 +45,49 @@
     "evropa-meistaradeildin",
     "evropa-baedi-timabil",
     "evropa-gullknotturinn",
+    "spann-lokastada-2020",
+    "spann-lokastada-2021",
     "spann-lokastada-2023",
     "spann-lokastada-2024",
     "spann-lokastada-2025",
+    "italia-lokastada-2021",
     "italia-lokastada-2022",
     "italia-lokastada-2023",
     "italia-lokastada-2024",
     "italia-lokastada-2025",
+    "thyskaland-lokastada-2020",
+    "thyskaland-lokastada-2021",
     "thyskaland-lokastada-2022",
     "thyskaland-lokastada-2023",
     "thyskaland-lokastada-2024",
     "thyskaland-lokastada-2025",
+    "frakkland-lokastada-2021",
     "frakkland-lokastada-2022",
     "frakkland-lokastada-2023",
     "frakkland-lokastada-2024",
-    "frakkland-lokastada-2025"
+    "frakkland-lokastada-2025",
+    "holland-lokastada-2025",
+    "portugal-lokastada-2022",
+    "portugal-lokastada-2023",
+    "portugal-lokastada-2024",
+    "portugal-lokastada-2025",
+    "enska-lokastada-2005",
+    "enska-lokastada-2006",
+    "enska-lokastada-2007",
+    "enska-lokastada-2008",
+    "spann-lid-2025",
+    "spann-lid-2026",
+    "italia-lid-2025",
+    "italia-lid-2026",
+    "thyskaland-lid-2025",
+    "thyskaland-lid-2026",
+    "frakkland-lid-2025",
+    "frakkland-lid-2026",
+    "holland-lid-2025",
+    "holland-lid-2026",
+    "portugal-lid-2026",
+    "championship-lid-2025",
+    "championship-lid-2026"
   ],
   "review": [
     {
@@ -101,6 +129,50 @@
     {
       "id": "spann-lokastada-2022",
       "reason": "tafla og úrslit ósammála: Girona, Rayo Vallecano, Sevilla eru jöfn að stigum"
+    },
+    {
+      "id": "italia-lokastada-2020",
+      "reason": "tafla og úrslit ósammála: Roma 18-8-12-68-58 finnst 0 sinnum í úrslitum; Hellas Verona 11-12-15-46-48 finnst 0 sinnum í úrslitum"
+    },
+    {
+      "id": "frakkland-lokastada-2020",
+      "reason": "engin Sports table á síðunni"
+    },
+    {
+      "id": "holland-lokastada-2022",
+      "reason": "tafla og úrslit ósammála: 18 lið í töflu, 25 í úrslitum; Feyenoord 25-7-2-81-30 finnst 0 sinnum í úrslitum; PSV Eindhoven 23-6-5-89-40 finnst 0 sinnum í úrslitum; Ajax 20-9-5-86-38 finnst 0 sinnum í úrslitum; AZ 20-7-7-68-35 finnst 0 sinnum í úrslitum; Twente 18-10-6-66-27 finnst 0 sinnum í úrslitum; Sparta Rotterdam 17-8-9-60-37 finnst 0 sinnum í úrslitum; Utrecht 15-9-10-55-50 finnst 0 sinnum í úrslitum (og 10 til viðbótar)"
+    },
+    {
+      "id": "holland-lokastada-2023",
+      "reason": "tafla og úrslit ósammála: 18 lið í töflu, 24 í úrslitum"
+    },
+    {
+      "id": "holland-lokastada-2024",
+      "reason": "tafla og úrslit ósammála: 18 lið í töflu, 24 í úrslitum"
+    },
+    {
+      "id": "island-lokastada-2011",
+      "reason": "tafla og úrslit ósammála: Stjarnan 10-7-5-51-35 finnst 0 sinnum í úrslitum; Valur 10-6-6-28-23 finnst 0 sinnum í úrslitum; Keflavík 7-3-12-27-32 finnst 0 sinnum í úrslitum; Fram 6-6-10-20-28 finnst 0 sinnum í úrslitum; Grindavík 5-8-9-26-37 finnst 0 sinnum í úrslitum; Þór Akureyri 6-3-13-28-41 finnst 0 sinnum í úrslitum"
+    },
+    {
+      "id": "island-lokastada-2012",
+      "reason": "tafla og úrslit ósammála: ÍBV 10-5-7-36-21 finnst 0 sinnum í úrslitum; KR 10-5-7-39-32 finnst 0 sinnum í úrslitum; Fram 8-3-11-31-36 finnst 0 sinnum í úrslitum; Grindavík 2-6-14-31-57 finnst 0 sinnum í úrslitum"
+    },
+    {
+      "id": "island-lokastada-2013",
+      "reason": "tafla og úrslit ósammála: KR 17-1-4-50-27 finnst 0 sinnum í úrslitum; FH 14-5-3-47-22 finnst 0 sinnum í úrslitum; Stjarnan 13-4-5-34-25 finnst 0 sinnum í úrslitum; ÍBV 8-5-9-26-28 finnst 0 sinnum í úrslitum; Keflavík 7-3-12-33-47 finnst 0 sinnum í úrslitum; Fram 6-4-12-26-37 finnst 0 sinnum í úrslitum; 8. sæti er Keflavík í töflu en Þór A. eftir stigum; 9. sæti er Þór A. í töflu en Keflavík eftir stigum"
+    },
+    {
+      "id": "island-lokastada-2014",
+      "reason": "óvænt uppsetning:  lið"
+    },
+    {
+      "id": "island-lokastada-2015",
+      "reason": "óvænt uppsetning:  lið"
+    },
+    {
+      "id": "portugal-lid-2025",
+      "reason": "lið tímabilsins: 19 lið í leikjaplani; Torreense aðeins í leikjaplani"
     }
   ]
 }

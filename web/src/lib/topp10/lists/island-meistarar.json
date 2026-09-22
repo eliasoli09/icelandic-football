@@ -5,15 +5,15 @@
   "competition": "ÍSLANDSMÓTIÐ",
   "title": "Íslandsmeistarar",
   "question": "Nefndu 10 félög sem hafa orðið Íslandsmeistarar karla í fótbolta.",
-  "context": "Til og með tímabilinu 2025.",
+  "context": "Til og með tímabilinu 2026.",
   "sources": [
     {
       "name": "en.wikipedia.org · Besta deild karla",
-      "url": "https://en.wikipedia.org/w/index.php?oldid=1371393570"
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375729725"
     },
     {
       "name": "is.wikipedia.org · Besta deild karla",
-      "url": "https://is.wikipedia.org/w/index.php?oldid=1963138"
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1979641"
     }
   ],
   "level": "medium",
@@ -54,22 +54,22 @@
       ]
     },
     {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "9 titlar, síðast 2026",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    },
+    {
       "id": "fh",
       "label": "FH",
       "detail": "8 titlar, síðast 2016",
       "accept": [
         "fh",
         "fimleikafelag hafnarfjardar"
-      ]
-    },
-    {
-      "id": "vikingur",
-      "label": "Víkingur R.",
-      "detail": "8 titlar, síðast 2025",
-      "accept": [
-        "vikingur r",
-        "vikingur",
-        "vikingur reykjavik"
       ]
     },
     {
@@ -115,5 +115,5 @@
       ]
     }
   ],
-  "verifiedAt": "2026-09-18"
+  "verifiedAt": "2026-09-22"
 }

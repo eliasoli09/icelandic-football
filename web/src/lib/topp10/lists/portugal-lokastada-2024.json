@@ -1,0 +1,116 @@
+{
+  "id": "portugal-lokastada-2024",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "PRIMEIRA LIGA",
+  "title": "Topp 10 2024/25",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum portúgölsku deildarinnar 2024/25.",
+  "context": "Lokastaða tímabilsins 2024/25. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2024-25 Primeira Liga",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372712039"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "sporting",
+      "label": "Sporting",
+      "detail": "1. sæti, 82 stig",
+      "accept": [
+        "sporting",
+        "sporting cp",
+        "sporting lisbon",
+        "sp lisbon",
+        "sporting lissabon"
+      ]
+    },
+    {
+      "id": "benfica",
+      "label": "Benfica",
+      "detail": "2. sæti, 80 stig",
+      "accept": [
+        "benfica"
+      ]
+    },
+    {
+      "id": "porto",
+      "label": "Porto",
+      "detail": "3. sæti, 71 stig",
+      "accept": [
+        "porto",
+        "fc porto"
+      ]
+    },
+    {
+      "id": "braga",
+      "label": "Braga",
+      "detail": "4. sæti, 66 stig",
+      "accept": [
+        "braga",
+        "sc braga",
+        "sporting braga",
+        "sp braga"
+      ]
+    },
+    {
+      "id": "santaclara",
+      "label": "Santa Clara",
+      "detail": "5. sæti, 57 stig",
+      "accept": [
+        "santa clara",
+        "cd santa clara"
+      ]
+    },
+    {
+      "id": "vitoriaguimaraes",
+      "label": "Vitória Guimarães",
+      "detail": "6. sæti, 54 stig",
+      "accept": [
+        "vitoria guimaraes",
+        "vitoria de guimaraes",
+        "guimaraes"
+      ]
+    },
+    {
+      "id": "famalicao",
+      "label": "Famalicão",
+      "detail": "7. sæti, 47 stig",
+      "accept": [
+        "famalicao",
+        "fc famalicao"
+      ]
+    },
+    {
+      "id": "estoril",
+      "label": "Estoril",
+      "detail": "8. sæti, 46 stig",
+      "accept": [
+        "estoril",
+        "estoril praia"
+      ]
+    },
+    {
+      "id": "casapia",
+      "label": "Casa Pia",
+      "detail": "9. sæti, 45 stig",
+      "accept": [
+        "casa pia"
+      ]
+    },
+    {
+      "id": "moreirense",
+      "label": "Moreirense",
+      "detail": "10. sæti, 40 stig",
+      "accept": [
+        "moreirense"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

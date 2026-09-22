@@ -1,0 +1,184 @@
+{
+  "id": "holland-lid-2025",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "EREDIVISIE",
+  "title": "Liðin 2025/26",
+  "question": "Nefndu 10 af 18 liðum hollensku deildarinnar 2025/26.",
+  "context": "Tímabilið 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025-26 Eredivisie",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371709686"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "ajax",
+      "label": "Ajax",
+      "detail": "",
+      "accept": [
+        "ajax",
+        "ajax amsterdam",
+        "ajax fc"
+      ]
+    },
+    {
+      "id": "az",
+      "label": "AZ Alkmaar",
+      "detail": "",
+      "accept": [
+        "az alkmaar",
+        "az"
+      ]
+    },
+    {
+      "id": "excelsior",
+      "label": "Excelsior",
+      "detail": "",
+      "accept": [
+        "excelsior",
+        "sbv excelsior"
+      ]
+    },
+    {
+      "id": "feyenoord",
+      "label": "Feyenoord",
+      "detail": "",
+      "accept": [
+        "feyenoord",
+        "feyenoord rotterdam"
+      ]
+    },
+    {
+      "id": "fortunasittard",
+      "label": "Fortuna Sittard",
+      "detail": "",
+      "accept": [
+        "fortuna sittard",
+        "for sittard"
+      ]
+    },
+    {
+      "id": "goahead",
+      "label": "Go Ahead Eagles",
+      "detail": "",
+      "accept": [
+        "go ahead eagles"
+      ]
+    },
+    {
+      "id": "groningen",
+      "label": "Groningen",
+      "detail": "",
+      "accept": [
+        "groningen",
+        "fc groningen"
+      ]
+    },
+    {
+      "id": "heerenveen",
+      "label": "Heerenveen",
+      "detail": "",
+      "accept": [
+        "heerenveen",
+        "sc heerenveen"
+      ]
+    },
+    {
+      "id": "heracles",
+      "label": "Heracles",
+      "detail": "",
+      "accept": [
+        "heracles",
+        "heracles almelo"
+      ]
+    },
+    {
+      "id": "nacbreda",
+      "label": "NAC Breda",
+      "detail": "",
+      "accept": [
+        "nac breda"
+      ]
+    },
+    {
+      "id": "nec",
+      "label": "NEC Nijmegen",
+      "detail": "",
+      "accept": [
+        "nec nijmegen",
+        "nec",
+        "nijmegen"
+      ]
+    },
+    {
+      "id": "zwolle",
+      "label": "PEC Zwolle",
+      "detail": "",
+      "accept": [
+        "pec zwolle",
+        "zwolle"
+      ]
+    },
+    {
+      "id": "psv",
+      "label": "PSV Eindhoven",
+      "detail": "",
+      "accept": [
+        "psv eindhoven",
+        "psv"
+      ]
+    },
+    {
+      "id": "spartarotterdam",
+      "label": "Sparta Rotterdam",
+      "detail": "",
+      "accept": [
+        "sparta rotterdam"
+      ]
+    },
+    {
+      "id": "telstar",
+      "label": "Telstar",
+      "detail": "",
+      "accept": [
+        "telstar",
+        "sc telstar"
+      ]
+    },
+    {
+      "id": "twente",
+      "label": "Twente",
+      "detail": "",
+      "accept": [
+        "twente",
+        "fc twente"
+      ]
+    },
+    {
+      "id": "utrecht",
+      "label": "Utrecht",
+      "detail": "",
+      "accept": [
+        "utrecht",
+        "fc utrecht"
+      ]
+    },
+    {
+      "id": "volendam",
+      "label": "Volendam",
+      "detail": "",
+      "accept": [
+        "volendam",
+        "fc volendam"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

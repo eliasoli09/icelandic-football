@@ -64,7 +64,8 @@
       "detail": "5. sæti, 61 stig",
       "accept": [
         "hoffenheim",
-        "tsg hoffenheim"
+        "tsg hoffenheim",
+        "1899 hoffenheim"
       ]
     },
     {
@@ -117,5 +118,5 @@
       ]
     }
   ],
-  "verifiedAt": "2026-09-18"
+  "verifiedAt": "2026-09-22"
 }

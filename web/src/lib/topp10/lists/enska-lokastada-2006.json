@@ -1,0 +1,112 @@
+{
+  "id": "enska-lokastada-2006",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2006/07",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2006/07.",
+  "context": "Lokastaða tímabilsins 2006/07. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2006-07 FA Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375832094"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "1. sæti, 89 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "2. sæti, 83 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "3. sæti, 68 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "4. sæti, 68 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "5. sæti, 60 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "6. sæti, 58 stig",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "bolton",
+      "label": "Bolton Wanderers",
+      "detail": "7. sæti, 56 stig",
+      "accept": [
+        "bolton wanderers",
+        "bolton"
+      ]
+    },
+    {
+      "id": "reading",
+      "label": "Reading",
+      "detail": "8. sæti, 55 stig",
+      "accept": [
+        "reading"
+      ]
+    },
+    {
+      "id": "portsmouth",
+      "label": "Portsmouth",
+      "detail": "9. sæti, 54 stig",
+      "accept": [
+        "portsmouth"
+      ]
+    },
+    {
+      "id": "blackburn",
+      "label": "Blackburn Rovers",
+      "detail": "10. sæti, 52 stig",
+      "accept": [
+        "blackburn rovers",
+        "blackburn"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

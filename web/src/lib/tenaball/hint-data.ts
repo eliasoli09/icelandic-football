@@ -172,6 +172,65 @@ players('Portúgal', 'figo')
 players('Tékkland', 'nedved')
 players('Úkraína', 'shevchenko')
 
+
+// Félög sem bættust við þegar hollenska og portúgalska deildin komu inn, ásamt
+// eldri liðum úr tímabilum sem nú er spurt um.
+clubs('England', `portsmouth|Portsmouth
+bolton|Bolton
+reading|Reading
+wigan|Wigan
+charlton|London
+cardiff|Cardiff
+lincolncity|Lincoln`)
+clubs('Spánn', `elche|Elche
+espanyol|Barcelona
+levante|Valencia
+deportivo|A Coruña
+sevilla|Sevilla
+granada|Granada`)
+clubs('Ítalía', `cagliari|Cagliari
+frosinone|Frosinone
+genoa|Genúa
+cremonese|Cremona
+verona|Verona`)
+clubs('Þýskaland', `koln|Köln`)
+clubs('Frakkland', `nantes|Nantes
+angers|Angers
+auxerre|Auxerre
+lehavre|Le Havre
+lemans|Le Mans
+metz|Metz`)
+clubs('Holland', `az|Alkmaar
+excelsior|Rotterdam
+fortunasittard|Sittard
+goahead|Deventer
+groningen|Groningen
+heerenveen|Heerenveen
+heracles|Almelo
+nacbreda|Breda
+adodenhaag|Haag
+cambuur|Leeuwarden
+nec|Nijmegen
+twente|Enschede
+utrecht|Utrecht
+spartarotterdam|Rotterdam`)
+clubs('Portúgal', `sporting|Lissabon
+braga|Braga
+famalicao|Vila Nova de Famalicão
+gilvicente|Barcelos
+moreirense|Moreira de Cónegos
+arouca|Arouca
+vitoriaguimaraes|Guimarães
+estoril|Estoril
+santaclara|Ponta Delgada
+casapia|Lissabon
+farense|Faro
+chaves|Chaves
+boavista|Porto
+academicoviseu|Viseu
+alverca|Alverca do Ribatejo
+estrela|Amadora`)
+
 export const GOLDEN_BOOT_CLUBS: Record<string, string> = {
   'gardar-gunnlaugsson': 'ÍA',
   'andri-runar-bjarnason': 'Grindavík',

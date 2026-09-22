@@ -1,0 +1,199 @@
+{
+  "id": "italia-lid-2025",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "SERIE A",
+  "title": "Liðin 2025/26",
+  "question": "Nefndu 10 af 20 liðum ítölsku deildarinnar 2025/26.",
+  "context": "Tímabilið 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2025-26 Serie A table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1369419143"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "milan",
+      "label": "AC Milan",
+      "detail": "",
+      "accept": [
+        "ac milan",
+        "milan"
+      ]
+    },
+    {
+      "id": "atalanta",
+      "label": "Atalanta",
+      "detail": "",
+      "accept": [
+        "atalanta",
+        "atalanta bc"
+      ]
+    },
+    {
+      "id": "bologna",
+      "label": "Bologna",
+      "detail": "",
+      "accept": [
+        "bologna"
+      ]
+    },
+    {
+      "id": "cagliari",
+      "label": "Cagliari",
+      "detail": "",
+      "accept": [
+        "cagliari"
+      ]
+    },
+    {
+      "id": "como",
+      "label": "Como",
+      "detail": "",
+      "accept": [
+        "como",
+        "como 1907"
+      ]
+    },
+    {
+      "id": "cremonese",
+      "label": "Cremonese",
+      "detail": "",
+      "accept": [
+        "cremonese"
+      ]
+    },
+    {
+      "id": "fiorentina",
+      "label": "Fiorentina",
+      "detail": "",
+      "accept": [
+        "fiorentina",
+        "acf fiorentina"
+      ]
+    },
+    {
+      "id": "genoa",
+      "label": "Genoa",
+      "detail": "",
+      "accept": [
+        "genoa"
+      ]
+    },
+    {
+      "id": "verona",
+      "label": "Hellas Verona",
+      "detail": "",
+      "accept": [
+        "hellas verona",
+        "verona"
+      ]
+    },
+    {
+      "id": "inter",
+      "label": "Inter",
+      "detail": "",
+      "accept": [
+        "inter",
+        "inter milan",
+        "internazionale",
+        "inter milano"
+      ]
+    },
+    {
+      "id": "juventus",
+      "label": "Juventus",
+      "detail": "",
+      "accept": [
+        "juventus"
+      ]
+    },
+    {
+      "id": "lazio",
+      "label": "Lazio",
+      "detail": "",
+      "accept": [
+        "lazio",
+        "ss lazio",
+        "s s lazio"
+      ]
+    },
+    {
+      "id": "lecce",
+      "label": "Lecce",
+      "detail": "",
+      "accept": [
+        "lecce"
+      ]
+    },
+    {
+      "id": "napoli",
+      "label": "Napoli",
+      "detail": "",
+      "accept": [
+        "napoli",
+        "ssc napoli"
+      ]
+    },
+    {
+      "id": "parma",
+      "label": "Parma",
+      "detail": "",
+      "accept": [
+        "parma",
+        "parma calcio 1913"
+      ]
+    },
+    {
+      "id": "pisa",
+      "label": "Pisa",
+      "detail": "",
+      "accept": [
+        "pisa"
+      ]
+    },
+    {
+      "id": "roma",
+      "label": "Roma",
+      "detail": "",
+      "accept": [
+        "roma",
+        "as roma",
+        "a s roma"
+      ]
+    },
+    {
+      "id": "sassuolo",
+      "label": "Sassuolo",
+      "detail": "",
+      "accept": [
+        "sassuolo"
+      ]
+    },
+    {
+      "id": "torino",
+      "label": "Torino",
+      "detail": "",
+      "accept": [
+        "torino",
+        "torino fc",
+        "torino f c"
+      ]
+    },
+    {
+      "id": "udinese",
+      "label": "Udinese",
+      "detail": "",
+      "accept": [
+        "udinese"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

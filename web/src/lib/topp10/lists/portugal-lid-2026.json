@@ -1,0 +1,185 @@
+{
+  "id": "portugal-lid-2026",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "PRIMEIRA LIGA",
+  "title": "Liðin 2026/27",
+  "question": "Nefndu 10 af 18 liðum portúgölsku deildarinnar 2026/27.",
+  "context": "Tímabilið 2026/27.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2026-27 Primeira Liga",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375929359"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "academicoviseu",
+      "label": "Académico de Viseu",
+      "detail": "",
+      "accept": [
+        "academico de viseu",
+        "academico viseu"
+      ]
+    },
+    {
+      "id": "alverca",
+      "label": "Alverca",
+      "detail": "",
+      "accept": [
+        "alverca",
+        "fc alverca"
+      ]
+    },
+    {
+      "id": "arouca",
+      "label": "Arouca",
+      "detail": "",
+      "accept": [
+        "arouca",
+        "fc arouca"
+      ]
+    },
+    {
+      "id": "benfica",
+      "label": "Benfica",
+      "detail": "",
+      "accept": [
+        "benfica"
+      ]
+    },
+    {
+      "id": "braga",
+      "label": "Braga",
+      "detail": "",
+      "accept": [
+        "braga",
+        "sc braga",
+        "sporting braga",
+        "sp braga"
+      ]
+    },
+    {
+      "id": "casapia",
+      "label": "Casa Pia",
+      "detail": "",
+      "accept": [
+        "casa pia"
+      ]
+    },
+    {
+      "id": "estoril",
+      "label": "Estoril",
+      "detail": "",
+      "accept": [
+        "estoril",
+        "estoril praia"
+      ]
+    },
+    {
+      "id": "estrela",
+      "label": "Estrela da Amadora",
+      "detail": "",
+      "accept": [
+        "estrela da amadora",
+        "estrela"
+      ]
+    },
+    {
+      "id": "famalicao",
+      "label": "Famalicão",
+      "detail": "",
+      "accept": [
+        "famalicao",
+        "fc famalicao"
+      ]
+    },
+    {
+      "id": "gilvicente",
+      "label": "Gil Vicente",
+      "detail": "",
+      "accept": [
+        "gil vicente"
+      ]
+    },
+    {
+      "id": "maritimo",
+      "label": "Marítimo",
+      "detail": "",
+      "accept": [
+        "maritimo"
+      ]
+    },
+    {
+      "id": "moreirense",
+      "label": "Moreirense",
+      "detail": "",
+      "accept": [
+        "moreirense"
+      ]
+    },
+    {
+      "id": "nacional",
+      "label": "Nacional",
+      "detail": "",
+      "accept": [
+        "nacional",
+        "cd nacional"
+      ]
+    },
+    {
+      "id": "porto",
+      "label": "Porto",
+      "detail": "",
+      "accept": [
+        "porto",
+        "fc porto"
+      ]
+    },
+    {
+      "id": "rioave",
+      "label": "Rio Ave",
+      "detail": "",
+      "accept": [
+        "rio ave"
+      ]
+    },
+    {
+      "id": "santaclara",
+      "label": "Santa Clara",
+      "detail": "",
+      "accept": [
+        "santa clara",
+        "cd santa clara"
+      ]
+    },
+    {
+      "id": "sporting",
+      "label": "Sporting",
+      "detail": "",
+      "accept": [
+        "sporting",
+        "sporting cp",
+        "sporting lisbon",
+        "sp lisbon",
+        "sporting lissabon"
+      ]
+    },
+    {
+      "id": "vitoriaguimaraes",
+      "label": "Vitória Guimarães",
+      "detail": "",
+      "accept": [
+        "vitoria guimaraes",
+        "vitoria de guimaraes",
+        "guimaraes"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}
