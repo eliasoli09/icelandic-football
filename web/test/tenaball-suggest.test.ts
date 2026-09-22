@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { QUESTIONS, QUESTION_BY_ID } from '../src/lib/tenaball/data'
+import { dailyQuestion, questionsAt } from '../src/lib/tenaball/game'
 import { namePool, suggest } from '../src/lib/tenaball/suggest'
 import hverNames from '../src/lib/hver/names.json'
 
@@ -37,5 +38,32 @@ describe('the names Tenaball offers while you type', () => {
 
   it('offers nothing for letters no name has', () => {
     expect(suggest(namePool(QUESTIONS, 'player', hverNames), 'xyz')).toEqual([])
+  })
+})
+
+describe('the daily question moves about', () => {
+  it('does not ask about the same competition two days running', () => {
+    for (const level of ['easy', 'medium', 'hard'] as const) {
+      const order = questionsAt(level)
+      let repeats = 0
+      order.forEach((q, i) => { if (i > 0 && q.competition === order[i - 1].competition) repeats++ })
+      // nine easy questions, five of them English: one meeting is unavoidable
+      expect(repeats, level).toBeLessThanOrEqual(level === 'easy' ? 1 : 0)
+    }
+  })
+
+  it('leaves the day it was re-spread on with the question it had', () => {
+    // people were in the middle of these when the order changed
+    expect(dailyQuestion(20718, 'easy').id).toBe('enska-lid-2026')
+    expect(dailyQuestion(20718, 'medium').id).toBe('enska-markahaestir-2023')
+    expect(dailyQuestion(20718, 'hard').id).toBe('italia-lokastada-2022')
+  })
+
+  it('walks through every question before repeating one', () => {
+    const order = questionsAt('hard')
+    const seen = new Set<string>()
+    for (let day = 20718; day < 20718 + order.length; day++) seen.add(dailyQuestion(day, 'hard').id)
+    expect(seen.size).toBe(order.length)
+    expect(dailyQuestion(20718 + order.length, 'hard').id).toBe(dailyQuestion(20718, 'hard').id)
   })
 })

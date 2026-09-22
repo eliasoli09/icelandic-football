@@ -1,4 +1,4 @@
-import { dailyList, dailyOrder } from '../topp10/daily'
+import { dailyOrder } from '../topp10/daily'
 import { matchGuess } from '../topp10/match'
 import { normalise } from '../topp10/normalise'
 import type { Level } from '../level'
@@ -34,16 +34,43 @@ export function newRound(q: Question): Round {
   return { questionId: q.id, found: [], hints: {}, lives: livesFor(q), status: 'playing', lastSubmission: null }
 }
 
+/**
+ * The day the questions were spread by competition instead of by region (22
+ * September 2026) and the question each level was showing that day. The new
+ * order is turned so that day keeps its question: people were in the middle of
+ * it, and a round whose question changes under them is a round lost.
+ */
+const ANCHOR_DAY = 20718
+const ANCHOR_QUESTION: Record<Level, string> = {
+  easy: 'enska-lid-2026',
+  medium: 'enska-markahaestir-2023',
+  hard: 'italia-lokastada-2022',
+}
+
 const byLevel = new Map<Level, Question[]>()
 /** A level's questions in the order its daily question walks through them. */
 export function questionsAt(level: Level): Question[] {
-  if (!byLevel.has(level)) byLevel.set(level, dailyOrder(QUESTIONS.filter((q) => q.level === level)))
+  if (!byLevel.has(level)) {
+    const order = dailyOrder(QUESTIONS.filter((q) => q.level === level))
+    const at = order.findIndex((q) => q.id === ANCHOR_QUESTION[level])
+    // the anchor question can be pulled if its sources stop agreeing; then
+    // there is nothing to hold on to and the order stands as it is
+    const n = order.length
+    const shift = at < 0 || !n ? 0 : (((at - (ANCHOR_DAY % n)) % n) + n) % n
+    byLevel.set(level, [...order.slice(shift), ...order.slice(0, shift)])
+  }
   return byLevel.get(level)!
 }
 
-/** Everyone gets the same question at a level on a given day (days counted in UTC). */
+/**
+ * Everyone gets the same question at a level on a given day (days counted in
+ * UTC). The day is read straight off the level's own order: handing it to
+ * dailyList would order the questions a second time and undo the turn that
+ * holds the anchor day in place.
+ */
 export function dailyQuestion(day: number, level: Level): Question {
-  return dailyList(questionsAt(level), new Date(day * DAY))!
+  const order = questionsAt(level)
+  return order[((day % order.length) + order.length) % order.length]
 }
 
 /**

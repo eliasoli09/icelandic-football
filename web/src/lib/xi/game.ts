@@ -1,4 +1,4 @@
-import { dayNumber, dailyList } from '../topp10/daily'
+import { dayNumber, dailyOrder } from '../topp10/daily'
 import type { Level } from '../level'
 import { letters } from './word'
 import type { Side, XiMatch } from './types'
@@ -89,9 +89,36 @@ export function puzzleNumber(day: number): number {
   return day - LAUNCH_DAY + 1
 }
 
+/**
+ * The day the matches were spread by competition rather than by region (22
+ * September 2026) and the match each level was showing that day. The order is
+ * turned so that day keeps its match: an eleven half-remembered is not worth
+ * losing to a change in the running order.
+ */
+const ANCHOR_DAY = 20718
+const ANCHOR_MATCH: Record<Level, string> = {
+  easy: 'realmadrid-liverpool-2018',
+  medium: 'thyskaland-spann-2008',
+  hard: 'bikar-2015',
+}
+
+const byLevel = new Map<Level, XiMatch[]>()
+/** A level's matches in the order the daily match walks through them. */
+export function matchesAt(matches: XiMatch[], level: Level): XiMatch[] {
+  if (!byLevel.has(level)) {
+    const order = dailyOrder(matches.filter((m) => m.level === level))
+    const at = order.findIndex((m) => m.id === ANCHOR_MATCH[level])
+    const n = order.length
+    const shift = at < 0 || !n ? 0 : (((at - (ANCHOR_DAY % n)) % n) + n) % n
+    byLevel.set(level, [...order.slice(shift), ...order.slice(0, shift)])
+  }
+  return byLevel.get(level)!
+}
+
 /** Everyone gets the same match at a level on a given day. */
 export function dailyMatch(matches: XiMatch[], day: number, level: Level): XiMatch {
-  return dailyList(matches.filter((m) => m.level === level), new Date(day * DAY))!
+  const order = matchesAt(matches, level)
+  return order[((day % order.length) + order.length) % order.length]
 }
 
 /** Spoiler-free: a square per player, left to right from the goalkeeper up. */

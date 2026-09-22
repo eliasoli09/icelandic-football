@@ -83,6 +83,28 @@ describe('daily question', () => {
     expect(seen.size).toBe(3)
   })
 
+  it('never asks about the same competition two days running', () => {
+    // the shape that caused this: one region holding far more of one
+    // competition than the others, which used to land four of them in a row
+    const many = [
+      ...Array.from({ length: 9 }, (_, i) => ({ id: `e-${i}`, region: 'enska', competition: 'ENSKA' })),
+      ...Array.from({ length: 5 }, (_, i) => ({ id: `i-${i}`, region: 'island', competition: 'BESTA' })),
+      ...Array.from({ length: 4 }, (_, i) => ({ id: `v-${i}`, region: 'evropa', competition: 'MEISTARADEILD' })),
+    ]
+    const order = dailyOrder(many)
+    expect(order).toHaveLength(18)
+    expect(new Set(order.map((l) => l.id)).size).toBe(18)
+    order.forEach((l, i) => { if (i > 0) expect(l.competition).not.toBe(order[i - 1].competition) })
+  })
+
+  it('gives the same order however the questions arrive', () => {
+    const many = [
+      ...Array.from({ length: 4 }, (_, i) => ({ id: `a-${i}`, region: 'enska', competition: 'A' })),
+      ...Array.from({ length: 3 }, (_, i) => ({ id: `b-${i}`, region: 'island', competition: 'B' })),
+    ]
+    expect(dailyOrder(many).map((x) => x.id)).toEqual(dailyOrder([...many].reverse()).map((x) => x.id))
+  })
+
   it('spreads the regions so the same one rarely comes twice in a row', () => {
     const many = ['island', 'enska', 'evropa'].flatMap((region) =>
       Array.from({ length: 4 }, (_, i) => ({ id: `${region}-${i}`, region })))
