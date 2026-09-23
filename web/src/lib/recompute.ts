@@ -14,6 +14,7 @@ import {
 } from './simulate'
 import { splitGroups } from './split'
 import { LEAGUES } from './leagues'
+import { leagueForecasts } from './leagueSim'
 import type { League, Phase, MatchEvent } from './types'
 import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext } from './belt'
 
@@ -464,7 +465,12 @@ export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
       computed_at: new Date().toISOString(),
     }
   })
-  await replaceTable('predictions', predRows)
+  // the leagues outside Iceland: the same chain, from their own results,
+  // expected goals and Elo, with each league's size and its promotion and
+  // relegation places taken from its entry in LEAGUES
+  const abroad = (Object.keys(LEAGUES) as League[]).filter((l) => !ICELANDIC.includes(l))
+  const foreign = await leagueForecasts(CURRENT_SEASON, adjustedRating, abroad)
+  await replaceTable('predictions', [...predRows, ...foreign.predictions])
 
   // --- season simulations + scorer races (both leagues) ---
   const scorerRows: Record<string, unknown>[] = []
@@ -580,7 +586,7 @@ export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
       })),
     )
   }
-  await replaceTable('season_sim', simRows)
+  await replaceTable('season_sim', [...simRows, ...foreign.sim])
 
   // assists race from the SofaScore snapshot (Besta deild only - no lengju data)
   const { data: sofa } = await db()
@@ -720,7 +726,8 @@ export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
   return {
     ratedTeams: ratings.size,
     playerRecords: playerRecords.length,
-    predictions: predRows.length,
+    predictions: predRows.length + foreign.predictions.length,
+    foreign: foreign.report,
     beltEvents: belt.history.length,
   }
 }

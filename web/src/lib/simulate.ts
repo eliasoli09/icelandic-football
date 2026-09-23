@@ -33,7 +33,7 @@ export interface SeasonSimResult {
   posProbs: number[] // index 0 = 1st place
   pTitle: number
   pEurope: number // top 3 (approximation, documented)
-  pRelegation: number // bottom 2
+  pRelegation: number // the places the league sends down
   projectedPoints: number // mean final points across runs
   pointsLow: number // 10th percentile - a bad run of results
   pointsHigh: number // 90th percentile - a good one
@@ -56,6 +56,8 @@ export function simulateSeason(
   opts: {
     split?: boolean
     upSlots?: number
+    /** places relegated: two at home, three in most of the big leagues */
+    downSlots?: number
     /**
      * Frozen split halves, once KSÍ has published them. The halves never meet
      * again, so they are ranked separately - the upper half takes places 1–6
@@ -68,7 +70,7 @@ export function simulateSeason(
     goals?: { home: number; away: number }
   } = {},
 ): SeasonSimResult[] {
-  const { split = true, upSlots = 3, groups = null, goals } = opts
+  const { split = true, upSlots = 3, downSlots = 2, groups = null, goals } = opts
   const rand = mulberry32(seed)
   const n = teams.length
   const posCounts = new Map<string, number[]>()
@@ -80,6 +82,32 @@ export function simulateSeason(
     ptsHist.set(t.team, new Map())
   }
 
+  /**
+   * Elo and the rates do not move inside a simulation, so a pairing's expected
+   * goals are the same in every one of the ten thousand seasons. Working them
+   * out once a pairing instead of once a match is the difference between a
+   * nightly job that finishes and one that does not.
+   */
+  const expected = new Map<string, { lambdaHome: number; lambdaAway: number }>()
+  const lambdas = (home: string, away: string) => {
+    const key = `${home}|${away}`
+    let p = expected.get(key)
+    if (!p) {
+      const full = predictMatch({
+        goals,
+        eloHome: eloByTeam.get(home)!,
+        eloAway: eloByTeam.get(away)!,
+        home: ratesByTeam.get(home) ?? null,
+        away: ratesByTeam.get(away) ?? null,
+      })
+      p = { lambdaHome: full.lambdaHome, lambdaAway: full.lambdaAway }
+      expected.set(key, p)
+    }
+    return p
+  }
+  const eloByTeam = new Map(teams.map((t) => [t.team, t.elo]))
+  const ratesByTeam = new Map(teams.map((t) => [t.team, t.rates]))
+
   for (let run = 0; run < runs; run++) {
     const state = new Map(
       teams.map((t) => [
@@ -87,17 +115,8 @@ export function simulateSeason(
         { pts: t.points, gf: t.goalsFor, ga: t.goalsAgainst, played: t.played },
       ]),
     )
-    const eloOf = new Map(teams.map((t) => [t.team, t.elo]))
-    const ratesOf = new Map(teams.map((t) => [t.team, t.rates]))
-
     const playFixture = (home: string, away: string) => {
-      const p = predictMatch({
-        goals,
-        eloHome: eloOf.get(home)!,
-        eloAway: eloOf.get(away)!,
-        home: ratesOf.get(home) ?? null,
-        away: ratesOf.get(away) ?? null,
-      })
+      const p = lambdas(home, away)
       const hg = samplePoisson(p.lambdaHome, rand)
       const ag = samplePoisson(p.lambdaAway, rand)
       const h = state.get(home)!
@@ -175,7 +194,7 @@ export function simulateSeason(
       posProbs,
       pTitle: posProbs[0],
       pEurope: posProbs.slice(0, upSlots).reduce((a, b) => a + b, 0),
-      pRelegation: posProbs.slice(n - 2).reduce((a, b) => a + b, 0),
+      pRelegation: posProbs.slice(n - downSlots).reduce((a, b) => a + b, 0),
       projectedPoints: ptsSum.get(t.team)! / runs,
       pointsLow: percentile(hist, 0.1),
       pointsHigh: percentile(hist, 0.9),
