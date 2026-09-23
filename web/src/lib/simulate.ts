@@ -202,12 +202,37 @@ export function simulateSeason(
   })
 }
 
+/** Gamma(shape, 1) by Marsaglia and Tsang, on the seeded generator. */
+export function sampleGamma(shape: number, rand: () => number): number {
+  if (shape < 1) return sampleGamma(shape + 1, rand) * Math.pow(rand() || 1e-12, 1 / shape)
+  const d = shape - 1 / 3, c = 1 / Math.sqrt(9 * d)
+  for (;;) {
+    let x = 0, v = 0
+    do {
+      const u1 = rand() || 1e-12, u2 = rand()
+      x = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
+      v = 1 + c * x
+    } while (v <= 0)
+    v = v * v * v
+    const u = rand() || 1e-12
+    if (u < 1 - 0.0331 * x * x * x * x) return d * v
+    if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v
+  }
+}
+
 export interface ScorerState {
   name: string
   team: string
   current: number
   perGame: number
   remainingTeamGames: number
+  /**
+   * How many matches the rate rests on. A rate from five matches is a guess
+   * and one from twenty-five is not, and the race should sound like it: the
+   * rate is drawn afresh in every run from what that many matches support.
+   * Left out, the rate is taken as known, which is how it always behaved.
+   */
+  rateGames?: number
 }
 
 export interface ScorerSimResult {
@@ -234,7 +259,10 @@ export function simulateScorerRace(
     let best = -1
     let leaders: string[] = []
     for (const p of players) {
-      const extra = samplePoisson(p.perGame * p.remainingTeamGames, rand)
+      const rate = p.rateGames && p.rateGames > 0
+        ? sampleGamma(Math.max(0.5, p.perGame * p.rateGames), rand) / p.rateGames
+        : p.perGame
+      const extra = samplePoisson(rate * p.remainingTeamGames, rand)
       const total = p.current + extra
       totalSum.set(p.name, totalSum.get(p.name)! + total)
       if (total > best) {

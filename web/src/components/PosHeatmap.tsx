@@ -3,7 +3,8 @@ export function PosHeatmap({
   middleLabel = 'Evrópa',
 }: {
   rows: { team: string; posProbs: number[]; pTitle: number; pEurope: number; pRelegation: number }[]
-  middleLabel?: string
+  /** null leaves the column out, for a league where the places mean nothing to a reader */
+  middleLabel?: string | null
 }) {
   const n = rows[0]?.posProbs.length ?? 12
   const cell = (p: number) => {
@@ -30,7 +31,7 @@ export function PosHeatmap({
               <th key={i} className="font-medium px-0.5">{i + 1}</th>
             ))}
             <th className="px-1.5 font-medium">Meistari</th>
-            <th className="px-1.5 font-medium">{middleLabel}</th>
+            {middleLabel && <th className="px-1.5 font-medium">{middleLabel}</th>}
             <th className="px-1.5 font-medium">Fall</th>
           </tr>
         </thead>
@@ -44,9 +45,11 @@ export function PosHeatmap({
               <td className="text-center text-xs num font-semibold" style={{ color: 'var(--accent)' }}>
                 {pct(r.pTitle)}
               </td>
-              <td className="text-center text-xs num font-semibold" style={{ color: 'var(--win)' }}>
-                {pct(r.pEurope)}
-              </td>
+              {middleLabel && (
+                <td className="text-center text-xs num font-semibold" style={{ color: 'var(--win)' }}>
+                  {pct(r.pEurope)}
+                </td>
+              )}
               <td className="text-center text-xs num font-semibold" style={{ color: 'var(--loss)' }}>
                 {pct(r.pRelegation)}
               </td>

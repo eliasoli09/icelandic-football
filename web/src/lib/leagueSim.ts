@@ -1,7 +1,8 @@
 import { db } from './db'
 import { LEAGUES } from './leagues'
 import { predictMatch, type TeamSeasonRates } from './predict'
-import { mulberry32, simulateSeason, type SeasonSimResult, type SimFixture, type SimTeamState } from './simulate'
+import { mulberry32, sampleGamma, simulateSeason, type SeasonSimResult, type SimFixture, type SimTeamState } from './simulate'
+import { premierScorerRace, premierTeamIds } from './fplScorers'
 import type { League } from './types'
 
 /**
@@ -80,28 +81,6 @@ export function tableFrom(matches: PlayedMatch[]) {
 
 
 /**
- * A draw from Gamma(shape, 1), Marsaglia and Tsang, on a seeded generator so a
- * simulation can be repeated exactly.
- */
-function gamma(shape: number, rand: () => number): number {
-  if (shape < 1) return gamma(shape + 1, rand) * Math.pow(rand() || 1e-12, 1 / shape)
-  const d = shape - 1 / 3, c = 1 / Math.sqrt(9 * d)
-  for (;;) {
-    let x = 0, v = 0
-    do {
-      // Box-Muller, since the generator gives uniforms
-      const u1 = rand() || 1e-12, u2 = rand()
-      x = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
-      v = 1 + c * x
-    } while (v <= 0)
-    v = v * v * v
-    const u = rand() || 1e-12
-    if (u < 1 - 0.0331 * x * x * x * x) return d * v
-    if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v
-  }
-}
-
-/**
  * Seven matches do not tell you a club's scoring rate, they suggest it. The
  * simulation treats the rate as known, which is fine in September at home
  * where everyone has played two dozen, and much too sure of itself abroad
@@ -129,7 +108,7 @@ export function simulateWithUncertainty(
       if (!t.rates || t.rates.games <= 0) return t
       const { games, gfPerGame, gaPerGame } = t.rates
       // goals seen is the shape; more games, tighter the draw
-      const scale = (perGame: number) => gamma(Math.max(0.5, perGame * games), rand) / games
+      const scale = (perGame: number) => sampleGamma(Math.max(0.5, perGame * games), rand) / games
       return { ...t, rates: { ...t.rates, gfPerGame: scale(gfPerGame), gaPerGame: scale(gaPerGame) } }
     })
     for (const row of simulateSeason(sampled, remaining, runsPerDraw, seed + draw * 7919, opts)) {
@@ -169,11 +148,12 @@ export async function leagueForecasts(
   season: number,
   ratingOf: (teamId: number) => number,
   leagues: League[],
-): Promise<{ predictions: Row[]; sim: Row[]; report: Record<string, { matches: number; fixtures: number; teams: number }> }> {
+): Promise<{ predictions: Row[]; sim: Row[]; scorers: Row[]; report: Record<string, { matches: number; fixtures: number; teams: number }> }> {
   const predictions: Row[] = []
   const sim: Row[] = []
+  const scorers: Row[] = []
   const report: Record<string, { matches: number; fixtures: number; teams: number }> = {}
-  if (!leagues.length) return { predictions, sim, report }
+  if (!leagues.length) return { predictions, sim, scorers, report }
 
   const rows: (PlayedMatch & { id: number; league: string; status: string })[] = []
   for (let from = 0; ; from += 1000) {
@@ -232,6 +212,18 @@ export async function leagueForecasts(
       upSlots: config.europeSlots,
       downSlots: config.relegationSlots,
     })
+    // the scoring race, where there is a player-level source for the league
+    if (league === 'premier') {
+      const played10 = new Map([...table].map(([id, s]) => [id, s.played]))
+      const left = new Map<number, number>()
+      for (const m of upcoming) {
+        left.set(m.home_team, (left.get(m.home_team) ?? 0) + 1)
+        left.set(m.away_team, (left.get(m.away_team) ?? 0) + 1)
+      }
+      const byName = await premierTeamIds()
+      scorers.push(...await premierScorerRace(season, (name) => byName.get(name.toLowerCase()), played10, left))
+    }
+
     sim.push(...result.map((r) => ({
       season, league, team_id: Number(r.team),
       pos_probs: r.posProbs, p_title: r.pTitle, p_europe: r.pEurope, p_relegation: r.pRelegation,
@@ -239,5 +231,5 @@ export async function leagueForecasts(
       run_at: now,
     })))
   }
-  return { predictions, sim, report }
+  return { predictions, sim, scorers, report }
 }

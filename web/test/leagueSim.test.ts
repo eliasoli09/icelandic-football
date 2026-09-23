@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ratesFrom, simulateWithUncertainty, tableFrom, XG_WEIGHT, type PlayedMatch } from '../src/lib/leagueSim'
-import { simulateSeason, type SimTeamState } from '../src/lib/simulate'
+import { simulateScorerRace, simulateSeason, type SimTeamState } from '../src/lib/simulate'
+import { PRIOR_MATCHES, PRIOR_RATE, scorerStates } from '../src/lib/fplScorers'
 
 const match = (home: number, away: number, hg: number, ag: number, hxg: number | null = null, axg: number | null = null): PlayedMatch =>
   ({ home_team: home, away_team: away, home_goals: hg, away_goals: ag, home_xg: hxg, away_xg: axg, date: '2026-05-01' })
@@ -91,5 +92,38 @@ describe('how sure the season may sound', () => {
 
   it('gives the same answer twice', () => {
     expect(field(9).map((r) => r.pTitle)).toEqual(field(9).map((r) => r.pTitle))
+  })
+})
+
+describe('the scoring race abroad', () => {
+  const player = (name: string, goals: number, assists = 0) =>
+    ({ name, fullName: name, team: 'Man City', goals, assists, minutes: 450 })
+
+  it('pulls a five-match rate toward what the player did last season', () => {
+    const teamId = () => 7
+    const played = new Map([[7, 5]]), left = new Map([[7, 33]])
+    const hot = scorerStates([player('Nýr', 5)], 'goals', teamId, played, left)[0]
+    const known = scorerStates([player('Þekktur', 5)], 'goals', teamId, played, left, () => 0.8)[0]
+    // five in five is not eight tenths of a goal a game unless he has done it before
+    expect(hot.perGame).toBeCloseTo((5 + PRIOR_MATCHES * PRIOR_RATE) / (5 + PRIOR_MATCHES), 6)
+    expect(known.perGame).toBeGreaterThan(hot.perGame)
+    expect(hot.perGame).toBeLessThan(1)
+    // and the race is told how little the rate rests on
+    expect(hot.rateGames).toBe(5 + PRIOR_MATCHES)
+  })
+
+  it('leaves out a player with nothing yet, and keeps the order', () => {
+    const rows = scorerStates([player('Enginn', 0), player('Einn', 1), player('Þrír', 3)], 'goals', () => 7, new Map([[7, 5]]), new Map([[7, 33]]))
+    expect(rows.map((r) => r.name)).toEqual(['Þrír', 'Einn'])
+  })
+
+  it('is less sure of a five-match leader than of a twenty-five-match one', () => {
+    const race = (rateGames: number | undefined) => simulateScorerRace([
+      { name: 'Leiðtogi', team: '1', current: 5, perGame: 0.8, remainingTeamGames: 20, rateGames },
+      { name: 'Hinn', team: '2', current: 4, perGame: 0.6, remainingTeamGames: 20, rateGames },
+    ], 3000, 11)[0].pWin
+    // with the rate taken as known the leader is nearly certain; from few
+    // matches he is not
+    expect(race(undefined)).toBeGreaterThan(race(6))
   })
 })

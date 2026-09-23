@@ -8,6 +8,8 @@ import { TeamBadge } from './TeamBadge'
 import { FormBadges } from './FormBadges'
 import { PosHeatmap } from './PosHeatmap'
 import { ShareButton } from './ShareButton'
+import { ScorerRace, type RaceRow } from './ScorerRace'
+import { LEAGUES } from '@/lib/leagues'
 import type { DashboardBundle, DashboardTeam } from '@/lib/dashboard'
 import type { League } from '@/lib/types'
 
@@ -25,10 +27,12 @@ export interface SimRow {
 export function TaflaView({
   bundles,
   sims,
+  scorers,
   teams,
 }: {
   bundles: Partial<Record<League, DashboardBundle>>
   sims: Partial<Record<League, SimRow[]>>
+  scorers: Partial<Record<League, RaceRow[]>>
   teams: Record<number, DashboardTeam>
 }) {
   const { league, current } = useLeague()
@@ -40,13 +44,14 @@ export function TaflaView({
   const sumRange = (probs: number[], from: number, to: number) =>
     probs.slice(from, to).reduce((a, b) => a + b, 0)
 
+  const cfg = LEAGUES[league]
   const projOf = new Map(sim.map((s) => [s.team_id, s]))
   const simRows = sim
     .map((s) => ({
       team: nm(s.team_id),
       posProbs: s.pos_probs,
       pTitle: s.p_title,
-      pEurope: league === 'besta' ? s.p_europe : sumRange(s.pos_probs, 0, 2),
+      pEurope: s.p_europe,
       pRelegation: s.p_relegation,
     }))
     .sort((a, b) => b.pTitle - a.pTitle || b.pEurope - a.pEurope || a.pRelegation - b.pRelegation)
@@ -167,15 +172,17 @@ export function TaflaView({
         <div className="card p-4">
           {simRows.length ? (
             <>
-              <PosHeatmap rows={simRows} middleLabel={league === 'besta' ? 'Evrópa' : 'Upp'} />
+              <PosHeatmap rows={simRows} middleLabel={cfg?.promotion ? null : 'Evrópa'} />
               <p className="text-[11px] muted mt-3">
-                {league === 'besta'
-                  ? `Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo + markatölfræði. ${
-                      d.standings.some((r) => r.group)
-                        ? 'Efri og neðri hluti eru hermdir hvor í sínu lagi - hóparnir mætast ekki aftur, svo neðri hlutinn getur ekki endað ofar en í 7. sæti.'
-                        : 'Deildarskiptingin (efri/neðri hluti) er hermd eftir 22 umferðir.'
-                    } Meistari = 1. sæti, Evrópa = 3 efstu (nálgun), fall = 2 neðstu.`
-                  : 'Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo + markatölfræði. Meistari = 1. sæti, upp = 2 efstu (beint), fall = 2 neðstu. Umspilssæti sjást í sætadreifingunni (3.–4. sæti).'}
+                Monte Carlo hermun á öllum eftirstandandi leikjum út frá Elo og markatölfræði.{' '}
+                {d.standings.some((r) => r.group)
+                  ? 'Efri og neðri hluti eru hermdir hvor í sínu lagi - hóparnir mætast ekki aftur, svo neðri hlutinn getur ekki endað ofar en í 7. sæti. '
+                  : ''}
+                Meistari = 1. sæti{cfg && !cfg.promotion ? `, Evrópa = ${cfg.europeSlots} efstu` : ''}
+                {cfg ? `, fall = ${cfg.relegationSlots} neðstu` : ''}.
+                {league !== 'besta' && league !== 'lengjudeild'
+                  ? ' Hlutföll liðanna eru dregin upp á nýtt í hverri hermun, svo fá spiluð umferðir gefa breiðara bil.'
+                  : ''}
               </p>
             </>
           ) : (
@@ -183,6 +190,23 @@ export function TaflaView({
           )}
         </div>
       </section>
+
+      {(scorers[league]?.length ?? 0) > 0 && (
+        <section className="min-w-0">
+          <h2 className="display text-lg font-extrabold mb-4 inline-flex items-center gap-2">
+            <Trophy size={16} aria-hidden style={{ color: 'var(--accent)' }} />
+            Markakóngaspá
+          </h2>
+          <div className="card p-4">
+            <ScorerRace rows={scorers[league]!} />
+            <p className="text-[11px] muted mt-3">
+              Líkur á að standa efstur í lok tímabils, úr 10.000 hermunum: markatíðni það sem af er,
+              yfir þá leiki sem liðið á eftir.
+              {league === 'premier' ? ' Mörkin koma frá Fantasy Premier League, opnum leik deildarinnar sjálfrar.' : ''}
+            </p>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

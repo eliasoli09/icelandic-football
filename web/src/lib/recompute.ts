@@ -621,7 +621,7 @@ export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
     projected: r.projected,
     p_win: r.pWin,
   }))
-  await replaceTable('scorer_sim', [...scorerRows, ...assistRows])
+  await replaceTable('scorer_sim', [...scorerRows, ...assistRows, ...foreign.scorers])
 
   // --- history: belt lineage, all-time H2H and all-time table (top flight) ---
   const bestaPlayed: BeltMatch[] = played
