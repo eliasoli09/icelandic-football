@@ -34,6 +34,24 @@
 .mine { margin: 6px 0 0; font-size: 12px; color: var(--text-2); min-height: 18px; }
 .go { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; font-size: 13px; font-weight: 700; color: var(--tone, var(--accent)); }
 
+/* Hausabolti: not a daily puzzle, so it sits under the four as its own wide banner. */
+.arcade { --tone: #ffc93c; position: relative; display: flex; align-items: center; gap: 18px; margin: 0 0 22px; padding: 16px 18px; border: 1px solid var(--border-strong); border-radius: 16px; background: linear-gradient(100deg, #0f2266 0%, #1d4ed8 55%, #0f2266 100%); color: #fff; text-decoration: none; overflow: hidden; transition: transform .18s ease-out, border-color .18s; }
+.arcade::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: var(--tone); }
+.arcade:hover { transform: translateY(-3px); border-color: var(--tone); }
+.arcade:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.arcadeHeads { display: flex; flex-shrink: 0; }
+.arcadeHeads img { width: 52px; height: auto; margin-left: -12px; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .35)); }
+.arcadeHeads img:first-child { margin-left: 0; }
+.arcadeText { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.arcadeKicker { font-size: 9px; font-weight: 700; letter-spacing: .16em; color: var(--tone); }
+.arcadeTitle { font-size: 19px; font-weight: 750; letter-spacing: -.02em; }
+.arcadeBlurb { font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, .82); }
+.arcade .go { margin: 0 0 0 auto; padding: 0; flex-shrink: 0; }
+@media (max-width: 560px) {
+  .arcade { flex-wrap: wrap; }
+  .arcade .go { margin-left: 0; }
+}
+
 .board { padding: 18px; border: 1px solid var(--border-strong); border-radius: 16px; background: var(--surface-solid, var(--surface)); }
 .boardHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
 .boardHead h2 { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 17px; font-weight: 750; }

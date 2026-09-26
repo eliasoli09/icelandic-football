@@ -81,6 +81,19 @@ export function GameRoom() {
         })}
       </ul>
 
+      <Link href="/hausabolti" className={styles.arcade}>
+        <span className={styles.arcadeHeads} aria-hidden>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {ARCADE_HEADS.map((id) => <img key={id} src={`/spil/hausabolti/assets/players/p${id}_head.png`} alt="" width={52} height={64} loading="lazy" />)}
+        </span>
+        <span className={styles.arcadeText}>
+          <span className={styles.arcadeKicker}>SPILASALURINN</span>
+          <span className={styles.arcadeTitle}>Hausabolti</span>
+          <span className={styles.arcadeBlurb}>Stórir hausar, eitt lyklaborð. Tveir saman eða einn á móti tölvunni.</span>
+        </span>
+        <span className={styles.go}>Spila <ArrowRight size={15} aria-hidden /></span>
+      </Link>
+
       <section className={styles.board} aria-label="Efst á stigatöflunni">
         <div className={styles.boardHead}>
           <h2><Trophy size={16} aria-hidden /> Efst á stigatöflunni</h2>
@@ -98,6 +111,9 @@ export function GameRoom() {
     </div>
   )
 }
+
+/** Heads shown on the Hausabolti banner; the game ships them in public/spil/hausabolti. */
+const ARCADE_HEADS = [2, 3, 6]
 
 /** The shape of the room before the browser has been read, so nothing jumps. */
 const PLACEHOLDERS: RoomCard[] = [
