@@ -944,7 +944,7 @@ export function OffsideTool() {
                   <p className="text-sm mt-1">{receiverVerdict.reason}</p>
                   <p className="text-xs muted mt-1">
                     Móttakandi: <b>{labels.get(receiverVerdict.id)}</b>
-                    {receiverByAi ? ' — valinn af gervigreind (þar sem boltinn stöðvaðist). Rangur? Veldu 🎯 Móttakandi.' : ' — valinn handvirkt.'}
+                    {receiverByAi ? ' — valinn af gervigreind (þar sem sendingin endaði). Rangur? Veldu 🎯 Móttakandi.' : ' — valinn handvirkt.'}
                   </p>
                   {resolution !== null && (
                     <p className="text-xs muted mt-2">
