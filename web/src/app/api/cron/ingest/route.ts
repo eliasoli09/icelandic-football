@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { ingestSeason, recomputeAll } from '@/lib/recompute'
 import { ingestCurrentSeason } from '@/lib/currentSeason'
+import { refreshNations } from '@/lib/nations'
 
 export const maxDuration = 300
 export const dynamic = 'force-dynamic'
@@ -18,8 +19,10 @@ export async function GET(req: NextRequest) {
     // this the foreign leagues would show last season's table until May.
     const current = await ingestCurrentSeason()
     const recompute = await recomputeAll()
+    // National teams are a separate display layer; a feed hiccup must not fail the club ingest.
+    const nations = await refreshNations().catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
     revalidatePath('/', 'layout')
-    return NextResponse.json({ ok: true, ingest, current, recompute })
+    return NextResponse.json({ ok: true, ingest, current, recompute, nations })
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : JSON.stringify(err) },

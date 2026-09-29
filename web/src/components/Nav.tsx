@@ -25,6 +25,7 @@ const NAV = [
   { href: '/rangstada', label: 'Rangstaða' },
   { href: '/sludur', label: 'Slúður' },
   { href: '/uefa', label: 'Evrópa' },
+  { href: '/landslid', label: 'Landsliðið' },
   { href: '/kastalinn', label: 'Kastalinn' },
   { href: '/saga', label: 'Saga' },
   { href: '/h2h', label: 'H2H' },
