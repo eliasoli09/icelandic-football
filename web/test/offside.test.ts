@@ -4,6 +4,8 @@ import { templatePoints, IFAB } from '../src/lib/offside/pitch'
 import { evaluateOffside, type PitchPlayer } from '../src/lib/offside/offside'
 import { cleanBallTrack, detectBallEvents, findReceiver, trackPersons, type Box, type Frame } from '../src/lib/offside/tracking'
 import { clusterTeams, rgbToLab, shirtColour } from '../src/lib/offside/teams'
+import { foot } from '../src/lib/offside/tracking'
+import scanFixture from './fixtures/offside_scan.json'
 
 // A plausible broadcast-style camera: pitch (u, v) → image pixels.
 const CAM = [22, -9, 640, 3, 7, 300, 0.004, 0.0012, 1] as const
@@ -166,7 +168,7 @@ describe('ball tracking and kick detection', () => {
     const events = detectBallEvents(frames, ball, 1280)
     const kick = events.filter((e) => e.type === 'kick').sort((a, b) => b.confidence - a.confidence)[0]
     const tracks = trackPersons(frames)
-    const rec = findReceiver(frames, ball, tracks, events, kick)
+    const rec = findReceiver(frames, ball, tracks, kick)
     expect(rec).not.toBeNull()
     expect(rec!.personIndexAtKick).toBe(1)
     expect(rec!.receptionT).toBeGreaterThan(1.4)
@@ -193,8 +195,44 @@ describe('receiver identification', () => {
     const events = detectBallEvents(frames, ball, 1280)
     const kick = events.filter((e) => e.type === 'kick').sort((a, b) => b.confidence - a.confidence)[0]
     expect(kick.t).toBeCloseTo(1.0, 5)
-    const rec = findReceiver(frames, ball, trackPersons(frames), events, kick)
+    const rec = findReceiver(frames, ball, trackPersons(frames), kick)
     expect(rec?.personIndexAtKick).toBe(1)
+  })
+})
+
+/**
+ * Real detector output (EfficientDet-Lite2, 10 fps) on a synthetic clip with
+ * known ground truth: the kick is at t=2.0 s, the pass flies to the receiver
+ * whose feet are at ≈(810, 445) px at the kick. Along the way the detector also
+ * reports the penalty spot at ≈(930, 356) as a "ball", and the ball is lost
+ * behind the receiver for several frames.
+ */
+describe('real scan regression', () => {
+  const { frames, width } = scanFixture as { frames: Frame[]; width: number }
+  const ball = cleanBallTrack(frames, width)
+  const events = detectBallEvents(frames, ball, width)
+  const kick = events.filter((e) => e.type === 'kick').sort((a, b) => b.confidence - a.confidence)[0]
+
+  it('finds the kick at 2.0 s', () => {
+    expect(kick.t).toBeCloseTo(2.0, 5)
+  })
+
+  it('does not let the penalty spot hijack the ball track', () => {
+    // Spurious detections of the (static) spot, frame → centre.
+    const spot: Record<number, [number, number]> = { 24: [928, 356], 26: [934, 356], 28: [978, 356], 29: [1001, 354] }
+    for (const [i, [x, y]] of Object.entries(spot)) {
+      const b = ball[+i]
+      if (b) expect(Math.hypot(b.x - x, b.y - y)).toBeGreaterThan(20)
+    }
+    // …while the real ball is kept through the flight.
+    expect(ball[28]!.x).toBeCloseTo(804, -1)
+  })
+
+  it('names the true receiver at the kick frame', () => {
+    const rec = findReceiver(frames, ball, trackPersons(frames), kick)!
+    expect(rec.arrival.x).toBeGreaterThan(900)
+    const f = foot(frames[kick.index].persons[rec.personIndexAtKick])
+    expect(Math.hypot(f.x - 810, f.y - 445)).toBeLessThan(25)
   })
 })
 

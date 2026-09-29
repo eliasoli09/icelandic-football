@@ -6,7 +6,7 @@ import { DEFAULT_PITCH, IFAB, templatePoints, type PitchDims, type TemplateId } 
 import { evaluateOffside, fmtM, type PitchPlayer, type Role } from '@/lib/offside/offside'
 import {
   cleanBallTrack, detectBallEvents, findReceiver, foot, nearestPlayer, trackPersons,
-  type BallEvent, type BallPoint, type Box, type Frame,
+  type BallEvent, type BallPoint, type Box, type Frame, type ReceiverGuess,
 } from '@/lib/offside/tracking'
 import { clusterTeams, labToCss, shirtColour } from '@/lib/offside/teams'
 import { drawOverlay, ROLE_COLOUR, STATUS_COLOUR, type Player } from './draw'
@@ -21,7 +21,15 @@ interface Kick {
   /** Image points at the kick frame, from the scan, used to seed the analysis. */
   kickerHint?: Pt
   receiverHint?: Pt
+  /** Where the pass ended (ball stopped or last seen in flight). */
+  arrivalHint?: Pt
   ballHint?: Pt
+}
+
+/** Kick hints from a receiver guess made on the scan frames. */
+function receiverHints(rec: ReceiverGuess | null, persons: Box[]): Pick<Kick, 'receiverHint' | 'arrivalHint'> {
+  if (!rec) return {}
+  return { receiverHint: rec.personIndexAtKick >= 0 ? foot(persons[rec.personIndexAtKick]) : undefined, arrivalHint: rec.arrival }
 }
 
 interface Scan {
@@ -292,13 +300,21 @@ export function OffsideTool() {
         }
       })
 
+      // Receiver: the tracked player if they wear the kicker's colours; otherwise
+      // the kicker's teammate nearest to where the pass ended.
       let rec: string | null = null
-      if (k.receiverHint) {
-        const idx = nearestPlayer(ps.map((p) => p.box!), k.receiverHint).index
-        if (idx >= 0 && idx !== kicker) {
-          rec = ps[idx].id
-          ps[idx].role = 'attacker'
-        }
+      const teammates = cl ? ps.flatMap((p, i) => (i !== kicker && p.role === 'attacker' ? [i] : [])) : []
+      const hinted = k.receiverHint ? nearestPlayer(det.persons, k.receiverHint).index : -1
+      if (hinted >= 0 && teammates.includes(hinted)) rec = ps[hinted].id
+      else if (k.arrivalHint && teammates.length) {
+        const a = k.arrivalHint
+        const idx = teammates.reduce((bi, i) =>
+          Math.hypot(ps[i].foot.x - a.x, ps[i].foot.y - a.y) / ps[i].box!.h < Math.hypot(ps[bi].foot.x - a.x, ps[bi].foot.y - a.y) / ps[bi].box!.h ? i : bi,
+        )
+        rec = ps[idx].id
+      } else if (!cl && hinted >= 0 && hinted !== kicker) {
+        rec = ps[hinted].id
+        ps[hinted].role = 'attacker'
       }
       setPlayers(ps)
       setReceiverId(rec)
@@ -362,10 +378,9 @@ export function OffsideTool() {
         const near = b ? nearestPlayer(f.persons, b) : { index: -1, d: Infinity }
         if (near.index >= 0) {
           const ev: BallEvent = { index: fi, t: f.t, ball: b!, type: 'kick', dv: 0, playerIndex: near.index, proximity: near.d, confidence: 0 }
-          const rec = findReceiver(scan.frames, scan.ball, scan.tracks, scan.events, ev)
           k.kickerHint = foot(f.persons[near.index])
           k.ballHint = b ?? undefined
-          if (rec) k.receiverHint = foot(f.persons[rec.personIndexAtKick])
+          Object.assign(k, receiverHints(findReceiver(scan.frames, scan.ball, scan.tracks, ev), f.persons))
         }
       }
     }
@@ -405,6 +420,8 @@ export function OffsideTool() {
       const tracks = trackPersons(frames)
       const events = detectBallEvents(frames, ballTrack, W)
       setScan({ frames, ball: ballTrack, tracks, events, width: W })
+      // Dev-only hook so tracking heuristics can be replayed offline in tests.
+      if (process.env.NODE_ENV !== 'production') (window as unknown as { __offsideScan?: unknown }).__offsideScan = { frames, width: W }
       const kicks = events.filter((e) => e.type === 'kick').sort((a, b) => b.confidence - a.confidence)
       const best = kicks[0]
       if (!best || best.confidence < 0.15) {
@@ -440,7 +457,7 @@ export function OffsideTool() {
         .sort((a, b) => b.dv * b.confidence - a.dv * a.confidence)[0]
       const kickT = fineKick?.t ?? best.t
 
-      const rec = findReceiver(frames, ballTrack, tracks, events, best)
+      const rec = findReceiver(frames, ballTrack, tracks, best)
       const hintFrame = fineKick ? fine[fineKick.index] : frames[best.index]
       const kickerNow = fineKick && fineKick.playerIndex >= 0 ? hintFrame.persons[fineKick.playerIndex] : kicker
       await openKick({
@@ -449,7 +466,7 @@ export function OffsideTool() {
         confidence: best.confidence,
         kickerHint: foot(kickerNow),
         ballHint: fineKick?.ball ?? best.ball,
-        receiverHint: rec ? foot(frames[best.index].persons[rec.personIndexAtKick]) : undefined,
+        ...receiverHints(rec, frames[best.index].persons),
       })
     } catch (e) {
       setError((e as Error).message === 'Hætt við' ? 'Hætt við skönnun.' : `Skönnun mistókst: ${(e as Error).message}`)
@@ -778,7 +795,7 @@ export function OffsideTool() {
                           className="px-2.5 py-1 rounded-lg border num text-xs"
                           style={{ borderColor: kick && Math.abs(kick.t - e.t) < 0.15 ? 'var(--accent)' : 'var(--border)' }}
                           onClick={() => {
-                            const rec = findReceiver(scan.frames, scan.ball, scan.tracks, scan.events, e)
+                            const rec = findReceiver(scan.frames, scan.ball, scan.tracks, e)
                             const f = scan.frames[e.index]
                             void openKick({
                               t: e.t,
@@ -786,7 +803,7 @@ export function OffsideTool() {
                               confidence: e.confidence,
                               kickerHint: foot(f.persons[e.playerIndex]),
                               ballHint: e.ball,
-                              receiverHint: rec ? foot(f.persons[rec.personIndexAtKick]) : undefined,
+                              ...receiverHints(rec, f.persons),
                             })
                           }}
                         >
