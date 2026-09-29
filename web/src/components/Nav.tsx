@@ -22,6 +22,7 @@ const NAV = [
   { href: '/stigatafla', label: 'Stigatafla' },
   { href: '/kort', label: 'Kort' },
   { href: '/leikmenn', label: 'Leikmenn' },
+  { href: '/rangstada', label: 'Rangstaða' },
   { href: '/sludur', label: 'Slúður' },
   { href: '/uefa', label: 'Evrópa' },
   { href: '/kastalinn', label: 'Kastalinn' },
