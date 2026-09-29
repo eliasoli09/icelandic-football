@@ -1,0 +1,205 @@
+{
+  "id": "spann-lid-2025",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LA LIGA",
+  "title": "Liðin 2025/26",
+  "question": "Nefndu 10 af 20 liðum spænsku deildarinnar 2025/26.",
+  "context": "Tímabilið 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2025-26 La Liga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1356513894"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "alaves",
+      "label": "Alavés",
+      "detail": "",
+      "accept": [
+        "alaves",
+        "deportivo alaves"
+      ]
+    },
+    {
+      "id": "athletic",
+      "label": "Athletic Bilbao",
+      "detail": "",
+      "accept": [
+        "athletic bilbao",
+        "ath bilbao",
+        "athletic club",
+        "bilbao"
+      ]
+    },
+    {
+      "id": "atletico",
+      "label": "Atlético Madrid",
+      "detail": "",
+      "accept": [
+        "atletico madrid",
+        "ath madrid",
+        "atletico"
+      ]
+    },
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "celta",
+      "label": "Celta Vigo",
+      "detail": "",
+      "accept": [
+        "celta vigo",
+        "celta"
+      ]
+    },
+    {
+      "id": "elche",
+      "label": "Elche",
+      "detail": "",
+      "accept": [
+        "elche"
+      ]
+    },
+    {
+      "id": "espanyol",
+      "label": "Espanyol",
+      "detail": "",
+      "accept": [
+        "espanyol",
+        "espanol",
+        "rcd espanyol"
+      ]
+    },
+    {
+      "id": "getafe",
+      "label": "Getafe",
+      "detail": "",
+      "accept": [
+        "getafe"
+      ]
+    },
+    {
+      "id": "girona",
+      "label": "Girona",
+      "detail": "",
+      "accept": [
+        "girona"
+      ]
+    },
+    {
+      "id": "levante",
+      "label": "Levante",
+      "detail": "",
+      "accept": [
+        "levante"
+      ]
+    },
+    {
+      "id": "mallorca",
+      "label": "Mallorca",
+      "detail": "",
+      "accept": [
+        "mallorca",
+        "rcd mallorca"
+      ]
+    },
+    {
+      "id": "osasuna",
+      "label": "Osasuna",
+      "detail": "",
+      "accept": [
+        "osasuna",
+        "ca osasuna"
+      ]
+    },
+    {
+      "id": "rayo",
+      "label": "Rayo Vallecano",
+      "detail": "",
+      "accept": [
+        "rayo vallecano",
+        "vallecano",
+        "rayo"
+      ]
+    },
+    {
+      "id": "betis",
+      "label": "Real Betis",
+      "detail": "",
+      "accept": [
+        "real betis",
+        "betis"
+      ]
+    },
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "oviedo",
+      "label": "Real Oviedo",
+      "detail": "",
+      "accept": [
+        "real oviedo",
+        "oviedo"
+      ]
+    },
+    {
+      "id": "sociedad",
+      "label": "Real Sociedad",
+      "detail": "",
+      "accept": [
+        "real sociedad",
+        "sociedad"
+      ]
+    },
+    {
+      "id": "sevilla",
+      "label": "Sevilla",
+      "detail": "",
+      "accept": [
+        "sevilla",
+        "sevilla fc"
+      ]
+    },
+    {
+      "id": "valencia",
+      "label": "Valencia",
+      "detail": "",
+      "accept": [
+        "valencia",
+        "valencia cf"
+      ]
+    },
+    {
+      "id": "villarreal",
+      "label": "Villarreal",
+      "detail": "",
+      "accept": [
+        "villarreal",
+        "villarreal cf",
+        "villareal cf"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

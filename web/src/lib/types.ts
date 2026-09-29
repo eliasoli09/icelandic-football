@@ -1,4 +1,14 @@
-export type League = 'besta' | 'lengjudeild'
+export type League =
+  | 'besta'
+  | 'lengjudeild'
+  | 'premier'
+  | 'laliga'
+  | 'seriea'
+  | 'bundesliga'
+  | 'ligue1'
+  | 'championship'
+  | 'eredivisie'
+  | 'primeira'
 export type Phase = 'main' | 'efri' | 'nedri' | 'umspil'
 
 export interface ParsedMatch {

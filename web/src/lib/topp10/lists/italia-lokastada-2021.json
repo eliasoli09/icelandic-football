@@ -1,0 +1,117 @@
+{
+  "id": "italia-lokastada-2021",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "SERIE A",
+  "title": "Topp 10 2021/22",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ítölsku deildarinnar 2021/22.",
+  "context": "Lokastaða tímabilsins 2021/22. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2021-22 Serie A table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1286346285"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "milan",
+      "label": "AC Milan",
+      "detail": "1. sæti, 86 stig",
+      "accept": [
+        "ac milan",
+        "milan"
+      ]
+    },
+    {
+      "id": "inter",
+      "label": "Inter",
+      "detail": "2. sæti, 84 stig",
+      "accept": [
+        "inter",
+        "inter milan",
+        "internazionale",
+        "inter milano"
+      ]
+    },
+    {
+      "id": "napoli",
+      "label": "Napoli",
+      "detail": "3. sæti, 79 stig",
+      "accept": [
+        "napoli",
+        "ssc napoli"
+      ]
+    },
+    {
+      "id": "juventus",
+      "label": "Juventus",
+      "detail": "4. sæti, 70 stig",
+      "accept": [
+        "juventus"
+      ]
+    },
+    {
+      "id": "lazio",
+      "label": "Lazio",
+      "detail": "5. sæti, 64 stig",
+      "accept": [
+        "lazio",
+        "ss lazio",
+        "s s lazio"
+      ]
+    },
+    {
+      "id": "roma",
+      "label": "Roma",
+      "detail": "6. sæti, 63 stig",
+      "accept": [
+        "roma",
+        "as roma",
+        "a s roma"
+      ]
+    },
+    {
+      "id": "fiorentina",
+      "label": "Fiorentina",
+      "detail": "7. sæti, 62 stig",
+      "accept": [
+        "fiorentina",
+        "acf fiorentina"
+      ]
+    },
+    {
+      "id": "atalanta",
+      "label": "Atalanta",
+      "detail": "8. sæti, 59 stig",
+      "accept": [
+        "atalanta",
+        "atalanta bc"
+      ]
+    },
+    {
+      "id": "verona",
+      "label": "Hellas Verona",
+      "detail": "9. sæti, 53 stig",
+      "accept": [
+        "hellas verona",
+        "verona"
+      ]
+    },
+    {
+      "id": "torino",
+      "label": "Torino",
+      "detail": "10. sæti, 50 stig",
+      "accept": [
+        "torino",
+        "torino fc",
+        "torino f c"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

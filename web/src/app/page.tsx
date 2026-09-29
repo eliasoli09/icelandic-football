@@ -1,85 +1,37 @@
-import Link from 'next/link'
-import { ProbBar } from '@/components/ProbBar'
-import {
-  teams, upcomingWithPredictions, recentResults, scorerSim, lastIngest,
-} from '@/lib/queries'
+import { Dashboard } from '@/components/Dashboard'
+import { dashboardData, allTeamInfo } from '@/lib/dashboard'
+import { leagueRegistry } from '@/lib/queries'
+import type { League } from '@/lib/types'
+import { Suspense } from 'react'
+import { HomeEntrance } from '@/components/Entrance/HomeEntrance'
 
 export const revalidate = 300
 
-const fmtDate = (d: string | null) =>
-  d ? new Date(d).toLocaleString('is-IS', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) : ''
-
-export default async function Home() {
-  let names = new Map<number, string>()
-  let upcoming: Awaited<ReturnType<typeof upcomingWithPredictions>> = []
-  let results: Awaited<ReturnType<typeof recentResults>> = []
-  let scorers: Awaited<ReturnType<typeof scorerSim>> = []
-  let ingest: Awaited<ReturnType<typeof lastIngest>> = null
-  try {
-    ;[names, upcoming, results, scorers, ingest] = await Promise.all([
-      teams(), upcomingWithPredictions(8), recentResults(6), scorerSim('goals'), lastIngest(),
-    ])
-  } catch {
-    return <p className="muted">Gagnagrunnur ekki tengdur enn — keyrðu fyrst innhleðslu.</p>
-  }
-  const nm = (id: number) => names.get(id) ?? `#${id}`
+export default function Home() {
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-      <section>
-        <h1 className="text-xl font-bold mb-4">Næstu leikir</h1>
-        <div className="grid gap-3">
-          {upcoming.map((m) => (
-            <Link key={m.id} href={`/leikir/${m.id}`} className="card p-4 hover:opacity-90">
-              <div className="flex justify-between text-xs muted mb-2">
-                <span>{fmtDate(m.date)} · {m.venue ?? ''}</span>
-                <span>{m.league === 'besta' ? 'Besta deildin' : 'Lengjudeildin'}</span>
-              </div>
-              <div className="flex items-center justify-between font-semibold mb-3">
-                <span>{nm(m.home_team)}</span>
-                <span className="muted text-sm">gegn</span>
-                <span>{nm(m.away_team)}</span>
-              </div>
-              {m.prediction ? (
-                <ProbBar pHome={m.prediction.p_home} pDraw={m.prediction.p_draw} pAway={m.prediction.p_away} compact />
-              ) : (
-                <p className="text-xs muted">Spá reiknast eftir næstu innhleðslu.</p>
-              )}
-            </Link>
-          ))}
-          {!upcoming.length && <p className="muted text-sm">Engir ókomnir leikir í grunninum.</p>}
-        </div>
-        <h2 className="text-lg font-bold mt-8 mb-3">Nýjustu úrslit</h2>
-        <div className="grid gap-2">
-          {results.map((m) => (
-            <Link key={m.id} href={`/leikir/${m.id}`} className="card px-4 py-2.5 flex items-center justify-between text-sm hover:opacity-90">
-              <span className="w-2/5">{nm(m.home_team)}</span>
-              <span className="font-bold num">{m.home_goals} – {m.away_goals}</span>
-              <span className="w-2/5 text-right">{nm(m.away_team)}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-      <aside>
-        <h2 className="text-lg font-bold mb-3">Markakóngskapphlaupið</h2>
-        <div className="card p-4">
-          {scorers.slice(0, 8).map((s, i) => (
-            <div key={s.name} className="flex items-center justify-between py-1.5 text-sm" style={i ? { borderTop: '1px solid var(--border)' } : {}}>
-              <span className="truncate pr-2">{s.name}</span>
-              <span className="num muted">{s.current}</span>
-              <span className="num font-semibold w-12 text-right" style={{ color: 'var(--accent)' }}>
-                {Math.round(s.p_win * 100)}%
-              </span>
-            </div>
-          ))}
-          {!scorers.length && <p className="muted text-sm">Reiknast eftir innhleðslu.</p>}
-          <p className="text-[11px] muted mt-2">% = líkur á að enda markakóngur</p>
-        </div>
-        {ingest && (
-          <p className="text-[11px] muted mt-4">
-            Síðast uppfært: {new Date(ingest.run_at).toLocaleString('is-IS', { timeZone: 'UTC' })}
-          </p>
-        )}
-      </aside>
-    </div>
+    <HomeEntrance>
+      <Suspense fallback={<div className="card p-8 muted" role="status">Hleð stöðu og næstu leikjum…</div>}>
+        <HomeContent />
+      </Suspense>
+    </HomeEntrance>
   )
+}
+
+async function HomeContent() {
+  try {
+    // every registered competition, each on its own season - a league in the
+    // switcher that answers "not loaded yet" is worse than not offering it
+    const registry = await leagueRegistry()
+    const [teams, ...loaded] = await Promise.all([
+      allTeamInfo(),
+      ...registry.map(async (l) => ({
+        key: l.key as League,
+        bundle: await dashboardData(l.key as League, l.current_season ?? undefined),
+      })),
+    ])
+    const bundles = Object.fromEntries(loaded.map((x) => [x.key, x.bundle]))
+    return <Dashboard bundles={bundles} teams={teams} />
+  } catch {
+    return <p className="muted">Gagnagrunnur ekki tengdur enn - keyrðu fyrst innhleðslu.</p>
+  }
 }

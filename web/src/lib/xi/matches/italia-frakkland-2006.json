@@ -1,0 +1,200 @@
+{
+  "id": "italia-frakkland-2006",
+  "region": "evropa",
+  "level": "medium",
+  "competition": "HM 2006",
+  "stage": "Úrslitaleikur",
+  "date": "2006-07-09",
+  "blurb": "Úrslitaleikur HM í Berlín.",
+  "score": {
+    "home": 1,
+    "away": 1,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 5-3."
+  },
+  "home": {
+    "name": "Ítalía",
+    "color": "#2050c0",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Gianluigi Buffon",
+        "word": "BUFFON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Gianluca Zambrotta",
+        "word": "ZAMBROTTA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Fabio Cannavaro",
+        "word": "CANNAVARO",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 23,
+        "name": "Marco Materazzi",
+        "word": "MATERAZZI",
+        "line": 1,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 3,
+        "name": "Fabio Grosso",
+        "word": "GROSSO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Mauro Camoranesi",
+        "word": "CAMORANESI",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 8,
+        "name": "Gennaro Gattuso",
+        "word": "GATTUSO",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 21,
+        "name": "Andrea Pirlo",
+        "word": "PIRLO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Simone Perrotta",
+        "word": "PERROTTA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Francesco Totti",
+        "word": "TOTTI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Luca Toni",
+        "word": "TONI",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Frakkland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 16,
+        "name": "Fabien Barthez",
+        "word": "BARTHEZ",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Willy Sagnol",
+        "word": "SAGNOL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 15,
+        "name": "Lilian Thuram",
+        "word": "THURAM",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "William Gallas",
+        "word": "GALLAS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Eric Abidal",
+        "word": "ABIDAL",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Patrick Vieira",
+        "word": "VIEIRA",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Claude Makélélé",
+        "word": "MAKELELE",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Franck Ribéry",
+        "word": "RIBERY",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Zinedine Zidane",
+        "word": "ZIDANE",
+        "line": 4,
+        "x": 1,
+        "captain": true,
+        "goals": 1
+      },
+      {
+        "number": 7,
+        "name": "Florent Malouda",
+        "word": "MALOUDA",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Thierry Henry",
+        "word": "HENRY",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2006 FIFA World Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374681396"
+    },
+    {
+      "name": "transfermarkt.com · Italy - France",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/53491"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -1,0 +1,200 @@
+{
+  "id": "bikar-2014",
+  "region": "island",
+  "level": "hard",
+  "competition": "Bikarkeppni karla 2014",
+  "stage": "Úrslitaleikur",
+  "date": "2014-08-16",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 2,
+    "away": 1
+  },
+  "home": {
+    "name": "KR",
+    "color": "#16181d",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Stefán Logi Magnússon",
+        "word": "STEFAN",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Grétar Sigfinnur Sigurðarson",
+        "word": "GRETAR",
+        "line": 1,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 3,
+        "name": "Haukur Heiðar Hauksson",
+        "word": "HAUKUR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Gary John Martin",
+        "word": "GARY",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Baldur Sigurðsson",
+        "word": "BALDUR",
+        "line": 2,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Kjartan Henry Finnbogason",
+        "word": "KJARTAN",
+        "line": 5,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 11,
+        "name": "Óskar Örn Hauksson",
+        "word": "OSKAR",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Almarr Ormarsson",
+        "word": "ALMARR",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Jónas Guðni Sævarsson",
+        "word": "JONAS",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Aron Bjarki Jósepsson",
+        "word": "ARON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 21,
+        "name": "Guðmundur Reynir Gunnarsson",
+        "word": "GUÐMUNDUR",
+        "line": 1,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Keflavík",
+    "color": "#1560bd",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Jonas Fredrik Sandqvist",
+        "word": "SANDQVIST",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 3,
+        "name": "Magnús Þórir Matthíasson",
+        "word": "MAGNUS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Haraldur Freyr Guðmundsson",
+        "word": "HARALDUR",
+        "line": 1,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Einar Orri Einarsson",
+        "word": "EINAR",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Birnir Guðmundsson",
+        "word": "JOHANN",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Hörður Sveinsson",
+        "word": "HÖRÐUR",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 14,
+        "name": "Halldór Kristinn Halldórsson",
+        "word": "HALLDOR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Aron Rúnarsson Heiðdal",
+        "word": "ARON",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 23,
+        "name": "Sindri Snær Magnússon",
+        "word": "SINDRI",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 25,
+        "name": "Frans Elvarsson",
+        "word": "FRANS",
+        "line": 2,
+        "x": 2
+      },
+      {
+        "number": 28,
+        "name": "Elías Már Ómarsson",
+        "word": "ELIAS",
+        "line": 5,
+        "x": 2
+      }
+    ]
+  },
+  "layout": "Línur í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · KR - Keflavík, Bikarkeppni - Borgunarbikar karla / 7. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=639667"
+    },
+    {
+      "name": "transfermarkt.com · KR Reykjavík - Keflavík ÍF",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2480469"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

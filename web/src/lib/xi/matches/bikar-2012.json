@@ -1,0 +1,200 @@
+{
+  "id": "bikar-2012",
+  "region": "island",
+  "level": "hard",
+  "competition": "Bikarkeppni karla 2012",
+  "stage": "Úrslitaleikur",
+  "date": "2012-08-18",
+  "blurb": "Úrslitaleikur bikarkeppninnar á Laugardalsvelli.",
+  "score": {
+    "home": 1,
+    "away": 2
+  },
+  "home": {
+    "name": "Stjarnan",
+    "color": "#29318d",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 29,
+        "name": "Arnar Darri Pétursson",
+        "word": "ARNAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Jóhann Laxdal",
+        "word": "JOHANN",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Atli Jóhannsson",
+        "word": "ATLI",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Daníel Laxdal",
+        "word": "DANIEL",
+        "line": 1,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Halldór Orri Björnsson",
+        "word": "HALLDOR",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 13,
+        "name": "Alexander Scholz",
+        "word": "SCHOLZ",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Baldvin Sturluson",
+        "word": "BALDVIN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 22,
+        "name": "Ellert Hreinsson",
+        "word": "ELLERT",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 24,
+        "name": "Mark Doninger",
+        "word": "DONINGER",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Kennie Knak Chopart",
+        "word": "CHOPART",
+        "line": 1,
+        "x": 4
+      },
+      {
+        "number": 27,
+        "name": "Garðar Jóhannsson",
+        "word": "GARÐAR",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "KR",
+    "color": "#16181d",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HANNES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Grétar Sigfinnur Sigurðarson",
+        "word": "GRETAR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Bjarni Eggerts Guðjónsson",
+        "word": "BJARNI",
+        "line": 3,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Baldur Sigurðsson",
+        "word": "BALDUR",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Kjartan Henry Finnbogason",
+        "word": "KJARTAN",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Óskar Örn Hauksson",
+        "word": "OSKAR",
+        "line": 5,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Viktor Bjarki Arnarsson",
+        "word": "VIKTOR",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Gary John Martin",
+        "word": "GARY",
+        "line": 5,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 18,
+        "name": "Aron Bjarki Jósepsson",
+        "word": "ARON",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 20,
+        "name": "Magnús Már Lúðvíksson",
+        "word": "MAGNUS",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 21,
+        "name": "Guðmundur Reynir Gunnarsson",
+        "word": "GUÐMUNDUR",
+        "line": 1,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Línur í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · Stjarnan - KR, Bikarkeppni - Borgunarbikar karla / 8. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=640620"
+    },
+    {
+      "name": "transfermarkt.com · Stjarnan Gardabaer - KR Reykjavík",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2256615"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

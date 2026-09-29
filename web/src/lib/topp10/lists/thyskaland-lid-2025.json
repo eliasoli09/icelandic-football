@@ -1,0 +1,199 @@
+{
+  "id": "thyskaland-lid-2025",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "BUNDESLIGA",
+  "title": "Liðin 2025/26",
+  "question": "Nefndu 10 af 18 liðum þýsku deildarinnar 2025/26.",
+  "context": "Tímabilið 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2025-26 Bundesliga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1356116444"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "koln",
+      "label": "1. FC Köln",
+      "detail": "",
+      "accept": [
+        "1 fc koln",
+        "fc koln",
+        "koln",
+        "cologne"
+      ]
+    },
+    {
+      "id": "leverkusen",
+      "label": "Bayer Leverkusen",
+      "detail": "",
+      "accept": [
+        "bayer leverkusen",
+        "leverkusen",
+        "bayer 04 leverkusen"
+      ]
+    },
+    {
+      "id": "bayern",
+      "label": "Bayern München",
+      "detail": "",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "fc bayern munchen",
+        "bayern",
+        "fc bayern"
+      ]
+    },
+    {
+      "id": "dortmund",
+      "label": "Borussia Dortmund",
+      "detail": "",
+      "accept": [
+        "borussia dortmund",
+        "dortmund",
+        "bvb"
+      ]
+    },
+    {
+      "id": "gladbach",
+      "label": "Borussia Mönchengladbach",
+      "detail": "",
+      "accept": [
+        "borussia monchengladbach",
+        "monchengladbach",
+        "m gladbach",
+        "gladbach"
+      ]
+    },
+    {
+      "id": "frankfurt",
+      "label": "Eintracht Frankfurt",
+      "detail": "",
+      "accept": [
+        "eintracht frankfurt",
+        "frankfurt",
+        "ein frankfurt",
+        "eintracht"
+      ]
+    },
+    {
+      "id": "augsburg",
+      "label": "FC Augsburg",
+      "detail": "",
+      "accept": [
+        "fc augsburg",
+        "augsburg"
+      ]
+    },
+    {
+      "id": "hamburg",
+      "label": "Hamburger SV",
+      "detail": "",
+      "accept": [
+        "hamburger sv",
+        "hamburg",
+        "hsv"
+      ]
+    },
+    {
+      "id": "heidenheim",
+      "label": "Heidenheim",
+      "detail": "",
+      "accept": [
+        "heidenheim",
+        "1 fc heidenheim"
+      ]
+    },
+    {
+      "id": "hoffenheim",
+      "label": "Hoffenheim",
+      "detail": "",
+      "accept": [
+        "hoffenheim",
+        "tsg hoffenheim",
+        "1899 hoffenheim"
+      ]
+    },
+    {
+      "id": "mainz",
+      "label": "Mainz 05",
+      "detail": "",
+      "accept": [
+        "mainz 05",
+        "mainz",
+        "1 fsv mainz 05"
+      ]
+    },
+    {
+      "id": "leipzig",
+      "label": "RB Leipzig",
+      "detail": "",
+      "accept": [
+        "rb leipzig",
+        "leipzig"
+      ]
+    },
+    {
+      "id": "freiburg",
+      "label": "SC Freiburg",
+      "detail": "",
+      "accept": [
+        "sc freiburg",
+        "freiburg"
+      ]
+    },
+    {
+      "id": "stpauli",
+      "label": "St. Pauli",
+      "detail": "",
+      "accept": [
+        "st pauli",
+        "fc st pauli"
+      ]
+    },
+    {
+      "id": "union",
+      "label": "Union Berlin",
+      "detail": "",
+      "accept": [
+        "union berlin",
+        "1 fc union berlin"
+      ]
+    },
+    {
+      "id": "stuttgart",
+      "label": "VfB Stuttgart",
+      "detail": "",
+      "accept": [
+        "vfb stuttgart",
+        "stuttgart"
+      ]
+    },
+    {
+      "id": "wolfsburg",
+      "label": "VfL Wolfsburg",
+      "detail": "",
+      "accept": [
+        "vfl wolfsburg",
+        "wolfsburg"
+      ]
+    },
+    {
+      "id": "bremen",
+      "label": "Werder Bremen",
+      "detail": "",
+      "accept": [
+        "werder bremen",
+        "bremen"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

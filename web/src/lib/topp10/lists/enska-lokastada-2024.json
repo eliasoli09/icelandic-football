@@ -1,0 +1,116 @@
+{
+  "id": "enska-lokastada-2024",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2024/25",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2024/25.",
+  "context": "Lokastaða tímabilsins 2024/25. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2024-25 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372807257"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "1. sæti, 84 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "2. sæti, 74 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "3. sæti, 71 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "4. sæti, 69 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "newcastle",
+      "label": "Newcastle United",
+      "detail": "5. sæti, 66 stig",
+      "accept": [
+        "newcastle united",
+        "newcastle"
+      ]
+    },
+    {
+      "id": "astonvilla",
+      "label": "Aston Villa",
+      "detail": "6. sæti, 66 stig",
+      "accept": [
+        "aston villa",
+        "villa",
+        "aston villa fc"
+      ]
+    },
+    {
+      "id": "forest",
+      "label": "Nottingham Forest",
+      "detail": "7. sæti, 65 stig",
+      "accept": [
+        "nottingham forest",
+        "nott m forest",
+        "forest"
+      ]
+    },
+    {
+      "id": "brighton",
+      "label": "Brighton & Hove Albion",
+      "detail": "8. sæti, 61 stig",
+      "accept": [
+        "brighton hove albion",
+        "brighton",
+        "brighton and hove albion"
+      ]
+    },
+    {
+      "id": "bournemouth",
+      "label": "Bournemouth",
+      "detail": "9. sæti, 56 stig",
+      "accept": [
+        "bournemouth",
+        "afc bournemouth"
+      ]
+    },
+    {
+      "id": "brentford",
+      "label": "Brentford",
+      "detail": "10. sæti, 56 stig",
+      "accept": [
+        "brentford"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

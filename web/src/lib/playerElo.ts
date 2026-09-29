@@ -1,10 +1,19 @@
-import type { MatchEvent } from './types'
+import type { MatchEvent, League } from './types'
+import type { Position } from './positions'
+import { normalizeName } from './positions'
 
-export const PLAYER_BASE = 1500
+export const PLAYER_BASE: Record<League, number> = { besta: 1500, lengjudeild: 1400, premier: 1500, laliga: 1500, seriea: 1500, bundesliga: 1500, ligue1: 1500, championship: 1500, eredivisie: 1500, primeira: 1500 }
+/** goals and results in the second tier move the needle less */
+export const LEAGUE_WEIGHT: Record<League, number> = { besta: 1, lengjudeild: 0.6, premier: 1, laliga: 1, seriea: 1, bundesliga: 1, ligue1: 1, championship: 1, eredivisie: 1, primeira: 1 }
+/** clean-sheet bonus by (inferred) position - keepers and defenders get the
+ * credit their work deserves; unknown positions get a flat middle value */
+export const CLEAN_SHEET_BONUS: Record<Position, number> = { GK: 18, DF: 12, MF: 6, FW: 4 }
+export const CLEAN_SHEET_DEFAULT = 8
 
 export interface PlayerMatchInput {
   matchId: number
   order: number
+  league: League
   homeGoals: number
   awayGoals: number
   events: MatchEvent[]
@@ -14,6 +23,7 @@ export interface PlayerEloRecord {
   playerKsiId: number
   playerName: string
   matchId: number
+  league: League
   eloBefore: number
   eloAfter: number
 }
@@ -21,9 +31,16 @@ export interface PlayerEloRecord {
 /**
  * Event-observable player Elo. KSÍ exposes scorers, cards and substitutions
  * (not full lineups), so ratings cover players who appear in events.
- * Per appearance: team-result term + per-event terms, capped at ±60.
+ * Per appearance: team-result term + per-event terms + a clean-sheet bonus
+ * weighted by inferred position (GK 18, DF 12, MF 6, FW 4 - flat 8 when the
+ * position is unknown), capped at ±60 and scaled by division weight
+ * (a Lengjudeild contribution counts 60% of a Besta one). Players first seen
+ * in Lengjudeildin start at a lower baseline and carry their rating up.
  */
-export function runPlayerElo(matches: PlayerMatchInput[]): PlayerEloRecord[] {
+export function runPlayerElo(
+  matches: PlayerMatchInput[],
+  positions?: Map<string, Position>,
+): PlayerEloRecord[] {
   const rating = new Map<number, number>()
   const names = new Map<number, string>()
   const out: PlayerEloRecord[] = []
@@ -64,14 +81,22 @@ export function runPlayerElo(matches: PlayerMatchInput[]): PlayerEloRecord[] {
     for (const [pid, eventDelta] of perPlayer) {
       const side = seenSide.get(pid)!
       const result = side === 'home' ? Math.sign(gd) : -Math.sign(gd)
-      const delta = clamp(eventDelta + 8 * result, -60, 60)
-      const before = rating.get(pid) ?? PLAYER_BASE
+      const conceded = side === 'home' ? m.awayGoals : m.homeGoals
+      let cleanSheetBonus = 0
+      if (conceded === 0) {
+        const pos = positions?.get(normalizeName(names.get(pid) ?? ''))
+        cleanSheetBonus = pos ? CLEAN_SHEET_BONUS[pos] : CLEAN_SHEET_DEFAULT
+      }
+      const weight = LEAGUE_WEIGHT[m.league]
+      const delta = clamp((eventDelta + 8 * result + cleanSheetBonus) * weight, -60, 60)
+      const before = rating.get(pid) ?? PLAYER_BASE[m.league]
       const after = before + delta
       rating.set(pid, after)
       out.push({
         playerKsiId: pid,
         playerName: names.get(pid)!,
         matchId: m.matchId,
+        league: m.league,
         eloBefore: before,
         eloAfter: after,
       })

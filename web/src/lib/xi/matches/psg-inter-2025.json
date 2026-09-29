@@ -1,0 +1,200 @@
+{
+  "id": "psg-inter-2025",
+  "region": "evropa",
+  "level": "easy",
+  "competition": "Meistaradeild Evrópu 2024/25",
+  "stage": "Úrslitaleikur",
+  "date": "2025-05-31",
+  "blurb": "Úrslitaleikurinn í München.",
+  "score": {
+    "home": 5,
+    "away": 0
+  },
+  "home": {
+    "name": "Paris Saint-Germain",
+    "color": "#0a1254",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Gianluigi Donnarumma",
+        "word": "DONNARUMMA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Achraf Hakimi",
+        "word": "HAKIMI",
+        "line": 1,
+        "x": 3,
+        "goals": 1
+      },
+      {
+        "number": 5,
+        "name": "Marquinhos",
+        "word": "MARQUINHOS",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 51,
+        "name": "Willian Pacho",
+        "word": "PACHO",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 25,
+        "name": "Nuno Mendes",
+        "word": "MENDES",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 87,
+        "name": "João Neves",
+        "word": "NEVES",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 17,
+        "name": "Vitinha",
+        "word": "VITINHA",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Fabián Ruiz",
+        "word": "RUIZ",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Désiré Doué",
+        "word": "DOUE",
+        "line": 5,
+        "x": 2,
+        "goals": 2
+      },
+      {
+        "number": 10,
+        "name": "Ousmane Dembélé",
+        "word": "DEMBELE",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Khvicha Kvaratskhelia",
+        "word": "KVARATSKHELIA",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Inter",
+    "color": "#ffcc00",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Yann Sommer",
+        "word": "SOMMER",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 28,
+        "name": "Benjamin Pavard",
+        "word": "PAVARD",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Francesco Acerbi",
+        "word": "ACERBI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 95,
+        "name": "Alessandro Bastoni",
+        "word": "BASTONI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Denzel Dumfries",
+        "word": "DUMFRIES",
+        "line": 3,
+        "x": 4
+      },
+      {
+        "number": 23,
+        "name": "Nicolò Barella",
+        "word": "BARELLA",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 20,
+        "name": "Hakan Çalhanoğlu",
+        "word": "CALHANOGLU",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 22,
+        "name": "Henrikh Mkhitaryan",
+        "word": "MKHITARYAN",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 32,
+        "name": "Federico Dimarco",
+        "word": "DIMARCO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Marcus Thuram",
+        "word": "THURAM",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Lautaro Martínez",
+        "word": "MARTINEZ",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370669484"
+    },
+    {
+      "name": "transfermarkt.com · Paris Saint-Germain - Inter Milan",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4547655"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -1,6 +1,7 @@
 import { db } from './db'
 import { CURRENT_SEASON } from './recompute'
 import type { League } from './types'
+import { LEAGUES, type LeagueRow } from './leagues'
 
 export interface TeamInfo {
   id: number
@@ -64,13 +65,32 @@ export async function recentResults(limit = 12): Promise<MatchWithPrediction[]> 
 
 export async function seasonMatches(
   season = CURRENT_SEASON,
+  league?: League,
 ): Promise<MatchWithPrediction[]> {
-  const { data } = await db()
+  let q = db()
     .from('matches')
     .select('id, date, venue, league, phase, home_team, away_team, home_goals, away_goals, status')
     .eq('season', season)
-    .order('date', { ascending: true, nullsFirst: false })
+  if (league) q = q.eq('league', league)
+  const { data } = await q.order('date', { ascending: true, nullsFirst: false })
   return (data ?? []) as MatchWithPrediction[]
+}
+
+/**
+ * Just enough rating history for the dashboard: each club's last six rows in
+ * one competition, oldest first. Reading a league's full history to compute a
+ * last-five delta took the table page from seconds to minutes.
+ */
+export async function eloHistoryFor(league: League): Promise<EloRow[]> {
+  const { data } = await db()
+    .from('team_elo_recent')
+    .select('team_id, elo_after, match_id, season, league, rn')
+    .eq('league', league)
+  const rows = (data ?? []) as (EloRow & { rn: number })[]
+  // the view numbers newest first; the delta walk expects chronological
+  return rows
+    .sort((a, b) => a.team_id - b.team_id || b.rn - a.rn)
+    .map(({ rn: _rn, ...r }) => ({ ...r, date: null }))
 }
 
 export async function matchDetail(id: number) {
@@ -98,18 +118,77 @@ export interface EloRow {
   date: string | null
   elo_after: number
   match_id: number
+  season: number
+  league: League
 }
 
-export async function eloHistory(): Promise<EloRow[]> {
+/**
+ * Elo history with the season and competition of each match attached.
+ * `date` is null for the 2019-2025 Icelandic seasons, so season is the only
+ * time axis that covers the whole history.
+ */
+/**
+ * @param fromSeason floor on how far back to read. The /elo page charts 2019
+ *   onward and looks back at most five seasons for its movement columns, so
+ *   it has no use for the 1990s - and reading every rating row for ten
+ *   leagues took the page 43 seconds.
+ */
+export async function eloHistory(fromSeason?: number): Promise<EloRow[]> {
+  const out: EloRow[] = []
+  for (let from = 0; ; from += 1000) {
+    let q = db()
+      .from('team_elo_seasons')
+      .select('team_id, date, elo_after, match_id, season, league')
+    if (fromSeason !== undefined) q = q.gte('season', fromSeason)
+    const { data } = await q.order('season').order('match_id').range(from, from + 999)
+    if (!data?.length) break
+    out.push(...(data as EloRow[]))
+    if (data.length < 1000) break
+  }
+  return out
+}
+
+/**
+ * Elo pool per club. Ratings only compare inside a pool: English and Icelandic
+ * clubs never meet, so each pool drifts from its own 1500 anchor and a higher
+ * number across pools means nothing.
+ */
+export async function teamPools(): Promise<Map<number, string>> {
+  const { data } = await db().from('team_leagues').select('team_id, league')
+  const pools = new Map<number, string>()
+  for (const r of (data ?? []) as { team_id: number; league: string }[]) {
+    const cfg = LEAGUES[r.league as League]
+    if (cfg) pools.set(r.team_id, cfg.eloPool)
+  }
+  return pools
+}
+
+/** Every competition on the site, ordered for the picker. */
+export async function leagueRegistry(): Promise<LeagueRow[]> {
+  const { data } = await db()
+    .from('league_registry')
+    .select('*')
+    .eq('visible', true)
+    .order('sort_order')
+    .order('name')
+  return (data ?? []) as LeagueRow[]
+}
+
+/**
+ * One rating per club per season - enough for a trend chart and for movement
+ * columns, and small enough that adding leagues does not slow the page.
+ */
+export async function eloSeasonEnds(fromSeason: number): Promise<EloRow[]> {
   const out: EloRow[] = []
   for (let from = 0; ; from += 1000) {
     const { data } = await db()
-      .from('team_elo')
-      .select('team_id, date, elo_after, match_id')
-      .order('match_id')
+      .from('team_elo_season_end')
+      .select('team_id, season, league, elo_after, match_id')
+      .gte('season', fromSeason)
+      .order('season')
       .range(from, from + 999)
     if (!data?.length) break
-    out.push(...(data as EloRow[]))
+    out.push(...(data as EloRow[]).map((r) => ({ ...r, date: null })))
     if (data.length < 1000) break
   }
   return out
@@ -138,6 +217,9 @@ export async function standings(
     .eq('season', season)
     .eq('league', league)
     .eq('status', 'played')
+    // play-offs decide promotion after the table is settled - they are not
+    // table matches, and counting them gave four Lengjudeild clubs 23 games
+    .neq('phase', 'umspil')
     .order('date', { ascending: true, nullsFirst: true })
   const per = new Map<number, StandingRow & { res: string[] }>()
   const row = (t: number) => {
@@ -164,20 +246,21 @@ export async function standings(
     .sort((x, y) => y.points - x.points || y.gf - y.ga - (x.gf - x.ga) || y.gf - x.gf)
 }
 
-export async function seasonSim() {
+export async function seasonSim(league: League = 'besta') {
   const { data } = await db()
     .from('season_sim')
     .select('*')
     .eq('season', CURRENT_SEASON)
-    .eq('league', 'besta')
+    .eq('league', league)
   return data ?? []
 }
 
-export async function scorerSim(kind: 'goals' | 'assists') {
+export async function scorerSim(kind: 'goals' | 'assists', league: League = 'besta') {
   const { data } = await db()
     .from('scorer_sim')
     .select('*')
     .eq('season', CURRENT_SEASON)
+    .eq('league', league)
     .eq('kind', kind)
     .order('p_win', { ascending: false })
   return data ?? []
@@ -195,18 +278,29 @@ export async function playerEloTable(limit = 60) {
     data.push(...page)
     if (page.length < 1000) break
   }
-  const latest = new Map<number, { elo: number; apps: number }>()
+  const { data: leagueRows } = await db()
+    .from('matches')
+    .select('id, league, date')
+    .in('id', [...new Set(data.map((r) => r.match_id))])
+  const matchInfo = new Map(
+    (leagueRows ?? []).map((m) => [m.id, { league: m.league as League, date: m.date as string | null }]),
+  )
+  const latest = new Map<number, { elo: number; apps: number; league: League; lastDate: string }>()
   for (const r of data ?? []) {
+    const info = matchInfo.get(r.match_id)
     const prev = latest.get(r.player_ksi_id)
+    const d = info?.date ?? ''
     latest.set(r.player_ksi_id, {
       elo: r.elo_after,
       apps: (prev?.apps ?? 0) + 1,
+      league: !prev || d >= prev.lastDate ? (info?.league ?? 'besta') : prev.league,
+      lastDate: !prev || d >= prev.lastDate ? d : prev.lastDate,
     })
   }
   const { data: players } = await db().from('players').select('ksi_id, name')
   const names = new Map((players ?? []).map((p) => [p.ksi_id, p.name]))
   return [...latest]
-    .map(([id, v]) => ({ id, name: names.get(id) ?? `#${id}`, ...v }))
+    .map(([id, v]) => ({ id, name: names.get(id) ?? `#${id}`, elo: v.elo, apps: v.apps, league: v.league }))
     .sort((a, b) => b.elo - a.elo)
     .slice(0, limit)
 }
@@ -214,7 +308,7 @@ export async function playerEloTable(limit = 60) {
 export async function sofascorePlayers() {
   const { data } = await db()
     .from('sofascore_players')
-    .select('name, team, rating, appearances, goals, assists, rank')
+    .select('name, team, rating, appearances, goals, assists, rank, extra')
     .eq('season', CURRENT_SEASON)
     .order('rank')
   return data ?? []
@@ -228,4 +322,223 @@ export async function lastIngest() {
     .limit(1)
     .maybeSingle()
   return data
+}
+
+export interface BeltRow {
+  match_id: number
+  season: number
+  date: string | null
+  holder_before: number
+  challenger: number
+  holder_after: number
+  taken: boolean
+}
+
+export async function beltHistory(): Promise<BeltRow[]> {
+  const out: BeltRow[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db()
+      .from('belt_history')
+      .select('*')
+      .order('season')
+      .order('date', { nullsFirst: false })
+      .order('match_id')
+      .range(from, from + 999)
+    if (!data?.length) break
+    out.push(...(data as BeltRow[]))
+    if (data.length < 1000) break
+  }
+  return out
+}
+
+export async function h2hAll() {
+  const out: { team_a: number; team_b: number; stats: Record<string, unknown> }[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db().from('h2h_cache').select('*').range(from, from + 999)
+    if (!data?.length) break
+    out.push(...data)
+    if (data.length < 1000) break
+  }
+  return out
+}
+
+export async function alltime() {
+  const { data } = await db().from('alltime_cache').select('*')
+  return (data ?? []).map((r) => r.stats) as {
+    teamId: number; played: number; won: number; drawn: number; lost: number
+    gf: number; ga: number; points3: number; seasons: number
+    firstSeason: number; lastSeason: number
+  }[]
+}
+
+export async function champions(): Promise<Map<number, number>> {
+  const { data } = await db().from('champions').select('season, team_id')
+  return new Map((data ?? []).map((c) => [c.season, c.team_id]))
+}
+
+import type { TeamInfo as TeamColorInfo } from './teamColors'
+
+export async function teamInfo(): Promise<Map<number, TeamColorInfo>> {
+  const { data } = await db().from('teams').select('id, name, crest_url, color')
+  return new Map(
+    (data ?? []).map((t) => [
+      t.id,
+      { name: t.name, crest: t.crest_url, color: t.color },
+    ]),
+  )
+}
+
+export async function teamAnalyses(): Promise<Record<number, string>> {
+  const { data } = await db().from('team_analysis').select('team_id, analysis')
+  return Object.fromEntries((data ?? []).map((r) => [r.team_id, r.analysis]))
+}
+
+/** Editorial recognitions from fotbolti.net (lið/leikmaður umferðar) → small
+ * visible bonus in the combined player rating. */
+export async function editorialBonus(): Promise<Record<string, { bonus: number; detail: string }>> {
+  const { data } = await db()
+    .from('editorial_mentions')
+    .select('player_name, kind')
+    .eq('season', CURRENT_SEASON)
+  const agg = new Map<string, { lid: number; leikmadur: number }>()
+  for (const m of data ?? []) {
+    const cur = agg.get(m.player_name) ?? { lid: 0, leikmadur: 0 }
+    if (m.kind === 'lid_umferdar') cur.lid++
+    else cur.leikmadur++
+    agg.set(m.player_name, cur)
+  }
+  return Object.fromEntries(
+    [...agg].map(([name, c]) => [
+      name,
+      {
+        bonus: Math.min(40, c.lid * 6 + c.leikmadur * 10),
+        detail: [
+          c.lid ? `${c.lid}× lið umferðar (+${c.lid * 6})` : '',
+          c.leikmadur ? `${c.leikmadur}× leikmaður umferðar (+${c.leikmadur * 10})` : '',
+        ].filter(Boolean).join(' · '),
+      },
+    ]),
+  )
+}
+
+import type { TransferItem } from './transfers'
+
+/** Transfer news + rumors curated from fotbolti.net (transfer_news table). */
+export async function transferNews(limit = 200): Promise<TransferItem[]> {
+  const { data } = await db()
+    .from('transfer_news')
+    .select('*')
+    .order('published_at', { ascending: false })
+    .order('id', { ascending: false })
+    .limit(limit)
+  return (data ?? []) as TransferItem[]
+}
+
+export type MatchOddsRow = {
+  bookmaker: string
+  home: number
+  draw: number
+  away: number
+  fetched_at: string
+}
+
+/** Bookmaker 1X2 odds for one match (display layer, scraped near kickoff). */
+export async function matchOdds(matchId: number): Promise<MatchOddsRow[]> {
+  const { data } = await db()
+    .from('match_odds')
+    .select('bookmaker, home, draw, away, fetched_at')
+    .eq('match_id', matchId)
+  return (data ?? []) as MatchOddsRow[]
+}
+
+export interface WcMatchRow {
+  id: number
+  round: number
+  date: string
+  venue: string | null
+  grp: string | null
+  home: string
+  away: string
+  home_score: number | null
+  away_score: number | null
+  winner: string | null
+  apif_fixture_id?: number | null
+  /** set at evaluation time when in-play data overrides the stored score */
+  live?: boolean
+}
+
+export interface WcPredictionRow {
+  match_id: number
+  p_home: number
+  p_draw: number
+  p_away: number
+  elo_home: number | null
+  elo_away: number | null
+}
+
+export async function wcMatches(): Promise<WcMatchRow[]> {
+  const { data } = await db().from('wc_matches').select('*').order('id')
+  return (data ?? []) as WcMatchRow[]
+}
+
+export async function wcPredictions(): Promise<Map<number, WcPredictionRow>> {
+  const { data } = await db().from('wc_predictions').select('*')
+  return new Map(((data ?? []) as WcPredictionRow[]).map((p) => [p.match_id, p]))
+}
+
+export async function betSlip(slug: string) {
+  const { data } = await db().from('bet_slips').select('*').eq('slug', slug).maybeSingle()
+  return data as { slug: string; title: string | null; legs: unknown[]; created_at: string } | null
+}
+
+export async function matchReport(matchId: number) {
+  const { data } = await db()
+    .from('match_reports')
+    .select('url, title')
+    .eq('match_id', matchId)
+    .maybeSingle()
+  return data
+}
+
+// ── European club competitions ─────────────────────────────────────────
+export interface UefaClub {
+  club: string; assoc: string; comp: string
+  rating: number | null; league_name: string | null; league_strength: number | null
+  rated: boolean
+  country: string | null
+  /** UEFA's own country coefficient, shown beside the rating; feeds nothing */
+  coefficient: number | null
+  coefficient_rank: number | null
+}
+export interface UefaMatch {
+  id: string; comp: string; matchday: number; date: string | null
+  home: string; away: string; home_goals: number | null; away_goals: number | null
+  p_home: number | null; p_draw: number | null; p_away: number | null
+}
+export interface UefaSim {
+  comp: string; club: string
+  proj_points: number; p_top8: number; p_playoff: number; p_out: number
+}
+
+export async function uefaClubs(): Promise<UefaClub[]> {
+  const { data } = await db().from('uefa_club').select('*').order('rating', { ascending: false })
+  return (data ?? []) as UefaClub[]
+}
+
+export async function uefaMatches(): Promise<UefaMatch[]> {
+  const out: UefaMatch[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data } = await db().from('uefa_match').select('*')
+      .order('date', { nullsFirst: false }).order('id').range(from, from + 999)
+    if (!data?.length) break
+    out.push(...(data as UefaMatch[]))
+    if (data.length < 1000) break
+  }
+  return out
+}
+
+export async function uefaSim(): Promise<UefaSim[]> {
+  const { data } = await db().from('uefa_sim').select('comp, club, proj_points, p_top8, p_playoff, p_out')
+    .order('proj_points', { ascending: false })
+  return (data ?? []) as UefaSim[]
 }

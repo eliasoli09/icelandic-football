@@ -1,0 +1,199 @@
+{
+  "id": "spann-italia-2012",
+  "region": "evropa",
+  "level": "easy",
+  "competition": "EM 2012",
+  "stage": "Úrslitaleikur",
+  "date": "2012-07-01",
+  "blurb": "Úrslitaleikur EM í Kænugarði.",
+  "score": {
+    "home": 4,
+    "away": 0
+  },
+  "home": {
+    "name": "Spánn",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Iker Casillas",
+        "word": "CASILLAS",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 17,
+        "name": "Álvaro Arbeloa",
+        "word": "ARBELOA",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 3,
+        "name": "Gerard Piqué",
+        "word": "PIQUE",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Sergio Ramos",
+        "word": "RAMOS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Jordi Alba",
+        "word": "ALBA",
+        "line": 1,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 16,
+        "name": "Sergio Busquets",
+        "word": "BUSQUETS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Xavi",
+        "word": "XAVI",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 14,
+        "name": "Xabi Alonso",
+        "word": "ALONSO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Cesc Fàbregas",
+        "word": "FABREGAS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "David Silva",
+        "word": "SILVA",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 6,
+        "name": "Andrés Iniesta",
+        "word": "INIESTA",
+        "line": 4,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Ítalía",
+    "color": "#0000ff",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Gianluigi Buffon",
+        "word": "BUFFON",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 7,
+        "name": "Ignazio Abate",
+        "word": "ABATE",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 15,
+        "name": "Andrea Barzagli",
+        "word": "BARZAGLI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 19,
+        "name": "Leonardo Bonucci",
+        "word": "BONUCCI",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Giorgio Chiellini",
+        "word": "CHIELLINI",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Andrea Pirlo",
+        "word": "PIRLO",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Claudio Marchisio",
+        "word": "MARCHISIO",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 18,
+        "name": "Riccardo Montolivo",
+        "word": "MONTOLIVO",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 16,
+        "name": "Daniele De Rossi",
+        "word": "DEROSSI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Mario Balotelli",
+        "word": "BALOTELLI",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Antonio Cassano",
+        "word": "CASSANO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · UEFA Euro 2012 final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1358889307"
+    },
+    {
+      "name": "transfermarkt.com · Spain - Italy",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2232817"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

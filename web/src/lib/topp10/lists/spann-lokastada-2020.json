@@ -1,0 +1,117 @@
+{
+  "id": "spann-lokastada-2020",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LA LIGA",
+  "title": "Topp 10 2020/21",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum spænsku deildarinnar 2020/21.",
+  "context": "Lokastaða tímabilsins 2020/21. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2020-21 La Liga",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375827347"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "atletico",
+      "label": "Atlético Madrid",
+      "detail": "1. sæti, 86 stig",
+      "accept": [
+        "atletico madrid",
+        "ath madrid",
+        "atletico"
+      ]
+    },
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "2. sæti, 84 stig",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "3. sæti, 79 stig",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "sevilla",
+      "label": "Sevilla",
+      "detail": "4. sæti, 77 stig",
+      "accept": [
+        "sevilla",
+        "sevilla fc"
+      ]
+    },
+    {
+      "id": "sociedad",
+      "label": "Real Sociedad",
+      "detail": "5. sæti, 62 stig",
+      "accept": [
+        "real sociedad",
+        "sociedad"
+      ]
+    },
+    {
+      "id": "betis",
+      "label": "Real Betis",
+      "detail": "6. sæti, 61 stig",
+      "accept": [
+        "real betis",
+        "betis"
+      ]
+    },
+    {
+      "id": "villarreal",
+      "label": "Villarreal",
+      "detail": "7. sæti, 58 stig",
+      "accept": [
+        "villarreal",
+        "villarreal cf",
+        "villareal cf"
+      ]
+    },
+    {
+      "id": "celta",
+      "label": "Celta Vigo",
+      "detail": "8. sæti, 53 stig",
+      "accept": [
+        "celta vigo",
+        "celta"
+      ]
+    },
+    {
+      "id": "granada",
+      "label": "Granada",
+      "detail": "9. sæti, 46 stig",
+      "accept": [
+        "granada",
+        "granada cf"
+      ]
+    },
+    {
+      "id": "athletic",
+      "label": "Athletic Bilbao",
+      "detail": "10. sæti, 46 stig",
+      "accept": [
+        "athletic bilbao",
+        "ath bilbao",
+        "athletic club",
+        "bilbao"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

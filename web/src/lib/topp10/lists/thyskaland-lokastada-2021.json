@@ -1,0 +1,124 @@
+{
+  "id": "thyskaland-lokastada-2021",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "BUNDESLIGA",
+  "title": "Topp 10 2021/22",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum þýsku deildarinnar 2021/22.",
+  "context": "Lokastaða tímabilsins 2021/22. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2021-22 Bundesliga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1268562825"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "bayern",
+      "label": "Bayern München",
+      "detail": "1. sæti, 77 stig",
+      "accept": [
+        "bayern munchen",
+        "bayern munich",
+        "fc bayern munchen",
+        "bayern",
+        "fc bayern"
+      ]
+    },
+    {
+      "id": "dortmund",
+      "label": "Borussia Dortmund",
+      "detail": "2. sæti, 69 stig",
+      "accept": [
+        "borussia dortmund",
+        "dortmund",
+        "bvb"
+      ]
+    },
+    {
+      "id": "leverkusen",
+      "label": "Bayer Leverkusen",
+      "detail": "3. sæti, 64 stig",
+      "accept": [
+        "bayer leverkusen",
+        "leverkusen",
+        "bayer 04 leverkusen"
+      ]
+    },
+    {
+      "id": "leipzig",
+      "label": "RB Leipzig",
+      "detail": "4. sæti, 58 stig",
+      "accept": [
+        "rb leipzig",
+        "leipzig"
+      ]
+    },
+    {
+      "id": "union",
+      "label": "Union Berlin",
+      "detail": "5. sæti, 57 stig",
+      "accept": [
+        "union berlin",
+        "1 fc union berlin"
+      ]
+    },
+    {
+      "id": "freiburg",
+      "label": "SC Freiburg",
+      "detail": "6. sæti, 55 stig",
+      "accept": [
+        "sc freiburg",
+        "freiburg"
+      ]
+    },
+    {
+      "id": "koln",
+      "label": "1. FC Köln",
+      "detail": "7. sæti, 52 stig",
+      "accept": [
+        "1 fc koln",
+        "fc koln",
+        "koln",
+        "cologne"
+      ]
+    },
+    {
+      "id": "mainz",
+      "label": "Mainz 05",
+      "detail": "8. sæti, 46 stig",
+      "accept": [
+        "mainz 05",
+        "mainz",
+        "1 fsv mainz 05"
+      ]
+    },
+    {
+      "id": "hoffenheim",
+      "label": "Hoffenheim",
+      "detail": "9. sæti, 46 stig",
+      "accept": [
+        "hoffenheim",
+        "tsg hoffenheim",
+        "1899 hoffenheim"
+      ]
+    },
+    {
+      "id": "gladbach",
+      "label": "Borussia Mönchengladbach",
+      "detail": "10. sæti, 45 stig",
+      "accept": [
+        "borussia monchengladbach",
+        "monchengladbach",
+        "m gladbach",
+        "gladbach"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

@@ -1,0 +1,199 @@
+{
+  "id": "dortmund-realmadrid-2024",
+  "region": "evropa",
+  "level": "easy",
+  "competition": "Meistaradeild Evrópu 2023/24",
+  "stage": "Úrslitaleikur",
+  "date": "2024-06-01",
+  "blurb": "Úrslitaleikurinn á Wembley.",
+  "score": {
+    "home": 0,
+    "away": 2
+  },
+  "home": {
+    "name": "Borussia Dortmund",
+    "color": "#f7e503",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Gregor Kobel",
+        "word": "KOBEL",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 26,
+        "name": "Julian Ryerson",
+        "word": "RYERSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 15,
+        "name": "Mats Hummels",
+        "word": "HUMMELS",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Nico Schlotterbeck",
+        "word": "SCHLOTTERBECK",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Ian Maatsen",
+        "word": "MAATSEN",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 23,
+        "name": "Emre Can",
+        "word": "CAN",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Marcel Sabitzer",
+        "word": "SABITZER",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Jadon Sancho",
+        "word": "SANCHO",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 19,
+        "name": "Julian Brandt",
+        "word": "BRANDT",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 27,
+        "name": "Karim Adeyemi",
+        "word": "ADEYEMI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Niclas Füllkrug",
+        "word": "FULLKRUG",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Real Madrid",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Thibaut Courtois",
+        "word": "COURTOIS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Dani Carvajal",
+        "word": "CARVAJAL",
+        "line": 1,
+        "x": 3,
+        "goals": 1
+      },
+      {
+        "number": 22,
+        "name": "Antonio Rüdiger",
+        "word": "RUDIGER",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Nacho",
+        "word": "NACHO",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 23,
+        "name": "Ferland Mendy",
+        "word": "MENDY",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 12,
+        "name": "Eduardo Camavinga",
+        "word": "CAMAVINGA",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Federico Valverde",
+        "word": "VALVERDE",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Jude Bellingham",
+        "word": "BELLINGHAM",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Rodrygo",
+        "word": "RODRYGO",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Vinícius Júnior",
+        "word": "VINICIUS",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2024 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370459237"
+    },
+    {
+      "name": "transfermarkt.com · Borussia Dortmund - Real Madrid",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4343512"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

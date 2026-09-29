@@ -1,0 +1,200 @@
+{
+  "id": "island-kroatia-2018",
+  "region": "island",
+  "level": "easy",
+  "competition": "HM 2018",
+  "stage": "Riðlakeppni",
+  "date": "2018-06-26",
+  "blurb": "Síðasti leikur Íslands á HM 2018, í Rostov.",
+  "score": {
+    "home": 1,
+    "away": 2
+  },
+  "home": {
+    "name": "Ísland",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HANNES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "BIRKIR",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Sverrir Ingi Ingason",
+        "word": "SVERRIR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "RAGNAR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Hörður Björgvin Magnússon",
+        "word": "HÖRÐUR",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "ARON",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 20,
+        "name": "Emil Hallfreðsson",
+        "word": "EMIL",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Jóhann Berg Guðmundsson",
+        "word": "JOHANN",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "GYLFI",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BIRKIR",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Alfreð Finnbogason",
+        "word": "ALFREÐ",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Króatía",
+    "color": "#000000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 12,
+        "name": "Lovre Kalinić",
+        "word": "KALINIC",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 13,
+        "name": "Tin Jedvaj",
+        "word": "JEDVAJ",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Vedran Ćorluka",
+        "word": "CORLUKA",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Duje Ćaleta-Car",
+        "word": "CALETACAR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Josip Pivarić",
+        "word": "PIVARIC",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Luka Modrić",
+        "word": "MODRIC",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Milan Badelj",
+        "word": "BADELJ",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 20,
+        "name": "Marko Pjaca",
+        "word": "PJACA",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "Mateo Kovačić",
+        "word": "KOVACIC",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Ivan Perišić",
+        "word": "PERISIC",
+        "line": 4,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 9,
+        "name": "Andrej Kramarić",
+        "word": "KRAMARIC",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2018 FIFA World Cup Group D",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372523086"
+    },
+    {
+      "name": "transfermarkt.com · Iceland - Croatia",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2977706"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

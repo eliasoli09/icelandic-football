@@ -1,0 +1,199 @@
+{
+  "id": "realmadrid-atletico-2016",
+  "region": "evropa",
+  "level": "easy",
+  "competition": "Meistaradeild Evrópu 2015/16",
+  "stage": "Úrslitaleikur",
+  "date": "2016-05-28",
+  "blurb": "Tvö lið frá Madríd mættust aftur í úrslitaleiknum, nú í Mílanó.",
+  "score": {
+    "home": 1,
+    "away": 1,
+    "note": "Eftir framlengingu. Vítaspyrnukeppni 5-3."
+  },
+  "home": {
+    "name": "Real Madrid",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Keylor Navas",
+        "word": "NAVAS",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Dani Carvajal",
+        "word": "CARVAJAL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Sergio Ramos",
+        "word": "RAMOS",
+        "line": 1,
+        "x": 2,
+        "captain": true,
+        "goals": 1
+      },
+      {
+        "number": 3,
+        "name": "Pepe",
+        "word": "PEPE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 12,
+        "name": "Marcelo",
+        "word": "MARCELO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Casemiro",
+        "word": "CASEMIRO",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Luka Modrić",
+        "word": "MODRIC",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Toni Kroos",
+        "word": "KROOS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Gareth Bale",
+        "word": "BALE",
+        "line": 5,
+        "x": 2
+      },
+      {
+        "number": 9,
+        "name": "Karim Benzema",
+        "word": "BENZEMA",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Cristiano Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Atlético Madrid",
+    "color": "#cb3524",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 13,
+        "name": "Jan Oblak",
+        "word": "OBLAK",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Juanfran",
+        "word": "JUANFRAN",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 15,
+        "name": "Stefan Savić",
+        "word": "SAVIC",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 2,
+        "name": "Diego Godín",
+        "word": "GODIN",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Filipe Luís",
+        "word": "FILIPELUIS",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Saúl",
+        "word": "SAUL",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Gabi",
+        "word": "GABI",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 12,
+        "name": "Augusto Fernández",
+        "word": "FERNANDEZ",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Koke",
+        "word": "KOKE",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Antoine Griezmann",
+        "word": "GRIEZMANN",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Fernando Torres",
+        "word": "TORRES",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2016 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1373353713"
+    },
+    {
+      "name": "transfermarkt.com · Real Madrid - Atlético de Madrid",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2690027"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

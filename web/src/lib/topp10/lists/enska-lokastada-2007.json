@@ -1,0 +1,114 @@
+{
+  "id": "enska-lokastada-2007",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2007/08",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2007/08.",
+  "context": "Lokastaða tímabilsins 2007/08. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2007-08 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371798058"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "1. sæti, 87 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "2. sæti, 85 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "3. sæti, 83 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "4. sæti, 76 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "5. sæti, 65 stig",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "astonvilla",
+      "label": "Aston Villa",
+      "detail": "6. sæti, 60 stig",
+      "accept": [
+        "aston villa",
+        "villa",
+        "aston villa fc"
+      ]
+    },
+    {
+      "id": "blackburn",
+      "label": "Blackburn Rovers",
+      "detail": "7. sæti, 58 stig",
+      "accept": [
+        "blackburn rovers",
+        "blackburn"
+      ]
+    },
+    {
+      "id": "portsmouth",
+      "label": "Portsmouth",
+      "detail": "8. sæti, 57 stig",
+      "accept": [
+        "portsmouth"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "9. sæti, 55 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    },
+    {
+      "id": "westham",
+      "label": "West Ham United",
+      "detail": "10. sæti, 49 stig",
+      "accept": [
+        "west ham united",
+        "west ham"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

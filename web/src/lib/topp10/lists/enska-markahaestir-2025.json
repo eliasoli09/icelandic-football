@@ -1,0 +1,118 @@
+{
+  "id": "enska-markahaestir-2025",
+  "region": "enska",
+  "kind": "player",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Markahæstir 2025/26",
+  "question": "Nefndu 10 markahæstu leikmenn ensku úrvalsdeildarinnar 2025/26.",
+  "context": "Mörk í deildinni 2025/26.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025-26 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375680742"
+    },
+    {
+      "name": "Fantasy Premier League 2025-26 (safn vaastav)",
+      "url": "https://github.com/vaastav/Fantasy-Premier-League/tree/master/data/2025-26"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "haaland",
+      "label": "Erling Haaland",
+      "detail": "27 mörk, Manchester City",
+      "accept": [
+        "erling haaland",
+        "erling braut haaland",
+        "haaland"
+      ]
+    },
+    {
+      "id": "igor-thiago",
+      "label": "Igor Thiago",
+      "detail": "22 mörk, Brentford",
+      "accept": [
+        "igor thiago",
+        "igor thiago nascimento rodrigues",
+        "thiago"
+      ]
+    },
+    {
+      "id": "semenyo",
+      "label": "Antoine Semenyo",
+      "detail": "17 mörk, Bournemouth / Manchester City",
+      "accept": [
+        "antoine semenyo",
+        "semenyo"
+      ]
+    },
+    {
+      "id": "watkins",
+      "label": "Ollie Watkins",
+      "detail": "16 mörk, Aston Villa",
+      "accept": [
+        "ollie watkins",
+        "watkins"
+      ]
+    },
+    {
+      "id": "gibbs-white",
+      "label": "Morgan Gibbs-White",
+      "detail": "15 mörk, Nottingham Forest",
+      "accept": [
+        "morgan gibbs white",
+        "gibbs white"
+      ]
+    },
+    {
+      "id": "joao-pedro",
+      "label": "João Pedro",
+      "detail": "15 mörk, Chelsea",
+      "accept": [
+        "joao pedro",
+        "joao pedro junqueira de jesus",
+        "pedro"
+      ]
+    },
+    {
+      "id": "calvert-lewin",
+      "label": "Dominic Calvert-Lewin",
+      "detail": "14 mörk, Leeds United",
+      "accept": [
+        "dominic calvert lewin",
+        "calvert lewin"
+      ]
+    },
+    {
+      "id": "gyokeres",
+      "label": "Viktor Gyökeres",
+      "detail": "14 mörk, Arsenal",
+      "accept": [
+        "viktor gyokeres",
+        "gyokeres"
+      ]
+    },
+    {
+      "id": "kroupi",
+      "label": "Eli Junior Kroupi",
+      "detail": "13 mörk, Bournemouth",
+      "accept": [
+        "eli junior kroupi",
+        "junior kroupi",
+        "kroupi",
+        "eli kroupi"
+      ]
+    },
+    {
+      "id": "welbeck",
+      "label": "Danny Welbeck",
+      "detail": "13 mörk, Brighton & Hove Albion",
+      "accept": [
+        "danny welbeck",
+        "welbeck"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

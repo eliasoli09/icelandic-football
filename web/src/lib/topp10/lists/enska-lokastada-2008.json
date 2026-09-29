@@ -1,0 +1,115 @@
+{
+  "id": "enska-lokastada-2008",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2008/09",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2008/09.",
+  "context": "Lokastaða tímabilsins 2008/09. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2008-09 Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1371803942"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "1. sæti, 90 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "2. sæti, 86 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "3. sæti, 83 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "4. sæti, 72 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "everton",
+      "label": "Everton",
+      "detail": "5. sæti, 63 stig",
+      "accept": [
+        "everton"
+      ]
+    },
+    {
+      "id": "astonvilla",
+      "label": "Aston Villa",
+      "detail": "6. sæti, 62 stig",
+      "accept": [
+        "aston villa",
+        "villa",
+        "aston villa fc"
+      ]
+    },
+    {
+      "id": "fulham",
+      "label": "Fulham",
+      "detail": "7. sæti, 53 stig",
+      "accept": [
+        "fulham"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "8. sæti, 51 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "westham",
+      "label": "West Ham United",
+      "detail": "9. sæti, 51 stig",
+      "accept": [
+        "west ham united",
+        "west ham"
+      ]
+    },
+    {
+      "id": "mancity",
+      "label": "Manchester City",
+      "detail": "10. sæti, 50 stig",
+      "accept": [
+        "manchester city",
+        "man city",
+        "mcfc"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

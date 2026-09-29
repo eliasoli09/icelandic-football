@@ -1,0 +1,184 @@
+{
+  "id": "holland-lid-2026",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "EREDIVISIE",
+  "title": "Liðin 2026/27",
+  "question": "Nefndu 10 af 18 liðum hollensku deildarinnar 2026/27.",
+  "context": "Tímabilið 2026/27.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2026-27 Eredivisie",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1376038332"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "adodenhaag",
+      "label": "ADO Den Haag",
+      "detail": "",
+      "accept": [
+        "ado den haag",
+        "den haag"
+      ]
+    },
+    {
+      "id": "ajax",
+      "label": "Ajax",
+      "detail": "",
+      "accept": [
+        "ajax",
+        "ajax amsterdam",
+        "ajax fc"
+      ]
+    },
+    {
+      "id": "az",
+      "label": "AZ Alkmaar",
+      "detail": "",
+      "accept": [
+        "az alkmaar",
+        "az"
+      ]
+    },
+    {
+      "id": "cambuur",
+      "label": "Cambuur",
+      "detail": "",
+      "accept": [
+        "cambuur",
+        "sc cambuur"
+      ]
+    },
+    {
+      "id": "excelsior",
+      "label": "Excelsior",
+      "detail": "",
+      "accept": [
+        "excelsior",
+        "sbv excelsior"
+      ]
+    },
+    {
+      "id": "feyenoord",
+      "label": "Feyenoord",
+      "detail": "",
+      "accept": [
+        "feyenoord",
+        "feyenoord rotterdam"
+      ]
+    },
+    {
+      "id": "fortunasittard",
+      "label": "Fortuna Sittard",
+      "detail": "",
+      "accept": [
+        "fortuna sittard",
+        "for sittard"
+      ]
+    },
+    {
+      "id": "goahead",
+      "label": "Go Ahead Eagles",
+      "detail": "",
+      "accept": [
+        "go ahead eagles"
+      ]
+    },
+    {
+      "id": "groningen",
+      "label": "Groningen",
+      "detail": "",
+      "accept": [
+        "groningen",
+        "fc groningen"
+      ]
+    },
+    {
+      "id": "heerenveen",
+      "label": "Heerenveen",
+      "detail": "",
+      "accept": [
+        "heerenveen",
+        "sc heerenveen"
+      ]
+    },
+    {
+      "id": "nec",
+      "label": "NEC Nijmegen",
+      "detail": "",
+      "accept": [
+        "nec nijmegen",
+        "nec",
+        "nijmegen"
+      ]
+    },
+    {
+      "id": "zwolle",
+      "label": "PEC Zwolle",
+      "detail": "",
+      "accept": [
+        "pec zwolle",
+        "zwolle"
+      ]
+    },
+    {
+      "id": "psv",
+      "label": "PSV Eindhoven",
+      "detail": "",
+      "accept": [
+        "psv eindhoven",
+        "psv"
+      ]
+    },
+    {
+      "id": "spartarotterdam",
+      "label": "Sparta Rotterdam",
+      "detail": "",
+      "accept": [
+        "sparta rotterdam"
+      ]
+    },
+    {
+      "id": "telstar",
+      "label": "Telstar",
+      "detail": "",
+      "accept": [
+        "telstar",
+        "sc telstar"
+      ]
+    },
+    {
+      "id": "twente",
+      "label": "Twente",
+      "detail": "",
+      "accept": [
+        "twente",
+        "fc twente"
+      ]
+    },
+    {
+      "id": "utrecht",
+      "label": "Utrecht",
+      "detail": "",
+      "accept": [
+        "utrecht",
+        "fc utrecht"
+      ]
+    },
+    {
+      "id": "willem2",
+      "label": "Willem II",
+      "detail": "",
+      "accept": [
+        "willem ii"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

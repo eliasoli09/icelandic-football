@@ -1,0 +1,115 @@
+{
+  "id": "enska-lokastada-2005",
+  "region": "enska",
+  "kind": "club",
+  "competition": "ENSKA ÚRVALSDEILDIN",
+  "title": "Topp 10 2005/06",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum ensku úrvalsdeildarinnar 2005/06.",
+  "context": "Lokastaða tímabilsins 2005/06. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2005-06 FA Premier League",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374563856"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "chelsea",
+      "label": "Chelsea",
+      "detail": "1. sæti, 91 stig",
+      "accept": [
+        "chelsea",
+        "chelsea fc",
+        "chelsea f c"
+      ]
+    },
+    {
+      "id": "manutd",
+      "label": "Manchester United",
+      "detail": "2. sæti, 83 stig",
+      "accept": [
+        "manchester united",
+        "man united",
+        "man utd"
+      ]
+    },
+    {
+      "id": "liverpool",
+      "label": "Liverpool",
+      "detail": "3. sæti, 82 stig",
+      "accept": [
+        "liverpool",
+        "liverpool fc"
+      ]
+    },
+    {
+      "id": "arsenal",
+      "label": "Arsenal",
+      "detail": "4. sæti, 67 stig",
+      "accept": [
+        "arsenal"
+      ]
+    },
+    {
+      "id": "tottenham",
+      "label": "Tottenham Hotspur",
+      "detail": "5. sæti, 65 stig",
+      "accept": [
+        "tottenham hotspur",
+        "tottenham",
+        "spurs"
+      ]
+    },
+    {
+      "id": "blackburn",
+      "label": "Blackburn Rovers",
+      "detail": "6. sæti, 63 stig",
+      "accept": [
+        "blackburn rovers",
+        "blackburn"
+      ]
+    },
+    {
+      "id": "newcastle",
+      "label": "Newcastle United",
+      "detail": "7. sæti, 58 stig",
+      "accept": [
+        "newcastle united",
+        "newcastle"
+      ]
+    },
+    {
+      "id": "bolton",
+      "label": "Bolton Wanderers",
+      "detail": "8. sæti, 56 stig",
+      "accept": [
+        "bolton wanderers",
+        "bolton"
+      ]
+    },
+    {
+      "id": "westham",
+      "label": "West Ham United",
+      "detail": "9. sæti, 55 stig",
+      "accept": [
+        "west ham united",
+        "west ham"
+      ]
+    },
+    {
+      "id": "wigan",
+      "label": "Wigan Athletic",
+      "detail": "10. sæti, 51 stig",
+      "accept": [
+        "wigan athletic",
+        "wigan"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

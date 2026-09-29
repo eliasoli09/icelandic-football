@@ -1,9 +1,21 @@
 import { ProbBar } from '@/components/ProbBar'
+import { ShareButton } from '@/components/ShareButton'
 import { FormBadges } from '@/components/FormBadges'
-import { teams, matchDetail } from '@/lib/queries'
+import { teams, matchDetail, teamInfo, matchReport, matchOdds } from '@/lib/queries'
+import { OddsTable } from '@/components/OddsTable'
+import { TeamBadge } from '@/components/TeamBadge'
+import { displayColor, tint } from '@/lib/teamColors'
 import type { PredictionFactors } from '@/lib/types'
 
 export const revalidate = 300
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  return {
+    openGraph: { images: [`/api/og/leikur/${id}`] },
+    twitter: { card: 'summary_large_image', images: [`/api/og/leikur/${id}`] },
+  }
+}
 
 const fmtDate = (d: string | null) =>
   d ? new Date(d).toLocaleString('is-IS', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) : ''
@@ -11,9 +23,12 @@ const fmtDate = (d: string | null) =>
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   let names = new Map<number, string>()
+  let infos: Awaited<ReturnType<typeof teamInfo>> = new Map()
   let detail: Awaited<ReturnType<typeof matchDetail>> = null
+  let report: Awaited<ReturnType<typeof matchReport>> = null
+  let odds: Awaited<ReturnType<typeof matchOdds>> = []
   try {
-    ;[names, detail] = await Promise.all([teams(), matchDetail(Number(id))])
+    ;[names, infos, detail, report, odds] = await Promise.all([teams(), teamInfo(), matchDetail(Number(id)), matchReport(Number(id)), matchOdds(Number(id))])
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
@@ -21,30 +36,83 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const { match, prediction, events } = detail
   const nm = (tid: number) => names.get(tid) ?? `#${tid}`
   const factors = (prediction?.factors ?? null) as
-    | (PredictionFactors & { topScorelines?: { home: number; away: number; p: number }[] })
+    | (PredictionFactors & {
+        topScorelines?: { home: number; away: number; p: number }[]
+        newsAdjustments?: { home: string[]; away: string[] }
+      })
     | null
 
   return (
     <div className="max-w-2xl mx-auto grid gap-6">
-      <section className="card p-6 text-center">
+      <section
+        className="card p-6 text-center"
+        style={{
+          background: `linear-gradient(120deg, ${tint(infos.get(match.home_team), 0.22)} 0%, var(--surface) 42%, var(--surface) 58%, ${tint(infos.get(match.away_team), 0.22)} 100%)`,
+        }}
+      >
         <p className="text-xs muted mb-3">
           {fmtDate(match.date)} · {match.venue ?? ''} · {match.league === 'besta' ? 'Besta deildin' : 'Lengjudeildin'} {match.season}
         </p>
         <div className="flex items-center justify-between gap-4 mb-4">
-          <h1 className="text-lg font-bold flex-1 text-right">{nm(match.home_team)}</h1>
-          <div className="text-3xl font-black num px-4">
+          <h1 className="text-lg font-bold flex-1 text-right inline-flex items-center justify-end gap-2">
+            <span style={{ color: displayColor(infos.get(match.home_team)) }}>{nm(match.home_team)}</span>
+            <TeamBadge info={infos.get(match.home_team)} size={34} />
+          </h1>
+          <div className="stat text-4xl sm:text-5xl px-4">
             {match.status === 'played' ? `${match.home_goals} – ${match.away_goals}` : 'gegn'}
           </div>
-          <h1 className="text-lg font-bold flex-1 text-left">{nm(match.away_team)}</h1>
+          <h1 className="text-lg font-bold flex-1 text-left inline-flex items-center gap-2">
+            <TeamBadge info={infos.get(match.away_team)} size={34} />
+            <span style={{ color: displayColor(infos.get(match.away_team)) }}>{nm(match.away_team)}</span>
+          </h1>
         </div>
         {prediction && match.status === 'upcoming' && (
           <ProbBar pHome={prediction.p_home} pDraw={prediction.p_draw} pAway={prediction.p_away} />
         )}
+        {report && (
+          <p className="mt-4 text-sm">
+            <a href={report.url} target="_blank" rel="noopener" className="font-semibold underline underline-offset-4" style={{ color: 'var(--accent)' }}>
+              Lesa leikskýrslu á fótbolta.net ↗
+            </a>
+          </p>
+        )}
+        <div className="mt-4">
+          <ShareButton
+            title={`${nm(match.home_team)} – ${nm(match.away_team)}`}
+            text={match.status === 'played'
+              ? `${nm(match.home_team)} ${match.home_goals} – ${match.away_goals} ${nm(match.away_team)}`
+              : `Spá: ${nm(match.home_team)} ${Math.round((prediction?.p_home ?? 0) * 100)}% – jafntefli ${Math.round((prediction?.p_draw ?? 0) * 100)}% – ${nm(match.away_team)} ${Math.round((prediction?.p_away ?? 0) * 100)}%`}
+            path={`/leikir/${match.id}`}
+            imagePath={`/api/og/leikur/${match.id}`}
+          />
+        </div>
       </section>
+
+      {match.status === 'upcoming' && odds.length > 0 && (
+        <OddsTable
+          odds={odds}
+          fair={
+            prediction && prediction.p_home > 0 && prediction.p_draw > 0 && prediction.p_away > 0
+              ? { home: 1 / prediction.p_home, draw: 1 / prediction.p_draw, away: 1 / prediction.p_away }
+              : null
+          }
+          favored={
+            prediction
+              ? ((['home', 'draw', 'away'] as const)[
+                  [prediction.p_home, prediction.p_draw, prediction.p_away].indexOf(
+                    Math.max(prediction.p_home, prediction.p_draw, prediction.p_away),
+                  )
+                ] ?? 'home')
+              : 'home'
+          }
+          homeName={nm(match.home_team)}
+          awayName={nm(match.away_team)}
+        />
+      )}
 
       {factors && match.status === 'upcoming' && (
         <section className="card p-5">
-          <h2 className="font-bold mb-3">Af hverju? — rökin á bak við spána</h2>
+          <h2 className="display font-extrabold mb-4">Af hverju? - rökin á bak við spána</h2>
           <div className="grid gap-2.5 text-sm">
             <Row label="Elo-stig">
               <span className="num">{factors.eloHome} gegn {factors.eloAway} <span className="muted">(munur {factors.eloDiff > 0 ? '+' : ''}{factors.eloDiff})</span></span>
@@ -65,6 +133,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               <span className="num">×{factors.homeAdvantage}</span>
             </Row>
           </div>
+          {factors.newsAdjustments && (
+            <div className="mt-4 pt-3 grid gap-1.5" style={{ borderTop: '1px solid var(--border)' }}>
+              <p className="text-xs font-bold muted uppercase tracking-wide">Fréttastuðlar</p>
+              {[...factors.newsAdjustments.home.map((r) => `${nm(match.home_team)} ${r}`),
+                ...factors.newsAdjustments.away.map((r) => `${nm(match.away_team)} ${r}`)].map((r) => (
+                <p key={r} className="text-xs" style={{ color: 'var(--accent)' }}>{r}</p>
+              ))}
+              <p className="text-[10px] muted">Handskráð atvik úr fréttum (t.d. sölur, meiðsli, Evrópuálag) - lögð ofan á Elo í spánni.</p>
+            </div>
+          )}
           {factors.topScorelines && (
             <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
               <p className="text-xs muted mb-2">Líklegustu úrslit</p>
@@ -82,7 +160,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
       {events.length > 0 && (
         <section className="card p-5">
-          <h2 className="font-bold mb-3">Atburðir</h2>
+          <h2 className="display font-extrabold mb-4">Atburðir</h2>
           <div className="grid gap-1.5 text-sm">
             {events.map((e) => (
               <div key={`${e.event_id}-${e.type}-${e.player_name}`} className="flex items-center gap-3">

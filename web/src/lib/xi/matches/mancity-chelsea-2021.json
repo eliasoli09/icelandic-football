@@ -1,0 +1,198 @@
+{
+  "id": "mancity-chelsea-2021",
+  "region": "evropa",
+  "level": "easy",
+  "competition": "Meistaradeild Evrópu 2020/21",
+  "stage": "Úrslitaleikur",
+  "date": "2021-05-29",
+  "blurb": "Enskur úrslitaleikur í Porto.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#77bbff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 31,
+        "name": "Ederson",
+        "word": "EDERSON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Kyle Walker",
+        "word": "WALKER",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "John Stones",
+        "word": "STONES",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Rúben Dias",
+        "word": "DIAS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Oleksandr Zinchenko",
+        "word": "ZINCHENKO",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Bernardo Silva",
+        "word": "SILVA",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "İlkay Gündoğan",
+        "word": "GUNDOGAN",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 47,
+        "name": "Phil Foden",
+        "word": "FODEN",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Kevin De Bruyne",
+        "word": "DEBRUYNE",
+        "line": 4,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 26,
+        "name": "Riyad Mahrez",
+        "word": "MAHREZ",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Raheem Sterling",
+        "word": "STERLING",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Chelsea",
+    "color": "#0000ff",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 16,
+        "name": "Édouard Mendy",
+        "word": "MENDY",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 28,
+        "name": "César Azpilicueta",
+        "word": "AZPILICUETA",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Thiago Silva",
+        "word": "SILVA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 2,
+        "name": "Antonio Rüdiger",
+        "word": "RUDIGER",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 24,
+        "name": "Reece James",
+        "word": "JAMES",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 21,
+        "name": "Ben Chilwell",
+        "word": "CHILWELL",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 5,
+        "name": "Jorginho",
+        "word": "JORGINHO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "N'Golo Kanté",
+        "word": "KANTE",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 29,
+        "name": "Kai Havertz",
+        "word": "HAVERTZ",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 19,
+        "name": "Mason Mount",
+        "word": "MOUNT",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Timo Werner",
+        "word": "WERNER",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2021 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1359669709"
+    },
+    {
+      "name": "transfermarkt.com · Manchester City - Chelsea FC",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3562547"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

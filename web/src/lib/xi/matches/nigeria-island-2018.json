@@ -1,0 +1,198 @@
+{
+  "id": "nigeria-island-2018",
+  "region": "island",
+  "level": "easy",
+  "competition": "HM 2018",
+  "stage": "Riðlakeppni",
+  "date": "2018-06-22",
+  "blurb": "Annar leikur Íslands á HM 2018, í Volgograd.",
+  "score": {
+    "home": 2,
+    "away": 0
+  },
+  "home": {
+    "name": "Nígería",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 23,
+        "name": "Francis Uzoho",
+        "word": "UZOHO",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Kenneth Omeruo",
+        "word": "OMERUO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "William Troost-Ekong",
+        "word": "TROOSTEKONG",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Leon Balogun",
+        "word": "BALOGUN",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "John Obi Mikel",
+        "word": "MIKEL",
+        "line": 2,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Peter Etebo",
+        "word": "ETEBO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Wilfred Ndidi",
+        "word": "NDIDI",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Victor Moses",
+        "word": "MOSES",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 2,
+        "name": "Brian Idowu",
+        "word": "IDOWU",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Ahmed Musa",
+        "word": "MUSA",
+        "line": 5,
+        "x": 1,
+        "goals": 2
+      },
+      {
+        "number": 14,
+        "name": "Kelechi Iheanacho",
+        "word": "IHEANACHO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Ísland",
+    "color": "#0c2fff",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Hannes Þór Halldórsson",
+        "word": "HANNES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Birkir Már Sævarsson",
+        "word": "BIRKIR",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Kári Árnason",
+        "word": "KARI",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Ragnar Sigurðsson",
+        "word": "RAGNAR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Hörður Björgvin Magnússon",
+        "word": "HÖRÐUR",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Rúrik Gíslason",
+        "word": "RURIK",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Aron Gunnarsson",
+        "word": "ARON",
+        "line": 3,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 10,
+        "name": "Gylfi Sigurðsson",
+        "word": "GYLFI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "Birkir Bjarnason",
+        "word": "BIRKIR",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Jón Daði Böðvarsson",
+        "word": "JON",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Alfreð Finnbogason",
+        "word": "ALFREÐ",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2018 FIFA World Cup Group D",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1372523086"
+    },
+    {
+      "name": "transfermarkt.com · Nigeria - Iceland",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2977704"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

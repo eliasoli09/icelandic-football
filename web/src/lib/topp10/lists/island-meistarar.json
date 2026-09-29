@@ -1,0 +1,119 @@
+{
+  "id": "island-meistarar",
+  "region": "island",
+  "kind": "club",
+  "competition": "ÍSLANDSMÓTIÐ",
+  "title": "Íslandsmeistarar",
+  "question": "Nefndu 10 félög sem hafa orðið Íslandsmeistarar karla í fótbolta.",
+  "context": "Til og með tímabilinu 2026.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375729725"
+    },
+    {
+      "name": "is.wikipedia.org · Besta deild karla",
+      "url": "https://is.wikipedia.org/w/index.php?oldid=1979641"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "kr",
+      "label": "KR",
+      "detail": "27 titlar, síðast 2019",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    },
+    {
+      "id": "valur",
+      "label": "Valur",
+      "detail": "23 titlar, síðast 2020",
+      "accept": [
+        "valur"
+      ]
+    },
+    {
+      "id": "fram",
+      "label": "Fram",
+      "detail": "18 titlar, síðast 1990",
+      "accept": [
+        "fram"
+      ]
+    },
+    {
+      "id": "ia",
+      "label": "ÍA",
+      "detail": "18 titlar, síðast 2001",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ]
+    },
+    {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "9 titlar, síðast 2026",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    },
+    {
+      "id": "fh",
+      "label": "FH",
+      "detail": "8 titlar, síðast 2016",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ]
+    },
+    {
+      "id": "keflavik",
+      "label": "Keflavík",
+      "detail": "4 titlar, síðast 1973",
+      "accept": [
+        "keflavik"
+      ]
+    },
+    {
+      "id": "ibv",
+      "label": "ÍBV",
+      "detail": "3 titlar, síðast 1998",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ]
+    },
+    {
+      "id": "breidablik",
+      "label": "Breiðablik",
+      "detail": "3 titlar, síðast 2024",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "KA",
+      "detail": "1 titill, síðast 1989",
+      "accept": [
+        "ka"
+      ]
+    },
+    {
+      "id": "stjarnan",
+      "label": "Stjarnan",
+      "detail": "1 titill, síðast 2014",
+      "accept": [
+        "stjarnan"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

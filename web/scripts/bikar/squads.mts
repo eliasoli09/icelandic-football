@@ -1,0 +1,327 @@
+/**
+ * The players of every verified side, for the draft, and the side's strength.
+ *
+ * - Who played: the starting eleven in the KSÍ report of each league match,
+ *   and the goals from the match page's events.
+ * - Where he played: the club's Transfermarkt squad for that season. Transfermarkt
+ *   numbers Icelandic seasons inconsistently, so the squad page is read for the
+ *   year and the year before, and the one naming more of KSÍ's starters is used.
+ *   A player is in the draft only with a position from Transfermarkt, or as a
+ *   goalkeeper in KSÍ's reports.
+ * - How good: the side's place in the ranking sets its level, and a player
+ *   rises above or falls below it by how often he started and, going forward,
+ *   how often he scored.
+ *
+ * Writes src/lib/bikar/sides.json. Usage: cd web && npx tsx scripts/bikar/squads.mts
+ */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { tmpdir } from 'os'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
+
+const here = dirname(fileURLToPath(import.meta.url))
+const webDir = join(here, '..', '..')
+for (const l of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')) {
+  const m = l.match(/^([A-Z_]+)=(.*)$/); if (m && !process.env[m[1]]) process.env[m[1]] = m[2]
+}
+const { parseKsiReport } = await import(join(webDir, 'scripts/xi/parse.ts'))
+const { parseEvents } = await import(join(webDir, 'src/lib/ksiEvents.ts'))
+const { normalise } = await import(join(webDir, 'src/lib/topp10/normalise.ts'))
+const { respell } = await import(join(webDir, 'scripts/hver/parse.ts'))
+const { rank } = await import(join(here, 'rank.ts'))
+const { db } = await import(join(webDir, 'src/lib/db.ts'))
+
+/**
+ * Vísir's list of the sixty best players in the history of Iceland's top
+ * division (scripts/bikar/visir-bestu.csv, as Elias supplied it on 17
+ * September 2026): rank, times in the team of the year, and the seasons he
+ * won the league. Appearances and goals cannot see what made a player great,
+ * so this is what lifts the ones who were.
+ */
+const VISIR = (() => {
+  const words = (x: string) => normalise(x).split(' ').filter(Boolean)
+  // Vísir writes the Reykjavík clubs without their suffix
+  const clubKey = (x: string) => normalise(x).replace(/\b(r|o)$/, '').trim()
+  const out = new Map<string, { rank: number; teamOfYear: number; champion: number[]; clubs: string[]; full: string }>()
+  const [, ...lines] = readFileSync(join(here, 'visir-bestu.csv'), 'utf-8').trim().split('\n')
+  for (const line of lines) {
+    const c = line.split(';')
+    const w = words(c[1])
+    out.set(`${w[0]} ${w[w.length - 1]}`, {
+      rank: Number(c[0]),
+      teamOfYear: Number(c[4]) || 0,
+      champion: [...c[5].matchAll(/\d{4}/g)].map((m) => +m[0]),
+      clubs: c[3].split(',').map(clubKey),
+      full: words(c[1]).join(' '),
+    })
+  }
+  return out
+})()
+/** A level of his own: the first on the list stands here, the sixtieth here. */
+const LEGEND_BEST = 90, LEGEND_LAST = 82.5
+/**
+ * What the list says about a player in a given season. His place on it gives
+ * him a level of his own, which carries him whatever side he played for: the
+ * best defender in the league is not a lesser player for having played in a
+ * side that finished third. On top of that come three fifths of a point for
+ * every selection in the team of the year, up to four, and one more in a
+ * season the list records him as a champion.
+ */
+function legendBonus(name: string, year: number, club: string): { level: number; extra: number; rank: number } | null {
+  const w = normalise(name).split(' ').filter(Boolean)
+  const v = VISIR.get(`${w[0]} ${w[w.length - 1]}`)
+  // the list names his clubs, which keeps another Sigurður Jónsson from being mistaken for the one on it
+  if (!v || !v.clubs.includes(normalise(club).replace(/\b(r|o)$/, '').trim())) return null
+  if (v.full !== w.join(' ') && w.length !== v.full.split(' ').length) return null
+  return {
+    level: LEGEND_LAST + (LEGEND_BEST - LEGEND_LAST) * (1 - (v.rank - 1) / 59),
+    extra: Math.min(4, v.teamOfYear * 0.6) + (v.champion.includes(year) ? 1 : 0),
+    rank: v.rank,
+  }
+}
+
+/**
+ * Sofascore's season ratings for 2023, 2024 and 2025 (scripts/fifa/history,
+ * from the file Elias supplied), the only per-season measure of a player
+ * himself that reaches these sides: the reports say who started and who
+ * scored, and nothing else separates one man from another, which left the
+ * best player in the league of 2023 reading as an ordinary starter. A rating
+ * above seven, which is about an average season, lifts him; the files name
+ * only the fifty best of 2023 and 2024, so no one is pushed down by them.
+ */
+const SOFA = (() => {
+  const fold = (x: string) => normalise(x).replace(/ð/g, 'd').replace(/þ/g, 'th')
+  const out = new Map<string, number>()
+  for (const year of [2023, 2024, 2025]) {
+    const file = join(webDir, 'scripts/fifa/history', `sofascore-${year}.csv`)
+    const [head, ...lines] = readFileSync(file, 'utf-8').trim().split('\n')
+    const col = head.split(';')
+    const iName = col.indexOf('Leikmaður'), iClub = col.indexOf('Lið'), iRate = col.indexOf('Sofascore-einkunn')
+    for (const line of lines) {
+      const c = line.split(';')
+      const rating = Number(c[iRate]?.replace(',', '.'))
+      if (!rating) continue
+      const w = fold(c[iName]).split(' ').filter(Boolean)
+      out.set(`${year}|${w[0]} ${w[w.length - 1]}|${fold(c[iClub]).split(' ')[0]}`, rating)
+    }
+  }
+  return out
+})()
+/**
+ * A level of his own again, the way the list gives one to the greats: an
+ * average season of seven stands at this level and every further point of
+ * rating is worth this much, so the best player in the league reads as one
+ * whatever his side did.
+ */
+const SOFA_LEVEL = 78, SOFA_PER_POINT = 12
+function sofaLevel(name: string, year: number, club: string): number {
+  const fold = (x: string) => normalise(x).replace(/ð/g, 'd').replace(/þ/g, 'th')
+  const w = fold(name).split(' ').filter(Boolean)
+  const rating = SOFA.get(`${year}|${w[0]} ${w[w.length - 1]}|${fold(club).split(' ')[0]}`)
+  return rating ? SOFA_LEVEL + (rating - 7) * SOFA_PER_POINT : 0
+}
+
+const verified = JSON.parse(readFileSync(join(here, 'teams.json'), 'utf-8'))
+const cacheDir = join(tmpdir(), 'bikar-cache')
+mkdirSync(cacheDir, { recursive: true })
+
+const UA = 'BestaSpain-Leikir/1.0 (https://islensk-fotbolti.vercel.app; cup game)'
+const PAUSE: Record<string, number> = { 'www.ksi.is': 1000, 'www.transfermarkt.com': 5000 }
+const last = new Map<string, number>()
+async function get(url: string): Promise<string> {
+  const file = join(cacheDir, url.replace(/^https?:\/\//, '').replace(/[^\w.-]+/g, '_').slice(0, 200))
+  if (existsSync(file)) return readFileSync(file, 'utf-8')
+  const host = new URL(url).host
+  for (let attempt = 0; ; attempt++) {
+    const wait = (last.get(host) ?? 0) + (PAUSE[host] ?? 1000) - Date.now()
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait))
+    last.set(host, Date.now())
+    let res: Response
+    try { res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'en' }, signal: AbortSignal.timeout(60_000) }) }
+    catch (err) {
+      // a dropped connection: try again a little later
+      if (attempt >= 3) throw err
+      console.log(`${host}: ${(err as Error).message}, reyni aftur eftir 30 sek.`)
+      await new Promise((r) => setTimeout(r, 30_000))
+      continue
+    }
+    // a refusal means slow down: wait it out, never work around it
+    if ((res.status === 403 || res.status === 429) && attempt < 3) {
+      console.log(`${host} svaraði ${res.status}, bíð ${10 * 2 ** attempt} mínútur`)
+      await new Promise((r) => setTimeout(r, 10 * 2 ** attempt * 60_000))
+      continue
+    }
+    if (!res.ok) throw new Error(`${url} svaraði ${res.status}`)
+    const body = await res.text()
+    writeFileSync(file, body)
+    return body
+  }
+}
+
+/** Transfermarkt club ids, by our club id. */
+const TM_CLUB: Record<string, string> = {
+  kr: '3237', valur: '1033', fram: '3832', ia: '1231', fh: '1185', vikingur: '5849', keflavik: '8037',
+  ibv: '8036', breidablik: '3737', ka: '1839', stjarnan: '21875', fylkir: '2576',
+}
+
+const FIFA_LINE: Record<string, 'GK' | 'DEF' | 'MID' | 'FWD'> = {
+  'Goalkeeper': 'GK', 'Centre-Back': 'DEF', 'Left-Back': 'DEF', 'Right-Back': 'DEF', 'Defender': 'DEF', 'Sweeper': 'DEF',
+  'Defensive Midfield': 'MID', 'Central Midfield': 'MID', 'Attacking Midfield': 'MID', 'Left Midfield': 'MID', 'Right Midfield': 'MID', 'midfield': 'MID', 'Midfield': 'MID',
+  'Left Winger': 'FWD', 'Right Winger': 'FWD', 'Second Striker': 'FWD', 'Centre-Forward': 'FWD', 'Striker': 'FWD', 'attack': 'FWD', 'Attack': 'FWD',
+}
+const SHORT: Record<string, string> = {
+  'Goalkeeper': 'GK', 'Centre-Back': 'CB', 'Left-Back': 'LB', 'Right-Back': 'RB', 'Defender': 'DEF', 'Sweeper': 'SW',
+  'Defensive Midfield': 'CDM', 'Central Midfield': 'CM', 'Attacking Midfield': 'CAM', 'Left Midfield': 'LM', 'Right Midfield': 'RM', 'midfield': 'MID', 'Midfield': 'MID',
+  'Left Winger': 'LW', 'Right Winger': 'RW', 'Second Striker': 'CF', 'Centre-Forward': 'ST', 'Striker': 'ST', 'attack': 'FWD', 'Attack': 'FWD',
+}
+
+interface TmRow { name: string; position: string }
+function squad(html: string): TmRow[] {
+  const rows: TmRow[] = []
+  for (const tr of html.split(/<tr class="(?:odd|even)">/).slice(1)) {
+    const name = tr.match(/<td class="hauptlink">\s*<a href="\/[^"]+\/profil\/spieler\/\d+">\s*([^<]+?)\s*(?:<span|<\/a>)/)
+    const pos = tr.match(/<tr>\s*<td>\s*([A-Za-z- ]+?)\s*<\/td>\s*<\/tr>/)
+    if (name && pos) rows.push({ name: name[1].replace(/&#039;/g, "'").replace(/&amp;/g, '&'), position: pos[1] })
+  }
+  return rows
+}
+const words = (s: string) => normalise(s).split(' ').filter(Boolean)
+/** The same whole name, else the same first and last name, when exactly one squad member has it. */
+function findIn(rows: TmRow[], name: string): TmRow | null {
+  const k = words(name)
+  for (const test of [(w: string[]) => w.join(' ') === k.join(' '), (w: string[]) => w[0] === k[0] && w[w.length - 1] === k[k.length - 1]]) {
+    const hits = rows.filter((r) => test(words(r.name)))
+    if (hits.length === 1) return hits[0]
+    if (hits.length > 1) return null
+  }
+  return null
+}
+
+const { data: teamRows } = await db().from('teams').select('id, name')
+const teamName = new Map<number, string>((teamRows ?? []).map((t: { id: number; name: string }) => [t.id, t.name]))
+
+const ranked = rank(verified.teams)
+const top = ranked[0].score, bottom = ranked[ranked.length - 1].score
+/** The best side's regulars sit at 86, the lowest-ranked side's at 72. */
+const levelOf = (score: number) => 72 + (86 - 72) * (score - bottom) / (top - bottom)
+
+const sides = []
+for (const [i, side] of ranked.entries()) {
+  const ids: number[] = side.reportIds
+  const { data: rows } = await db().from('matches').select('id, home_team, away_team').in('id', ids)
+  const players = new Map<number, { name: string; starts: number; keeper: number; goals: number }>()
+  for (const m of rows ?? []) {
+    const base = `https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=${m.id}`
+    let report
+    try { report = parseKsiReport(await get(`${base}&banner-tab=report`)) } catch { continue }
+    // which side of the report is ours: our database's team names are the club labels
+    const key = normalise(teamName.get(m.home_team)!) === normalise(side.label) ? 'home'
+      : normalise(teamName.get(m.away_team)!) === normalise(side.label) ? 'away' : null
+    if (!key) throw new Error(`${side.label} ${side.year}: hvorugt lið leiks ${m.id}`)
+    for (const p of report.lineups[key]) {
+      const x = players.get(p.ksiId) ?? { name: p.name, starts: 0, keeper: 0, goals: 0 }
+      x.starts++; if (p.goalkeeper) x.keeper++
+      players.set(p.ksiId, x)
+    }
+    for (const e of parseEvents(await get(base))) {
+      if ((e.type === 'goal' || e.type === 'penalty') && e.side === key && e.playerKsiId && players.has(e.playerKsiId)) players.get(e.playerKsiId)!.goals++
+    }
+  }
+
+  // the Transfermarkt season that names more of the starters
+  const tmId = TM_CLUB[side.club]
+  let best: TmRow[] = [], bestHits = -1, bestSeason = 0
+  for (const s of [side.year - 1, side.year]) {
+    const rowsTm = squad(await get(`https://www.transfermarkt.com/x/kader/verein/${tmId}/saison_id/${s}/plus/1`))
+    const hits = [...players.values()].filter((p) => p.starts >= 3 && findIn(rowsTm, p.name)).length
+    if (hits > bestHits) { best = rowsTm; bestHits = hits; bestSeason = s }
+  }
+
+  const level = levelOf(side.score)
+  const games = side.record.games
+  const pool = []
+  for (const [ksiId, p] of players) {
+    if (p.starts < 3) continue
+    const tm = findIn(best, p.name)
+    const line = tm ? FIFA_LINE[tm.position] : p.keeper > p.starts / 2 ? 'GK' : undefined
+    if (!line) continue
+    const share = p.starts / games
+    const scoring = line === 'FWD' || line === 'MID' ? Math.min(10, 12 * p.goals / p.starts) : 0
+    const legend = legendBonus(tm ? respell(tm.name, p.name, p.name) : p.name, side.year, side.label)
+    const named = tm ? respell(tm.name, p.name, p.name) : p.name
+    const raw = Math.max(level, legend?.level ?? 0, sofaLevel(named, side.year, side.label))
+      + 8 * (share - 0.7) + scoring + (legend?.extra ?? 0)
+    pool.push({
+      id: ksiId,
+      name: tm ? respell(tm.name, p.name, p.name) : p.name,
+      line,
+      position: tm ? SHORT[tm.position] : 'GK',
+      raw, share, rating: 0, starts: p.starts, goals: p.goals,
+      visir: legend?.rank,
+    })
+  }
+  pool.sort((a, b) => b.raw - a.raw)
+  // the strength is set once every player is on the same scale, below
+  sides.push({
+    id: `${side.club}-${side.year}`, club: side.club, label: side.label, year: side.year, rank: i + 1, score: side.score,
+    champion: side.champion, position: side.position, cupDouble: side.cupDouble, record: side.record, basis: side.basis,
+    europe: side.europeSummary, europeTies: side.europe, strength: Math.round(level), tmSeason: bestSeason, tmMatched: bestHits, players: pool,
+  })
+  console.log(`${i + 1}. ${side.label} ${side.year}: ${players.size} byrjuðu, ${pool.length} í draftinu (Transfermarkt ${bestSeason}, ${bestHits} fundust)`)
+}
+
+/**
+ * Goals are the only thing separating one player from another in a KSÍ report,
+ * and defenders and goalkeepers score almost none, so every line but the
+ * forwards sat low. Each line is therefore brought onto the common scale
+ * first: the median of its regulars is moved to the median of all regulars,
+ * and half the difference in spread is taken out, the way the FIFA ratings
+ * standardise a player within his line. Half, not all, because a forward's
+ * goals really are evidence and taking the whole spread out threw it away.
+ */
+const LINE_MIX = 0.5
+const median = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)]
+const spread = (xs: number[]) => {
+  const m = xs.reduce((a, x) => a + x, 0) / xs.length
+  return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / xs.length)
+}
+{
+  const all = sides.flatMap((s) => s.players)
+  // a regular, so that reserves do not drag a line's middle down
+  const regulars = all.filter((p) => p.share >= 0.5).map((p) => p.raw)
+  const middle = median(regulars), width = spread(regulars)
+  for (const line of ['GK', 'DEF', 'MID', 'FWD'] as const) {
+    const own = all.filter((p) => p.line === line && p.share >= 0.5).map((p) => p.raw)
+    const m = median(own), w = Math.max(1, spread(own))
+    const stretch = (1 - LINE_MIX) + LINE_MIX * width / w
+    for (const p of all) if (p.line === line) p.raw = middle + (p.raw - m) * stretch
+    console.log(`${line}: miðgildi ${m.toFixed(1)}, spönn ${w.toFixed(1)} -> teygt um ${stretch.toFixed(2)}`)
+  }
+}
+
+/**
+ * One scale for every player of every side: ranked by what his season and the
+ * list of the greats say, the best at 94 and the rest down a curve, the same
+ * shape the FIFA ratings use. A cap alone piled a dozen players onto 94.
+ */
+const TOP = 94, SPREAD = 30, CURVE = 0.62
+{
+  const raws = sides.flatMap((s) => s.players.map((p) => p.raw)).sort((a, b) => b - a)
+  const onCurve = (i: number) => TOP - SPREAD * Math.pow(i / (raws.length - 1), CURVE)
+  const scale = (raw: number) => {
+    const i = raws.findIndex((x) => x <= raw)
+    return Math.max(55, Math.min(TOP, Math.round(onCurve(i < 0 ? raws.length - 1 : i))))
+  }
+  for (const side of sides) {
+    for (const p of side.players) p.rating = scale(p.raw)
+    side.players.sort((a, b) => b.rating - a.rating || b.starts - a.starts)
+    const xi = [...side.players.filter((p) => p.line === 'GK').slice(0, 1), ...side.players.filter((p) => p.line !== 'GK').slice(0, 10)]
+    // the best eleven's average; where Transfermarkt placed too few of them, the side's own level
+    if (xi.length === 11) side.strength = Math.round(xi.reduce((a, p) => a + p.rating, 0) / 11)
+    for (const p of side.players) { delete (p as { raw?: number }).raw; delete (p as { share?: number }).share }
+  }
+  console.log(`einkunnir: ${raws.length} leikmenn, ${sides.flatMap((s) => s.players).filter((p) => p.rating >= 90).length} yfir 90`)
+}
+
+mkdirSync(join(webDir, 'src/lib/bikar'), { recursive: true })
+writeFileSync(join(webDir, 'src/lib/bikar/sides.json'), JSON.stringify({ sources: verified.sources, built: new Date().toISOString().slice(0, 10), sides }) + '\n')

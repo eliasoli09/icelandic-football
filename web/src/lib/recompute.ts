@@ -3,6 +3,7 @@ import { fetchTournamentMatches } from './ksi'
 import { fetchMatchEvents, validateEvents } from './ksiEvents'
 import { runElo, currentRatings, type EloMatch } from './elo'
 import { runPlayerElo, type PlayerMatchInput } from './playerElo'
+import { inferPositions, normalizeName } from './positions'
 import { predictMatch, type TeamSeasonRates } from './predict'
 import {
   simulateSeason,
@@ -11,9 +12,17 @@ import {
   type SimFixture,
   type ScorerState,
 } from './simulate'
+import { splitGroups } from './split'
+import { LEAGUES } from './leagues'
+import { leagueForecasts } from './leagueSim'
 import type { League, Phase, MatchEvent } from './types'
+import { runBelt, computeH2H, computeAllTime, type BeltMatch, type BeltContext } from './belt'
 
 export const CURRENT_SEASON = 2026
+/** recomputeAll covers the KSÍ leagues; API-Football competitions run their own pass. */
+const ICELANDIC: League[] = ['besta', 'lengjudeild']
+/** Team Elo covers the modern era only - last 26 years, from 2000. */
+export const ELO_START_SEASON = 2000
 export const TOURNAMENTS_2026: { id: number; league: League; phase: Phase }[] = [
   { id: 7025510, league: 'besta', phase: 'main' },
   { id: 7025527, league: 'besta', phase: 'efri' },
@@ -176,14 +185,21 @@ interface MatchRow {
   status: 'played' | 'upcoming'
 }
 
-async function allMatches(): Promise<MatchRow[]> {
+/**
+ * @param leagues restrict to these competitions. The belt, head-to-head and
+ *   all-time tables are Icelandic-only, so pulling every league into memory
+ *   would not survive the multi-league registry.
+ */
+async function allMatches(leagues?: League[]): Promise<MatchRow[]> {
   const out: MatchRow[] = []
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await db()
+    let q = db()
       .from('matches')
       .select(
         'id, season, league, phase, date, home_team, away_team, home_goals, away_goals, status',
       )
+    if (leagues) q = q.in('league', leagues)
+    const { data, error } = await q
       .order('season')
       .order('date', { nullsFirst: true })
       .order('id')
@@ -235,33 +251,117 @@ function seasonRates(
 }
 
 /** Recompute Elo, predictions and simulations from the full match table. */
-export async function recomputeAll() {
-  const matches = await allMatches()
+/**
+ * Rate every played match that has no rating yet, continuing from the ratings
+ * already stored. Elo is sequential but incremental - replaying 26 years on
+ * every run does not survive more than a couple of leagues.
+ *
+ * `full` rebuilds from scratch, which is only needed if historical results
+ * were corrected after the fact.
+ */
+export async function updateElo(full = false): Promise<Map<string, number>> {
+  const seed = new Map<string, number>()
+  if (full) {
+    const all = await allMatches()
+    const input: EloMatch[] = all
+      .filter((m) => m.status === 'played' && m.home_goals !== null && m.season >= ELO_START_SEASON)
+      .map((m, i) => ({
+        matchId: m.id, order: i, date: m.date, league: m.league,
+        home: String(m.home_team), away: String(m.away_team),
+        homeGoals: m.home_goals!, awayGoals: m.away_goals!,
+      }))
+    const records = runElo(input)
+    // a full rebuild is ~180k rows across ten leagues; one payload that size
+    // is refused by the transport, so clear and then append in batches
+    await replaceTable('team_elo', [])
+    for (let i = 0; i < records.length; i += 500) {
+      const { error } = await db().rpc('rpc_append_elo', {
+        p_secret: SECRET(),
+        p_rows: records.slice(i, i + 500).map((r) => ({
+          team_id: Number(r.team), match_id: r.matchId, date: r.date,
+          elo_before: r.eloBefore, elo_after: r.eloAfter,
+        })),
+      })
+      if (error) throw error
+    }
+    return currentRatings(records)
+  }
+
+  const { data: cur, error: curErr } = await db()
+    .from('team_elo_current')
+    .select('team_id, elo_after')
+  if (curErr) throw curErr
+  for (const r of cur ?? []) seed.set(String(r.team_id), r.elo_after as number)
+
+  const pending: MatchRow[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db()
+      .from('matches_needing_elo')
+      .select('id, season, league, date, home_team, away_team, home_goals, away_goals')
+      .order('season').order('date', { nullsFirst: true }).order('id')
+      .range(from, from + 999)
+    if (error) throw error
+    pending.push(...(data as MatchRow[]))
+    if (data.length < 1000) break
+  }
+  if (!pending.length) return seed
+
+  const input: EloMatch[] = pending.map((m, i) => ({
+    matchId: m.id, order: i, date: m.date, league: m.league,
+    home: String(m.home_team), away: String(m.away_team),
+    homeGoals: m.home_goals!, awayGoals: m.away_goals!,
+  }))
+  const records = runElo(input, seed)
+  for (let i = 0; i < records.length; i += 500) {
+    const { error } = await db().rpc('rpc_append_elo', {
+      p_secret: SECRET(),
+      p_rows: records.slice(i, i + 500).map((r) => ({
+        team_id: Number(r.team), match_id: r.matchId, date: r.date,
+        elo_before: r.eloBefore, elo_after: r.eloAfter,
+      })),
+    })
+    if (error) throw error
+  }
+  for (const [team, elo] of currentRatings(records)) seed.set(team, elo)
+  return seed
+}
+
+export async function recomputeAll(opts: { fullElo?: boolean } = {}) {
+  const ratings = await updateElo(opts.fullElo)
+  const matches = await allMatches(ICELANDIC)
   const played = matches.filter((m) => m.status === 'played' && m.home_goals !== null)
 
-  // --- team Elo ---
-  const eloInput: EloMatch[] = played.map((m, i) => ({
-    matchId: m.id,
-    order: i, // allMatches is season+date ordered
-    date: m.date,
-    league: m.league,
-    home: String(m.home_team),
-    away: String(m.away_team),
-    homeGoals: m.home_goals!,
-    awayGoals: m.away_goals!,
-  }))
-  const eloRecords = runElo(eloInput)
-  await replaceTable(
-    'team_elo',
-    eloRecords.map((r) => ({
-      team_id: Number(r.team),
-      match_id: r.matchId,
-      date: r.date,
-      elo_before: r.eloBefore,
-      elo_after: r.eloAfter,
-    })),
-  )
-  const ratings = currentRatings(eloRecords)
+  // news-based adjustments (transfers, injuries, Europe congestion) - applied
+  // transparently on top of Elo at prediction time, never to stored history
+  const { data: adjRows } = await db()
+    .from('news_adjustments')
+    .select('team_id, delta, reason')
+    .eq('active', true)
+    .gte('expires_at', new Date().toISOString())
+  const newsAdj = new Map<number, { delta: number; reasons: string[] }>()
+  for (const a of adjRows ?? []) {
+    const cur = newsAdj.get(a.team_id) ?? { delta: 0, reasons: [] }
+    cur.delta += a.delta
+    cur.reasons.push(`${a.delta > 0 ? '+' : ''}${a.delta}: ${a.reason}`)
+    newsAdj.set(a.team_id, cur)
+  }
+  const adjustedRating = (teamId: number) =>
+    (ratings.get(String(teamId)) ?? 1500) + (newsAdj.get(teamId)?.delta ?? 0)
+
+  // players confirmed out (injury/ban) - excluded from remaining games in the
+  // scorer races; their current tally still counts, so a lead can still hold
+  const { data: outRows } = await db()
+    .from('player_out')
+    .select('name, league, until')
+    .eq('active', true)
+  const today = new Date().toISOString().slice(0, 10)
+  const playerIsOut = (name: string, league: League) =>
+    (outRows ?? []).some(
+      (r) =>
+        r.league === league &&
+        (!r.until || r.until >= today) &&
+        normalizeName(r.name) === normalizeName(name),
+    )
 
   // --- player Elo (current season, event-observable) ---
   const evRows = await fetchAll<{
@@ -291,11 +391,19 @@ export async function recomputeAll() {
     .map((m, i) => ({
       matchId: m.id,
       order: i,
+      league: m.league,
       homeGoals: m.home_goals!,
       awayGoals: m.away_goals!,
       events: evByMatch.get(m.id)!,
     }))
-  const playerRecords = runPlayerElo(playerInput)
+  const { data: sofaForPos } = await db()
+    .from('sofascore_players')
+    .select('name, appearances, assists, goals, extra')
+    .eq('season', CURRENT_SEASON)
+  const positionByNorm = new Map(
+    [...inferPositions(sofaForPos ?? [])].map(([name, pos]) => [normalizeName(name), pos]),
+  )
+  const playerRecords = runPlayerElo(playerInput, positionByNorm)
   await replaceTable(
     'player_elo',
     playerRecords.map((r) => ({
@@ -307,7 +415,7 @@ export async function recomputeAll() {
   )
 
   // --- predictions for upcoming current-season matches ---
-  const rates = {
+  const rates: Record<string, Map<number, TeamSeasonRates>> = {
     besta: seasonRates(matches, CURRENT_SEASON, 'besta'),
     lengjudeild: seasonRates(matches, CURRENT_SEASON, 'lengjudeild'),
   }
@@ -331,12 +439,15 @@ export async function recomputeAll() {
   )
   const predRows = upcoming.map((m) => {
     const p = predictMatch({
-      eloHome: ratings.get(String(m.home_team)) ?? 1500,
-      eloAway: ratings.get(String(m.away_team)) ?? 1500,
+      goals: LEAGUES[m.league]?.goals,
+      eloHome: adjustedRating(m.home_team),
+      eloAway: adjustedRating(m.away_team),
       home: rates[m.league].get(m.home_team) ?? null,
       away: rates[m.league].get(m.away_team) ?? null,
       h2h: h2hOf(m.home_team, m.away_team),
     })
+    const homeAdj = newsAdj.get(m.home_team)
+    const awayAdj = newsAdj.get(m.away_team)
     return {
       match_id: m.id,
       p_home: p.pHome,
@@ -344,107 +455,154 @@ export async function recomputeAll() {
       p_away: p.pAway,
       lambda_home: p.lambdaHome,
       lambda_away: p.lambdaAway,
-      factors: { ...p.factors, topScorelines: p.topScorelines },
+      factors: {
+        ...p.factors,
+        topScorelines: p.topScorelines,
+        newsAdjustments: homeAdj || awayAdj
+          ? { home: homeAdj?.reasons ?? [], away: awayAdj?.reasons ?? [] }
+          : undefined,
+      },
       computed_at: new Date().toISOString(),
     }
   })
-  await replaceTable('predictions', predRows)
+  // the leagues outside Iceland: the same chain, from their own results,
+  // expected goals and Elo, with each league's size and its promotion and
+  // relegation places taken from its entry in LEAGUES
+  const abroad = (Object.keys(LEAGUES) as League[]).filter((l) => !ICELANDIC.includes(l))
+  const foreign = await leagueForecasts(CURRENT_SEASON, adjustedRating, abroad)
+  await replaceTable('predictions', [...predRows, ...foreign.predictions])
 
-  // --- season simulation (Besta deild) ---
-  const standings = new Map<number, { pts: number; gf: number; ga: number; p: number }>()
-  for (const m of played.filter(
-    (m) => m.season === CURRENT_SEASON && m.league === 'besta',
-  )) {
-    const h = standings.get(m.home_team) ?? { pts: 0, gf: 0, ga: 0, p: 0 }
-    const a = standings.get(m.away_team) ?? { pts: 0, gf: 0, ga: 0, p: 0 }
-    h.gf += m.home_goals!; h.ga += m.away_goals!; h.p++
-    a.gf += m.away_goals!; a.ga += m.home_goals!; a.p++
-    if (m.home_goals! > m.away_goals!) h.pts += 3
-    else if (m.home_goals! < m.away_goals!) a.pts += 3
-    else { h.pts++; a.pts++ }
-    standings.set(m.home_team, h)
-    standings.set(m.away_team, a)
-  }
-  const simTeams: SimTeamState[] = [...standings].map(([teamId, s]) => ({
-    team: String(teamId),
-    elo: ratings.get(String(teamId)) ?? 1500,
-    rates: rates.besta.get(teamId) ?? null,
-    points: s.pts,
-    goalsFor: s.gf,
-    goalsAgainst: s.ga,
-    played: s.p,
-  }))
-  const remaining: SimFixture[] = upcoming
-    .filter((m) => m.league === 'besta' && m.phase === 'main')
-    .map((m) => ({ home: String(m.home_team), away: String(m.away_team) }))
-  if (simTeams.length === 12) {
-    const sim = simulateSeason(simTeams, remaining, 10000)
-    await replaceTable(
-      'season_sim',
-      sim.map((r) => ({
+  // --- season simulations + scorer races (both leagues) ---
+  const scorerRows: Record<string, unknown>[] = []
+  const simRows: Record<string, unknown>[] = []
+  for (const simLeague of ICELANDIC) {
+    const standings = new Map<number, { pts: number; gf: number; ga: number; p: number }>()
+    for (const m of played.filter(
+      (m) => m.season === CURRENT_SEASON && m.league === simLeague,
+    )) {
+      const h = standings.get(m.home_team) ?? { pts: 0, gf: 0, ga: 0, p: 0 }
+      const a = standings.get(m.away_team) ?? { pts: 0, gf: 0, ga: 0, p: 0 }
+      h.gf += m.home_goals!; h.ga += m.away_goals!; h.p++
+      a.gf += m.away_goals!; a.ga += m.home_goals!; a.p++
+      if (m.home_goals! > m.away_goals!) h.pts += 3
+      else if (m.home_goals! < m.away_goals!) a.pts += 3
+      else { h.pts++; a.pts++ }
+      standings.set(m.home_team, h)
+      standings.set(m.away_team, a)
+    }
+    const simTeams: SimTeamState[] = [...standings].map(([teamId, s]) => ({
+      team: String(teamId),
+      elo: adjustedRating(teamId),
+      rates: rates[simLeague].get(teamId) ?? null,
+      points: s.pts,
+      goalsFor: s.gf,
+      goalsAgainst: s.ga,
+      played: s.p,
+    }))
+    // Once the split is published its fixtures are real, so simulate those
+    // rather than inventing a round robin. `umspil` is a knockout, not part of
+    // the league table, so it stays out.
+    const remaining: SimFixture[] = upcoming
+      .filter(
+        (m) =>
+          m.league === simLeague &&
+          (m.phase === 'main' || m.phase === 'efri' || m.phase === 'nedri'),
+      )
+      .map((m) => ({ home: String(m.home_team), away: String(m.away_team) }))
+    const teamGroups = splitGroups(
+      matches.filter((m) => m.season === CURRENT_SEASON && m.league === simLeague),
+    )
+    if (simTeams.length === 12) {
+      const sim = simulateSeason(simTeams, remaining, 10000, 20260706, {
+        goals: LEAGUES[simLeague]?.goals,
+        split: simLeague === 'besta',
+        upSlots: simLeague === 'besta' ? 3 : 2,
+        groups: teamGroups
+          ? new Map([...teamGroups].map(([id, g]) => [String(id), g]))
+          : null,
+      })
+      simRows.push(
+        ...sim.map((r) => ({
+          season: CURRENT_SEASON,
+          league: simLeague,
+          team_id: Number(r.team),
+          pos_probs: r.posProbs,
+          p_title: r.pTitle,
+          p_europe: r.pEurope,
+          p_relegation: r.pRelegation,
+          proj_points: r.projectedPoints,
+          proj_low: r.pointsLow,
+          proj_high: r.pointsHigh,
+        })),
+      )
+    }
+
+    // scorer race for this league
+    const teamGamesLeft = new Map<number, number>()
+    for (const m of upcoming.filter((m) => m.league === simLeague)) {
+      teamGamesLeft.set(m.home_team, (teamGamesLeft.get(m.home_team) ?? 0) + 1)
+      teamGamesLeft.set(m.away_team, (teamGamesLeft.get(m.away_team) ?? 0) + 1)
+    }
+    const avgLeft =
+      [...teamGamesLeft.values()].reduce((a, b) => a + b, 0) /
+      Math.max(1, teamGamesLeft.size)
+    const teamGamesPlayed = new Map<number, number>()
+    for (const [teamId, s] of standings) teamGamesPlayed.set(teamId, s.p)
+    const goalsByPlayer = new Map<string, { goals: number; teamId: number }>()
+    for (const m of played.filter(
+      (m) => m.season === CURRENT_SEASON && m.league === simLeague,
+    )) {
+      for (const e of evByMatch.get(m.id) ?? []) {
+        if (e.type === 'goal' || e.type === 'penalty') {
+          const teamId = e.side === 'home' ? m.home_team : m.away_team
+          const cur = goalsByPlayer.get(e.playerName) ?? { goals: 0, teamId }
+          cur.goals++
+          cur.teamId = teamId
+          goalsByPlayer.set(e.playerName, cur)
+        }
+      }
+    }
+    const goalRace: ScorerState[] = [...goalsByPlayer]
+      .sort((a, b) => b[1].goals - a[1].goals)
+      .slice(0, 25)
+      .map(([name, g]) => ({
+        name,
+        team: String(g.teamId),
+        current: g.goals,
+        perGame: g.goals / Math.max(1, teamGamesPlayed.get(g.teamId) ?? 13),
+        remainingTeamGames: playerIsOut(name, simLeague)
+          ? 0
+          : teamGamesLeft.get(g.teamId) ?? avgLeft,
+      }))
+    scorerRows.push(
+      ...simulateScorerRace(goalRace).map((r) => ({
         season: CURRENT_SEASON,
-        league: 'besta',
-        team_id: Number(r.team),
-        pos_probs: r.posProbs,
-        p_title: r.pTitle,
-        p_europe: r.pEurope,
-        p_relegation: r.pRelegation,
+        league: simLeague,
+        name: r.name,
+        kind: 'goals' as const,
+        current: r.current,
+        projected: r.projected,
+        p_win: r.pWin,
       })),
     )
   }
+  await replaceTable('season_sim', [...simRows, ...foreign.sim])
 
-  // --- scorer races ---
-  const teamGamesLeft = new Map<number, number>()
-  for (const m of upcoming.filter((m) => m.league === 'besta')) {
-    teamGamesLeft.set(m.home_team, (teamGamesLeft.get(m.home_team) ?? 0) + 1)
-    teamGamesLeft.set(m.away_team, (teamGamesLeft.get(m.away_team) ?? 0) + 1)
-  }
-  const avgLeft =
-    [...teamGamesLeft.values()].reduce((a, b) => a + b, 0) /
-    Math.max(1, teamGamesLeft.size)
-
-  const teamGamesPlayed = new Map<number, number>()
-  for (const [teamId, s] of standings) teamGamesPlayed.set(teamId, s.p)
-  const goalsByPlayer = new Map<string, { goals: number; teamId: number }>()
-  for (const m of played.filter(
-    (m) => m.season === CURRENT_SEASON && m.league === 'besta',
-  )) {
-    for (const e of evByMatch.get(m.id) ?? []) {
-      if (e.type === 'goal' || e.type === 'penalty') {
-        const teamId = e.side === 'home' ? m.home_team : m.away_team
-        const cur = goalsByPlayer.get(e.playerName) ?? { goals: 0, teamId }
-        cur.goals++
-        cur.teamId = teamId
-        goalsByPlayer.set(e.playerName, cur)
-      }
-    }
-  }
-  const goalRace: ScorerState[] = [...goalsByPlayer]
-    .sort((a, b) => b[1].goals - a[1].goals)
-    .slice(0, 25)
-    .map(([name, g]) => ({
-      name,
-      team: String(g.teamId),
-      current: g.goals,
-      perGame: g.goals / Math.max(1, teamGamesPlayed.get(g.teamId) ?? 13),
-      remainingTeamGames: teamGamesLeft.get(g.teamId) ?? avgLeft,
-    }))
-  const scorerRows = simulateScorerRace(goalRace).map((r) => ({
-    season: CURRENT_SEASON,
-    name: r.name,
-    kind: 'goals' as const,
-    current: r.current,
-    projected: r.projected,
-    p_win: r.pWin,
-  }))
-
-  // assists race from the SofaScore snapshot (no per-match assist data at KSÍ)
+  // assists race from the SofaScore snapshot (Besta deild only - no lengju data)
   const { data: sofa } = await db()
     .from('sofascore_players')
     .select('name, assists, appearances')
     .eq('season', CURRENT_SEASON)
     .order('assists', { ascending: false })
     .limit(25)
+  const avgLeftBesta = (() => {
+    const per = new Map<number, number>()
+    for (const m of upcoming.filter((m) => m.league === 'besta')) {
+      per.set(m.home_team, (per.get(m.home_team) ?? 0) + 1)
+      per.set(m.away_team, (per.get(m.away_team) ?? 0) + 1)
+    }
+    return [...per.values()].reduce((a, b) => a + b, 0) / Math.max(1, per.size)
+  })()
   const assistRace: ScorerState[] = (sofa ?? [])
     .filter((p) => p.assists && p.appearances)
     .map((p) => ({
@@ -452,23 +610,135 @@ export async function recomputeAll() {
       team: '',
       current: p.assists,
       perGame: p.assists / p.appearances,
-      remainingTeamGames: avgLeft,
+      remainingTeamGames: playerIsOut(p.name, 'besta') ? 0 : avgLeftBesta,
     }))
   const assistRows = simulateScorerRace(assistRace).map((r) => ({
     season: CURRENT_SEASON,
+    league: 'besta',
     name: r.name,
     kind: 'assists' as const,
     current: r.current,
     projected: r.projected,
     p_win: r.pWin,
   }))
-  await replaceTable('scorer_sim', [...scorerRows, ...assistRows])
+  await replaceTable('scorer_sim', [...scorerRows, ...assistRows, ...foreign.scorers])
+
+  // --- history: belt lineage, all-time H2H and all-time table (top flight) ---
+  const bestaPlayed: BeltMatch[] = played
+    .filter((m) => m.league === 'besta')
+    .map((m) => ({
+      matchId: m.id,
+      season: m.season,
+      date: m.date,
+      order: 0,
+      homeTeam: m.home_team,
+      awayTeam: m.away_team,
+      homeGoals: m.home_goals!,
+      awayGoals: m.away_goals!,
+    }))
+    .sort(
+      (a, b) =>
+        a.season - b.season ||
+        (a.date ?? '~').localeCompare(b.date ?? '~') || // undated last within season
+        a.matchId - b.matchId,
+    )
+    .map((m, i) => ({ ...m, order: i }))
+
+  // the champion of the last table-only season carries the belt into match play
+  const firstMatchSeason = bestaPlayed[0]?.season
+  let initialHolder: number | undefined
+  if (firstMatchSeason) {
+    const { data: champ } = await db()
+      .from('champions')
+      .select('team_id')
+      .eq('season', firstMatchSeason - 1)
+      .maybeSingle()
+    initialHolder = champ?.team_id
+  }
+  const { data: champRows } = await db().from('champions').select('season, team_id')
+  const beltCtx: BeltContext = {
+    seasonTeams: (() => {
+      const st = new Map<number, Set<number>>()
+      for (const m of bestaPlayed) {
+        if (!st.has(m.season)) st.set(m.season, new Set())
+        st.get(m.season)!.add(m.homeTeam)
+        st.get(m.season)!.add(m.awayTeam)
+      }
+      return st
+    })(),
+    champions: new Map((champRows ?? []).map((c) => [c.season, c.team_id])),
+  }
+  const belt = runBelt(bestaPlayed, initialHolder, beltCtx)
+  await replaceHistoryTable(
+    'belt_history',
+    belt.history.map((h) => ({
+      match_id: h.matchId,
+      season: h.season,
+      date: h.date,
+      holder_before: h.holderBefore,
+      challenger: h.challenger,
+      holder_after: h.holderAfter,
+      taken: h.taken,
+    })),
+  )
+  const allPlayedH2H: BeltMatch[] = played.map((m, i) => ({
+    matchId: m.id, season: m.season, date: m.date, order: i,
+    homeTeam: m.home_team, awayTeam: m.away_team,
+    homeGoals: m.home_goals!, awayGoals: m.away_goals!,
+  }))
+  await replaceHistoryTable(
+    'h2h_cache',
+    computeH2H(allPlayedH2H).map((p) => ({
+      team_a: p.teamA,
+      team_b: p.teamB,
+      stats: p,
+    })),
+  )
+  // all-time table: official season standings for the table-only era
+  // (pre-1985) + per-match data from 1985 onwards
+  const alltimeRows = computeAllTime(bestaPlayed)
+  const { data: oldStandings } = await db()
+    .from('season_standings')
+    .select('season, team_id, played, won, drawn, lost, gf, ga')
+    .lt('season', firstMatchSeason ?? 1985)
+  const byTeam = new Map(alltimeRows.map((r) => [r.teamId, r]))
+  for (const s of oldStandings ?? []) {
+    let r = byTeam.get(s.team_id)
+    if (!r) {
+      r = { teamId: s.team_id, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0,
+            points3: 0, seasons: 0, firstSeason: s.season, lastSeason: s.season }
+      byTeam.set(s.team_id, r)
+      alltimeRows.push(r)
+    }
+    r.played += s.played; r.won += s.won; r.drawn += s.drawn; r.lost += s.lost
+    r.gf += s.gf; r.ga += s.ga
+    r.points3 += 3 * s.won + s.drawn
+    r.seasons += 1
+    r.firstSeason = Math.min(r.firstSeason, s.season)
+    r.lastSeason = Math.max(r.lastSeason, s.season)
+  }
+  alltimeRows.sort((a, b) => b.points3 - a.points3)
+  await replaceHistoryTable(
+    'alltime_cache',
+    alltimeRows.map((r) => ({ team_id: r.teamId, stats: r })),
+  )
 
   return {
-    eloRecords: eloRecords.length,
+    ratedTeams: ratings.size,
     playerRecords: playerRecords.length,
-    predictions: predRows.length,
+    predictions: predRows.length + foreign.predictions.length,
+    foreign: foreign.report,
+    beltEvents: belt.history.length,
   }
+}
+
+async function replaceHistoryTable(table: string, rows: Record<string, unknown>[]) {
+  const { error } = await db().rpc('rpc_replace_history', {
+    p_secret: SECRET(),
+    p_table: table,
+    p_rows: rows,
+  })
+  if (error) throw error
 }
 
 async function fetchAll<T>(table: string, select: string): Promise<T[]> {

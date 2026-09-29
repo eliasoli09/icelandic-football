@@ -6,7 +6,7 @@ import { parseMatchCards } from '../src/lib/ksi'
 const fx = (name: string) =>
   readFileSync(join(__dirname, 'fixtures', name), 'utf8')
 
-describe('parseMatchCards — results page (Besta deild 2026)', () => {
+describe('parseMatchCards - results page (Besta deild 2026)', () => {
   const cards = parseMatchCards(fx('results_page.html'), 2026)
 
   it('finds all 15 cards on the page', () => {
@@ -20,7 +20,7 @@ describe('parseMatchCards — results page (Besta deild 2026)', () => {
     expect(m.homeGoals).toBe(1)
     expect(m.awayGoals).toBe(0)
     expect(m.status).toBe('played')
-    // ÍBV's home ground — proves venue is taken from the card's own header,
+    // ÍBV's home ground - proves venue is taken from the card's own header,
     // not the following card's
     expect(m.venue).toBe('Hásteinsvöllur')
     expect(m.date).toMatch(/^2026-07-04T/)
@@ -32,7 +32,7 @@ describe('parseMatchCards — results page (Besta deild 2026)', () => {
   })
 })
 
-describe('parseMatchCards — fixtures page (upcoming)', () => {
+describe('parseMatchCards - fixtures page (upcoming)', () => {
   const cards = parseMatchCards(fx('fixtures_page.html'), 2026)
 
   it('parses the upcoming Keflavík–Fram card with kickoff time', () => {
@@ -49,5 +49,86 @@ describe('parseMatchCards — fixtures page (upcoming)', () => {
     expect(ka.ksiId).toBeNull()
     expect(ka.status).toBe('upcoming')
     expect(cards.filter((c) => c.ksiId === 7041404)).toHaveLength(1)
+  })
+})
+
+// KSÍ added Tailwind utility classes to the team-name spans (seen Sept 2026:
+// `max-w-[125rem] l:max-w-[160rem] wrap-break-word`). The old exact-class
+// regexes matched nothing, so the nightly ingest silently scraped zero cards
+// for six weeks. Parse on the stable part of the class list instead.
+describe('parseMatchCards - KSÍ markup with extra utility classes', () => {
+  const cards = parseMatchCards(fx('results_page_v2.html'), 2026)
+
+  it('still finds all 15 cards', () => {
+    expect(cards).toHaveLength(15)
+  })
+
+  it('keeps home and away on their own sides of the score', () => {
+    const m = cards.find((c) => c.ksiId === 7041453)!
+    expect(m.home).toBe('ÍA')
+    expect(m.away).toBe('KR')
+    expect(m.homeGoals).toBe(3)
+    expect(m.awayGoals).toBe(1)
+    expect(m.status).toBe('played')
+    expect(m.venue).toBe('ELKEM völlurinn')
+  })
+
+  it('never reads the same club on both sides of a card', () => {
+    for (const c of cards) expect(c.home).not.toBe(c.away)
+  })
+
+  it('parses upcoming split-round cards too', () => {
+    const up = parseMatchCards(fx('fixtures_page_v2.html'), 2026)
+    expect(up.length).toBeGreaterThan(0)
+    expect(up.every((c) => c.home && c.away)).toBe(true)
+  })
+})
+
+// KSÍ publishes placeholder cards for stages whose participants aren't decided
+// ("Úrslitaleikur" / "23. Umferð" vs a team literally named "."). They look
+// like real cards - team links, crest slots - so they were ingested as matches
+// and even created clubs named "23. Umferð" in the teams table.
+describe('parseMatchCards - undecided-stage placeholders', () => {
+  const cards = parseMatchCards(fx('playoff_placeholder_page.html'), 2026)
+
+  it('keeps the real playoff ties', () => {
+    expect(cards).toHaveLength(4)
+    expect(cards.map((c) => `${c.home}-${c.away}`)).toContain('Njarðvík-Þróttur R.')
+  })
+
+  it('drops the undecided final rather than inventing clubs for it', () => {
+    expect(cards.some((c) => c.home === 'Úrslitaleikur' || c.away === '.')).toBe(false)
+  })
+})
+
+// The placeholder wording changes with the stage: a semi-final that has not
+// been drawn shows up as "Undanúrslit" against "Fyrri leikur". An earlier fix
+// only knew about "Úrslitaleikur" and "23. Umferð", so these still got in and
+// created three phantom clubs.
+describe('parseMatchCards - stage names used as clubs', () => {
+  const card = (home: string, away: string) => `
+    <div class="grid-cols-[1fr_auto_1fr] gap">
+      <a href="/oll-mot/mot/lid?id=1"><span class="body-4 group-hover:underline text-right max-w-[125rem] wrap-break-word">${home}</span></a>
+      <span class="body-4 whitespace-nowrap">-</span>
+      <a href="/oll-mot/mot/lid?id=2"><span class="body-4 group-hover:underline max-w-[125rem] wrap-break-word">${away}</span></a>
+    </div>`
+
+  it('drops every undrawn-stage card', () => {
+    for (const [h, a] of [
+      ['Undanúrslit', 'Fyrri leikur'],
+      ['Undanúrslit', 'Seinni leikur'],
+      ['Úrslitaleikur', '.'],
+      ['23. Umferð', '.'],
+      ['8-liða úrslit', '.'],
+    ]) {
+      expect(parseMatchCards(card(h, a), 2026)).toHaveLength(0)
+    }
+  })
+
+  it('still keeps a real tie', () => {
+    const cards = parseMatchCards(card('Þróttur R.', 'Njarðvík'), 2026)
+    expect(cards).toHaveLength(1)
+    expect(cards[0].home).toBe('Þróttur R.')
+    expect(cards[0].away).toBe('Njarðvík')
   })
 })

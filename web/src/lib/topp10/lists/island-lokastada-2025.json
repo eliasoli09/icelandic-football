@@ -1,0 +1,111 @@
+{
+  "id": "island-lokastada-2025",
+  "region": "island",
+  "kind": "club",
+  "competition": "BESTA DEILDIN",
+  "title": "Topp 10 2025",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum efstu deildar karla 2025.",
+  "context": "Lokastaða tímabilsins 2025. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2025 Besta deild karla",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1337561080"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "vikingur",
+      "label": "Víkingur R.",
+      "detail": "1. sæti, 57 stig",
+      "accept": [
+        "vikingur r",
+        "vikingur",
+        "vikingur reykjavik"
+      ]
+    },
+    {
+      "id": "valur",
+      "label": "Valur",
+      "detail": "2. sæti, 45 stig",
+      "accept": [
+        "valur"
+      ]
+    },
+    {
+      "id": "stjarnan",
+      "label": "Stjarnan",
+      "detail": "3. sæti, 42 stig",
+      "accept": [
+        "stjarnan"
+      ]
+    },
+    {
+      "id": "breidablik",
+      "label": "Breiðablik",
+      "detail": "4. sæti, 42 stig",
+      "accept": [
+        "breidablik",
+        "blikar"
+      ]
+    },
+    {
+      "id": "fram",
+      "label": "Fram",
+      "detail": "5. sæti, 36 stig",
+      "accept": [
+        "fram"
+      ]
+    },
+    {
+      "id": "fh",
+      "label": "FH",
+      "detail": "6. sæti, 33 stig",
+      "accept": [
+        "fh",
+        "fimleikafelag hafnarfjardar"
+      ]
+    },
+    {
+      "id": "ka",
+      "label": "KA",
+      "detail": "7. sæti, 39 stig",
+      "accept": [
+        "ka"
+      ]
+    },
+    {
+      "id": "ia",
+      "label": "ÍA",
+      "detail": "8. sæti, 34 stig",
+      "accept": [
+        "ia",
+        "akranes",
+        "skaginn"
+      ]
+    },
+    {
+      "id": "ibv",
+      "label": "ÍBV",
+      "detail": "9. sæti, 33 stig",
+      "accept": [
+        "ibv",
+        "eyjamenn"
+      ]
+    },
+    {
+      "id": "kr",
+      "label": "KR",
+      "detail": "10. sæti, 31 stig",
+      "accept": [
+        "kr",
+        "knattspyrnufelag reykjavikur"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

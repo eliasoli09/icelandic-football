@@ -1,0 +1,199 @@
+{
+  "id": "brasilia-frakkland-1998",
+  "region": "evropa",
+  "level": "hard",
+  "competition": "HM 1998",
+  "stage": "Úrslitaleikur",
+  "date": "1998-07-12",
+  "blurb": "Úrslitaleikur HM á Stade de France.",
+  "score": {
+    "home": 0,
+    "away": 3
+  },
+  "home": {
+    "name": "Brasilía",
+    "color": "#ffcc00",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Cláudio Taffarel",
+        "word": "TAFFAREL",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Cafu",
+        "word": "CAFU",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Júnior Baiano",
+        "word": "BAIANO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Aldair",
+        "word": "ALDAIR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Roberto Carlos",
+        "word": "ROBERTOCARLOS",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Dunga",
+        "word": "DUNGA",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 5,
+        "name": "César Sampaio",
+        "word": "SAMPAIO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 18,
+        "name": "Leonardo Araújo",
+        "word": "LEONARDO",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 10,
+        "name": "Rivaldo",
+        "word": "RIVALDO",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Bebeto",
+        "word": "BEBETO",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Ronaldo",
+        "word": "RONALDO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Frakkland",
+    "color": "#0000c0",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 16,
+        "name": "Fabien Barthez",
+        "word": "BARTHEZ",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 15,
+        "name": "Lilian Thuram",
+        "word": "THURAM",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 18,
+        "name": "Frank Leboeuf",
+        "word": "LEBOEUF",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 8,
+        "name": "Marcel Desailly",
+        "word": "DESAILLY",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Bixente Lizarazu",
+        "word": "LIZARAZU",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "Didier Deschamps",
+        "word": "DESCHAMPS",
+        "line": 2,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 19,
+        "name": "Christian Karembeu",
+        "word": "KAREMBEU",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 17,
+        "name": "Emmanuel Petit",
+        "word": "PETIT",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Zinedine Zidane",
+        "word": "ZIDANE",
+        "line": 4,
+        "x": 0,
+        "goals": 2
+      },
+      {
+        "number": 6,
+        "name": "Youri Djorkaeff",
+        "word": "DJORKAEFF",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Stéphane Guivarc'h",
+        "word": "GUIVARCH",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 1998 FIFA World Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1370477312"
+    },
+    {
+      "name": "transfermarkt.com · Brazil - France",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/936721"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

@@ -1,0 +1,200 @@
+{
+  "id": "dortmund-bayern-2013",
+  "region": "evropa",
+  "level": "medium",
+  "competition": "Meistaradeild Evrópu 2012/13",
+  "stage": "Úrslitaleikur",
+  "date": "2013-05-25",
+  "blurb": "Þýskur úrslitaleikur á Wembley.",
+  "score": {
+    "home": 1,
+    "away": 2
+  },
+  "home": {
+    "name": "Borussia Dortmund",
+    "color": "#ffff00",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Roman Weidenfeller",
+        "word": "WEIDENFELLER",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 26,
+        "name": "Łukasz Piszczek",
+        "word": "PISZCZEK",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Neven Subotić",
+        "word": "SUBOTIC",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Mats Hummels",
+        "word": "HUMMELS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 29,
+        "name": "Marcel Schmelzer",
+        "word": "SCHMELZER",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Sven Bender",
+        "word": "BENDER",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 8,
+        "name": "İlkay Gündoğan",
+        "word": "GUNDOGAN",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 16,
+        "name": "Jakub Błaszczykowski",
+        "word": "BLASZCZYKOWSKI",
+        "line": 4,
+        "x": 2
+      },
+      {
+        "number": 11,
+        "name": "Marco Reus",
+        "word": "REUS",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Kevin Großkreutz",
+        "word": "GROSSKREUTZ",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Robert Lewandowski",
+        "word": "LEWANDOWSKI",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Bayern München",
+    "color": "#dd0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Manuel Neuer",
+        "word": "NEUER",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Philipp Lahm",
+        "word": "LAHM",
+        "line": 1,
+        "x": 3,
+        "captain": true
+      },
+      {
+        "number": 17,
+        "name": "Jérôme Boateng",
+        "word": "BOATENG",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 4,
+        "name": "Dante",
+        "word": "DANTE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 27,
+        "name": "David Alaba",
+        "word": "ALABA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 8,
+        "name": "Javi Martínez",
+        "word": "MARTINEZ",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 31,
+        "name": "Bastian Schweinsteiger",
+        "word": "SCHWEINSTEIGER",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Arjen Robben",
+        "word": "ROBBEN",
+        "line": 4,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 25,
+        "name": "Thomas Müller",
+        "word": "MULLER",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 7,
+        "name": "Franck Ribéry",
+        "word": "RIBERY",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Mario Mandžukić",
+        "word": "MANDZUKIC",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2013 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1352352017"
+    },
+    {
+      "name": "transfermarkt.com · Borussia Dortmund - Bayern Munich",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/2314690"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

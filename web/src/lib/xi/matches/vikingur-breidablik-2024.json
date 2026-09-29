@@ -1,0 +1,199 @@
+{
+  "id": "vikingur-breidablik-2024",
+  "region": "island",
+  "level": "medium",
+  "competition": "Besta deild karla 2024",
+  "stage": "Lokaumferð",
+  "date": "2024-10-27",
+  "blurb": "Tvö efstu liðin mættust í síðasta leik tímabilsins. Sigurliðið varð Íslandsmeistari.",
+  "score": {
+    "home": 0,
+    "away": 3
+  },
+  "home": {
+    "name": "Víkingur R.",
+    "color": "#c8102e",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Ingvar Jónsson",
+        "word": "INGVAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Peter Oliver Ekroth",
+        "word": "EKROTH",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 6,
+        "name": "Gunnar Vatnhamar",
+        "word": "VATNHAMAR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Erlingur Agnarsson",
+        "word": "ERLINGUR",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Gísli Gottskálk Þórðarson",
+        "word": "GISLI",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Ari Sigurpálsson",
+        "word": "ARI",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Danijel Dejan Djuric",
+        "word": "DANIJEL",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 20,
+        "name": "Tarik Ibrahimagic",
+        "word": "IBRAHIMAGIC",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Aron Elís Þrándarson",
+        "word": "ARON",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Karl Friðleifur Gunnarsson",
+        "word": "KARL",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 23,
+        "name": "Nikolaj Andreas Hansen",
+        "word": "HANSEN",
+        "line": 4,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "away": {
+    "name": "Breiðablik",
+    "color": "#0f6756",
+    "ink": "#ffffff",
+    "icelandic": true,
+    "players": [
+      {
+        "number": 1,
+        "name": "Anton Ari Einarsson",
+        "word": "ANTON",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 4,
+        "name": "Damir Muminovic",
+        "word": "DAMIR",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 7,
+        "name": "Höskuldur Gunnlaugsson",
+        "word": "HÖSKULDUR",
+        "line": 3,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Viktor Karl Einarsson",
+        "word": "VIKTOR",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 11,
+        "name": "Aron Bjarnason",
+        "word": "ARON",
+        "line": 4,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 18,
+        "name": "Davíð Ingvarsson",
+        "word": "DAVIÐ",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 19,
+        "name": "Kristinn Jónsson",
+        "word": "KRISTINN",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 21,
+        "name": "Viktor Örn Margeirsson",
+        "word": "VIKTOR",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Ísak Snær Þorvaldsson",
+        "word": "ISAK",
+        "line": 5,
+        "x": 0,
+        "goals": 2
+      },
+      {
+        "number": 24,
+        "name": "Arnór Gauti Jónsson",
+        "word": "ARNOR",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 30,
+        "name": "Andri Rafn Yeoman",
+        "word": "ANDRI",
+        "line": 1,
+        "x": 3
+      }
+    ]
+  },
+  "layout": "Uppstilling í leiknum samkvæmt Transfermarkt",
+  "sources": [
+    {
+      "name": "ksi.is · Víkingur R. - Breiðablik, Íslandsmót KSÍ - Besta deild karla 2024 - Efri hluti / 5. umferð",
+      "url": "https://www.ksi.is/leikir-og-urslit/felagslid/leikur?id=685211"
+    },
+    {
+      "name": "transfermarkt.com · Víkingur Reykjavík - Breidablik Kópavogur",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/4458892"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

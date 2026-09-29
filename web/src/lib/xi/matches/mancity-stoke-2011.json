@@ -1,0 +1,198 @@
+{
+  "id": "mancity-stoke-2011",
+  "region": "enska",
+  "level": "hard",
+  "competition": "Enski bikarinn 2010/11",
+  "stage": "Úrslitaleikur",
+  "date": "2011-05-14",
+  "blurb": "Úrslitaleikur enska bikarsins á Wembley.",
+  "score": {
+    "home": 1,
+    "away": 0
+  },
+  "home": {
+    "name": "Manchester City",
+    "color": "#89c0ef",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 25,
+        "name": "Joe Hart",
+        "word": "HART",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Micah Richards",
+        "word": "RICHARDS",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 4,
+        "name": "Vincent Kompany",
+        "word": "KOMPANY",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 19,
+        "name": "Joleon Lescott",
+        "word": "LESCOTT",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 13,
+        "name": "Aleksandar Kolarov",
+        "word": "KOLAROV",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 34,
+        "name": "Nigel de Jong",
+        "word": "DEJONG",
+        "line": 2,
+        "x": 1
+      },
+      {
+        "number": 18,
+        "name": "Gareth Barry",
+        "word": "BARRY",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 42,
+        "name": "Yaya Touré",
+        "word": "TOURE",
+        "line": 3,
+        "x": 0,
+        "goals": 1
+      },
+      {
+        "number": 21,
+        "name": "David Silva",
+        "word": "SILVA",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 45,
+        "name": "Mario Balotelli",
+        "word": "BALOTELLI",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 32,
+        "name": "Carlos Tevez",
+        "word": "TEVEZ",
+        "line": 5,
+        "x": 0,
+        "captain": true
+      }
+    ]
+  },
+  "away": {
+    "name": "Stoke",
+    "color": "#cc0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 29,
+        "name": "Thomas Sørensen",
+        "word": "SORENSEN",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 28,
+        "name": "Andy Wilkinson",
+        "word": "WILKINSON",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 17,
+        "name": "Ryan Shawcross",
+        "word": "SHAWCROSS",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 4,
+        "name": "Robert Huth",
+        "word": "HUTH",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 12,
+        "name": "Marc Wilson",
+        "word": "WILSON",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Jermaine Pennant",
+        "word": "PENNANT",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 6,
+        "name": "Glenn Whelan",
+        "word": "WHELAN",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 24,
+        "name": "Rory Delap",
+        "word": "DELAP",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 26,
+        "name": "Matthew Etherington",
+        "word": "ETHERINGTON",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 9,
+        "name": "Kenwyne Jones",
+        "word": "JONES",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Jonathan Walters",
+        "word": "WALTERS",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2011 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1344773342"
+    },
+    {
+      "name": "transfermarkt.com · Manchester City - Stoke City",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/1097276"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

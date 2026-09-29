@@ -1,0 +1,198 @@
+{
+  "id": "chelsea-leicester-2021",
+  "region": "enska",
+  "level": "medium",
+  "competition": "Enski bikarinn 2020/21",
+  "stage": "Úrslitaleikur",
+  "date": "2021-05-15",
+  "blurb": "Úrslitaleikur enska bikarsins á Wembley.",
+  "score": {
+    "home": 0,
+    "away": 1
+  },
+  "home": {
+    "name": "Chelsea",
+    "color": "#0000ff",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Kepa Arrizabalaga",
+        "word": "KEPA",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 28,
+        "name": "César Azpilicueta",
+        "word": "AZPILICUETA",
+        "line": 1,
+        "x": 2,
+        "captain": true
+      },
+      {
+        "number": 6,
+        "name": "Thiago Silva",
+        "word": "SILVA",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 2,
+        "name": "Antonio Rüdiger",
+        "word": "RUDIGER",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 24,
+        "name": "Reece James",
+        "word": "JAMES",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 7,
+        "name": "N'Golo Kanté",
+        "word": "KANTE",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 5,
+        "name": "Jorginho",
+        "word": "JORGINHO",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 3,
+        "name": "Marcos Alonso",
+        "word": "ALONSO",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 22,
+        "name": "Hakim Ziyech",
+        "word": "ZIYECH",
+        "line": 4,
+        "x": 1
+      },
+      {
+        "number": 19,
+        "name": "Mason Mount",
+        "word": "MOUNT",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 11,
+        "name": "Timo Werner",
+        "word": "WERNER",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "away": {
+    "name": "Leicester",
+    "color": "#600020",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Kasper Schmeichel",
+        "word": "SCHMEICHEL",
+        "line": 0,
+        "x": 0,
+        "captain": true
+      },
+      {
+        "number": 3,
+        "name": "Wesley Fofana",
+        "word": "FOFANA",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 6,
+        "name": "Jonny Evans",
+        "word": "EVANS",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 4,
+        "name": "Çağlar Söyüncü",
+        "word": "SOYUNCU",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 27,
+        "name": "Timothy Castagne",
+        "word": "CASTAGNE",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 8,
+        "name": "Youri Tielemans",
+        "word": "TIELEMANS",
+        "line": 3,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 25,
+        "name": "Wilfred Ndidi",
+        "word": "NDIDI",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 33,
+        "name": "Luke Thomas",
+        "word": "THOMAS",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 17,
+        "name": "Ayoze Pérez",
+        "word": "PEREZ",
+        "line": 4,
+        "x": 0
+      },
+      {
+        "number": 14,
+        "name": "Kelechi Iheanacho",
+        "word": "IHEANACHO",
+        "line": 5,
+        "x": 1
+      },
+      {
+        "number": 9,
+        "name": "Jamie Vardy",
+        "word": "VARDY",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2021 FA Cup final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1361484493"
+    },
+    {
+      "name": "transfermarkt.com · Chelsea FC - Leicester City",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/3554787"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

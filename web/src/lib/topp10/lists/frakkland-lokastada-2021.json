@@ -1,0 +1,114 @@
+{
+  "id": "frakkland-lokastada-2021",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LIGUE 1",
+  "title": "Topp 10 2021/22",
+  "question": "Nefndu liðin sem enduðu í tíu efstu sætum frönsku deildarinnar 2021/22.",
+  "context": "Lokastaða tímabilsins 2021/22. Tíu lið eru rétt, í hvaða röð sem er.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2021-22 Ligue 1 table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1343948558"
+    },
+    {
+      "name": "Úrslit allra leikja tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/tafla"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "psg",
+      "label": "Paris Saint-Germain",
+      "detail": "1. sæti, 86 stig",
+      "accept": [
+        "paris saint germain",
+        "paris sg",
+        "psg"
+      ]
+    },
+    {
+      "id": "marseille",
+      "label": "Marseille",
+      "detail": "2. sæti, 71 stig",
+      "accept": [
+        "marseille",
+        "olympique de marseille",
+        "om"
+      ]
+    },
+    {
+      "id": "monaco",
+      "label": "Monaco",
+      "detail": "3. sæti, 69 stig",
+      "accept": [
+        "monaco",
+        "as monaco"
+      ]
+    },
+    {
+      "id": "rennes",
+      "label": "Rennes",
+      "detail": "4. sæti, 66 stig",
+      "accept": [
+        "rennes",
+        "stade rennais"
+      ]
+    },
+    {
+      "id": "nice",
+      "label": "Nice",
+      "detail": "5. sæti, 66 stig",
+      "accept": [
+        "nice",
+        "ogc nice"
+      ]
+    },
+    {
+      "id": "strasbourg",
+      "label": "Strasbourg",
+      "detail": "6. sæti, 63 stig",
+      "accept": [
+        "strasbourg",
+        "rc strasbourg alsace"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Lens",
+      "detail": "7. sæti, 62 stig",
+      "accept": [
+        "lens",
+        "rc lens"
+      ]
+    },
+    {
+      "id": "lyon",
+      "label": "Lyon",
+      "detail": "8. sæti, 61 stig",
+      "accept": [
+        "lyon",
+        "olympique lyonnais"
+      ]
+    },
+    {
+      "id": "nantes",
+      "label": "Nantes",
+      "detail": "9. sæti, 55 stig",
+      "accept": [
+        "nantes"
+      ]
+    },
+    {
+      "id": "lille",
+      "label": "Lille",
+      "detail": "10. sæti, 55 stig",
+      "accept": [
+        "lille",
+        "losc lille"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

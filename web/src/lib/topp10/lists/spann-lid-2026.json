@@ -1,0 +1,209 @@
+{
+  "id": "spann-lid-2026",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LA LIGA",
+  "title": "Liðin 2026/27",
+  "question": "Nefndu 10 af 20 liðum spænsku deildarinnar 2026/27.",
+  "context": "Tímabilið 2026/27.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2026-27 La Liga table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375913409"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "alaves",
+      "label": "Alavés",
+      "detail": "",
+      "accept": [
+        "alaves",
+        "deportivo alaves"
+      ]
+    },
+    {
+      "id": "athletic",
+      "label": "Athletic Bilbao",
+      "detail": "",
+      "accept": [
+        "athletic bilbao",
+        "ath bilbao",
+        "athletic club",
+        "bilbao"
+      ]
+    },
+    {
+      "id": "atletico",
+      "label": "Atlético Madrid",
+      "detail": "",
+      "accept": [
+        "atletico madrid",
+        "ath madrid",
+        "atletico"
+      ]
+    },
+    {
+      "id": "barcelona",
+      "label": "Barcelona",
+      "detail": "",
+      "accept": [
+        "barcelona",
+        "fc barcelona",
+        "barca"
+      ]
+    },
+    {
+      "id": "celta",
+      "label": "Celta Vigo",
+      "detail": "",
+      "accept": [
+        "celta vigo",
+        "celta"
+      ]
+    },
+    {
+      "id": "deportivo",
+      "label": "Deportivo La Coruña",
+      "detail": "",
+      "accept": [
+        "deportivo la coruna",
+        "la coruna",
+        "deportivo de la coruna",
+        "deportivo a coruna",
+        "deportivo"
+      ]
+    },
+    {
+      "id": "elche",
+      "label": "Elche",
+      "detail": "",
+      "accept": [
+        "elche"
+      ]
+    },
+    {
+      "id": "espanyol",
+      "label": "Espanyol",
+      "detail": "",
+      "accept": [
+        "espanyol",
+        "espanol",
+        "rcd espanyol"
+      ]
+    },
+    {
+      "id": "getafe",
+      "label": "Getafe",
+      "detail": "",
+      "accept": [
+        "getafe"
+      ]
+    },
+    {
+      "id": "levante",
+      "label": "Levante",
+      "detail": "",
+      "accept": [
+        "levante"
+      ]
+    },
+    {
+      "id": "malaga",
+      "label": "Málaga",
+      "detail": "",
+      "accept": [
+        "malaga",
+        "malaga cf"
+      ]
+    },
+    {
+      "id": "osasuna",
+      "label": "Osasuna",
+      "detail": "",
+      "accept": [
+        "osasuna",
+        "ca osasuna"
+      ]
+    },
+    {
+      "id": "racingsantander",
+      "label": "Racing Santander",
+      "detail": "",
+      "accept": [
+        "racing santander",
+        "santander"
+      ]
+    },
+    {
+      "id": "rayo",
+      "label": "Rayo Vallecano",
+      "detail": "",
+      "accept": [
+        "rayo vallecano",
+        "vallecano",
+        "rayo"
+      ]
+    },
+    {
+      "id": "betis",
+      "label": "Real Betis",
+      "detail": "",
+      "accept": [
+        "real betis",
+        "betis"
+      ]
+    },
+    {
+      "id": "realmadrid",
+      "label": "Real Madrid",
+      "detail": "",
+      "accept": [
+        "real madrid"
+      ]
+    },
+    {
+      "id": "sociedad",
+      "label": "Real Sociedad",
+      "detail": "",
+      "accept": [
+        "real sociedad",
+        "sociedad"
+      ]
+    },
+    {
+      "id": "sevilla",
+      "label": "Sevilla",
+      "detail": "",
+      "accept": [
+        "sevilla",
+        "sevilla fc"
+      ]
+    },
+    {
+      "id": "valencia",
+      "label": "Valencia",
+      "detail": "",
+      "accept": [
+        "valencia",
+        "valencia cf"
+      ]
+    },
+    {
+      "id": "villarreal",
+      "label": "Villarreal",
+      "detail": "",
+      "accept": [
+        "villarreal",
+        "villarreal cf",
+        "villareal cf"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

@@ -1,0 +1,181 @@
+{
+  "id": "frakkland-lid-2026",
+  "region": "evropa",
+  "kind": "club",
+  "competition": "LIGUE 1",
+  "title": "Liðin 2026/27",
+  "question": "Nefndu 10 af 18 liðum frönsku deildarinnar 2026/27.",
+  "context": "Tímabilið 2026/27.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · Template:2026-27 Ligue 1 table",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1375912016"
+    },
+    {
+      "name": "Leikjaplan tímabilsins í gagnagrunni Bestu spárinnar",
+      "url": "https://islensk-fotbolti.vercel.app/leikir"
+    }
+  ],
+  "level": "easy",
+  "answers": [
+    {
+      "id": "angers",
+      "label": "Angers",
+      "detail": "",
+      "accept": [
+        "angers"
+      ]
+    },
+    {
+      "id": "auxerre",
+      "label": "Auxerre",
+      "detail": "",
+      "accept": [
+        "auxerre"
+      ]
+    },
+    {
+      "id": "brest",
+      "label": "Brest",
+      "detail": "",
+      "accept": [
+        "brest",
+        "stade brestois 29"
+      ]
+    },
+    {
+      "id": "lehavre",
+      "label": "Le Havre",
+      "detail": "",
+      "accept": [
+        "le havre"
+      ]
+    },
+    {
+      "id": "lemans",
+      "label": "Le Mans",
+      "detail": "",
+      "accept": [
+        "le mans"
+      ]
+    },
+    {
+      "id": "lens",
+      "label": "Lens",
+      "detail": "",
+      "accept": [
+        "lens",
+        "rc lens"
+      ]
+    },
+    {
+      "id": "lille",
+      "label": "Lille",
+      "detail": "",
+      "accept": [
+        "lille",
+        "losc lille"
+      ]
+    },
+    {
+      "id": "lorient",
+      "label": "Lorient",
+      "detail": "",
+      "accept": [
+        "lorient"
+      ]
+    },
+    {
+      "id": "lyon",
+      "label": "Lyon",
+      "detail": "",
+      "accept": [
+        "lyon",
+        "olympique lyonnais"
+      ]
+    },
+    {
+      "id": "marseille",
+      "label": "Marseille",
+      "detail": "",
+      "accept": [
+        "marseille",
+        "olympique de marseille",
+        "om"
+      ]
+    },
+    {
+      "id": "monaco",
+      "label": "Monaco",
+      "detail": "",
+      "accept": [
+        "monaco",
+        "as monaco"
+      ]
+    },
+    {
+      "id": "nice",
+      "label": "Nice",
+      "detail": "",
+      "accept": [
+        "nice",
+        "ogc nice"
+      ]
+    },
+    {
+      "id": "parisfc",
+      "label": "Paris FC",
+      "detail": "",
+      "accept": [
+        "paris fc"
+      ]
+    },
+    {
+      "id": "psg",
+      "label": "Paris Saint-Germain",
+      "detail": "",
+      "accept": [
+        "paris saint germain",
+        "paris sg",
+        "psg"
+      ]
+    },
+    {
+      "id": "rennes",
+      "label": "Rennes",
+      "detail": "",
+      "accept": [
+        "rennes",
+        "stade rennais"
+      ]
+    },
+    {
+      "id": "strasbourg",
+      "label": "Strasbourg",
+      "detail": "",
+      "accept": [
+        "strasbourg",
+        "rc strasbourg alsace"
+      ]
+    },
+    {
+      "id": "toulouse",
+      "label": "Toulouse",
+      "detail": "",
+      "accept": [
+        "toulouse",
+        "toulouse fc"
+      ]
+    },
+    {
+      "id": "troyes",
+      "label": "Troyes",
+      "detail": "",
+      "accept": [
+        "troyes",
+        "estac troyes"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-09-22"
+}

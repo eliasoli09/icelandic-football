@@ -1,0 +1,201 @@
+{
+  "id": "barcelona-manutd-2011",
+  "region": "evropa",
+  "level": "medium",
+  "competition": "Meistaradeild Evrópu 2010/11",
+  "stage": "Úrslitaleikur",
+  "date": "2011-05-28",
+  "blurb": "Úrslitaleikurinn á Wembley.",
+  "score": {
+    "home": 3,
+    "away": 1
+  },
+  "home": {
+    "name": "Barcelona",
+    "color": "#bf0000",
+    "ink": "#ffffff",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Víctor Valdés",
+        "word": "VALDES",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 2,
+        "name": "Dani Alves",
+        "word": "ALVES",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 14,
+        "name": "Javier Mascherano",
+        "word": "MASCHERANO",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 3,
+        "name": "Gerard Piqué",
+        "word": "PIQUE",
+        "line": 1,
+        "x": 1
+      },
+      {
+        "number": 22,
+        "name": "Eric Abidal",
+        "word": "ABIDAL",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 16,
+        "name": "Sergio Busquets",
+        "word": "BUSQUETS",
+        "line": 2,
+        "x": 0
+      },
+      {
+        "number": 6,
+        "name": "Xavi",
+        "word": "XAVI",
+        "line": 3,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 8,
+        "name": "Andrés Iniesta",
+        "word": "INIESTA",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 7,
+        "name": "David Villa",
+        "word": "VILLA",
+        "line": 5,
+        "x": 2,
+        "goals": 1
+      },
+      {
+        "number": 10,
+        "name": "Lionel Messi",
+        "word": "MESSI",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 17,
+        "name": "Pedro",
+        "word": "PEDRO",
+        "line": 5,
+        "x": 0,
+        "goals": 1
+      }
+    ]
+  },
+  "away": {
+    "name": "Manchester United",
+    "color": "#ffffff",
+    "ink": "#111111",
+    "icelandic": false,
+    "players": [
+      {
+        "number": 1,
+        "name": "Edwin van der Sar",
+        "word": "VANDERSAR",
+        "line": 0,
+        "x": 0
+      },
+      {
+        "number": 20,
+        "name": "Fábio",
+        "word": "FABIO",
+        "line": 1,
+        "x": 3
+      },
+      {
+        "number": 5,
+        "name": "Rio Ferdinand",
+        "word": "FERDINAND",
+        "line": 1,
+        "x": 2
+      },
+      {
+        "number": 15,
+        "name": "Nemanja Vidić",
+        "word": "VIDIC",
+        "line": 1,
+        "x": 1,
+        "captain": true
+      },
+      {
+        "number": 3,
+        "name": "Patrice Evra",
+        "word": "EVRA",
+        "line": 1,
+        "x": 0
+      },
+      {
+        "number": 25,
+        "name": "Antonio Valencia",
+        "word": "VALENCIA",
+        "line": 3,
+        "x": 3
+      },
+      {
+        "number": 16,
+        "name": "Michael Carrick",
+        "word": "CARRICK",
+        "line": 3,
+        "x": 2
+      },
+      {
+        "number": 11,
+        "name": "Ryan Giggs",
+        "word": "GIGGS",
+        "line": 3,
+        "x": 1
+      },
+      {
+        "number": 13,
+        "name": "Park Ji-sung",
+        "word": "JISUNG",
+        "line": 3,
+        "x": 0
+      },
+      {
+        "number": 10,
+        "name": "Wayne Rooney",
+        "word": "ROONEY",
+        "line": 5,
+        "x": 1,
+        "goals": 1
+      },
+      {
+        "number": 14,
+        "name": "Javier Hernández",
+        "word": "CHICHARITO",
+        "line": 5,
+        "x": 0
+      }
+    ]
+  },
+  "layout": "Stöður í leiknum samkvæmt Wikipedia",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · 2011 UEFA Champions League final",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1374794252"
+    },
+    {
+      "name": "transfermarkt.com · FC Barcelona - Manchester United",
+      "url": "https://www.transfermarkt.com/spielbericht/index/spielbericht/1102390"
+    }
+  ],
+  "verifiedAt": "2026-09-16"
+}

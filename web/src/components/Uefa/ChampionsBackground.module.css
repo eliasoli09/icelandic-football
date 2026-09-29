@@ -1,0 +1,109 @@
+.background {
+  position: absolute;
+  z-index: 0;
+  top: -54px;
+  left: 50%;
+  width: 100vw;
+  height: 900px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  overflow: hidden;
+  contain: paint;
+  mask-image: linear-gradient(#000 0%, #000 43%, rgb(0 0 0 / 75%) 65%, transparent 100%);
+}
+
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 35% 31% at 70% 13%, rgb(17 40 169 / 22%), transparent 88%),
+    radial-gradient(ellipse 18% 26% at 89% 28%, rgb(114 25 192 / 12%), transparent 84%);
+}
+
+.contours {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .9;
+}
+
+.contour, .glint, .star {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contour {
+  fill: none;
+  stroke-width: 1.1;
+  stroke-opacity: .85;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  animation: draw 1.2s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.glint {
+  fill: none;
+  stroke: #7fdbff;
+  stroke-width: 1.7;
+  stroke-dasharray: .022 .978;
+  stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 3px #087bff);
+  animation: glint 18s linear infinite both;
+}
+
+.ball {
+  position: absolute;
+  top: -105px;
+  right: max(6%, calc((100vw - 1220px) / 2 + 48px));
+  width: clamp(460px, 43vw, 610px);
+  height: auto;
+  aspect-ratio: 1;
+  opacity: .88;
+  will-change: transform;
+}
+
+.ball svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.rimGlow { stroke-width: 5; filter: blur(4px); opacity: .8; }
+
+.star {
+  stroke-width: 1.05;
+  stroke-dasharray: 1;
+  animation: draw 1.2s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.ballGlint { stroke-width: 1.2; stroke-dasharray: .027 .973; animation-duration: 21s; }
+
+.centerShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgb(2 8 28 / 18%) 13%, rgb(2 8 28 / 7%) 40%, transparent 62%),
+    linear-gradient(transparent 0%, transparent 23%, rgb(2 8 28 / 20%) 42%, rgb(2 8 28 / 70%) 82%, transparent 100%);
+}
+
+.background[data-running='false'] *, .background[data-running='false'] *::before { animation-play-state: paused; }
+
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes glint { from { stroke-dashoffset: 1; } to { stroke-dashoffset: -1; } }
+
+@media (max-width: 900px) {
+  .ball { right: -85px; top: -70px; width: 480px; opacity: .68; }
+  .contours { opacity: .43; }
+}
+
+@media (max-width: 640px) {
+  .background { height: 720px; }
+  .ball { width: 390px; right: -172px; top: -35px; opacity: .46; }
+  .contours { width: 155%; left: -28%; opacity: .34; }
+  .extraContour { display: none; }
+  .edgeGroup:last-child { display: none; }
+  .glint { filter: none; stroke-width: 1; }
+  .centerShade { background: linear-gradient(90deg, rgb(2 8 28 / 8%), transparent), linear-gradient(transparent 20%, rgb(2 8 28 / 60%) 60%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background *, .background *::before { animation: none !important; }
+  .contour, .star { stroke-dasharray: none; stroke-dashoffset: 0; }
+  .glint { display: none; }
+  .ball { will-change: auto; transform: none !important; }
+}
