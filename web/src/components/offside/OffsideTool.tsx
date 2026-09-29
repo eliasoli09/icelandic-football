@@ -651,6 +651,11 @@ export function OffsideTool() {
                 onPointerUp={onPointerUp}
                 onPointerLeave={() => setPointer(null)}
               />
+              {view === 'frame' && mode === 'calibrate' && !busy && (
+                <div className="absolute top-2 left-2 w-28 sm:w-40 opacity-90 pointer-events-none rounded-lg overflow-hidden shadow-lg">
+                  <CalibDiagram template={template} side={goalSide} dims={dims} active={tpl[calibIdx]?.key} done={new Set(Object.keys(clicks).filter((k) => clicks[k]))} />
+                </div>
+              )}
               {busy && (
                 <div className="absolute inset-x-0 bottom-0 p-3 text-sm text-white" style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.85))' }}>
                   <div className="flex items-center justify-between gap-3 mb-2">
@@ -686,6 +691,23 @@ export function OffsideTool() {
                     {kick && <Btn onClick={() => openKick(kick)} disabled={!!busy}>Fara í sparkramma</Btn>}
                   </div>
                 </>
+              ) : mode === 'calibrate' ? (
+                // Calibration controls live next to the frame so the user never scrolls between clicks.
+                <div className="flex flex-wrap items-center gap-2 text-sm">
+                  <span className="min-w-0 flex-1">
+                    {tpl[calibIdx] ? (
+                      <>
+                        <b>Punktur {calibIdx + 1}/{tpl.length}:</b> {tpl[calibIdx].label}
+                        <span className="muted"> · {calibCount} merktir{H ? ' ✓' : ` (minnst 4)`}</span>
+                      </>
+                    ) : (
+                      <span>Allir punktar farnir í gegn — dragðu krossana til að fínstilla. {calibCount} merktir{H ? ' ✓' : ''}</span>
+                    )}
+                  </span>
+                  <Btn onClick={() => setCalibIdx((i) => Math.min(i + 1, tpl.length))} disabled={!tpl[calibIdx]}>Sést ekki — sleppa</Btn>
+                  <Btn onClick={() => setCalibIdx((i) => Math.max(0, i - 1))}>Til baka</Btn>
+                  <Btn primary onClick={() => setMode('select')}>{H ? 'Ljúka kvörðun' : 'Loka'}</Btn>
+                </div>
               ) : (
                 <div className="flex flex-wrap items-center gap-2 text-sm">
                   <Btn onClick={() => { setView('video'); setMode('select') }} disabled={!!busy}>← Myndband</Btn>
@@ -696,8 +718,16 @@ export function OffsideTool() {
                     </span>
                   )}
                   <span className="flex-1" />
+                  {kick && !busy && mode !== 'select' && (
+                    <span className="text-xs" style={{ color: 'var(--accent)' }}>
+                      {mode === 'receiver' ? 'Smelltu á móttakandann' : mode === 'ball' ? 'Smelltu þar sem boltinn snertir jörð' : 'Smelltu á fætur leikmannsins'}
+                    </span>
+                  )}
                   {kick && !busy && (
                     <>
+                      <Btn onClick={() => setMode('calibrate')} primary={!H}>📐 {H ? 'Kvörðun' : 'Kvarða völlinn'}</Btn>
+                      <ModeBtn mode={mode} setMode={setMode} m="receiver">🎯 Móttakandi</ModeBtn>
+                      <ModeBtn mode={mode} setMode={setMode} m="ball">⚽ Bolti</ModeBtn>
                       <Btn onClick={() => openKick({ ...kick, t: Math.max(0, kick.t - 1 / stepFps), source: 'manual' })} title="Sparkið var einum ramma fyrr">◀︎ Rammi</Btn>
                       <Btn onClick={() => openKick({ ...kick, t: kick.t + 1 / stepFps, source: 'manual' })} title="Sparkið var einum ramma síðar">Rammi ▶︎</Btn>
                     </>
@@ -791,9 +821,7 @@ export function OffsideTool() {
                       </p>
                       <p className="muted text-xs mb-2">{tpl[calibIdx].hint}</p>
                       <div className="flex gap-2">
-                        <Btn onClick={() => setCalibIdx((i) => Math.min(i + 1, tpl.length))}>Sést ekki — sleppa</Btn>
-                        <Btn onClick={() => setCalibIdx((i) => Math.max(0, i - 1))}>Til baka</Btn>
-                        <Btn onClick={() => { setClicks({}); setCalibIdx(0) }}>Hreinsa</Btn>
+                        <Btn onClick={() => { setClicks({}); setCalibIdx(0) }}>Hreinsa alla punkta</Btn>
                       </div>
                     </div>
                   ) : mode === 'calibrate' ? (
