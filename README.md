@@ -34,6 +34,33 @@ ksi.is ──(cron scrape)──▶ Supabase (Postgres) ──▶ Next.js (Verce
    byrjunarlið eða stoðsendingar — stoðsendingatafla og einkunnir koma úr
    SofaScore-innslögum.
 
+## Rangstöðugreining (prufuútgáfa) — `/rangstada`
+
+Hladdu inn myndbroti (MP4/WebM) úr tölvunni. Allt keyrir í vafranum — myndbandinu er
+aldrei hlaðið upp.
+
+1. **Sparkið:** gervigreind (MediaPipe EfficientDet-Lite2, COCO „person“ + „sports ball“,
+   keyrð á skörun reita svo litlir leikmenn og bolti greinist) skannar ±3 s við 10 ramma/s,
+   fylgir boltanum og finnur augnablikið þegar hraði hans breytist skyndilega við fætur
+   leikmanns. Síðan er fínstillt ramma fyrir ramma. Notandinn getur alltaf merkt sparkið
+   sjálfur (**K** / „Merkja spark hér“) eða fært það um ramma.
+2. **Völlurinn í metrum:** stærð valla er breytileg en merkingar eru staðlaðar (IFAB:
+   vítateigur 40,32 × 16,5 m, markteigur, vítapunktur, vítabogi, miðhringur). Notandinn
+   smellir á ≥4 sýnilega punkta á sparkrammanum og kerfið reiknar samvörpun (homography)
+   frá pixlum yfir í vallarhnit. Vallarlínur eru teiknaðar aftur ofan á myndina til staðfestingar.
+3. **Leikmenn og lið:** leikmenn finnast sjálfkrafa, skipt í lið eftir treyjulit (k-means í
+   Lab-litrúmi), liðið sem sparkar er sóknarliðið, og móttakandinn er rakinn aftur á
+   sparkrammann. Allt má leiðrétta með smelli/drætti.
+4. **Úrskurður (lög 11):** rangstöðulína = næstaftasti varnarmaður eða boltinn (sá sem er
+   nær marklínu); ekki rangstaða á eigin vallarhelmingi; jafnt = réttstaða. Mismunur innan
+   óvissumarka (sjálfgefið ±30 cm) er merktur „of tæpt“.
+
+**Takmarkanir:** ein myndavél og ~25 ramma/s (einn rammi ≈ 20–30 cm á spretti), fótpunktur
+er nálgun á fremsta líkamshluta, og smáir/óskýrir boltar greinast illa í víðum útsendingarskotum
+— þá þarf að merkja sparkið handvirkt. Tólið metur rangstöðu*stöðu*, ekki hvort leikmaður hafi
+áhrif á leikinn. Líkanið (~23 MB) er sótt af storage.googleapis.com við fyrstu notkun;
+WASM-keyrslan er afrituð í `web/public/mediapipe` við `npm install`.
+
 ## Uppsetning
 
 ```bash

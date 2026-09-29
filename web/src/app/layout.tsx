@@ -20,6 +20,7 @@ const NAV = [
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
   { href: '/leikmenn', label: 'Leikmenn' },
+  { href: '/rangstada', label: 'Rangstaða' },
 ]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
