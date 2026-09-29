@@ -223,9 +223,11 @@ export interface ReceiverGuess {
 }
 
 /**
- * The receiver is the first player other than the kicker the ball arrives at
- * after the kick. We find them at the reception and follow their track back to
- * the kick frame (where their position is what offside is judged on).
+ * The receiver is the player the ball *stops at* after the kick — the moment
+ * its speed collapses — not merely the first player it passes near: a pass
+ * often flies close to other players, and detection jitter mid-flight looks
+ * like a touch. We find that player at the reception and follow their track
+ * back to the kick frame (where their position is what offside is judged on).
  */
 export function findReceiver(frames: Frame[], ball: (BallPoint | null)[], tracks: number[][], events: BallEvent[], kick: BallEvent, maxSeconds = 5): ReceiverGuess | null {
   const kickerTrack = kick.playerIndex >= 0 ? tracks[kick.index][kick.playerIndex] : -1
@@ -235,19 +237,37 @@ export function findReceiver(frames: Frame[], ball: (BallPoint | null)[], tracks
     const at = tracks[kick.index].indexOf(tr)
     return at >= 0 ? { personIndexAtKick: at, receptionT: frames[fi].t } : null
   }
+  const speed = (fi: number) => {
+    const a = ball[fi - 1]
+    const b = ball[fi + 1]
+    if (!a || !b) return null
+    return Math.hypot(b.x - a.x, b.y - a.y) / (frames[fi + 1].t - frames[fi - 1].t)
+  }
+
+  // Speed just after the kick, then the first sustained drop to well below it.
+  let flight = 0
+  for (let fi = kick.index + 1; fi <= kick.index + 3 && fi < frames.length - 1; fi++) flight = Math.max(flight, speed(fi) ?? 0)
+  if (flight > 0) {
+    for (let fi = kick.index + 2; fi < frames.length - 2 && frames[fi].t <= kick.t + maxSeconds; fi++) {
+      const s0 = speed(fi)
+      const s1 = speed(fi + 1)
+      const b = ball[fi]
+      if (s0 === null || s1 === null || !b || s0 > 0.45 * flight || s1 > 0.45 * flight) continue
+      const kickerHere = tracks[fi].indexOf(kickerTrack)
+      const { index, d } = nearestPlayer(frames[fi].persons, b, kickerHere)
+      if (index >= 0 && d < 0.9) {
+        const g = toKickFrame(fi, index)
+        if (g) return g
+      }
+      break // the ball stopped away from any player (or back at the kicker)
+    }
+  }
+
+  // Fallback when the trajectory is too patchy: the first slowing touch.
   for (const e of events) {
-    if (e.t <= kick.t + 0.15 || e.t > kick.t + maxSeconds || e.playerIndex < 0) continue
+    if (e.type !== 'touch' || e.t <= kick.t + 0.15 || e.t > kick.t + maxSeconds || e.playerIndex < 0) continue
     const g = toKickFrame(e.index, e.playerIndex)
     if (g) return g
-  }
-  for (let fi = kick.index + 1; fi < frames.length && frames[fi].t <= kick.t + maxSeconds; fi++) {
-    const b = ball[fi]
-    if (!b || frames[fi].t < kick.t + 0.25) continue
-    const { index, d } = nearestPlayer(frames[fi].persons, b)
-    if (index >= 0 && d < 0.5) {
-      const g = toKickFrame(fi, index)
-      if (g) return g
-    }
   }
   return null
 }

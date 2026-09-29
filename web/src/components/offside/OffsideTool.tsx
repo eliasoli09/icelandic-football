@@ -79,6 +79,7 @@ export function OffsideTool() {
   const [ball, setBall] = useState<Pt | null>(null)
   const [ballEstimated, setBallEstimated] = useState(false)
   const [receiverId, setReceiverId] = useState<string | null>(null)
+  const [receiverByAi, setReceiverByAi] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [mode, setMode] = useState<Mode>('select')
   const [tolerance, setTolerance] = useState(0.3)
@@ -301,6 +302,7 @@ export function OffsideTool() {
       }
       setPlayers(ps)
       setReceiverId(rec)
+      setReceiverByAi(!!rec)
       setBall(ballPt ?? (kicker >= 0 ? foot(det.persons[kicker]) : null))
       setBallEstimated(!ballPt)
       setSelectedId(null)
@@ -518,6 +520,7 @@ export function OffsideTool() {
       const pl = playerAt(p)
       if (pl) {
         setReceiverId(pl.id)
+        setReceiverByAi(false)
         setPlayers((ps) => ps.map((x) => (x.id === pl.id ? { ...x, role: 'attacker' } : x)))
         setMode('select')
       }
@@ -892,7 +895,7 @@ export function OffsideTool() {
                         {ROLE_NAME[r]}
                       </button>
                     ))}
-                    <button onClick={() => { setReceiverId(selected.id); setRole(selected.id, 'attacker') }} className="px-2.5 py-1 rounded-lg border text-xs font-medium" style={{ borderColor: receiverId === selected.id ? '#fff' : 'var(--border)' }}>
+                    <button onClick={() => { setReceiverId(selected.id); setReceiverByAi(false); setRole(selected.id, 'attacker') }} className="px-2.5 py-1 rounded-lg border text-xs font-medium" style={{ borderColor: receiverId === selected.id ? '#fff' : 'var(--border)' }}>
                       🎯 Móttakandi
                     </button>
                     <button onClick={() => { setPlayers((ps) => ps.filter((p) => p.id !== selected.id)); if (receiverId === selected.id) setReceiverId(null); setSelectedId(null) }} className="px-2.5 py-1 rounded-lg border text-xs" style={{ borderColor: 'var(--border)', color: 'var(--loss)' }}>
@@ -922,6 +925,10 @@ export function OffsideTool() {
                     {STATUS_TEXT[receiverVerdict.status]}
                   </p>
                   <p className="text-sm mt-1">{receiverVerdict.reason}</p>
+                  <p className="text-xs muted mt-1">
+                    Móttakandi: <b>{labels.get(receiverVerdict.id)}</b>
+                    {receiverByAi ? ' — valinn af gervigreind (þar sem boltinn stöðvaðist). Rangur? Veldu 🎯 Móttakandi.' : ' — valinn handvirkt.'}
+                  </p>
                   {resolution !== null && (
                     <p className="text-xs muted mt-2">
                       Upplausn við móttakanda: 1 px ≈ {Math.max(1, Math.round(resolution * 100))} cm. Rammi til eða frá getur munað

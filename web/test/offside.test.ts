@@ -179,6 +179,25 @@ describe('ball tracking and kick detection', () => {
   })
 })
 
+describe('receiver identification', () => {
+  it('picks the player where the ball stops, not a bystander it passes in flight', () => {
+    // Same pass, but a third attacker stands right on the ball's path at x≈600
+    // and the ball detection jitters as it flies past him.
+    const frames = passClip().map((f, i) => {
+      const persons = [...f.persons.slice(0, 2), person(600, 458)]
+      // Frame 13 (t=1.3) has the ball flying past him; detection jitters down 30 px.
+      const balls = i === 13 ? [ballAt(599, 482)] : f.balls
+      return { ...f, persons, balls }
+    })
+    const ball = cleanBallTrack(frames, 1280)
+    const events = detectBallEvents(frames, ball, 1280)
+    const kick = events.filter((e) => e.type === 'kick').sort((a, b) => b.confidence - a.confidence)[0]
+    expect(kick.t).toBeCloseTo(1.0, 5)
+    const rec = findReceiver(frames, ball, trackPersons(frames), events, kick)
+    expect(rec?.personIndexAtKick).toBe(1)
+  })
+})
+
 describe('team colours', () => {
   const box = (rgb: [number, number, number], w = 10, h = 20) => {
     const a = new Uint8ClampedArray(w * h * 4)
