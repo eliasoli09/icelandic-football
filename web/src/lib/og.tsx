@@ -3,6 +3,9 @@ import { join } from 'node:path'
 
 export const OG_SIZE = { width: 1200, height: 630 }
 
+/** Satori fetches every <img>, so site-relative crests need the full origin. */
+export const ogSrc = (src: string) => new URL(src, 'https://islensk-fotbolti.vercel.app').href
+
 let fontsCache: { name: string; data: Buffer; weight: 400 | 700 }[] | null = null
 
 export function ogFonts() {

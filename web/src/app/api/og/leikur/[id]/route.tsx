@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { teamInfo, matchDetail } from '@/lib/queries'
-import { Frame, Bar, C, OG_SIZE, ogFonts } from '@/lib/og'
+import { Frame, Bar, C, OG_SIZE, ogFonts, ogSrc } from '@/lib/og'
 import { displayColor, tint } from '@/lib/teamColors'
 
 export const dynamic = 'force-dynamic'
@@ -25,7 +25,7 @@ export async function GET(
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, flex: 1 }}>
       {info?.crest ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={info.crest} width={110} height={110} style={{ objectFit: 'contain' }} />
+        <img src={ogSrc(info.crest)} width={110} height={110} style={{ objectFit: 'contain' }} />
       ) : (
         <div style={{ display: 'flex', width: 110, height: 110, borderRadius: 60, background: tint(info, 0.4) }} />
       )}

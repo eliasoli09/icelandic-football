@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { teams, eloHistory, teamInfo } from '@/lib/queries'
-import { Frame, C, OG_SIZE, ogFonts } from '@/lib/og'
+import { Frame, C, OG_SIZE, ogFonts, ogSrc } from '@/lib/og'
 import { displayColor } from '@/lib/teamColors'
 
 export const dynamic = 'force-dynamic'
@@ -21,7 +21,7 @@ export async function GET() {
             <div key={teamId} style={{ display: 'flex', alignItems: 'center', padding: '7px 0', fontSize: 28 }}>
               <div style={{ display: 'flex', width: 44, color: C.muted }}>{i + 1}</div>
               {infos.get(teamId)?.crest ? (
-                <img src={infos.get(teamId)!.crest!} width={30} height={30} style={{ objectFit: 'contain', marginRight: 12 }} />
+                <img src={ogSrc(infos.get(teamId)!.crest!)} width={30} height={30} style={{ objectFit: 'contain', marginRight: 12 }} />
               ) : (
                 <div style={{ display: 'flex', width: 30, marginRight: 12 }} />
               )}

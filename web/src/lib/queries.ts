@@ -378,12 +378,21 @@ export async function champions(): Promise<Map<number, number>> {
 
 import type { TeamInfo as TeamColorInfo } from './teamColors'
 
+/** comet.ksi.is stopped answering (Oct 2026), so its crests are served from
+ * public/crests/ksi/<id>.png, recovered from the Wayback Machine. */
+const KSI_COMET = /^https?:\/\/comet\.ksi\.is\/file\?id=([0-9a-f-]{36})$/
+
+function crestSrc(url: string | null): string | null {
+  const m = url?.match(KSI_COMET)
+  return m ? `/crests/ksi/${m[1]}.png` : url
+}
+
 export async function teamInfo(): Promise<Map<number, TeamColorInfo>> {
   const { data } = await db().from('teams').select('id, name, crest_url, color')
   return new Map(
     (data ?? []).map((t) => [
       t.id,
-      { name: t.name, crest: t.crest_url, color: t.color },
+      { name: t.name, crest: crestSrc(t.crest_url), color: t.color },
     ]),
   )
 }

@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { teams, beltHistory, teamInfo } from '@/lib/queries'
-import { Frame, C, OG_SIZE, ogFonts } from '@/lib/og'
+import { Frame, C, OG_SIZE, ogFonts, ogSrc } from '@/lib/og'
 import { displayColor, tint } from '@/lib/teamColors'
 
 export const dynamic = 'force-dynamic'
@@ -21,7 +21,7 @@ export async function GET() {
           <div style={{ display: 'flex', fontSize: 30, color: C.muted, letterSpacing: 4 }}>KONUNGUR KASTALANS</div>
           <div style={{ display: 'flex', fontSize: 40 }}>👑</div>
           {infos.get(holder)?.crest ? (
-            <img src={infos.get(holder)!.crest!} width={130} height={130} style={{ objectFit: 'contain' }} />
+            <img src={ogSrc(infos.get(holder)!.crest!)} width={130} height={130} style={{ objectFit: 'contain' }} />
           ) : null}
           <div style={{ display: 'flex', fontSize: 92, fontWeight: 700, color: displayColor(infos.get(holder)) }}>{nm(holder)}</div>
           <div style={{ display: 'flex', fontSize: 28, color: C.muted }}>
