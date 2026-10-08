@@ -47,6 +47,9 @@
 .arcadeTitle { font-size: 19px; font-weight: 750; letter-spacing: -.02em; }
 .arcadeBlurb { font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, .82); }
 .arcade .go { margin: 0 0 0 auto; padding: 0; flex-shrink: 0; }
+/* Leiðin: the same wide banner in the game's own sky-and-grass colours, its last stadium as the art. */
+.road { --tone: #9be15d; background: linear-gradient(100deg, #10304f 0%, #2d6a96 55%, #10304f 100%); }
+.roadArt { flex-shrink: 0; width: 110px; height: auto; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .35)); }
 @media (max-width: 560px) {
   .arcade { flex-wrap: wrap; }
   .arcade .go { margin-left: 0; }

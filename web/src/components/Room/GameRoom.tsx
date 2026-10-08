@@ -81,6 +81,17 @@ export function GameRoom() {
         })}
       </ul>
 
+      <Link href="/leidin" className={`${styles.arcade} ${styles.road}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={styles.roadArt} src="/leidin/vellir/laugardalur.png" alt="" width={110} height={36} loading="lazy" />
+        <span className={styles.arcadeText}>
+          <span className={styles.arcadeKicker}>NÝTT · LEIÐ DAGSINS</span>
+          <span className={styles.arcadeTitle}>Leiðin á Laugardalsvöll</span>
+          <span className={styles.arcadeBlurb}>Sjö spurningar, 25 sekúndur á hverja. Því sjaldgæfara svar, því lengra hleypur þú.</span>
+        </span>
+        <span className={styles.go}>Spila <ArrowRight size={15} aria-hidden /></span>
+      </Link>
+
       <Link href="/hausabolti" className={styles.arcade}>
         <span className={styles.arcadeHeads} aria-hidden>
           {/* eslint-disable-next-line @next/next/no-img-element */}
