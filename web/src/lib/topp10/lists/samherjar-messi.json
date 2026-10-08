@@ -1,0 +1,116 @@
+{
+  "id": "samherjar-messi",
+  "region": "heimur",
+  "kind": "player",
+  "competition": "SAMHERJAR",
+  "title": "Flestir leikir með Lionel Messi",
+  "question": "Nefndu 10 leikmenn sem hafa spilað flesta leiki með Lionel Messi, samkvæmt Transfermarkt.",
+  "context": "Sameiginlegir leikir í talningu Transfermarkt, með félagsliðum og landsliði. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "Transfermarkt · leikir með Lionel Messi",
+      "url": "https://www.transfermarkt.com/lionel-messi/gemeinsameSpiele/spieler/28003"
+    },
+    {
+      "name": "Transfermarkt · sömu leikir, taldir af síðu hvers samherja",
+      "url": "https://www.transfermarkt.com/sergio-busquets/gemeinsameSpiele/spieler/65230"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "busquets",
+      "label": "Sergio Busquets",
+      "detail": "651 leikur saman",
+      "accept": [
+        "sergio busquets",
+        "busquets"
+      ]
+    },
+    {
+      "id": "pique",
+      "label": "Gerard Piqué",
+      "detail": "506 leikir saman",
+      "accept": [
+        "gerard pique",
+        "pique"
+      ]
+    },
+    {
+      "id": "iniesta",
+      "label": "Andrés Iniesta",
+      "detail": "489 leikir saman",
+      "accept": [
+        "andres iniesta",
+        "iniesta"
+      ]
+    },
+    {
+      "id": "jordi-alba",
+      "label": "Jordi Alba",
+      "detail": "421 leikur saman",
+      "accept": [
+        "jordi alba",
+        "alba"
+      ]
+    },
+    {
+      "id": "mascherano",
+      "label": "Javier Mascherano",
+      "detail": "414 leikir saman",
+      "accept": [
+        "javier mascherano",
+        "mascherano"
+      ]
+    },
+    {
+      "id": "xavi",
+      "label": "Xavi",
+      "detail": "399 leikir saman",
+      "accept": [
+        "xavi",
+        "xavi hernandez"
+      ]
+    },
+    {
+      "id": "valdes",
+      "label": "Víctor Valdés",
+      "detail": "353 leikir saman",
+      "accept": [
+        "victor valdes",
+        "valdes"
+      ]
+    },
+    {
+      "id": "dani-alves",
+      "label": "Dani Alves",
+      "detail": "349 leikir saman",
+      "accept": [
+        "dani alves",
+        "daniel alves",
+        "alves"
+      ]
+    },
+    {
+      "id": "suarez",
+      "label": "Luis Suárez",
+      "detail": "345 leikir saman",
+      "accept": [
+        "luis suarez",
+        "luis suarez diaz",
+        "suarez"
+      ]
+    },
+    {
+      "id": "rakitic",
+      "label": "Ivan Rakitić",
+      "detail": "277 leikir saman",
+      "accept": [
+        "ivan rakitic",
+        "rakitic"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08",
+  "note": "Aðeins Transfermarkt telur sameiginlega leiki. Hver tala er lesin bæði af síðu leikmannsins og af síðu samherjans."
+}

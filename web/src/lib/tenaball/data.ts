@@ -13,6 +13,7 @@ export const REGIONS: { id: Region; label: string }[] = [
   { id: 'island', label: 'Ísland' },
   { id: 'enska', label: 'England' },
   { id: 'evropa', label: 'Evrópa' },
+  { id: 'heimur', label: 'Heimurinn' },
 ]
 
 /** The words a round uses, which depend on whether it asks for clubs or players. */

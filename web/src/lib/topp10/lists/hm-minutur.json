@@ -1,0 +1,116 @@
+{
+  "id": "hm-minutur",
+  "region": "heimur",
+  "kind": "player",
+  "competition": "HEIMSMEISTARAKEPPNIN",
+  "title": "Flestar mínútur á HM",
+  "question": "Nefndu 10 leikmenn sem hafa spilað flestar mínútur í lokakeppni HM karla, samkvæmt Transfermarkt.",
+  "context": "Mínútur í lokakeppni HM til og með HM 2026, með framlengingum. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "Transfermarkt · HM, leikjahæstir og mínútur",
+      "url": "https://www.transfermarkt.com/weltmeisterschaft/rekordspieler/pokalwettbewerb/FIWC"
+    },
+    {
+      "name": "en.wikipedia.org · List of players who have appeared in the most FIFA World Cups",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1378059314"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "messi",
+      "label": "Lionel Messi",
+      "detail": "3055 mínútur í 34 leikjum",
+      "accept": [
+        "lionel messi",
+        "messi"
+      ]
+    },
+    {
+      "id": "maldini",
+      "label": "Paolo Maldini",
+      "detail": "2217 mínútur í 23 leikjum",
+      "accept": [
+        "paolo maldini",
+        "maldini"
+      ]
+    },
+    {
+      "id": "ronaldo",
+      "label": "Cristiano Ronaldo",
+      "detail": "2205 mínútur í 27 leikjum",
+      "accept": [
+        "cristiano ronaldo",
+        "cristiano ronaldo dos santos aveiro",
+        "cr7",
+        "ronaldo"
+      ]
+    },
+    {
+      "id": "neuer",
+      "label": "Manuel Neuer",
+      "detail": "2160 mínútur í 23 leikjum",
+      "accept": [
+        "manuel neuer",
+        "neuer"
+      ]
+    },
+    {
+      "id": "matthaus",
+      "label": "Lothar Matthäus",
+      "detail": "2047 mínútur í 25 leikjum",
+      "accept": [
+        "lothar matthaus",
+        "matthaus"
+      ]
+    },
+    {
+      "id": "seeler",
+      "label": "Uwe Seeler",
+      "detail": "1980 mínútur í 21 leik",
+      "accept": [
+        "uwe seeler",
+        "seeler"
+      ]
+    },
+    {
+      "id": "modric",
+      "label": "Luka Modrić",
+      "detail": "1967 mínútur í 23 leikjum",
+      "accept": [
+        "luka modric",
+        "modric"
+      ]
+    },
+    {
+      "id": "mascherano",
+      "label": "Javier Mascherano",
+      "detail": "1950 mínútur í 20 leikjum",
+      "accept": [
+        "javier mascherano",
+        "mascherano"
+      ]
+    },
+    {
+      "id": "courtois",
+      "label": "Thibaut Courtois",
+      "detail": "1931 mínúta í 21 leik",
+      "accept": [
+        "thibaut courtois",
+        "courtois"
+      ]
+    },
+    {
+      "id": "perisic",
+      "label": "Ivan Perišić",
+      "detail": "1921 mínúta í 21 leik",
+      "accept": [
+        "ivan perisic",
+        "perisic"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08",
+  "note": "Mínúturnar telur Transfermarkt eitt. Leikjafjöldi hvers svars er staðfestur á Wikipedia."
+}

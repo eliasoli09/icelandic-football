@@ -1,5 +1,5 @@
 {
-  "builtAt": "2026-09-22",
+  "builtAt": "2026-10-08",
   "shipped": [
     "island-meistarar",
     "island-bikarmeistarar",
@@ -87,7 +87,16 @@
     "holland-lid-2026",
     "portugal-lid-2026",
     "championship-lid-2025",
-    "championship-lid-2026"
+    "championship-lid-2026",
+    "evropa-markahaestir",
+    "hm-leikjahaestir",
+    "hm-markahaestir",
+    "hm-minutur",
+    "clasico-leikjahaestir",
+    "clasico-markahaestir",
+    "samherjar-messi",
+    "samherjar-ronaldo",
+    "samherjar-gylfi"
   ],
   "review": [
     {
@@ -121,10 +130,6 @@
     {
       "id": "evropa-evropudeildin",
       "reason": "UEFA-bikarinn: Inter: 1991 1994 1998 og 1991 1998; Parma: 1995 1999 og 1994 1995 1999"
-    },
-    {
-      "id": "evropa-markahaestir",
-      "reason": "markahæstu í Meistaradeildinni: ronaldo: 140 á ensku, 142 á íslensku; mbappe: 71 á ensku, 70 á íslensku; haaland: 59 á ensku, 57 á íslensku; kane: 55 á ensku, 53 á íslensku"
     },
     {
       "id": "spann-lokastada-2022",
@@ -173,6 +178,18 @@
     {
       "id": "portugal-lid-2025",
       "reason": "lið tímabilsins: 19 lið í leikjaplani; Torreense aðeins í leikjaplani"
+    },
+    {
+      "id": "meistaradeild-leikjahaestir",
+      "reason": "Flestir leikir í Meistaradeildinni: Raúl 142 aðeins hjá en.wikipedia; Sergio Ramos 142 aðeins hjá en.wikipedia; Luka Modrić 142 aðeins hjá en.wikipedia; Ryan Giggs 145 aðeins hjá Transfermarkt"
+    },
+    {
+      "id": "enska-leikjahaestir",
+      "reason": "Flestir leikir í úrvalsdeildinni: Frank Lampard: 609 hjá en.wikipedia, 611 hjá Transfermarkt; Phil Neville: 505 hjá en.wikipedia, 504 hjá Transfermarkt; Rio Ferdinand 504 aðeins hjá Transfermarkt; Steven Gerrard 504 aðeins hjá Transfermarkt"
+    },
+    {
+      "id": "dyrustu-felagaskipti",
+      "reason": "dýrustu félagaskiptin: Yan Diomande (€125m) aðeins hjá en.wikipedia; Bradley Barcola (€125m) aðeins hjá en.wikipedia; Antoine Griezmann (€120m) aðeins hjá en.wikipedia; Ousmane Dembélé (€148m) aðeins hjá Transfermarkt; Philippe Coutinho (€135m) aðeins hjá Transfermarkt; Jude Bellingham (€127m) aðeins hjá Transfermarkt"
     }
   ]
 }

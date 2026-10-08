@@ -1,0 +1,152 @@
+{
+  "id": "hm-leikjahaestir",
+  "region": "heimur",
+  "kind": "player",
+  "competition": "HEIMSMEISTARAKEPPNIN",
+  "title": "Flestir leikir á HM",
+  "question": "Nefndu 10 leikmenn sem hafa spilað flesta leiki í lokakeppni HM karla.",
+  "context": "Leikir í lokakeppni HM frá 1930 til og með HM 2026. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · List of players who have appeared in the most FIFA World Cups",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1378059314"
+    },
+    {
+      "name": "Transfermarkt · HM, leikjahæstir",
+      "url": "https://www.transfermarkt.com/weltmeisterschaft/rekordspieler/pokalwettbewerb/FIWC"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "messi",
+      "label": "Lionel Messi",
+      "detail": "34 leikir á 6 mótum",
+      "accept": [
+        "lionel messi",
+        "messi"
+      ]
+    },
+    {
+      "id": "ronaldo",
+      "label": "Cristiano Ronaldo",
+      "detail": "27 leikir á 6 mótum",
+      "accept": [
+        "cristiano ronaldo",
+        "cristiano ronaldo dos santos aveiro",
+        "cr7",
+        "ronaldo"
+      ]
+    },
+    {
+      "id": "matthaus",
+      "label": "Lothar Matthäus",
+      "detail": "25 leikir á 5 mótum",
+      "accept": [
+        "lothar matthaus",
+        "matthaus"
+      ]
+    },
+    {
+      "id": "klose",
+      "label": "Miroslav Klose",
+      "detail": "24 leikir á 4 mótum",
+      "accept": [
+        "miroslav klose",
+        "klose"
+      ]
+    },
+    {
+      "id": "maldini",
+      "label": "Paolo Maldini",
+      "detail": "23 leikir á 4 mótum",
+      "accept": [
+        "paolo maldini",
+        "maldini"
+      ]
+    },
+    {
+      "id": "modric",
+      "label": "Luka Modrić",
+      "detail": "23 leikir á 5 mótum",
+      "accept": [
+        "luka modric",
+        "modric"
+      ]
+    },
+    {
+      "id": "neuer",
+      "label": "Manuel Neuer",
+      "detail": "23 leikir á 5 mótum",
+      "accept": [
+        "manuel neuer",
+        "neuer"
+      ]
+    },
+    {
+      "id": "mbappe",
+      "label": "Kylian Mbappé",
+      "detail": "22 leikir á 3 mótum",
+      "accept": [
+        "kylian mbappe",
+        "mbappe"
+      ]
+    },
+    {
+      "id": "courtois",
+      "label": "Thibaut Courtois",
+      "detail": "21 leikur á 4 mótum",
+      "accept": [
+        "thibaut courtois",
+        "courtois"
+      ]
+    },
+    {
+      "id": "maradona",
+      "label": "Diego Maradona",
+      "detail": "21 leikur á 4 mótum",
+      "accept": [
+        "diego maradona",
+        "diego armando maradona",
+        "maradona"
+      ]
+    },
+    {
+      "id": "otamendi",
+      "label": "Nicolás Otamendi",
+      "detail": "21 leikur á 4 mótum",
+      "accept": [
+        "nicolas otamendi",
+        "otamendi"
+      ]
+    },
+    {
+      "id": "perisic",
+      "label": "Ivan Perišić",
+      "detail": "21 leikur á 4 mótum",
+      "accept": [
+        "ivan perisic",
+        "perisic"
+      ]
+    },
+    {
+      "id": "seeler",
+      "label": "Uwe Seeler",
+      "detail": "21 leikur á 4 mótum",
+      "accept": [
+        "uwe seeler",
+        "seeler"
+      ]
+    },
+    {
+      "id": "zmuda",
+      "label": "Władysław Żmuda",
+      "detail": "21 leikur á 4 mótum",
+      "accept": [
+        "wladyslaw zmuda",
+        "zmuda"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08"
+}

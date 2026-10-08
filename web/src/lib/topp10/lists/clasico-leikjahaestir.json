@@ -1,0 +1,115 @@
+{
+  "id": "clasico-leikjahaestir",
+  "region": "evropa",
+  "kind": "player",
+  "competition": "EL CLÁSICO",
+  "title": "Flestir leikir í El Clásico",
+  "question": "Nefndu 10 leikmenn sem hafa spilað flesta leiki milli Barcelona og Real Madrid.",
+  "context": "Allir keppnisleikir félaganna, án vináttuleikja. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · El Clásico",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1377817258"
+    },
+    {
+      "name": "es.wikipedia.org · El Clásico",
+      "url": "https://es.wikipedia.org/w/index.php?oldid=175722117"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "busquets",
+      "label": "Sergio Busquets",
+      "detail": "48 leikir, Barcelona",
+      "accept": [
+        "sergio busquets",
+        "busquets"
+      ]
+    },
+    {
+      "id": "messi",
+      "label": "Lionel Messi",
+      "detail": "45 leikir, Barcelona",
+      "accept": [
+        "lionel messi",
+        "messi"
+      ]
+    },
+    {
+      "id": "sergio-ramos",
+      "label": "Sergio Ramos",
+      "detail": "45 leikir, Real Madrid",
+      "accept": [
+        "sergio ramos",
+        "ramos"
+      ]
+    },
+    {
+      "id": "benzema",
+      "label": "Karim Benzema",
+      "detail": "43 leikir, Real Madrid",
+      "accept": [
+        "karim benzema",
+        "benzema"
+      ]
+    },
+    {
+      "id": "gento",
+      "label": "Paco Gento",
+      "detail": "42 leikir, Real Madrid",
+      "accept": [
+        "paco gento",
+        "francisco gento",
+        "gento"
+      ]
+    },
+    {
+      "id": "sanchis",
+      "label": "Manuel Sanchís",
+      "detail": "42 leikir, Real Madrid",
+      "accept": [
+        "manuel sanchis",
+        "manolo sanchis",
+        "sanchis"
+      ]
+    },
+    {
+      "id": "xavi",
+      "label": "Xavi",
+      "detail": "42 leikir, Barcelona",
+      "accept": [
+        "xavi",
+        "xavi hernandez"
+      ]
+    },
+    {
+      "id": "pique",
+      "label": "Gerard Piqué",
+      "detail": "40 leikir, Barcelona",
+      "accept": [
+        "gerard pique",
+        "pique"
+      ]
+    },
+    {
+      "id": "iniesta",
+      "label": "Andrés Iniesta",
+      "detail": "38 leikir, Barcelona",
+      "accept": [
+        "andres iniesta",
+        "iniesta"
+      ]
+    },
+    {
+      "id": "modric",
+      "label": "Luka Modrić",
+      "detail": "38 leikir, Real Madrid",
+      "accept": [
+        "luka modric",
+        "modric"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08"
+}

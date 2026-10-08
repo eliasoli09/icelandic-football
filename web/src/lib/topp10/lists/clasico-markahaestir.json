@@ -1,0 +1,121 @@
+{
+  "id": "clasico-markahaestir",
+  "region": "evropa",
+  "kind": "player",
+  "competition": "EL CLÁSICO",
+  "title": "Markahæstir í El Clásico",
+  "question": "Nefndu 10 markahæstu leikmenn í leikjum Barcelona og Real Madrid.",
+  "context": "Allir keppnisleikir félaganna, án vináttuleikja. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · El Clásico",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1377817258"
+    },
+    {
+      "name": "es.wikipedia.org · El Clásico",
+      "url": "https://es.wikipedia.org/w/index.php?oldid=175722117"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "messi",
+      "label": "Lionel Messi",
+      "detail": "26 mörk, Barcelona",
+      "accept": [
+        "lionel messi",
+        "messi"
+      ]
+    },
+    {
+      "id": "di-stefano",
+      "label": "Alfredo Di Stéfano",
+      "detail": "18 mörk, Real Madrid",
+      "accept": [
+        "alfredo di stefano",
+        "di stefano",
+        "stefano",
+        "alfredo stefano"
+      ]
+    },
+    {
+      "id": "ronaldo",
+      "label": "Cristiano Ronaldo",
+      "detail": "18 mörk, Real Madrid",
+      "accept": [
+        "cristiano ronaldo",
+        "cristiano ronaldo dos santos aveiro",
+        "cr7",
+        "ronaldo"
+      ]
+    },
+    {
+      "id": "benzema",
+      "label": "Karim Benzema",
+      "detail": "16 mörk, Real Madrid",
+      "accept": [
+        "karim benzema",
+        "benzema"
+      ]
+    },
+    {
+      "id": "raul",
+      "label": "Raúl",
+      "detail": "15 mörk, Real Madrid",
+      "accept": [
+        "raul",
+        "raul gonzalez",
+        "raul gonzalez blanco"
+      ]
+    },
+    {
+      "id": "cesar",
+      "label": "César",
+      "detail": "14 mörk, Barcelona",
+      "accept": [
+        "cesar",
+        "cesar rodriguez",
+        "cesar rodriguez alvarez"
+      ]
+    },
+    {
+      "id": "gento",
+      "label": "Paco Gento",
+      "detail": "14 mörk, Real Madrid",
+      "accept": [
+        "paco gento",
+        "francisco gento",
+        "gento"
+      ]
+    },
+    {
+      "id": "puskas",
+      "label": "Ferenc Puskás",
+      "detail": "14 mörk, Real Madrid",
+      "accept": [
+        "ferenc puskas",
+        "puskas"
+      ]
+    },
+    {
+      "id": "santillana",
+      "label": "Santillana",
+      "detail": "12 mörk, Real Madrid",
+      "accept": [
+        "santillana",
+        "carlos alonso santillana"
+      ]
+    },
+    {
+      "id": "suarez",
+      "label": "Luis Suárez",
+      "detail": "11 mörk, Barcelona",
+      "accept": [
+        "luis suarez",
+        "luis suarez diaz",
+        "suarez"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08"
+}

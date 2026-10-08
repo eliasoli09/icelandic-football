@@ -1,0 +1,124 @@
+{
+  "id": "hm-markahaestir",
+  "region": "heimur",
+  "kind": "player",
+  "competition": "HEIMSMEISTARAKEPPNIN",
+  "title": "Markahæstir á HM",
+  "question": "Nefndu 10 markahæstu leikmenn í sögu HM karla.",
+  "context": "Mörk í lokakeppni HM frá 1930 til og með HM 2026. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · List of FIFA World Cup top goalscorers",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1379004077"
+    },
+    {
+      "name": "Transfermarkt · HM, markahæstir frá upphafi",
+      "url": "https://www.transfermarkt.com/weltmeisterschaft/ewigeTorschuetzenliste/pokalwettbewerb/FIWC"
+    }
+  ],
+  "level": "medium",
+  "answers": [
+    {
+      "id": "mbappe",
+      "label": "Kylian Mbappé",
+      "detail": "22 mörk í 22 leikjum",
+      "accept": [
+        "kylian mbappe",
+        "mbappe"
+      ]
+    },
+    {
+      "id": "messi",
+      "label": "Lionel Messi",
+      "detail": "21 mark í 34 leikjum",
+      "accept": [
+        "lionel messi",
+        "messi"
+      ]
+    },
+    {
+      "id": "klose",
+      "label": "Miroslav Klose",
+      "detail": "16 mörk í 24 leikjum",
+      "accept": [
+        "miroslav klose",
+        "klose"
+      ]
+    },
+    {
+      "id": "ronaldo-nazario",
+      "label": "Ronaldo",
+      "detail": "15 mörk í 19 leikjum",
+      "accept": [
+        "ronaldo",
+        "ronaldo luis nazario de lima",
+        "ronaldo nazario",
+        "r9"
+      ]
+    },
+    {
+      "id": "gerd-muller",
+      "label": "Gerd Müller",
+      "detail": "14 mörk í 13 leikjum",
+      "accept": [
+        "gerd muller",
+        "muller"
+      ]
+    },
+    {
+      "id": "kane",
+      "label": "Harry Kane",
+      "detail": "14 mörk í 18 leikjum",
+      "accept": [
+        "harry kane",
+        "kane"
+      ]
+    },
+    {
+      "id": "fontaine",
+      "label": "Just Fontaine",
+      "detail": "13 mörk í 6 leikjum",
+      "accept": [
+        "just fontaine",
+        "fontaine"
+      ]
+    },
+    {
+      "id": "pele",
+      "label": "Pelé",
+      "detail": "12 mörk í 14 leikjum",
+      "accept": [
+        "pele"
+      ]
+    },
+    {
+      "id": "kocsis",
+      "label": "Sándor Kocsis",
+      "detail": "11 mörk í 5 leikjum",
+      "accept": [
+        "sandor kocsis",
+        "kocsis"
+      ]
+    },
+    {
+      "id": "klinsmann",
+      "label": "Jürgen Klinsmann",
+      "detail": "11 mörk í 17 leikjum",
+      "accept": [
+        "jurgen klinsmann",
+        "klinsmann"
+      ]
+    },
+    {
+      "id": "ronaldo",
+      "label": "Cristiano Ronaldo",
+      "detail": "11 mörk í 27 leikjum",
+      "accept": [
+        "cristiano ronaldo",
+        "cristiano ronaldo dos santos aveiro",
+        "cr7"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08"
+}

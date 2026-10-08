@@ -1,7 +1,7 @@
 import type { Level } from '../level'
 
 /** Where a question belongs. */
-export type Region = 'island' | 'enska' | 'evropa'
+export type Region = 'island' | 'enska' | 'evropa' | 'heimur'
 
 /** What an answer is, which decides the words the game uses for it. */
 export type Kind = 'club' | 'player'

@@ -1,0 +1,112 @@
+{
+  "id": "samherjar-ronaldo",
+  "region": "heimur",
+  "kind": "player",
+  "competition": "SAMHERJAR",
+  "title": "Flestir leikir með Cristiano Ronaldo",
+  "question": "Nefndu 10 leikmenn sem hafa spilað flesta leiki með Cristiano Ronaldo, samkvæmt Transfermarkt.",
+  "context": "Sameiginlegir leikir í talningu Transfermarkt, með félagsliðum og landsliði. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "Transfermarkt · leikir með Cristiano Ronaldo",
+      "url": "https://www.transfermarkt.com/cristiano-ronaldo/gemeinsameSpiele/spieler/8198"
+    },
+    {
+      "name": "Transfermarkt · sömu leikir, taldir af síðu hvers samherja",
+      "url": "https://www.transfermarkt.com/pepe/gemeinsameSpiele/spieler/14132"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "pepe",
+      "label": "Pepe",
+      "detail": "348 leikir saman",
+      "accept": [
+        "pepe"
+      ]
+    },
+    {
+      "id": "benzema",
+      "label": "Karim Benzema",
+      "detail": "342 leikir saman",
+      "accept": [
+        "karim benzema",
+        "benzema"
+      ]
+    },
+    {
+      "id": "sergio-ramos",
+      "label": "Sergio Ramos",
+      "detail": "339 leikir saman",
+      "accept": [
+        "sergio ramos",
+        "ramos"
+      ]
+    },
+    {
+      "id": "marcelo",
+      "label": "Marcelo",
+      "detail": "332 leikir saman",
+      "accept": [
+        "marcelo"
+      ]
+    },
+    {
+      "id": "varane",
+      "label": "Raphaël Varane",
+      "detail": "231 leikur saman",
+      "accept": [
+        "raphael varane",
+        "varane"
+      ]
+    },
+    {
+      "id": "casillas",
+      "label": "Iker Casillas",
+      "detail": "228 leikir saman",
+      "accept": [
+        "iker casillas",
+        "casillas"
+      ]
+    },
+    {
+      "id": "modric",
+      "label": "Luka Modrić",
+      "detail": "222 leikir saman",
+      "accept": [
+        "luka modric",
+        "modric"
+      ]
+    },
+    {
+      "id": "rio-ferdinand",
+      "label": "Rio Ferdinand",
+      "detail": "221 leikur saman",
+      "accept": [
+        "rio ferdinand",
+        "ferdinand"
+      ]
+    },
+    {
+      "id": "oshea",
+      "label": "John O'Shea",
+      "detail": "215 leikir saman",
+      "accept": [
+        "john o shea",
+        "o shea"
+      ]
+    },
+    {
+      "id": "xabi-alonso",
+      "label": "Xabi Alonso",
+      "detail": "208 leikir saman",
+      "accept": [
+        "xabi alonso",
+        "alonso"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08",
+  "note": "Aðeins Transfermarkt telur sameiginlega leiki. Hver tala er lesin bæði af síðu leikmannsins og af síðu samherjans."
+}

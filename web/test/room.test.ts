@@ -17,7 +17,9 @@ describe('the games room', () => {
     // the puzzle's own answers must not appear in the room
     const question = dailyQuestion(DAY, 'medium')
     const room = cards.map((c) => `${c.title} ${c.today} ${c.blurb}`).join(' ').toLowerCase()
-    for (const answer of question.answers) expect(room).not.toContain(answer.label.toLowerCase())
+    // as whole words: the answer KA is not given away by the word "karla"
+    const words = (text: string) => ` ${text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ')} `
+    for (const answer of question.answers) expect(words(room)).not.toContain(words(answer.label))
   })
 
   it('starts everyone at the beginning when the browser has saved nothing', () => {

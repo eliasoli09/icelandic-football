@@ -1,0 +1,114 @@
+{
+  "id": "samherjar-gylfi",
+  "region": "island",
+  "kind": "player",
+  "competition": "SAMHERJAR",
+  "title": "Flestir leikir með Gylfa Sigurðssyni",
+  "question": "Nefndu 10 leikmenn sem hafa spilað flesta leiki með Gylfa Sigurðssyni, samkvæmt Transfermarkt.",
+  "context": "Sameiginlegir leikir í talningu Transfermarkt, með félagsliðum og landsliði. Efstu tíu, og allir jafnir þeim tíunda.",
+  "sources": [
+    {
+      "name": "Transfermarkt · leikir með Gylfa Sigurðssyni",
+      "url": "https://www.transfermarkt.com/gylfi-sigurdsson/gemeinsameSpiele/spieler/90466"
+    },
+    {
+      "name": "Transfermarkt · sömu leikir, taldir af síðu hvers samherja",
+      "url": "https://www.transfermarkt.com/jordan-pickford/gemeinsameSpiele/spieler/130164"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "pickford",
+      "label": "Jordan Pickford",
+      "detail": "141 leikur saman",
+      "accept": [
+        "jordan pickford",
+        "pickford"
+      ]
+    },
+    {
+      "id": "calvert-lewin",
+      "label": "Dominic Calvert-Lewin",
+      "detail": "138 leikir saman",
+      "accept": [
+        "dominic calvert lewin",
+        "calvert lewin"
+      ]
+    },
+    {
+      "id": "michael-keane",
+      "label": "Michael Keane",
+      "detail": "125 leikir saman",
+      "accept": [
+        "michael keane",
+        "keane"
+      ]
+    },
+    {
+      "id": "ashley-williams",
+      "label": "Ashley Williams",
+      "detail": "111 leikir saman",
+      "accept": [
+        "ashley williams",
+        "williams"
+      ]
+    },
+    {
+      "id": "richarlison",
+      "label": "Richarlison",
+      "detail": "109 leikir saman",
+      "accept": [
+        "richarlison",
+        "richarlison de andrade"
+      ]
+    },
+    {
+      "id": "digne",
+      "label": "Lucas Digne",
+      "detail": "106 leikir saman",
+      "accept": [
+        "lucas digne",
+        "digne"
+      ]
+    },
+    {
+      "id": "fabianski",
+      "label": "Łukasz Fabiański",
+      "detail": "105 leikir saman",
+      "accept": [
+        "lukasz fabianski",
+        "fabianski"
+      ]
+    },
+    {
+      "id": "naughton",
+      "label": "Kyle Naughton",
+      "detail": "105 leikir saman",
+      "accept": [
+        "kyle naughton",
+        "naughton"
+      ]
+    },
+    {
+      "id": "neil-taylor",
+      "label": "Neil Taylor",
+      "detail": "95 leikir saman",
+      "accept": [
+        "neil taylor",
+        "taylor"
+      ]
+    },
+    {
+      "id": "routledge",
+      "label": "Wayne Routledge",
+      "detail": "94 leikir saman",
+      "accept": [
+        "wayne routledge",
+        "routledge"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08",
+  "note": "Aðeins Transfermarkt telur sameiginlega leiki. Hver tala er lesin bæði af síðu leikmannsins og af síðu samherjans."
+}

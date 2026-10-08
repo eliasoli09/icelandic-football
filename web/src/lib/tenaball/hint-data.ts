@@ -171,6 +171,28 @@ players('Brasilía', 'ronaldo-nazario rivaldo ronaldinho kaka')
 players('Portúgal', 'figo')
 players('Tékkland', 'nedved')
 players('Úkraína', 'shevchenko')
+players('England', 'owen')
+
+// Heilir ferlar: HM, El Clásico, Meistaradeildin og samherjar. Þjóðerni er landsliðið
+// sem leikmaðurinn spilaði fyrir; Di Stéfano og Puskás spiluðu fyrir tvö.
+players('Spánn', 'busquets sergio-ramos gento sanchis xavi pique iniesta raul cesar santillana jordi-alba valdes casillas xabi-alonso')
+players('Króatía', 'modric perisic rakitic')
+players('Argentína / Spánn', 'di-stefano')
+players('Ungverjaland / Spánn', 'puskas')
+players('Ungverjaland', 'kocsis')
+players('Úrúgvæ', 'suarez')
+players('Frakkland', 'benzema mbappe fontaine digne varane')
+players('Pólland', 'lewandowski zmuda fabianski')
+players('Þýskaland', 'muller klose neuer seeler gerd-muller klinsmann')
+players('Holland', 'van-nistelrooy')
+players('Ítalía', 'maldini')
+players('Belgía', 'courtois')
+players('Argentína', 'maradona otamendi mascherano')
+players('Brasilía', 'pele dani-alves marcelo')
+players('England', 'pickford michael-keane rio-ferdinand naughton routledge')
+players('Wales', 'ashley-williams neil-taylor')
+players('Portúgal', 'pepe')
+players('Írland', 'oshea')
 
 
 // Félög sem bættust við þegar hollenska og portúgalska deildin komu inn, ásamt
@@ -292,6 +314,131 @@ export const OTHER_HINTS: Record<string, { label: string; values: Record<string,
       kaka: 'Milan',
       ronaldo: 'Manchester United',
       messi: 'Barcelona',
+    },
+  },
+  // Staða úr Transfermarkt-töflunum sem spurningarnar voru staðfestar á; félagið í El Clásico úr töflu en.wikipedia
+  'evropa-markahaestir': {
+    label: 'Staða',
+    values: {
+      ronaldo: 'Framherji',
+      messi: 'Hægri kantmaður',
+      lewandowski: 'Framherji',
+      benzema: 'Framherji',
+      mbappe: 'Framherji',
+      raul: 'Framherji',
+      haaland: 'Framherji',
+      muller: 'Framherji',
+      'van-nistelrooy': 'Framherji',
+      kane: 'Framherji',
+    },
+  },
+  'hm-leikjahaestir': {
+    label: 'Staða',
+    values: {
+      messi: 'Hægri kantmaður',
+      ronaldo: 'Framherji',
+      matthaus: 'Varnarsinnaður miðjumaður',
+      klose: 'Framherji',
+      maldini: 'Vinstri bakvörður',
+      modric: 'Miðjumaður',
+      neuer: 'Markvörður',
+      mbappe: 'Framherji',
+      courtois: 'Markvörður',
+      maradona: 'Sóknarsinnaður miðjumaður',
+      otamendi: 'Miðvörður',
+      perisic: 'Hægri kantmaður',
+      seeler: 'Framherji',
+      zmuda: 'Miðvörður',
+    },
+  },
+  'hm-markahaestir': {
+    label: 'Staða',
+    values: {
+      mbappe: 'Framherji',
+      messi: 'Hægri kantmaður',
+      klose: 'Framherji',
+      'ronaldo-nazario': 'Framherji',
+      'gerd-muller': 'Framherji',
+      kane: 'Framherji',
+      fontaine: 'Framherji',
+      pele: 'Framherji',
+      kocsis: 'Framherji',
+      klinsmann: 'Framherji',
+      ronaldo: 'Framherji',
+    },
+  },
+  'hm-minutur': {
+    label: 'Staða',
+    values: {
+      messi: 'Hægri kantmaður',
+      maldini: 'Vinstri bakvörður',
+      ronaldo: 'Framherji',
+      neuer: 'Markvörður',
+      matthaus: 'Varnarsinnaður miðjumaður',
+      seeler: 'Framherji',
+      modric: 'Miðjumaður',
+      mascherano: 'Varnarsinnaður miðjumaður',
+      courtois: 'Markvörður',
+      perisic: 'Hægri kantmaður',
+    },
+  },
+  'samherjar-gylfi': {
+    label: 'Staða',
+    values: {
+      pickford: 'Markvörður',
+      'calvert-lewin': 'Framherji',
+      'michael-keane': 'Miðvörður',
+      'ashley-williams': 'Miðvörður',
+      richarlison: 'Framherji',
+      digne: 'Vinstri bakvörður',
+      fabianski: 'Markvörður',
+      naughton: 'Hægri bakvörður',
+      'neil-taylor': 'Vinstri bakvörður',
+      routledge: 'Vinstri kantmaður',
+    },
+  },
+  'samherjar-messi': {
+    label: 'Staða',
+    values: {
+      busquets: 'Varnarsinnaður miðjumaður',
+      pique: 'Miðvörður',
+      iniesta: 'Miðjumaður',
+      'jordi-alba': 'Vinstri bakvörður',
+      mascherano: 'Varnarsinnaður miðjumaður',
+      xavi: 'Miðjumaður',
+      valdes: 'Markvörður',
+      'dani-alves': 'Hægri bakvörður',
+      suarez: 'Framherji',
+      rakitic: 'Miðjumaður',
+    },
+  },
+  'samherjar-ronaldo': {
+    label: 'Staða',
+    values: {
+      pepe: 'Miðvörður',
+      benzema: 'Framherji',
+      'sergio-ramos': 'Miðvörður',
+      marcelo: 'Vinstri bakvörður',
+      varane: 'Miðvörður',
+      casillas: 'Markvörður',
+      modric: 'Miðjumaður',
+      'rio-ferdinand': 'Miðvörður',
+      oshea: 'Miðvörður',
+      'xabi-alonso': 'Varnarsinnaður miðjumaður',
+    },
+  },
+  'clasico-leikjahaestir': {
+    label: 'Félag',
+    values: {
+      busquets: 'Barcelona', messi: 'Barcelona', 'sergio-ramos': 'Real Madrid', benzema: 'Real Madrid', gento: 'Real Madrid',
+      sanchis: 'Real Madrid', xavi: 'Barcelona', pique: 'Barcelona', iniesta: 'Barcelona', modric: 'Real Madrid',
+    },
+  },
+  'clasico-markahaestir': {
+    label: 'Félag',
+    values: {
+      messi: 'Barcelona', 'di-stefano': 'Real Madrid', ronaldo: 'Real Madrid', benzema: 'Real Madrid', raul: 'Real Madrid',
+      cesar: 'Barcelona', gento: 'Real Madrid', puskas: 'Real Madrid', santillana: 'Real Madrid', suarez: 'Barcelona',
     },
   },
 }

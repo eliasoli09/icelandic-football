@@ -9,7 +9,7 @@ import { matchGuess, ambiguousAliases } from '../src/lib/topp10/match'
 // sources agreed. These checks catch one edited by hand into something unplayable.
 describe('Tenaball questions', () => {
   it('has questions for every region', () => {
-    for (const region of ['island', 'enska', 'evropa']) {
+    for (const region of ['island', 'enska', 'evropa', 'heimur']) {
       expect(LISTS.some((l) => l.region === region)).toBe(true)
     }
   })

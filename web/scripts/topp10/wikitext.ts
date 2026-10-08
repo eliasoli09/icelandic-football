@@ -39,9 +39,14 @@ export function plain(text: string): string {
     .replace(/<ref[^>]*\/>/g, '')
     .replace(/<ref[^>]*>[\s\S]*?<\/ref>/g, '')
     .replace(/<!--[\s\S]*?-->/g, '')
+    // a picture, which es.wikipedia uses for a player with two flags
+    .replace(/\[\[(?:File|Image|Archivo|Imagen|Mynd):[^\[\]]*\]\]/gi, '')
     // is.wikipedia's club template, {{Lið KR}}
     .replace(/\{\{\s*Lið\s+([^{}|]+?)\s*\}\}/g, '$1')
-    .replace(/\{\{\s*(?:flagicon|fbaicon|fb|flag icon|#invoke:flag\|icon)\|[^{}]*\}\}/gi, '')
+    // es.wikipedia flags itself with {{bandera|tamaño=15px|España}}
+    .replace(/\{\{\s*(?:flagicon|fbaicon|fb|flag icon|#invoke:flag\|icon|bandera)\|[^{}]*\}\}/gi, '')
+    // {{sortname|Lionel|Messi}}, {{sortname||Cafu}}, {{sortname|David|James|David James (footballer)}}
+    .replace(/\{\{\s*sortname\|([^{}|]*)\|([^{}|]*)(?:\|[^{}]*)?\}\}/gi, (_, first: string, last: string) => `${first} ${last}`)
     .replace(/\{\{\s*(?:nowrap|nobr|small|sortname-display)\|([^{}]*)\}\}/gi, '$1')
     .replace(/\{\{\s*sdash\s*\}\}/gi, '')
   // links, innermost first, keeping the label
@@ -148,7 +153,8 @@ export function tableAfter(wt: string, marker: string | RegExp): string {
   return wt.slice(start, start + length)
 }
 
-const ATTRS = /^\s*(?:[a-z-]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'|]+)\s*)+$/i
+// nowrap is the one attribute written without a value: align="left" nowrap|…
+const ATTRS = /^\s*(?:(?:[a-z-]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'|]+)|nowrap)\s*)+$/i
 
 /** Cell text with its attribute prefix (rowspan="3" | …) removed. */
 function cellParts(raw: string): { text: string; rowspan: number } {

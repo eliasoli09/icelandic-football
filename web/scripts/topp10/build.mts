@@ -14,7 +14,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { tmpdir } from 'os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import type { Answer, Kind, Topp10List } from '../../src/lib/topp10/types'
+import type { Answer, Kind, Region, Topp10List } from '../../src/lib/topp10/types'
 import type { Level } from '../../src/lib/level'
 import type { Entity } from './names'
 
@@ -72,7 +72,7 @@ const utf8OrLatin = (bytes: Uint8Array) => {
 interface Source { name: string; url: string }
 interface Page { wikitext: string; source: Source }
 
-async function wiki(lang: 'en' | 'is', page: string): Promise<Page> {
+async function wiki(lang: 'en' | 'is' | 'es', page: string): Promise<Page> {
   const api = `https://${lang}.wikipedia.org/w/api.php?action=parse&prop=wikitext%7Crevid&format=json&formatversion=2&redirects=1&page=${encodeURIComponent(page)}`
   const json = JSON.parse(await fetchCached(`${lang}-${page}.json`, api))
   if (json.error) throw new Error(`${lang}.wikipedia "${page}": ${json.error.info}`)
@@ -233,6 +233,8 @@ export function levelOf(id: string): Level {
   if (/^enska-markahaestir-/.test(id)) return year >= 2023 ? 'medium' : 'hard'
   if (/^(spann|italia|thyskaland|frakkland|island|holland|portugal)-lokastada-/.test(id)) return year >= 2024 ? 'medium' : 'hard'
   if (['island-meistarar', 'island-bikarmeistarar', 'island-landsleikir'].includes(id)) return 'medium'
+  // the famous names of a whole career: Messi's friends and Klose's goals are known to many
+  if (['hm-markahaestir', 'hm-leikjahaestir', 'clasico-markahaestir', 'samherjar-messi', 'dyrustu-felagaskipti'].includes(id)) return 'medium'
   return 'hard'
 }
 
@@ -696,28 +698,23 @@ async function uefaCup(): Promise<Topp10List> {
   }, clubs.map((c) => answerFor('club', c.club, `${plural(c.years.length, 'titill', 'titlar')}, síðast ${c.years[c.years.length - 1]}`)))
 }
 
+/**
+ * is.wikipedia was the second source here and disagreed with en.wikipedia on
+ * four counts, so the question never shipped. Transfermarkt keeps a count of
+ * its own and is the second source now.
+ */
 async function uclScorers(): Promise<Topp10List> {
   const en = await wiki('en', 'List of UEFA Champions League top scorers')
-  const is = await wiki('is', 'Meistaradeild Evrópu')
-  const read = (rows: string[][], nameCol: number, goalsCol: number) =>
-    rows.map((r) => ({ name: W.plain(r[nameCol] ?? ''), goals: Number(W.plain(r[goalsCol] ?? '')) }))
-      .filter((x) => x.name && Number.isInteger(x.goals))
-  const a = topWithTies(read(W.dataRows(W.tableAfter(en.wikitext, 'All-time top scorers')), 1, 2), (x) => x.goals)
-  const b = topWithTies(read(W.dataRows(W.tableAfter(is.wikitext, 'Markahæstu menn')), 1, 2), (x) => x.goals)
-  const goals = (list: typeof a) => new Map(list.map((item) => [personOf(item.name).id, item.goals]))
-  const x = goals(a), z = goals(b)
-  const problems: string[] = []
-  for (const id of new Set([...x.keys(), ...z.keys()])) {
-    if (x.get(id) !== z.get(id)) problems.push(`${id}: ${x.get(id) ?? '-'} á ensku, ${z.get(id) ?? '-'} á íslensku`)
-  }
-  mustAgree(problems, 'markahæstu í Meistaradeildinni')
+  const tm = await tmTable('cl-ewigeTorschuetzenliste', 'uefa-champions-league/ewigeTorschuetzenliste/pokalwettbewerb/CL', 'Transfermarkt · Meistaradeildin, markahæstir frá upphafi')
+  const a = wikiCounts(W.dataRows(W.tableAfter(en.wikitext, 'All-time top scorers')), 1, 2)
+  const agreed = agreedTop('markahæstu í Meistaradeildinni', a, tmCounts(tm.rows, 'Goals'), ['en.wikipedia', 'Transfermarkt'])
   return finish({
     id: 'evropa-markahaestir', region: 'evropa', kind: 'player', competition: 'MEISTARADEILDIN',
     title: 'Markahæstir frá upphafi',
     question: 'Nefndu 10 markahæstu leikmenn Evrópukeppni meistaraliða og Meistaradeildarinnar.',
-    context: 'Mörk í aðalkeppninni frá upphafi.',
-    sources: [en.source, is.source],
-  }, a.map((item) => answerFor('player', personOf(item.name), plural(item.goals, 'mark', 'mörk'))))
+    context: 'Mörk í aðalkeppninni frá upphafi, án forkeppni.',
+    sources: [en.source, tm.source],
+  }, agreed.map((c) => answerFor('player', c.person, plural(c.n, 'mark', 'mörk'))))
 }
 
 // ── Iceland's internationals ───────────────────────────────────────────
@@ -819,6 +816,292 @@ async function ballonDor(from: number, to: number): Promise<Topp10List> {
     w.years.length > 1 ? `Gullknötturinn ${listYears(w.years)}` : `Gullknötturinn ${w.years[0]}`)))
 }
 
+// ── whole careers: Transfermarkt against Wikipedia ─────────────────────
+
+interface TmRow { tmId: string; slug: string; name: string; position: string; nation: string; cells: Map<string, string> }
+
+const unescape = (s: string) => s.replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&nbsp;/g, ' ')
+  .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n))).replace(/&amp;/g, '&')
+const cellText = (html: string) => unescape(html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim()
+/** Transfermarkt writes a thousand with a point, 3.055 minutes, and none as a dash. */
+const tmNumber = (s: string) => s === '-' ? 0 : Number(s.replace(/\./g, ''))
+
+/**
+ * One of Transfermarkt's player tables, read by its column headings: a row
+ * whose cells do not line up with the headings stops the question, so a
+ * column added on their side cannot shift a number into the wrong place.
+ */
+async function tmTable(key: string, path: string, name: string): Promise<{ rows: TmRow[]; source: Source }> {
+  const url = `https://www.transfermarkt.com/${path}`
+  const html = await fetchCached(`tm-${key}.html`, url)
+  const at = html.indexOf('<table class="items">')
+  if (at < 0) throw new Error(`Transfermarkt ${path}: engin tafla`)
+  const table = html.slice(at, html.indexOf('</tbody>', at))
+  // a heading drawn as an icon names itself in its title
+  const heads = [...table.slice(0, table.indexOf('<tbody>')).matchAll(/<th[^>]*>([\s\S]*?)<\/th>/g)]
+    .map((m) => cellText(m[1]) || unescape(m[1].match(/title="([^"]+)"/)?.[1] ?? ''))
+  const playerAt = heads.findIndex((h) => /^(?:Player|Played together with:)$/.test(h))
+  if (playerAt < 0) throw new Error(`Transfermarkt ${path}: enginn leikmannadálkur í ${heads.join(', ')}`)
+  const columns = heads.slice(playerAt + 1)
+  const parts = table.split(/<a title="[^"]*" href="\/([^"/]+)\/profil\/spieler\/(\d+)">([^<]+)<\/a>/)
+  const rows: TmRow[] = []
+  for (let i = 1; i + 3 < parts.length; i += 4) {
+    const [slug, tmId, label, rest] = parts.slice(i, i + 4)
+    // the player sits in a small table of his own: picture, name, then position
+    const [inner, outer = ''] = rest.split('</table>')
+    const row = outer.split('</tr>')[0]
+    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((m) => cellText(m[1]))
+    if (cells.length !== columns.length) throw new Error(`Transfermarkt ${path}: ${label} hefur ${cells.length} reiti en dálkarnir eru ${columns.length}`)
+    rows.push({
+      tmId, slug, name: unescape(label).trim(),
+      position: inner.match(/<tr>\s*<td>([^<]+)<\/td>/)?.[1].trim() ?? '',
+      nation: row.match(/title="([^"]+)" alt="[^"]*" class="flaggenrahmen"/)?.[1] ?? '',
+      cells: new Map(columns.map((c, j) => [c, cells[j]])),
+    })
+  }
+  if (rows.length < 10) throw new Error(`Transfermarkt ${path}: aðeins ${rows.length} leikmenn lásust`)
+  return { rows, source: { name, url } }
+}
+
+const tmCell = (r: TmRow, column: string) => {
+  const v = r.cells.get(column)
+  if (v === undefined) throw new Error(`Transfermarkt: enginn dálkur "${column}"`)
+  return v
+}
+
+type Count = { person: Entity; n: number; cells?: string[]; tm?: TmRow }
+
+/** A Wikipedia table as name and number: the first ten, and anyone level with the tenth. */
+function wikiCounts(rows: string[][], nameCol: number, n: number | ((r: string[]) => string)): Count[] {
+  const read = rows.map((r) => r.map((c) => W.plain(c))).map((cells) => ({
+    cells,
+    // "Neymar (1)" for his first entry on a list, "Paco Gento †" on es.wikipedia
+    name: unqualified((cells[nameCol] ?? '').replace(/\s*(?:\(\d+\)|[†♦*])\s*$/, '')),
+    n: Number(typeof n === 'number' ? cells[n] : n(cells)),
+  })).filter((x) => x.name && Number.isInteger(x.n) && x.n > 0)
+  return topWithTies(read, (x) => x.n).map((x) => ({ person: personOf(x.name), n: x.n, cells: x.cells }))
+}
+
+function tmCounts(rows: TmRow[], column: string): Count[] {
+  return topWithTies(rows, (r) => tmNumber(tmCell(r, column)))
+    .map((r) => ({ person: personOf(r.name), n: tmNumber(tmCell(r, column)), tm: r }))
+}
+
+/**
+ * Two counts of the same thing held against each other both ways: a player in
+ * either top ten must be in the other's with the same number, so neither
+ * source can forget someone without the question stopping.
+ */
+function agreedTop(what: string, a: Count[], b: Count[], names: [string, string]): (Count & { other: Count })[] {
+  const x = new Map(a.map((c) => [c.person.id, c])), y = new Map(b.map((c) => [c.person.id, c]))
+  const problems: string[] = []
+  for (const id of new Set([...x.keys(), ...y.keys()])) {
+    const p = x.get(id), q = y.get(id)
+    if (!p || !q) problems.push(`${(p ?? q)!.person.label} ${(p ?? q)!.n} aðeins hjá ${p ? names[0] : names[1]}`)
+    else if (p.n !== q.n) problems.push(`${p.person.label}: ${p.n} hjá ${names[0]}, ${q.n} hjá ${names[1]}`)
+  }
+  mustAgree(problems, what)
+  return a.map((c) => ({ ...c, other: y.get(c.person.id)! }))
+}
+
+// the game counts the first ten only, and says so itself
+const TOP_TEN = 'Efstu tíu, og allir jafnir þeim tíunda.'
+
+async function worldCupApps(): Promise<Topp10List> {
+  const en = await wiki('en', 'List of players who have appeared in the most FIFA World Cups')
+  const tm = await tmTable('hm-rekordspieler', 'weltmeisterschaft/rekordspieler/pokalwettbewerb/FIWC', 'Transfermarkt · HM, leikjahæstir')
+  const agreed = agreedTop('leikjahæstir á HM', wikiCounts(W.dataRows(W.tableAfter(en.wikitext, '==Matches==')), 2, 3),
+    tmCounts(tm.rows, 'Appearances'), ['en.wikipedia', 'Transfermarkt'])
+  return finish({
+    id: 'hm-leikjahaestir', region: 'heimur', kind: 'player', competition: 'HEIMSMEISTARAKEPPNIN',
+    title: 'Flestir leikir á HM',
+    question: 'Nefndu 10 leikmenn sem hafa spilað flesta leiki í lokakeppni HM karla.',
+    context: `Leikir í lokakeppni HM frá 1930 til og með HM 2026. ${TOP_TEN}`,
+    sources: [en.source, tm.source],
+  }, agreed.map((c) => answerFor('player', c.person,
+    `${plural(c.n, 'leikur', 'leikir')} á ${plural(c.cells![4].split(',').length, 'móti', 'mótum')}`)))
+}
+
+async function worldCupGoals(): Promise<Topp10List> {
+  const en = await wiki('en', 'List of FIFA World Cup top goalscorers')
+  const tm = await tmTable('hm-ewigeTorschuetzenliste', 'weltmeisterschaft/ewigeTorschuetzenliste/pokalwettbewerb/FIWC', 'Transfermarkt · HM, markahæstir frá upphafi')
+  // the first table under the heading is the key to the symbols in the second
+  const rows = W.dataRows(W.tableAfter(en.wikitext, 'Denotes tournaments where the player was top scorer'))
+  const agreed = agreedTop('markahæstir á HM', wikiCounts(rows, 1, 3), tmCounts(tm.rows, 'Goals'), ['en.wikipedia', 'Transfermarkt'])
+  const problems = agreed.flatMap((c) => Number(c.cells![4]) === tmNumber(tmCell(c.other.tm!, 'Appearances')) ? []
+    : [`${c.person.label}: ${c.cells![4]} og ${tmCell(c.other.tm!, 'Appearances')} leikir`])
+  mustAgree(problems, 'leikir markahæstu á HM')
+  return finish({
+    id: 'hm-markahaestir', region: 'heimur', kind: 'player', competition: 'HEIMSMEISTARAKEPPNIN',
+    title: 'Markahæstir á HM',
+    question: 'Nefndu 10 markahæstu leikmenn í sögu HM karla.',
+    context: `Mörk í lokakeppni HM frá 1930 til og með HM 2026. ${TOP_TEN}`,
+    sources: [en.source, tm.source],
+  }, agreed.map((c) => answerFor('player', c.person, `${plural(c.n, 'mark', 'mörk')} í ${plural(Number(c.cells![4]), 'leik', 'leikjum')}`)))
+}
+
+/**
+ * Minutes are counted by Transfermarkt alone, so the question says so, and
+ * en.wikipedia confirms the number of matches behind every answer. The table
+ * is sorted by matches, not minutes: pages are read until a player further
+ * down could not reach the tenth even playing 120 minutes every match.
+ */
+async function worldCupMinutes(): Promise<Topp10List> {
+  const path = 'weltmeisterschaft/rekordspieler/pokalwettbewerb/FIWC'
+  const rows: TmRow[] = []
+  let source: Source | undefined
+  for (let page = 1; ; page++) {
+    if (page > 8) throw new Error('mínútulistinn kláraðist ekki á átta síðum')
+    const t = await tmTable(page === 1 ? 'hm-rekordspieler' : `hm-rekordspieler-${page}`, page === 1 ? path : `${path}/page/${page}`, 'Transfermarkt · HM, leikjahæstir og mínútur')
+    rows.push(...t.rows); source ??= t.source
+    const cut = tmNumber(tmCell(topWithTies(rows, (r) => tmNumber(tmCell(r, 'Minutes played')))[9], 'Minutes played'))
+    const fewest = Math.min(...t.rows.map((r) => tmNumber(tmCell(r, 'Appearances'))))
+    if (fewest * 120 < cut) break
+  }
+  const top = tmCounts(rows, 'Minutes played')
+  const en = await wiki('en', 'List of players who have appeared in the most FIFA World Cups')
+  const matches = new Map(W.dataRows(W.tableAfter(en.wikitext, '==Matches==')).map((r: string[]) => r.map((c) => W.plain(c)))
+    .map((c: string[]) => [normalise(c[2]), Number(c[3])]))
+  const problems = top.flatMap((c) => {
+    const apps = tmNumber(tmCell(c.tm!, 'Appearances'))
+    const theirs = [c.person.label, ...c.person.names].map((n) => matches.get(normalise(n))).find((n) => n !== undefined)
+    return theirs === apps ? [] : [`${c.person.label}: ${apps} leikir hjá Transfermarkt, ${theirs ?? 'enginn'} hjá Wikipedia`]
+  })
+  mustAgree(problems, 'leikir þeirra mínútuhæstu á HM')
+  return finish({
+    id: 'hm-minutur', region: 'heimur', kind: 'player', competition: 'HEIMSMEISTARAKEPPNIN',
+    title: 'Flestar mínútur á HM',
+    question: 'Nefndu 10 leikmenn sem hafa spilað flestar mínútur í lokakeppni HM karla, samkvæmt Transfermarkt.',
+    context: `Mínútur í lokakeppni HM til og með HM 2026, með framlengingum. ${TOP_TEN}`,
+    note: 'Mínúturnar telur Transfermarkt eitt. Leikjafjöldi hvers svars er staðfestur á Wikipedia.',
+    sources: [source!, en.source],
+  }, top.map((c) => answerFor('player', c.person,
+    `${plural(c.n, 'mínúta', 'mínútur')} í ${plural(tmNumber(tmCell(c.tm!, 'Appearances')), 'leik', 'leikjum')}`)))
+}
+
+const noComments = (wt: string) => wt.replace(/<!--[\s\S]*?-->/g, '')
+const CLASICO_CLUB: Record<string, string> = { Barcelona: 'Barcelona', 'Real Madrid': 'Real Madrid', 'Both clubs': 'bæði félögin' }
+
+async function clasico(what: 'leikir' | 'mork'): Promise<Topp10List> {
+  const en = await wiki('en', 'El Clásico'), es = await wiki('es', 'El Clásico')
+  const goals = what === 'mork'
+  // en.wikipedia hides the scorers below the tenth in a comment
+  const a = goals
+    ? wikiCounts(W.dataRows(W.tableAfter(noComments(en.wikitext), '=====Top goalscorers=====')), 1, (r) => r[r.length - 1])
+    : wikiCounts(W.dataRows(W.tableAfter(noComments(en.wikitext), '====Most appearances====')), 1, 0)
+  // es.wikipedia gives games and goals per competition, and the totals last
+  const b = goals
+    ? wikiCounts(W.dataRows(W.tableAfter(noComments(es.wikitext), '=== Tabla histórica de goleadores ===')), 1, (r) => r[r.length - 2])
+    : wikiCounts(W.dataRows(W.tableAfter(noComments(es.wikitext), '=== Jugadores con mayor cantidad de encuentros disputados ===')), 1, (r) => r[r.length - 1])
+  const agreed = agreedTop(goals ? 'markahæstir í El Clásico' : 'leikjahæstir í El Clásico', a, b, ['en.wikipedia', 'es.wikipedia'])
+  const club = (c: Count) => {
+    const name = CLASICO_CLUB[c.cells![2]]
+    if (!name) throw new Error(`${c.person.label}: óþekkt félag "${c.cells![2]}"`)
+    return name
+  }
+  return finish({
+    id: goals ? 'clasico-markahaestir' : 'clasico-leikjahaestir', region: 'evropa', kind: 'player', competition: 'EL CLÁSICO',
+    title: goals ? 'Markahæstir í El Clásico' : 'Flestir leikir í El Clásico',
+    question: goals
+      ? 'Nefndu 10 markahæstu leikmenn í leikjum Barcelona og Real Madrid.'
+      : 'Nefndu 10 leikmenn sem hafa spilað flesta leiki milli Barcelona og Real Madrid.',
+    context: `Allir keppnisleikir félaganna, án vináttuleikja. ${TOP_TEN}`,
+    sources: [en.source, es.source],
+  }, agreed.map((c) => answerFor('player', c.person, `${plural(c.n, goals ? 'mark' : 'leikur', goals ? 'mörk' : 'leikir')}, ${club(c)}`)))
+}
+
+async function recordApps(o: {
+  id: string; region: Region; competition: string; title: string; question: string; context: string
+  page: string; marker: string; nameCol: number; appsCol: number; tmKey: string; tmPath: string; tmName: string
+}): Promise<Topp10List> {
+  const en = await wiki('en', o.page)
+  const tm = await tmTable(o.tmKey, o.tmPath, o.tmName)
+  const agreed = agreedTop(o.title, wikiCounts(W.dataRows(W.tableAfter(en.wikitext, o.marker)), o.nameCol, o.appsCol),
+    tmCounts(tm.rows, 'Appearances'), ['en.wikipedia', 'Transfermarkt'])
+  return finish({
+    id: o.id, region: o.region, kind: 'player', competition: o.competition, title: o.title, question: o.question,
+    context: `${o.context} ${TOP_TEN}`, sources: [en.source, tm.source],
+  }, agreed.map((c) => answerFor('player', c.person, plural(c.n, 'leikur', 'leikir'))))
+}
+
+/**
+ * The dearest players, each once at his highest fee. Fees are rarely made
+ * public and the two sources convert them to euros on their own terms, so the
+ * amounts may differ; the question stands only if both name the same players.
+ */
+async function transfers(): Promise<Topp10List> {
+  const en = await wiki('en', 'List of most expensive association football transfers')
+  const tm = await tmTable('transferrekorde', 'transfers/transferrekorde/statistik/top/plus/0/galerie/0?saison_id=alle', 'Transfermarkt · dýrustu félagaskipti sögunnar')
+  type Fee = { name: string; fee: number; to: string; year: string }
+  const enFees: Fee[] = W.dataRows(W.tableAfter(en.wikitext, '==Highest transfer records in association football=='))
+    .map((r: string[]) => r.map((c) => W.plain(c)))
+    .filter((c: string[]) => /^\d+(?:\.\d+)?/.test(c[5] ?? ''))
+    .map((c: string[]) => ({ name: unqualified(c[1].replace(/\s*\(\d+\)\s*$/, '')), fee: parseFloat(c[5]), to: c[3], year: c[7] }))
+  const tmFees: Fee[] = tm.rows.map((r) => ({
+    name: r.name, fee: parseFloat(tmCell(r, 'Fee').replace(/[€m]/g, '')), to: tmCell(r, 'New club'), year: tmCell(r, 'Season'),
+  }))
+  // a player's dearest move only, then the first ten players and anyone level with the tenth
+  const dearest = (fees: Fee[]) => topWithTies([...new Map([...fees].sort((a, b) => a.fee - b.fee).map((f) => [normalise(f.name), f])).values()], (f) => f.fee)
+    .map((f) => ({ ...f, person: personOf(f.name) }))
+  const a = dearest(enFees), b = dearest(tmFees)
+  const ids = (l: typeof a) => new Set(l.map((f) => f.person.id))
+  const problems = [
+    ...a.filter((f) => !ids(b).has(f.person.id)).map((f) => `${f.person.label} (€${f.fee}m) aðeins hjá en.wikipedia`),
+    ...b.filter((f) => !ids(a).has(f.person.id)).map((f) => `${f.person.label} (€${f.fee}m) aðeins hjá Transfermarkt`),
+  ]
+  mustAgree(problems, 'dýrustu félagaskiptin')
+  return finish({
+    id: 'dyrustu-felagaskipti', region: 'heimur', kind: 'player', competition: 'FÉLAGASKIPTI',
+    title: 'Dýrustu leikmenn sögunnar',
+    question: 'Nefndu 10 leikmenn sem hafa verið seldir fyrir hæstu upphæð sögunnar.',
+    context: 'Hver leikmaður telst einu sinni, á sínu hæsta kaupverði. Upphæðin er úr en.wikipedia, í milljónum evra á gengi dagsins sem skiptin urðu.',
+    note: 'Kaupverð eru sjaldan gefin upp og heimildunum ber ekki saman um upphæðir. Spurningin birtist aðeins ef þær nefna sömu leikmenn.',
+    sources: [en.source, tm.source],
+  }, a.map((f) => answerFor('player', f.person, `${String(f.fee).replace('.', ',')} milljónir evra, til ${f.to} ${f.year}`)))
+}
+
+/**
+ * Who played most often beside a player, as Transfermarkt counts it. It is the
+ * only count there is, so the question names it, and every answer is read
+ * again from the other man's page. The two sides are not always equal -
+ * Busquets has 651 games with Messi on Messi's page and 650 on his own - so a
+ * game or two either way is allowed, as long as both sides rank the same men
+ * in the same order and the tenth place stays where it is.
+ */
+async function teammates(o: { id: string; region: Region; slug: string; tmId: string; label: string; dative: string }): Promise<Topp10List> {
+  const page = (slug: string, id: string) => `${slug}/gemeinsameSpiele/spieler/${id}`
+  const tm = await tmTable(`samherjar-${o.slug}`, page(o.slug, o.tmId), `Transfermarkt · leikir með ${o.dative}`)
+  // the first ten and the men just below them, who could take the tenth place from his side
+  const top = tmCounts(tm.rows, 'Matches')
+  const near = tm.rows.filter((r) => !top.some((c) => c.tm === r) && tmNumber(tmCell(r, 'Matches')) >= top[top.length - 1].n - 4)
+  const problems: string[] = []
+  let back: Source | undefined
+  const theirs = new Map<string, number>()
+  for (const r of [...top.map((c) => c.tm!), ...near]) {
+    const other = await tmTable(`samherjar-${r.slug}-${r.tmId}`, page(r.slug, r.tmId), `Transfermarkt · sömu leikir, taldir af síðu hvers samherja`)
+    back ??= other.source
+    const star = other.rows.find((x) => x.tmId === o.tmId)
+    if (!star) { problems.push(`${o.label} er ekki á fyrstu síðu ${r.name}`); continue }
+    const n = tmNumber(tmCell(star, 'Matches')), mine = tmNumber(tmCell(r, 'Matches'))
+    if (Math.abs(n - mine) > 2) problems.push(`${r.name}: ${mine} leikir frá ${o.label}, ${n} frá honum`)
+    theirs.set(r.tmId, n)
+  }
+  // read from the other side, the same men must come out on top in the same order
+  const order = (count: (r: TmRow) => number) => topWithTies([...top.map((c) => c.tm!), ...near], count).map((r) => r.tmId).join(',')
+  if (!problems.length && order((r) => tmNumber(tmCell(r, 'Matches'))) !== order((r) => theirs.get(r.tmId)!)) {
+    problems.push('röðin er önnur frá hlið samherjanna')
+  }
+  mustAgree(problems, `samherjar ${o.label}`)
+  return finish({
+    id: o.id, region: o.region, kind: 'player', competition: 'SAMHERJAR',
+    title: `Flestir leikir með ${o.dative}`,
+    question: `Nefndu 10 leikmenn sem hafa spilað flesta leiki með ${o.dative}, samkvæmt Transfermarkt.`,
+    context: `Sameiginlegir leikir í talningu Transfermarkt, með félagsliðum og landsliði. ${TOP_TEN}`,
+    note: 'Aðeins Transfermarkt telur sameiginlega leiki. Hver tala er lesin bæði af síðu leikmannsins og af síðu samherjans.',
+    sources: [tm.source, back!],
+  }, top.map((c) => answerFor('player', c.person, `${plural(c.n, 'leikur', 'leikir')} saman`)))
+}
+
 // ── run ────────────────────────────────────────────────────────────────
 
 const range = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i)
@@ -874,6 +1157,31 @@ const BUILDERS: [string, () => Promise<Topp10List>][] = [
   ['evropa-evropudeildin', uefaCup],
   ['evropa-markahaestir', uclScorers],
   ['evropa-gullknotturinn', () => ballonDor(1990, 2009)],
+
+  // whole careers, asked for by Elias on 8 October 2026
+  ['hm-leikjahaestir', worldCupApps],
+  ['hm-markahaestir', worldCupGoals],
+  ['hm-minutur', worldCupMinutes],
+  ['clasico-leikjahaestir', () => clasico('leikir')],
+  ['clasico-markahaestir', () => clasico('mork')],
+  ['meistaradeild-leikjahaestir', () => recordApps({
+    id: 'meistaradeild-leikjahaestir', region: 'evropa', competition: 'MEISTARADEILDIN', title: 'Flestir leikir í Meistaradeildinni',
+    question: 'Nefndu 10 leikmenn sem hafa spilað flesta leiki í Meistaradeildinni.',
+    context: 'Leikir í Evrópukeppni meistaraliða og Meistaradeildinni frá upphafi, án forkeppni.',
+    page: 'List of footballers with 100 or more UEFA Champions League appearances', marker: '==Players==', nameCol: 1, appsCol: 3,
+    tmKey: 'cl-rekordspieler', tmPath: 'uefa-champions-league/rekordspieler/pokalwettbewerb/CL', tmName: 'Transfermarkt · Meistaradeildin, leikjahæstir',
+  })],
+  ['enska-leikjahaestir', () => recordApps({
+    id: 'enska-leikjahaestir', region: 'enska', competition: 'ENSKA ÚRVALSDEILDIN', title: 'Flestir leikir í úrvalsdeildinni',
+    question: 'Nefndu 10 leikmenn sem hafa spilað flesta leiki í ensku úrvalsdeildinni.',
+    context: 'Leikir í ensku úrvalsdeildinni frá stofnun hennar 1992.',
+    page: 'List of footballers with 500 or more Premier League appearances', marker: '==List of players==', nameCol: 1, appsCol: 4,
+    tmKey: 'pl-rekordspieler', tmPath: 'premier-league/rekordspieler/wettbewerb/GB1', tmName: 'Transfermarkt · enska úrvalsdeildin, leikjahæstir',
+  })],
+  ['dyrustu-felagaskipti', transfers],
+  ['samherjar-messi', () => teammates({ id: 'samherjar-messi', region: 'heimur', slug: 'lionel-messi', tmId: '28003', label: 'Messi', dative: 'Lionel Messi' })],
+  ['samherjar-ronaldo', () => teammates({ id: 'samherjar-ronaldo', region: 'heimur', slug: 'cristiano-ronaldo', tmId: '8198', label: 'Ronaldo', dative: 'Cristiano Ronaldo' })],
+  ['samherjar-gylfi', () => teammates({ id: 'samherjar-gylfi', region: 'island', slug: 'gylfi-sigurdsson', tmId: '90466', label: 'Gylfi', dative: 'Gylfa Sigurðssyni' })],
   ...(['laliga', 'seriea', 'bundesliga', 'ligue1'] as const).flatMap((league) => [2020, 2021, 2022, 2023, 2024, 2025].map((y) =>
     [`${LEAGUES[league].id}-lokastada-${y}`, () => leagueTable(league, y)] as [string, () => Promise<Topp10List>])),
   ...(['eredivisie', 'primeira'] as const).flatMap((league) => [2022, 2023, 2024, 2025].map((y) =>
@@ -901,15 +1209,18 @@ const BUILDERS: [string, () => Promise<Topp10List>][] = [
     })] as [string, () => Promise<Topp10List>])),
 ]
 
+// --only a,b rebuilds those questions and leaves every other one as it stands
+const only = process.argv.includes('--only') ? new Set(process.argv[process.argv.indexOf('--only') + 1].split(',')) : null
 mkdirSync(LISTS_DIR, { recursive: true })
 const known = new Set(BUILDERS.map(([id]) => id))
 for (const f of readdirSync(LISTS_DIR)) {
-  if (f.endsWith('.json') && !known.has(f.slice(0, -5))) rmSync(join(LISTS_DIR, f))
+  if (!only && f.endsWith('.json') && !known.has(f.slice(0, -5))) rmSync(join(LISTS_DIR, f))
 }
 
 const shipped: string[] = []
 const review: { id: string; reason: string }[] = []
 for (const [id, build] of BUILDERS) {
+  if (only && !only.has(id)) continue
   const file = join(LISTS_DIR, `${id}.json`)
   try {
     const list = await build()
@@ -939,5 +1250,11 @@ writeFileSync(join(LISTS_DIR, 'index.ts'), [
   `export const LISTS = [${files.map(ident).join(', ')}] as Topp10List[]`,
   '',
 ].join('\n'))
+if (only) {
+  // the questions not rebuilt keep the place they had
+  const before = JSON.parse(readFileSync(REVIEW_FILE, 'utf-8')) as { shipped: string[]; review: { id: string; reason: string }[] }
+  shipped.unshift(...before.shipped.filter((id) => !only.has(id)))
+  review.unshift(...before.review.filter((r) => !only.has(r.id)))
+}
 writeFileSync(REVIEW_FILE, JSON.stringify({ builtAt: today, shipped, review }, null, 2) + '\n')
 console.log(`\n${shipped.length} spurningar staðfestar, ${review.length} til yfirferðar → ${REVIEW_FILE}`)

@@ -52,11 +52,11 @@ describe('the daily question moves about', () => {
     }
   })
 
-  it('leaves the day it was re-spread on with the question it had', () => {
+  it('leaves the day new questions came in with the question it had', () => {
     // people were in the middle of these when the order changed
-    expect(dailyQuestion(20718, 'easy').id).toBe('enska-lid-2026')
-    expect(dailyQuestion(20718, 'medium').id).toBe('enska-markahaestir-2023')
-    expect(dailyQuestion(20718, 'hard').id).toBe('italia-lokastada-2022')
+    expect(dailyQuestion(20734, 'easy').id).toBe('enska-lokastada-2024')
+    expect(dailyQuestion(20734, 'medium').id).toBe('island-lokastada-2024')
+    expect(dailyQuestion(20734, 'hard').id).toBe('thyskaland-lokastada-2020')
   })
 
   it('walks through every question before repeating one', () => {

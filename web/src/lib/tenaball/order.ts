@@ -3,6 +3,14 @@ import type { Answer, Topp10List } from '../topp10/types'
 export type OrderedQuestion = Topp10List & { ordering: string }
 const alphabetically = (a: Answer, b: Answer) => a.label.localeCompare(b.label, 'is')
 
+/** What a player question counts, read from the word after the number: "34 leikir á 6 mótum". */
+function mostOf(detail: string) {
+  if (/^\d+ landsleik/.test(detail)) return 'Flestir landsleikir'
+  if (/^\d+ (?:leikur|leikir)/.test(detail)) return 'Flestir leikir'
+  if (/^\d+ mínút/.test(detail)) return 'Flestar mínútur'
+  return 'Flest mörk'
+}
+
 /** Preserve the full verified source sets; only the Tenaball view selects ten. */
 export function orderedQuestion(source: Topp10List): OrderedQuestion {
   let answers = [...source.answers]
@@ -23,15 +31,16 @@ export function orderedQuestion(source: Topp10List): OrderedQuestion {
       ? [...a.detail.matchAll(/\d+/g)].reduce((sum, n) => sum + Number(n[0]), 0)
       : parseInt(a.detail)
     answers.sort((a, b) => score(b) - score(a) || alphabetically(a, b))
-    const goals = source.kind === 'player'
-    ordering = `${goals ? 'Flest mörk' : 'Flestir titlar'} fyrst. Jafnt: íslensk stafrófsröð eftir nafni. Aðeins fyrstu tíu gilda.`
-    if (!goals) {
+    const players = source.kind === 'player'
+    ordering = `${players ? mostOf(answers[0].detail) : 'Flestir titlar'} fyrst. Jafnt: íslensk stafrófsröð eftir nafni. Aðeins fyrstu tíu gilda.`
+    if (!players) {
       question = source.question.replace('Nefndu 10 félög', 'Nefndu 10 sigursælustu félög')
       if (source.id === 'evropa-baedi-timabil') ordering = 'Flestir titlar samtals á báðum tímabilum fyrst. Jafnt: íslensk stafrófsröð.'
     }
   }
   const context = source.context
     .replace(' Allir sem voru jafnir í 10. sæti gilda.', '')
+    .replace(' Efstu tíu, og allir jafnir þeim tíunda.', '')
     .replace('Tíu lið eru rétt, í hvaða röð sem er.', 'Þú mátt svara í hvaða röð sem er.')
   return { ...source, question, context, ordering, answers: answers.slice(0, 10) }
 }

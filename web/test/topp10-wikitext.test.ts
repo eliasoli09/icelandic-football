@@ -8,6 +8,14 @@ describe('plain', () => {
     expect(plain("{{nowrap|[[Paris Saint-Germain FC|Paris Saint-Germain]]}}")).toBe('Paris Saint-Germain')
   })
 
+  it('reads a sorted name as it is written, and drops the Spanish flag', () => {
+    expect(plain("'''{{sortname|Cristiano|Ronaldo}}'''")).toBe('Cristiano Ronaldo')
+    expect(plain('{{sortname||Cafu}}')).toBe('Cafu')
+    expect(plain('{{sortname|Władysław|Żmuda|dab=born 1954}}')).toBe('Władysław Żmuda')
+    expect(plain('{{sortname|David|James|David James (footballer, born 1970)}}')).toBe('David James')
+    expect(plain('{{bandera|tamaño=15px|España}} [[Sergio Busquets]]')).toBe('Sergio Busquets')
+  })
+
   it('reads the club template on is.wikipedia', () => {
     expect(plain("'''{{Lið Víkingur R.}}'''")).toBe('Víkingur R.')
   })
@@ -129,6 +137,22 @@ Larus Gudmundsson
     const [row] = dataRows(tableAfter(wt, '{|'))
     expect(plainList(row[1])).toEqual(['Sigurlás Þorleifsson', 'Larus Gudmundsson'])
     expect(plain(row[2])).toBe('12')
+  })
+
+  it('reads an attribute written without a value, and keeps a club name that is not one', () => {
+    const wt = `{| class="wikitable"
+|-
+|9
+|align="left" nowrap|{{sortname|Jamie|Carragher}}||508
+|-
+|10
+|Real Madrid|x||1
+|}`
+    expect(dataRows(tableAfter(wt, '{|')).map((r) => r.map(plain))).toEqual([['9', 'Jamie Carragher', '508'], ['10', 'Real Madrid|x', '1']])
+  })
+
+  it('drops a picture link, as es.wikipedia draws two flags', () => {
+    expect(plain('[[Archivo:Flag of HispanoArgentino Double.png|15px|borde]] [[Alfredo Di Stéfano]]')).toBe('Alfredo Di Stéfano')
   })
 
   it('does not read a link pipe as an attribute separator', () => {

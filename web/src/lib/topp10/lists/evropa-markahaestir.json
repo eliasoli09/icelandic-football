@@ -1,0 +1,119 @@
+{
+  "id": "evropa-markahaestir",
+  "region": "evropa",
+  "kind": "player",
+  "competition": "MEISTARADEILDIN",
+  "title": "Markahæstir frá upphafi",
+  "question": "Nefndu 10 markahæstu leikmenn Evrópukeppni meistaraliða og Meistaradeildarinnar.",
+  "context": "Mörk í aðalkeppninni frá upphafi, án forkeppni.",
+  "sources": [
+    {
+      "name": "en.wikipedia.org · List of UEFA Champions League top scorers",
+      "url": "https://en.wikipedia.org/w/index.php?oldid=1378913992"
+    },
+    {
+      "name": "Transfermarkt · Meistaradeildin, markahæstir frá upphafi",
+      "url": "https://www.transfermarkt.com/uefa-champions-league/ewigeTorschuetzenliste/pokalwettbewerb/CL"
+    }
+  ],
+  "level": "hard",
+  "answers": [
+    {
+      "id": "ronaldo",
+      "label": "Cristiano Ronaldo",
+      "detail": "140 mörk",
+      "accept": [
+        "cristiano ronaldo",
+        "cristiano ronaldo dos santos aveiro",
+        "cr7",
+        "ronaldo"
+      ]
+    },
+    {
+      "id": "messi",
+      "label": "Lionel Messi",
+      "detail": "129 mörk",
+      "accept": [
+        "lionel messi",
+        "messi"
+      ]
+    },
+    {
+      "id": "lewandowski",
+      "label": "Robert Lewandowski",
+      "detail": "109 mörk",
+      "accept": [
+        "robert lewandowski",
+        "lewandowski"
+      ]
+    },
+    {
+      "id": "benzema",
+      "label": "Karim Benzema",
+      "detail": "90 mörk",
+      "accept": [
+        "karim benzema",
+        "benzema"
+      ]
+    },
+    {
+      "id": "mbappe",
+      "label": "Kylian Mbappé",
+      "detail": "71 mark",
+      "accept": [
+        "kylian mbappe",
+        "mbappe"
+      ]
+    },
+    {
+      "id": "raul",
+      "label": "Raúl",
+      "detail": "71 mark",
+      "accept": [
+        "raul",
+        "raul gonzalez",
+        "raul gonzalez blanco"
+      ]
+    },
+    {
+      "id": "haaland",
+      "label": "Erling Haaland",
+      "detail": "59 mörk",
+      "accept": [
+        "erling haaland",
+        "erling braut haaland",
+        "haaland"
+      ]
+    },
+    {
+      "id": "muller",
+      "label": "Thomas Müller",
+      "detail": "57 mörk",
+      "accept": [
+        "thomas muller",
+        "muller"
+      ]
+    },
+    {
+      "id": "van-nistelrooy",
+      "label": "Ruud van Nistelrooy",
+      "detail": "56 mörk",
+      "accept": [
+        "ruud van nistelrooy",
+        "van nistelrooy",
+        "nistelrooy",
+        "ruud nistelrooy"
+      ]
+    },
+    {
+      "id": "kane",
+      "label": "Harry Kane",
+      "detail": "55 mörk",
+      "accept": [
+        "harry kane",
+        "kane"
+      ]
+    }
+  ],
+  "verifiedAt": "2026-10-08"
+}

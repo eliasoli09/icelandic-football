@@ -35,16 +35,17 @@ export function newRound(q: Question): Round {
 }
 
 /**
- * The day the questions were spread by competition instead of by region (22
- * September 2026) and the question each level was showing that day. The new
- * order is turned so that day keeps its question: people were in the middle of
- * it, and a round whose question changes under them is a round lost.
+ * The last day new questions came in (8 October 2026) and the question each
+ * level was showing that day. The new order is turned so that day keeps its
+ * question: people were in the middle of it, and a round whose question
+ * changes under them is a round lost. Move it to the release day whenever
+ * questions are added.
  */
-const ANCHOR_DAY = 20718
+const ANCHOR_DAY = 20734
 const ANCHOR_QUESTION: Record<Level, string> = {
-  easy: 'enska-lid-2026',
-  medium: 'enska-markahaestir-2023',
-  hard: 'italia-lokastada-2022',
+  easy: 'enska-lokastada-2024',
+  medium: 'island-lokastada-2024',
+  hard: 'thyskaland-lokastada-2020',
 }
 
 const byLevel = new Map<Level, Question[]>()
