@@ -10,7 +10,8 @@
  * Pages are cached, so a second run is offline and an interrupted run carries
  * on where it stopped.
  *
- * Usage: cd web && npx tsx scripts/leidin/fetch-events.mts 2025 [2024 ...]
+ * Usage: cd web && npx tsx scripts/leidin/fetch-events.mts [--league=lengjudeild] 2025 [2024 ...]
+ * (Besta deild unless a league is named; other leagues write events-<league>-<season>.json)
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
@@ -31,13 +32,14 @@ const cacheDir = join(here, 'cache', 'pages')
 mkdirSync(cacheDir, { recursive: true })
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-for (const season of process.argv.slice(2).map(Number)) {
+const league = process.argv.find((a) => a.startsWith('--league='))?.slice(9) ?? 'besta'
+for (const season of process.argv.slice(2).filter((a) => !a.startsWith('--')).map(Number)) {
   const { data: teams } = await db().from('teams').select('id, name')
   const name = new Map<number, string>((teams ?? []).map((t: { id: number; name: string }) => [t.id, t.name]))
   const { data, error } = await db()
     .from('matches')
     .select('id, phase, home_team, away_team, home_goals, away_goals, status')
-    .eq('league', 'besta')
+    .eq('league', league)
     .eq('season', season)
     .order('id')
   if (error) throw error
@@ -71,6 +73,6 @@ for (const season of process.argv.slice(2).map(Number)) {
     if (warnings.length) console.log(`  ! ${m.id} ${name.get(m.home_team)}-${name.get(m.away_team)}: ${warnings.join('; ')}`)
     if ((i + 1) % 20 === 0) console.log(`  ${i + 1}/${matches.length}`)
   }
-  writeFileSync(join(here, 'cache', `events-${season}.json`), JSON.stringify(out, null, 1))
+  writeFileSync(join(here, 'cache', league === 'besta' ? `events-${season}.json` : `events-${league}-${season}.json`), JSON.stringify(out, null, 1))
   console.log(`${season}: wrote ${out.length} matches, ${out.filter((m) => m.warnings.length).length} with warnings`)
 }

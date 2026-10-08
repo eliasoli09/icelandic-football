@@ -6,7 +6,7 @@ import { Pixelify_Sans, Silkscreen } from 'next/font/google'
 import { ArrowLeft, Archive, Check, ChevronDown, Infinity as Endless, Share2, Shirt, Volume2, VolumeX } from 'lucide-react'
 import { dayNumber } from '@/lib/topp10/daily'
 import {
-  KIT_KEY, LAUNCH_DAY, ROUND, SECONDS, SOUND_KEY, TIER_INFO, answer, dailyRoad, isDone, newRun, openQuestion,
+  KIT_KEY, LAUNCH_DAY, PRACTICE_FROM, ROUND, SECONDS, SOUND_KEY, TIER_INFO, answer, dailyRoad, isDone, newRun, openQuestion,
   restore, roadNumber, shareText, showcase, storageKey, suggest, tierOf, timeout, total,
   type Pick, type Run,
 } from '@/lib/leidin/game'
@@ -364,7 +364,7 @@ export function LeidinGame() {
               <div className={styles.subButtons}>
                 <button type="button" className={styles.chip} onClick={() => setPanel(panel === 'kits' ? 'none' : 'kits')}><Shirt size={12} aria-hidden /> TREYJA</button>
                 <button type="button" className={styles.chip} onClick={() => setPanel(panel === 'archive' ? 'none' : 'archive')}><Archive size={12} aria-hidden /> ELDRI LEIÐIR</button>
-                <button type="button" className={styles.chip} onClick={() => startMode({ kind: 'practice', day: 30000 + Math.floor(Math.random() * 50000) })}><Endless size={12} aria-hidden /> ÆFING</button>
+                <button type="button" className={styles.chip} onClick={() => startMode({ kind: 'practice', day: LAUNCH_DAY + PRACTICE_FROM + Math.floor(Math.random() * 1_000_000) })}><Endless size={12} aria-hidden /> ÆFING</button>
                 {mode.kind !== 'daily' && <button type="button" className={styles.chip} onClick={() => startMode({ kind: 'daily' })}>LEIÐ DAGSINS</button>}
               </div>
             </div>
@@ -488,7 +488,7 @@ export function LeidinGame() {
               <button type="button" className={styles.go} onClick={share}>
                 {copied ? <><Check size={14} aria-hidden /> AFRITAÐ</> : <><Share2 size={14} aria-hidden /> DEILA</>}
               </button>
-              <button type="button" className={styles.chip} onClick={() => startMode({ kind: 'practice', day: 30000 + Math.floor(Math.random() * 50000) })}><Endless size={12} aria-hidden /> ÆFINGALEIÐ</button>
+              <button type="button" className={styles.chip} onClick={() => startMode({ kind: 'practice', day: LAUNCH_DAY + PRACTICE_FROM + Math.floor(Math.random() * 1_000_000) })}><Endless size={12} aria-hidden /> ÆFINGALEIÐ</button>
               {mode.kind !== 'daily' && <button type="button" className={styles.chip} onClick={() => startMode({ kind: 'daily' })}>LEIÐ DAGSINS</button>}
             </div>
             {mode.kind === 'daily' && <p className={styles.clock}>Næsta leið eftir <b>{clock}</b></p>}

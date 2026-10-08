@@ -1,4 +1,5 @@
 import { normalise } from '../topp10/normalise'
+import { dailyOrder } from '../topp10/daily'
 import QUESTIONS_JSON from './questions.json'
 import NAMES_JSON from './names.json'
 import type { Kind, LeidAnswer, LeidQuestion, Slot, Tier } from './types'
@@ -30,44 +31,101 @@ function scramble(id: string): number {
   return h
 }
 
+/**
+ * What a question is "about", so two about the same thing are kept apart:
+ * the club for the club questions (scored for Fram 2024, scored against Fram
+ * 2025), and the question without its season for the rest (late goals 2024,
+ * late goals 2025).
+ */
+export function family(q: LeidQuestion): string {
+  const parts = q.id.split('-')
+  if (q.slot === 'lidid') return parts[1]
+  return q.id.replace(/-\d{4}$/, '')
+}
+
 const bySlot = new Map<Slot, LeidQuestion[]>()
 function inSlot(slot: Slot): LeidQuestion[] {
   if (!bySlot.has(slot)) {
-    bySlot.set(slot, QUESTIONS.filter((q) => q.slot === slot).sort((a, b) => scramble(a.id) - scramble(b.id) || a.id.localeCompare(b.id)))
+    const items = QUESTIONS.filter((q) => q.slot === slot)
+    const order = dailyOrder(items.map((q) => ({ id: q.id, competition: family(q) })))
+    bySlot.set(slot, order.map((o) => QUESTION_BY_ID[o.id]))
   }
   return bySlot.get(slot)!
 }
-const pick = (slot: Slot, n: number) => {
-  const list = inSlot(slot)
-  return list[((n % list.length) + list.length) % list.length]
+
+/** a seeded random number generator, the same numbers for the same seed */
+function seeded(seed: string) {
+  let h = scramble(seed)
+  return () => ((h = (Math.imul(h, 1664525) + 1013904223) >>> 0) / 2 ** 32)
+}
+function shuffle<T>(items: T[], rand: () => number): T[] {
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1))
+    ;[items[i], items[j]] = [items[j], items[i]]
+  }
+  return items
+}
+
+/** the Icelandic kinds; abroad ('utlond') is added on its own every other day */
+const ICELAND: Slot[] = ['felog', 'ar', 'markaskorarar', 'lidid', 'serstakt', 'landslid']
+/** no road asks more than this many questions of one kind */
+const MOST_OF_A_KIND = 2
+/** roads this far from the first one are practice roads, not days */
+export const PRACTICE_FROM = 100_000
+
+const roads: string[][] = []
+const credit = new Map<Slot, number>(ICELAND.map((s) => [s, 0]))
+const nextOf = new Map<Slot, number>()
+const take = (slot: Slot) => {
+  const list = inSlot(slot), i = nextOf.get(slot) ?? 0
+  nextOf.set(slot, i + 1)
+  return list[i % list.length]
 }
 
 /**
- * The seven questions everyone gets on a day. One from each kind, so a road
- * never asks three scorer questions; each kind walks through its own fixed
- * order a step a day, so no question comes back on the next day. The seventh
- * is abroad every other day and a second odd one in between, which keeps the
- * road mostly Icelandic. The order of the seven is shuffled by the day.
+ * Lays out the roads day by day from the first one. Each kind walks through
+ * its own fixed order and never goes round again until every question of the
+ * kind has been asked; the kinds take turns in proportion to how many
+ * questions they hold (a smooth weighted round robin), at most two of a kind
+ * a day. So every day is a new road, and with 240 questions a question comes
+ * back only after weeks.
+ */
+function layOut(n: number) {
+  const weight = new Map(ICELAND.map((s) => [s, inSlot(s).length]))
+  const sum = [...weight.values()].reduce((a, b) => a + b, 0)
+  while (roads.length <= n) {
+    const i = roads.length
+    const abroad = i % 2 === 0 && inSlot('utlond').length > 0
+    const used = new Map<Slot, number>()
+    const ids: string[] = []
+    while (ids.length < ROUND - (abroad ? 1 : 0)) {
+      for (const s of ICELAND) credit.set(s, credit.get(s)! + weight.get(s)!)
+      const open = ICELAND.filter((s) => (used.get(s) ?? 0) < MOST_OF_A_KIND && weight.get(s)! > 0)
+      const best = open.reduce((a, b) => (credit.get(b)! > credit.get(a)! ? b : a))
+      credit.set(best, credit.get(best)! - sum)
+      used.set(best, (used.get(best) ?? 0) + 1)
+      ids.push(take(best).id)
+    }
+    if (abroad) ids.push(take('utlond').id)
+    roads.push(shuffle(ids, seeded(`leid-${LAUNCH_DAY + i}`)))
+  }
+}
+
+/**
+ * The seven questions everyone gets on a day: mostly Icelandic, one from
+ * abroad every other day, in an order shuffled by the day. A practice road
+ * (a "day" far from the real ones) is drawn at random the same way, one
+ * question from each Icelandic kind and one from abroad.
  */
 export function dailyRoad(day: number): LeidQuestion[] {
   const n = day - LAUNCH_DAY
-  const odd = inSlot('serstakt')
-  const seven = [
-    pick('felog', n),
-    pick('markaskorarar', n),
-    pick('ar', n),
-    pick('landslid', n),
-    pick('lidid', n),
-    pick('serstakt', n),
-    n % 2 === 0 ? pick('utlond', n / 2) : pick('serstakt', n + Math.floor(odd.length / 2)),
-  ]
-  let seed = scramble(`leid-${day}`)
-  const rand = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 2 ** 32)
-  for (let i = seven.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1))
-    ;[seven[i], seven[j]] = [seven[j], seven[i]]
+  if (n < 0 || n >= PRACTICE_FROM) {
+    const rand = seeded(`aefing-${day}`)
+    const one = (slot: Slot) => { const l = inSlot(slot); return l[Math.floor(rand() * l.length)] }
+    return shuffle([...ICELAND.map(one), one('utlond')], rand)
   }
-  return seven
+  layOut(n)
+  return roads[n].map((id) => QUESTION_BY_ID[id])
 }
 
 // ---------------------------------------------------------------- answers

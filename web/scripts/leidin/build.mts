@@ -14,10 +14,11 @@
  *
  * Usage: cd web && npx tsx scripts/leidin/build.mts
  */
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { normalise } from '../../src/lib/topp10/normalise'
+import { IS_NAMES } from '../../src/lib/nations'
 import { CLUBS, PEOPLE, type Entity } from '../topp10/names'
 import type { Kind, LeidAnswer, LeidQuestion, Slot, Tier } from '../../src/lib/leidin/types'
 
@@ -146,9 +147,9 @@ const CORRECTIONS: Record<number, { ev: Ev; source: string }[]> = {
   }],
 }
 
-function season(year: number): Match[] {
-  const file = join(here, 'cache', `events-${year}.json`)
-  if (!existsSync(file)) throw new Error(`no events for ${year}: run fetch-events.mts ${year}`)
+function season(year: number, league = 'besta'): Match[] {
+  const file = join(here, 'cache', league === 'besta' ? `events-${year}.json` : `events-${league}-${year}.json`)
+  if (!existsSync(file)) throw new Error(`no events for ${league} ${year}: run fetch-events.mts --league=${league} ${year}`)
   const matches: Match[] = JSON.parse(readFileSync(file, 'utf-8'))
   for (const m of matches) {
     const fix = CORRECTIONS[m.id]
@@ -419,11 +420,11 @@ const lastDay = new Date(lastPlayed)
 const MONTHS = ['janúar', 'febrúar', 'mars', 'apríl', 'maí', 'júní', 'júlí', 'ágúst', 'september', 'október', 'nóvember', 'desember']
 const upTo2026 = `Til og með leikjum ${lastDay.getUTCDate()}. ${MONTHS[lastDay.getUTCMonth()]} 2026.`
 
-const SEASONS = { 2024: season(2024), 2025: season(2025), 2026: season(2026) } as Record<number, Match[]>
+const SEASONS = { 2023: season(2023), 2024: season(2024), 2025: season(2025), 2026: season(2026) } as Record<number, Match[]>
 const PLAYERS = Object.fromEntries(Object.entries(SEASONS).map(([y, ms]) => [y, players(ms)])) as Record<number, Map<string, Scorer>>
 const eventsCtx = (y: number) => (y === 2026 ? upTo2026 : `Tímabilið ${y}, öll umferðin og úrslitakeppnin.`)
 
-for (const y of [2024, 2025, 2026]) {
+for (const y of [2023, 2024, 2025, 2026]) {
   const rows = [...PLAYERS[y].values()].filter((p) => p.goals > 0)
   playerQuestion(`markaskorarar-${y}`, 'markaskorarar', `Nefndu leikmann sem skoraði í Bestu deild karla ${y}${y === 2026 ? ' (til þessa)' : ''}.`,
     eventsCtx(y) + ' Sjálfsmörk teljast ekki.', 'Því fleiri mörk, því algengara svar.',
@@ -655,6 +656,306 @@ handPicked('islendingar-pl', 'player', 'Nefndu Íslending sem hefur spilað í e
   })
 }
 
+// ================================================================ more roads
+// Enough questions that a new road comes every day for weeks before any
+// question is asked twice (see dailyRoad in src/lib/leidin/game.ts).
+
+// -- félög: seasons, eras, final tables -----------------------------------
+
+{
+  const bySeason = new Map<number, string[]>()
+  for (const [club, years] of topSeasons) for (const y of years) bySeason.set(y, [...(bySeason.get(y) ?? []), club])
+  for (let y = 2010; y <= 2020; y++) {
+    const clubs = bySeason.get(y) ?? []
+    if (clubs.length !== 12) throw new Error(`top flight ${y}: ${clubs.length} clubs`)
+    clubQuestion(`efsta-deild-${y}`, 'felog', `Nefndu lið sem spilaði í efstu deild karla ${y}.`, `Liðin tólf í efstu deild tímabilið ${y}.`,
+      'Því fleiri tímabil sem félagið hefur átt í efstu deild, því algengara svar.',
+      clubs.map((club) => ({ club, common: seasonsOf(club), detail: seasonWord(seasonsOf(club)) })),
+      [{ name: 'Öll úrslit tímabilsins í gagnagrunni Bestu spárinnar (KSÍ)', url: `${SITE}/saga` }])
+  }
+}
+for (const [from, to] of [[1912, 1949], [1950, 1979], [1980, 1999]]) {
+  const rows = [...champYears.entries()].map(([id, ys]) => ({ id, n: ys.filter((y) => y >= from && y <= to).length })).filter((x) => x.n)
+  clubQuestion(`meistarar-${from}`, 'felog', `Nefndu félag sem varð Íslandsmeistari karla á árunum ${from}-${to}.`,
+    `Tímabilin ${from}-${to}.`, 'Því fleiri titlar á tímabilinu, því algengara svar.',
+    rows.map((x) => ({ club: ALL_CLUBS.find((c) => c.id === x.id)!.label, common: x.n, detail: `${titles(x.n)} á árunum ${from}-${to}` })),
+    list('island-meistarar').sources)
+}
+for (const y of [2021, 2022, 2023, 2024, 2025]) {
+  const l = list(`island-lokastada-${y}`)
+  clubQuestion(`lokastada-${y}`, 'felog', `Nefndu lið sem endaði í einu af tíu efstu sætum efstu deildar karla ${y}.`, l.context,
+    'Því ofar í töflunni, því algengara svar: meistararnir gefa minnst.',
+    l.answers.map((a: any) => ({ club: a.label, common: -Number(a.detail.match(/^(\d+)\./)[1]), detail: a.detail })), ofList(l))
+}
+{
+  const l = list('island-lid-2025')
+  clubQuestion('besta-2025', 'felog', 'Nefndu lið í Bestu deild karla 2025.', 'Liðin tólf á tímabilinu 2025.',
+    'Því fleiri tímabil sem félagið hefur átt í efstu deild, því algengara svar.',
+    l.answers.map((a: any) => { const db = [...topSeasons.keys()].find((k) => clubOf(k).id === a.id)!; return { club: a.label, common: seasonsOf(db), detail: seasonWord(seasonsOf(db)) } }),
+    ofList(l))
+}
+
+// -- ártöl: more champions, and the years clubs went down -------------------
+
+for (const id of ['keflavik', 'ibv', 'breidablik']) {
+  const club = ALL_CLUBS.find((c) => c.id === id)!
+  const years = champYears.get(id)!
+  const t = tiersBy(years, (y) => y)
+  add({ id: `ar-${id}`, slot: 'ar', kind: 'year', prompt: `Nefndu ár sem ${club.label} varð Íslandsmeistari karla.`,
+    context: `${club.label} hefur ${years.length} sinnum orðið Íslandsmeistari. Skrifaðu ártalið, t.d. 1999.`,
+    rarity: 'Því nýrri titill, því algengara svar.', sources: list('island-meistarar').sources,
+    answers: years.map((y) => ({ id: String(y), label: String(y), detail: `Íslandsmeistari ${y}`, points: t.get(y)! })) },
+  (a) => [a.label])
+}
+{
+  // a club in the top flight one season and not the next went down; only
+  // from 1955, when relegation began, and never for the old town alliances
+  // (ÍBA, ÍBH, ÍBÍ) that split up rather than fell
+  const leagueYears = new Set([...topSeasons.values()].flatMap((s) => [...s]))
+  for (const [club, years] of topSeasons) {
+    const c = clubOf(club)
+    if (['iba', 'ibh', 'ibi'].includes(c.id)) continue
+    const down = [...years].filter((y) => y >= 1955 && leagueYears.has(y + 1) && !years.has(y + 1)).sort((a, b) => a - b)
+    if (down.length < 3) continue
+    const t = tiersBy(down, (y) => y)
+    add({ id: `fall-${c.id}`, slot: 'ar', kind: 'year', prompt: `Nefndu ár sem ${c.label} féll úr efstu deild karla.`,
+      context: `Árið sem liðið spilaði síðast í efstu deild áður en það féll. ${c.label} hefur fallið ${down.length} sinnum.`,
+      rarity: 'Því nýrra fall, því algengara svar.',
+      sources: [{ name: 'Lokastöður 1912-1984 og öll úrslit frá 1985 í gagnagrunni Bestu spárinnar', url: `${SITE}/saga` }],
+      answers: down.map((y) => ({ id: String(y), label: String(y), detail: `Féll eftir tímabilið ${y}`, points: t.get(y)! })) },
+    (a) => [a.label])
+  }
+}
+
+// -- markaskorarar: halves of the split, the second tier ---------------------
+
+const scorerKey = (e: Ev) => (e.playerKsiId ? `ksi-${e.playerKsiId}` : `nafn-${normalise(e.playerName).replace(/ /g, '-')}`)
+const isGoal = (e: Ev) => e.type === 'goal' || e.type === 'penalty'
+const sideClub = (m: Match, e: Ev) => (e.side === 'home' ? m.home : m.away)
+
+/** Goals by player within some of a season's matches, with the player's whole-season tally for tie-breaks. */
+function tally(y: number, matches: Match[], pick: (m: Match, e: Ev) => boolean) {
+  const n = new Map<string, number>()
+  for (const m of matches) for (const e of m.events) if (isGoal(e) && pick(m, e)) n.set(scorerKey(e), (n.get(scorerKey(e)) ?? 0) + 1)
+  return [...n.entries()].map(([key, k]) => ({ p: PLAYERS[y].get(key)!, k }))
+}
+
+for (const [y, half, word] of [[2024, 'efri', 'efri'], [2025, 'nedri', 'neðri'], [2024, 'nedri', 'neðri']] as const) {
+  const rows = tally(y, SEASONS[y], (m) => m.phase === half)
+  playerQuestion(`${half}-${y}`, 'markaskorarar', `Nefndu leikmann sem skoraði í ${word} hluta Bestu deildarinnar ${y}.`,
+    `Aðeins leikirnir fimm eftir tvískiptingu, í ${word} hlutanum.`, `Því fleiri mörk í ${word} hlutanum, því algengara svar.`,
+    rows.map(({ p, k }) => ({ key: p.key, name: p.name, common: k * 1000 + p.goals, detail: `${goals(k)} fyrir ${p.club} í ${word} hlutanum` })), [KSI])
+}
+
+const LENGJU = season(2026, 'lengjudeild').filter((m) => m.phase === 'main')
+const LENGJU_PLAYERS = players(LENGJU)
+const lengjuCtx = upTo2026.replace('Til og með', 'Deildarkeppnin, til og með')
+{
+  const rows = [...LENGJU_PLAYERS.values()].filter((p) => p.goals > 0)
+  playerQuestion('lengjudeild-markaskorarar-2026', 'markaskorarar', 'Nefndu leikmann sem skoraði í Lengjudeild karla 2026.',
+    `${lengjuCtx} Umspilið telst ekki með.`, 'Því fleiri mörk, því algengara svar.',
+    rows.map((p) => ({ key: p.key, name: p.name, common: p.goals, detail: `${goals(p.goals)} fyrir ${p.club}` })), [KSI])
+}
+
+// -- liðið: scored for, scored against, and the second tier -------------------
+
+for (const y of [2023, 2024]) {
+  for (const club of [...new Set(SEASONS[y].flatMap((m) => [m.home, m.away]))]) {
+    const c = clubOf(club)
+    const rows = tally(y, SEASONS[y], (m, e) => sideClub(m, e) === club)
+    if (rows.length < 4) continue
+    playerQuestion(`lid-${c.id}-${y}`, 'lidid', `Nefndu leikmann sem skoraði fyrir ${c.label} í Bestu deildinni ${y}.`,
+      eventsCtx(y) + ' Sjálfsmörk teljast ekki.', 'Því fleiri mörk fyrir félagið, því algengara svar.',
+      rows.map(({ p, k }) => ({ key: p.key, name: p.name, common: k, detail: `${goals(k)} fyrir ${c.label}` })), [KSI])
+  }
+}
+for (const y of [2025, 2026]) {
+  for (const club of [...new Set(SEASONS[y].flatMap((m) => [m.home, m.away]))]) {
+    const c = clubOf(club)
+    const rows = tally(y, SEASONS[y], (m, e) => (m.home === club || m.away === club) && sideClub(m, e) !== club)
+    if (rows.length < 4) continue
+    playerQuestion(`gegn-${c.id}-${y}`, 'lidid', `Nefndu leikmann sem skoraði gegn ${c.label} í Bestu deildinni ${y}${y === 2026 ? ' (til þessa)' : ''}.`,
+      eventsCtx(y) + ' Sjálfsmörk teljast ekki.', 'Því oftar sem hann skoraði gegn þeim, því algengara svar.',
+      rows.map(({ p, k }) => ({ key: p.key, name: p.name, common: k * 100 + p.goals, detail: `${goals(k)} gegn ${c.label} (${p.club})` })), [KSI])
+  }
+}
+for (const club of [...new Set(LENGJU.flatMap((m) => [m.home, m.away]))]) {
+  const c = clubOf(club)
+  const n = new Map<string, number>()
+  for (const m of LENGJU) for (const e of m.events) if (isGoal(e) && sideClub(m, e) === club) n.set(scorerKey(e), (n.get(scorerKey(e)) ?? 0) + 1)
+  const rows = [...n.entries()].map(([key, k]) => ({ p: LENGJU_PLAYERS.get(key)!, k }))
+  if (rows.length < 4) continue
+  playerQuestion(`lengju-${c.id}-2026`, 'lidid', `Nefndu leikmann sem skoraði fyrir ${c.label} í Lengjudeildinni 2026.`,
+    `${lengjuCtx} Sjálfsmörk teljast ekki.`, 'Því fleiri mörk fyrir félagið, því algengara svar.',
+    rows.map(({ p, k }) => ({ key: p.key, name: p.name, common: k, detail: `${goals(k)} fyrir ${c.label}` })), [KSI])
+}
+
+// -- sérstakt: more seasons, lone winners, Reykjavík derbies -------------------
+
+{
+  const y = 2024
+  const all = [...PLAYERS[y].values()]
+  playerQuestion(`snemma-${y}`, 'serstakt', `Nefndu leikmann sem skoraði á fyrstu fimm mínútum leiks í Bestu deildinni ${y}.`,
+    eventsCtx(y) + ' Mark á 1.-5. mínútu.', 'Því fleiri snemmbúin mörk, því algengara svar.',
+    all.filter((p) => p.early > 0).map((p) => ({ key: p.key, name: p.name, common: p.early * 100 + p.goals, detail: `${goals(p.early)} á fyrstu fimm mínútunum fyrir ${p.club}` })), [KSI])
+  playerQuestion(`tvenna-${y}`, 'serstakt', `Nefndu leikmann sem skoraði tvö mörk eða fleiri í einum leik í Bestu deildinni ${y}.`,
+    eventsCtx(y) + ' Sjálfsmörk teljast ekki.', 'Því oftar sem hann gerði það, því algengara svar.',
+    all.filter((p) => p.braces > 0).map((p) => ({ key: p.key, name: p.name, common: p.braces * 100 + p.goals, detail: `${p.braces} ${p.braces === 1 ? 'leikur' : 'leikir'} með 2+ mörk fyrir ${p.club}` })), [KSI])
+  playerQuestion(`seint-${y}`, 'serstakt', `Nefndu leikmann sem skoraði á 90. mínútu eða síðar í Bestu deildinni ${y}.`,
+    eventsCtx(y) + ' Uppbótartími telst með.', 'Því fleiri dramatísk mörk, því algengara svar.',
+    all.filter((p) => p.late > 0).map((p) => ({ key: p.key, name: p.name, common: p.late * 1000 + p.goals, detail: `${goals(p.late)} á 90. mínútu eða síðar fyrir ${p.club}` })), [KSI])
+  playerQuestion(`rautt-${y}`, 'serstakt', `Nefndu leikmann sem fékk rautt spjald í Bestu deildinni ${y}.`,
+    eventsCtx(y), 'Markaskorarar eru þekktari: því fleiri mörk sem leikmaðurinn skoraði, því algengara svar.',
+    all.filter((p) => p.reds > 0).map((p) => ({ key: p.key, name: p.name, common: p.goals * 10 + p.reds, detail: `${p.reds} rautt spjald, ${goals(p.goals)} á tímabilinu` })), [KSI])
+}
+for (const y of [2024, 2026]) {
+  const own = [...PLAYERS[y].values()].filter((p) => p.owngoals > 0)
+  if (own.length < 3) continue
+  playerQuestion(`sjalfsmark-${y}`, 'serstakt', `Nefndu leikmann sem skoraði sjálfsmark í Bestu deildinni ${y}${y === 2026 ? ' (til þessa)' : ''}.`,
+    eventsCtx(y), 'Markaskorarar eru þekktari: því fleiri mörk (í rétt mark) á tímabilinu, því algengara svar.',
+    own.map((p) => ({ key: p.key, name: p.name, common: p.goals * 10 + p.owngoals, detail: `${p.owngoals} sjálfsmark, ${goals(p.goals)} í rétt mark` })), [KSI])
+}
+for (const y of [2024, 2025, 2026]) {
+  const rows = tally(y, SEASONS[y], (m) => (m.score[0] === 1 && m.score[1] === 0) || (m.score[0] === 0 && m.score[1] === 1))
+  playerQuestion(`sigurmark-${y}`, 'serstakt', `Nefndu leikmann sem skoraði eina markið í 1-0 sigri í Bestu deildinni ${y}${y === 2026 ? ' (til þessa)' : ''}.`,
+    eventsCtx(y), 'Því fleiri 1-0 sigurmörk, því algengara svar.',
+    rows.map(({ p, k }) => ({ key: p.key, name: p.name, common: k * 1000 + p.goals, detail: `${k} ${k === 1 ? 'sigurmark' : 'sigurmörk'} í 1-0 leik fyrir ${p.club}` })), [KSI])
+}
+const REYKJAVIK = new Set(['KR', 'Valur', 'Víkingur R.', 'Fram', 'Fylkir', 'Leiknir R.', 'Þróttur R.', 'ÍR', 'Fjölnir'])
+for (const y of [2024, 2025, 2026]) {
+  const rows = tally(y, SEASONS[y], (m) => REYKJAVIK.has(m.home) && REYKJAVIK.has(m.away))
+  playerQuestion(`reykjavikurslagur-${y}`, 'serstakt', `Nefndu leikmann sem skoraði í Reykjavíkurslag í Bestu deildinni ${y}${y === 2026 ? ' (til þessa)' : ''}.`,
+    `Leikir þar sem bæði lið eru úr Reykjavík (t.d. KR, Valur, Víkingur, Fram). ${eventsCtx(y)}`, 'Því fleiri mörk í Reykjavíkurslögum, því algengara svar.',
+    rows.map(({ p, k }) => ({ key: p.key, name: p.name, common: k * 1000 + p.goals, detail: `${goals(k)} í Reykjavíkurslögum fyrir ${p.club}` })), [KSI])
+}
+
+// -- landsliðið: every A international since 1930 -------------------------------
+
+{
+  const NATION: Record<string, { is: string; en?: string[] }> = Object.fromEntries(Object.entries(IS_NAMES).map(([k, v]) => [k, { is: v }]))
+  Object.assign(NATION, {
+    DD: { is: 'Austur-Þýskaland' }, SU: { is: 'Sovétríkin' }, CS: { is: 'Tékkóslóvakía' }, WG: { is: 'Vestur-Þýskaland' },
+    KW: { is: 'Kúveit' }, SA: { is: 'Sádi-Arabía' }, BM: { is: 'Bermúda' }, ZA: { is: 'Suður-Afríka' }, AE: { is: 'Sameinuðu arabísku furstadæmin', en: ['UAE', 'Furstadæmin'] },
+    BH: { is: 'Barein' }, NG: { is: 'Nígería' }, QA: { is: 'Katar' }, GL: { is: 'Grænland' }, CL: { is: 'Síle', en: ['Chile'] },
+    BO: { is: 'Bólivía' }, HN: { is: 'Hondúras' }, GT: { is: 'Gvatemala' }, CN: { is: 'Kína' }, TT: { is: 'Trínidad og Tóbagó' },
+    SV: { is: 'El Salvador' }, UG: { is: 'Úganda' }, GH: { is: 'Gana' }, VE: { is: 'Venesúela' }, IN: { is: 'Indland' }, PE: { is: 'Perú' },
+    HT: { is: 'Haítí' }, TN: { is: 'Túnis' }, ID: { is: 'Indónesía' }, IR: { is: 'Íran' },
+  })
+  const EXTRA_ACCEPT: Record<string, string[]> = {
+    NL: ['Niðurlönd'], CZ: ['Tékkland', 'Czech Republic'], BA: ['Bosnía og Hersegóvína', 'Bosnia'], NM: ['Makedónía', 'Macedonia'],
+    EN: ['Englendingar'], SQ: ['Skotar'], DK: ['Danir'], NO: ['Norðmenn'], SE: ['Svíar'], FO: ['Færeyingar', 'Faroe'],
+    US: ['USA', 'Bandaríki Norður-Ameríku'], KR: ['Kórea'], DE: ['Þjóðverjar'], FR: ['Frakkar'], TR: ['Tyrkir'],
+  }
+  const rows = await all<{ date: string; home_code: string; away_code: string; home: string; away: string; home_goals: number | null; away_goals: number | null }>(
+    'nations_matches', 'date, home_code, away_code, home, away, home_goals, away_goals', (q) => q.or('home_code.eq.IS,away_code.eq.IS'))
+  const games = rows.filter((r) => r.home_goals !== null && r.away_goals !== null).map((r) => {
+    const home = r.home_code === 'IS'
+    let code = home ? r.away_code : r.home_code
+    if (code === 'MK') code = 'NM' // Macedonia and North Macedonia are one opponent
+    return { code, en: home ? r.away : r.home, year: Number(r.date.slice(0, 4)), diff: home ? r.home_goals! - r.away_goals! : r.away_goals! - r.home_goals! }
+  })
+  const english = new Map(games.map((g) => [g.code, g.en]))
+  for (const g of games) if (!NATION[g.code]) throw new Error(`no Icelandic name for ${g.code} (${g.en})`)
+  const UEFA = new Set([...Object.keys(IS_NAMES).slice(0, Object.keys(IS_NAMES).indexOf('AR')), 'DD', 'SU', 'CS', 'WG'])
+  const ELO = { name: 'eloratings.net · öll úrslit A-landsliðs Íslands (gagnagrunnur Bestu spárinnar)', url: `${SITE}/landslid` }
+  const nationQuestion = (id: string, prompt: string, context: string, rarity: string, list: { code: string; common: number; detail: string }[]) =>
+    add({ id, slot: 'landslid', kind: 'nation', prompt, context, rarity, sources: [ELO],
+      answers: (() => { const t = tiersBy(list, (r) => r.common); return list.map((r) => ({ id: r.code.toLowerCase(), label: NATION[r.code].is, detail: r.detail, points: t.get(r)! })) })() },
+    (a) => {
+      const code = a.id.toUpperCase()
+      return [NATION[code].is, english.get(code) ?? '', ...(NATION[code].en ?? []), ...(EXTRA_ACCEPT[code] ?? [])].map(normalise)
+    })
+  const per = (pick: (g: typeof games[number]) => boolean) => {
+    const out = new Map<string, { n: number; w: number; d: number }>()
+    for (const g of games) if (pick(g)) { const x = out.get(g.code) ?? { n: 0, w: 0, d: 0 }; x.n++; if (g.diff > 0) x.w++; if (g.diff === 0) x.d++; out.set(g.code, x) }
+    return out
+  }
+  const lastYear = Math.max(...games.map((g) => g.year))
+  const allTime = per(() => true)
+  nationQuestion('landslid-sigrar', 'Nefndu þjóð sem A-landslið karla hefur unnið.', `Allir A-landsleikir frá 1930 til ${lastYear}.`,
+    'Því oftar sem Ísland hefur unnið þjóðina, því algengara svar.',
+    [...allTime].filter(([, x]) => x.w > 0).map(([code, x]) => ({ code, common: x.w, detail: `${x.w} ${x.w === 1 ? 'sigur' : 'sigrar'} í ${x.n} leikjum` })))
+  nationQuestion('landslid-aldrei', 'Nefndu þjóð sem Ísland hefur mætt minnst þrisvar en aldrei unnið.', `A-landslið karla, allir leikir frá 1930 til ${lastYear}.`,
+    'Því oftar sem liðin hafa mæst, því algengara svar.',
+    [...allTime].filter(([, x]) => x.w === 0 && x.n >= 3).map(([code, x]) => ({ code, common: x.n, detail: `${x.n} leikir, enginn sigur` })))
+  const recent = per((g) => g.year >= 2020)
+  nationQuestion('landslid-2020', 'Nefndu þjóð sem A-landslið karla hefur mætt frá 2020.', `Allir A-landsleikir 2020-${lastYear}, vináttuleikir líka.`,
+    'Því oftar sem liðin hafa mæst, því algengara svar.',
+    [...recent].map(([code, x]) => ({ code, common: x.n, detail: `${x.n} ${x.n === 1 ? 'leikur' : 'leikir'} frá 2020` })))
+  for (const [from, to, word] of [[1990, 1999, 'á árunum 1990-1999'], [2010, 2019, 'á árunum 2010-2019']] as const) {
+    const era = per((g) => g.year >= from && g.year <= to)
+    nationQuestion(`landslid-${from}`, `Nefndu þjóð sem A-landslið karla mætti ${word}.`, 'Allir A-landsleikir tímabilsins, vináttuleikir líka.',
+      'Því oftar sem liðin mættust, því algengara svar.',
+      [...era].map(([code, x]) => ({ code, common: x.n, detail: `${x.n} ${x.n === 1 ? 'leikur' : 'leikir'} ${word}` })))
+  }
+  nationQuestion('landslid-jafntefli', 'Nefndu þjóð sem A-landslið karla hefur gert jafntefli við.', `Allir A-landsleikir frá 1930 til ${lastYear}.`,
+    'Því fleiri jafntefli, því algengara svar.',
+    [...allTime].filter(([, x]) => x.d > 0).map(([code, x]) => ({ code, common: x.d, detail: `${x.d} ${x.d === 1 ? 'jafntefli' : 'jafntefli'} í ${x.n} leikjum` })))
+  const far = per((g) => !UEFA.has(g.code))
+  nationQuestion('landslid-utan-evropu', 'Nefndu þjóð utan Evrópu sem A-landslið karla hefur mætt.', `Allir A-landsleikir frá 1930 til ${lastYear}.`,
+    'Því oftar sem liðin hafa mæst, því algengara svar.',
+    [...far].map(([code, x]) => ({ code, common: x.n, detail: `${x.n} ${x.n === 1 ? 'leikur' : 'leikir'}, ${x.w} ${x.w === 1 ? 'sigur' : 'sigrar'}` })))
+}
+
+// -- útlönd: every verified Tenaball table ----------------------------------------
+
+{
+  const LEAGUE: Record<string, { name: string; key: string }> = {
+    enska: { name: 'ensku úrvalsdeildinni', key: 'premier' }, spann: { name: 'spænsku deildinni', key: 'laliga' },
+    italia: { name: 'ítölsku deildinni', key: 'seriea' }, thyskaland: { name: 'þýsku deildinni', key: 'bundesliga' },
+    frakkland: { name: 'frönsku deildinni', key: 'ligue1' }, portugal: { name: 'portúgölsku deildinni', key: 'primeira' },
+    holland: { name: 'hollensku deildinni', key: 'eredivisie' }, championship: { name: 'ensku B-deildinni', key: 'championship' },
+  }
+  const seasonsIn = new Map<string, Map<string, Set<number>>>()
+  const foreign = await all<{ league: string; season: number; home_team: number }>('matches', 'league, season, home_team',
+    (q) => q.in('league', Object.values(LEAGUE).map((x) => x.key)))
+  for (const m of foreign) {
+    const byClub = seasonsIn.get(m.league) ?? new Map()
+    const n = normalise(teamName.get(m.home_team)!)
+    byClub.set(n, (byClub.get(n) ?? new Set()).add(m.season))
+    seasonsIn.set(m.league, byClub)
+  }
+  const files = readdirSync(join(webDir, 'src/lib/topp10/lists')).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5))
+  const done = new Set(questions.map((q) => q.id))
+  // a Tenaball list is named by the year its season starts: 2025 is 2025/26
+  const span = (y: number) => `${y}/${String(y + 1).slice(2)}`
+  for (const id of files) {
+    const m = id.match(/^(enska|spann|italia|thyskaland|frakkland|portugal|holland|championship)-(lokastada|lid|markahaestir)-(\d{4})$/)
+    if (!m || done.has(id)) continue
+    const [, land, kind, yy] = m
+    const l = list(id), y = Number(yy), league = LEAGUE[land]
+    if (kind === 'lokastada') {
+      const t = tiersBy(l.answers, (a: any) => -Number(a.detail.match(/^(\d+)\./)[1]))
+      add({ id, slot: 'utlond', kind: 'club', prompt: `Nefndu lið sem endaði í einu af tíu efstu sætum í ${league.name} ${span(y)}.`,
+        context: l.context, rarity: 'Því ofar í töflunni, því algengara svar: meistararnir gefa minnst.', sources: l.sources,
+        answers: l.answers.map((a: any) => ({ id: a.id, label: a.label, detail: a.detail, points: t.get(a)! })) },
+      (a) => trust(a.label, l.answers.find((x: any) => x.id === a.id).accept))
+    } else if (kind === 'lid') {
+      const clubs = seasonsIn.get(league.key) ?? new Map()
+      const count = (a: any) => Math.max(0, ...l.answers.find((x: any) => x.id === a.id).accept.map((k: string) => clubs.get(k)?.size ?? 0))
+      const rows = l.answers.map((a: any) => ({ a, n: count(a) }))
+      const t = tiersBy(rows, (r: any) => r.n)
+      add({ id, slot: 'utlond', kind: 'club', prompt: `Nefndu lið í ${league.name} ${span(y)}.`,
+        context: l.context, rarity: 'Því fleiri tímabil í deildinni, því algengara svar.', sources: l.sources,
+        answers: rows.map((r: any) => ({ id: r.a.id, label: r.a.label, detail: r.n ? `${r.n} tímabil í deildinni í gögnunum okkar` : 'nýtt í deildinni', points: t.get(r)! })) },
+      (a) => trust(a.label, l.answers.find((x: any) => x.id === a.id).accept))
+    } else {
+      const t = tiersBy(l.answers, (a: any) => Number(a.detail.match(/^(\d+)/)?.[1] ?? 0))
+      for (const a of l.answers) meet(a.label)
+      add({ id, slot: 'utlond', kind: 'player', prompt: `Nefndu einn af markahæstu leikmönnum ensku úrvalsdeildarinnar ${span(y)}.`,
+        context: l.context, rarity: 'Því fleiri mörk, því algengara svar.', sources: l.sources,
+        answers: l.answers.map((a: any) => ({ id: a.id, label: a.label, detail: a.detail, points: t.get(a)! })) },
+      (a) => [...new Set([...personKeys(a.label), ...trust(a.label, l.answers.find((x: any) => x.id === a.id).accept)])])
+    }
+  }
+  const cl = list('evropa-meistaradeildin')
+  const t = tiersBy(cl.answers, (a: any) => Number(a.detail.match(/^\d+/)[0]))
+  add({ id: 'meistaradeildin-1993', slot: 'utlond', kind: 'club', prompt: 'Nefndu félag sem hefur unnið Meistaradeildina frá 1993.',
+    context: cl.context, rarity: 'Því fleiri titlar, því algengara svar.', sources: cl.sources,
+    answers: cl.answers.map((a: any) => ({ id: a.id, label: a.label, detail: a.detail, points: t.get(a)! })) },
+  (a) => trust(a.label, cl.answers.find((x: any) => x.id === a.id).accept))
+}
+
 // ---------------------------------------------------------------- checks
 
 // a short form of one person must never be another person's full name
@@ -680,7 +981,7 @@ writeFileSync(out, JSON.stringify(questions, null, 1) + '\n')
 // name says nothing about whether it answers today's question
 const hver: string[] = JSON.parse(readFileSync(join(webDir, 'src/lib/hver/names.json'), 'utf-8'))
 const pool = (kind: Kind) => [...new Set(questions.filter((q) => q.kind === kind).flatMap((q) => q.answers.map((a) => a.label)))]
-const NATIONS = ['Albanía', 'Andorra', 'Argentína', 'Armenía', 'Austurríki', 'Aserbaísjan', 'Belgía', 'Bosnía og Hersegóvína', 'Brasilía', 'Búlgaría',
+const NATION_POOL = ['Albanía', 'Andorra', 'Argentína', 'Armenía', 'Austurríki', 'Aserbaísjan', 'Belgía', 'Bosnía og Hersegóvína', 'Brasilía', 'Búlgaría',
   'Danmörk', 'Eistland', 'England', 'Finnland', 'Frakkland', 'Færeyjar', 'Georgía', 'Grikkland', 'Holland', 'Hvíta-Rússland', 'Írland', 'Ísrael',
   'Ítalía', 'Japan', 'Kasakstan', 'Kósovó', 'Króatía', 'Kýpur', 'Lettland', 'Liechtenstein', 'Litháen', 'Lúxemborg', 'Malta', 'Mexíkó',
   'Moldóva', 'Norður-Írland', 'Norður-Makedónía', 'Noregur', 'Nígería', 'Pólland', 'Portúgal', 'Rúmenía', 'Rússland', 'San Marínó',
@@ -694,11 +995,11 @@ const TOWNS = ['Reykjavík', 'Kópavogur', 'Hafnarfjörður', 'Garðabær', 'Mos
 const names = {
   player: [...new Set([...pool('player'), ...hver])].sort((a, b) => a.localeCompare(b, 'is')),
   club: [...new Set([...ALL_CLUBS.map((c) => c.label)])].sort((a, b) => a.localeCompare(b, 'is')),
-  nation: NATIONS.sort((a, b) => a.localeCompare(b, 'is')),
+  nation: [...new Set([...NATION_POOL, ...pool('nation')])].sort((a, b) => a.localeCompare(b, 'is')),
   town: TOWNS.sort((a, b) => a.localeCompare(b, 'is')),
   year: [],
 }
-for (const k of ['nation', 'town'] as const) for (const label of pool(k)) if (!names[k].includes(label)) throw new Error(`${label} missing from the ${k} suggestions`)
+for (const k of ['town'] as const) for (const label of pool(k)) if (!names[k].includes(label)) throw new Error(`${label} missing from the ${k} suggestions`)
 writeFileSync(join(webDir, 'src/lib/leidin/names.json'), JSON.stringify(names) + '\n')
 
 const bySlot = new Map<string, number>()
