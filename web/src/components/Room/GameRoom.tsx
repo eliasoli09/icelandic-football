@@ -81,11 +81,31 @@ export function GameRoom() {
         })}
       </ul>
 
+      <Link href="/vallarleit" className={`${styles.arcade} ${styles.globe}`}>
+        <svg className={styles.globeArt} viewBox="0 0 110 64" aria-hidden>
+          <defs>
+            <radialGradient id="vl-sea" cx="38%" cy="32%" r="75%"><stop offset="0" stopColor="#2a5d80" /><stop offset="1" stopColor="#0b1d2b" /></radialGradient>
+          </defs>
+          <circle cx="55" cy="34" r="29" fill="url(#vl-sea)" stroke="rgba(150,210,255,.35)" />
+          <path d="M38 22c6-5 14-6 20-3s10 1 14 5-1 8-6 9-7 6-12 5-6-5-11-4-9-2-8-6 0-4 3-6z" fill="#294a38" />
+          <path d="M44 42c4-2 9-1 12 1s7 4 5 7-8 3-12 1-7-6-5-9z" fill="#294a38" />
+          {[[47, 27, '#ffd06a'], [62, 31, '#f06028'], [55, 44, '#d02626']].map(([x, y, c]) => (
+            <g key={String(c)}><line x1={x} y1={y} x2={x} y2={Number(y) - 13} stroke="#e8ece6" strokeWidth="1.4" /><path d={`M${x} ${Number(y) - 13}h9l-2 3.2 2 3.2h-9z`} fill={String(c)} /></g>
+          ))}
+        </svg>
+        <span className={styles.arcadeText}>
+          <span className={styles.arcadeKicker}>NÝTT · VÖLLUR DAGSINS</span>
+          <span className={styles.arcadeTitle}>Vallarleit</span>
+          <span className={styles.arcadeBlurb}>Finndu heimavöllinn á hnettinum. Hver ágiskun plantar fána og liturinn segir hve heitt þú ert.</span>
+        </span>
+        <span className={styles.go}>Spila <ArrowRight size={15} aria-hidden /></span>
+      </Link>
+
       <Link href="/leidin" className={`${styles.arcade} ${styles.road}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={styles.roadArt} src="/leidin/vellir/laugardalur.png" alt="" width={110} height={36} loading="lazy" />
         <span className={styles.arcadeText}>
-          <span className={styles.arcadeKicker}>NÝTT · LEIÐ DAGSINS</span>
+          <span className={styles.arcadeKicker}>LEIÐ DAGSINS</span>
           <span className={styles.arcadeTitle}>Leiðin á Laugardalsvöll</span>
           <span className={styles.arcadeBlurb}>Sjö spurningar, 25 sekúndur á hverja. Því sjaldgæfara svar, því lengra hleypur þú.</span>
         </span>
