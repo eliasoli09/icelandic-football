@@ -16,8 +16,8 @@ export const LEVELS: { key: Level; label: string; blurb: string }[] = [
   { key: 'impossible', label: 'Ómögulegt', blurb: `Hvaða lið sem er af ${CLUBS.length} í ${LEAGUES.length} deildum Evrópu` },
 ]
 
-/** 9 Oct 2026, the first Vallarleit */
-export const LAUNCH_DAY = 20735
+/** 13 Oct 2026, the first Vallarleit */
+export const LAUNCH_DAY = 20739
 export const URL = 'https://islensk-fotbolti.vercel.app/vallarleit'
 
 /**
