@@ -111,7 +111,8 @@ export function normName(s: string): string {
     .replace(/\b([a-z]) (?=[a-z]\b)/g, '$1')
 }
 
-export const OFFENCE = new Set(['QB', 'RB', 'FB', 'HB', 'WR', 'TE', 'OL', 'T', 'OT', 'G', 'OG', 'C', 'K', 'P'])
+export { OFFENCE_POSITIONS as OFFENCE } from './positions'
+import { OFFENCE_POSITIONS as OFFENCE } from './positions'
 export type Side = 'offence' | 'defence'
 
 /**
