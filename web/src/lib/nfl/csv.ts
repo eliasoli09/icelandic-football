@@ -23,7 +23,7 @@ export function parseCsv(text: string): string[][] {
 }
 
 /** Rows as objects. A missing column or a ragged row throws: half a file must never be written. */
-function table(text: string, required: readonly string[]): Record<string, string>[] {
+export function table(text: string, required: readonly string[]): Record<string, string>[] {
   const [head, ...body] = parseCsv(text)
   const missing = required.filter((c) => !head.includes(c))
   if (missing.length) throw new Error(`nflverse: dálk vantar í CSV: ${missing.join(', ')}`)
