@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Award as AwardIcon } from 'lucide-react'
+import awardsJson from '@/lib/nfl/data/nfl-awards.json'
+import { AWARD_LABEL, type AwardWinner } from '@/lib/nfl/awards'
 import { NflLogo } from '@/components/Nfl/NflLogo'
 import { PlayerHead } from '@/components/Nfl/PlayerHead'
 import { barColor } from '@/lib/nfl/format'
@@ -42,6 +44,7 @@ export default async function NflPlayerPage({ params }: Props) {
   const age = ageOn(player.birth_date, new Date())
   const reg = career.filter((r) => r.season_type === 'REG')
   const post = career.filter((r) => r.season_type === 'POST')
+  const won = (awardsJson as AwardWinner[]).filter((a) => a.player_id === id).sort((a, b) => b.season - a.season)
 
   return (
     // minmax(0, 1fr): a wide career table must scroll inside its card, not widen the page
@@ -63,6 +66,19 @@ export default async function NflPlayerPage({ params }: Props) {
             {player.college ? ` · ${player.college}` : ''}
             {player.rookie_season ? ` · nýliði ${player.rookie_season}` : ''}
           </p>
+          {won.length > 0 && (
+            <ul className="flex flex-wrap gap-1.5 mt-1">
+              {won.map((a) => (
+                <li key={`${a.award}-${a.season}`}>
+                  <Link href={`/nfl/verdlaun?verdlaun=${a.award}`} title={`${AWARD_LABEL[a.award]} ${a.season}`}
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                    style={{ background: 'var(--accent)', color: 'var(--accent-ink)' }}>
+                    <AwardIcon size={12} aria-hidden /> {a.award} {a.season}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </header>
 

@@ -17,7 +17,7 @@ export function NflSubnav() {
   return (
     <nav aria-label="NFL" className="inline-flex max-w-full overflow-x-auto rounded-full border p-1 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
       {TABS.map((t) => {
-        const active = pathname === t.href || (t.href === '/nfl/leikmenn' && pathname.startsWith('/nfl/leikmadur'))
+        const active = pathname === t.href || (t.href === '/nfl/leikmenn' && (pathname.startsWith('/nfl/leikmadur') || pathname.startsWith('/nfl/verdlaun')))
         return (
           <Link
             key={t.href}

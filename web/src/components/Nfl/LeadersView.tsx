@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
 import { NflLogo } from './NflLogo'
 import { PlayerHead } from './PlayerHead'
+import { PlayersSwitch } from './PlayersSwitch'
 import { barColor } from '@/lib/nfl/format'
 import { leaders } from '@/lib/nfl/players'
 import { GROUP_LABEL, LEADER_CATEGORIES, type LeaderStat } from '@/lib/nfl/statColumns'
@@ -30,6 +31,7 @@ export function LeadersView({ season, rows, teams }: { season: number; rows: Lea
 
   return (
     <section className="grid gap-6">
+      <PlayersSwitch active="tolfraedi" />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm muted">Deildarkeppnin {season}</p>
         <div role="tablist" className="inline-flex rounded-full border p-1 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
