@@ -1,7 +1,8 @@
 import { db } from '../db'
 import { parseGames, parseTeams } from './csv'
-import { runElo } from './elo'
-import { isPlayed, type NflGame } from './types'
+import { runElo, type EloRow, type EloState } from './elo'
+import { simulateSeason } from './sim'
+import { isPlayed, type NflGame, type NflTeam } from './types'
 
 export const GAMES_URL = 'https://github.com/nflverse/nfldata/raw/master/data/games.csv'
 export const TEAMS_URL = 'https://github.com/nflverse/nflverse-data/releases/download/teams/teams_colors_logos.csv'
@@ -9,7 +10,17 @@ const SECRET = () => process.env.CRON_SECRET!
 const BATCH = 500
 const STALE_HOURS = 18
 
-export interface NflIngestResult { season: number; games: number; newResults: number; warnings: string[]; elo: { rows: number } | { error: string } }
+export interface NflIngestResult {
+  season: number
+  games: number
+  newResults: number
+  warnings: string[]
+  elo: { rows: number } | { error: string }
+  sim: { sims: number; ms: number } | { error: string }
+}
+
+/** Hot simulation, chosen by scripts/nfl-sim-backtest.mts; 10,000 runs take a few seconds. */
+export const NFL_SIM = { sims: 10_000, hot: true }
 
 /** The KSÍ scraper once reported newMatches: 0 for six weeks without a word, so say what looks wrong. */
 export function ingestWarnings(season: NflGame[], now: Date, expectedTeams = 32): string[] {
@@ -62,8 +73,11 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
   await call('rpc_upsert_nfl_teams', teams)
   await call('rpc_upsert_nfl_games', rows)
 
-  // Elo is a display layer on top of the results: if it fails, the results still count.
-  const elo = await writeElo(games, opts.all ? null : season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+  // Elo and the simulation are display layers on top of the results: if either
+  // fails, the results still count and the previous simulation stays up.
+  const run = runElo(games)
+  const elo = await writeElo(run.rows, opts.all ? null : season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+  const sim = await writeSim(current, teams, run.state).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
 
   return {
     season,
@@ -71,20 +85,37 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
     newResults: current.filter((g) => isPlayed(g) && !before.has(g.game_id)).length,
     warnings: ingestWarnings(current, opts.now ?? new Date()),
     elo,
+    sim,
   }
 }
 
 const round = (x: number, d: number) => Math.round(x * 10 ** d) / 10 ** d
 
 /**
- * Replay every game since 1999 (milliseconds) and write the rows. Daily runs
+ * Write the rows of a full replay since 1999 (milliseconds). Daily runs
  * write only the current season: earlier ratings cannot change unless an old
  * result does, and `--all` covers that.
  */
-async function writeElo(games: NflGame[], onlySeason: number | null): Promise<{ rows: number }> {
-  const rows = runElo(games).rows
+async function writeElo(all: EloRow[], onlySeason: number | null): Promise<{ rows: number }> {
+  const rows = all
     .filter((r) => onlySeason === null || r.season === onlySeason)
     .map((r) => ({ ...r, elo_before: round(r.elo_before, 2), elo_after: round(r.elo_after, 2), p_win: round(r.p_win, 5) }))
   await call('rpc_upsert_nfl_elo', rows)
   return { rows: rows.length }
+}
+
+async function writeSim(season: NflGame[], allTeams: NflTeam[], state: EloState): Promise<{ sims: number; ms: number }> {
+  const names = new Set(season.flatMap((g) => [g.home, g.away]))
+  const teams = allTeams.filter((t) => names.has(t.abbr))
+  const t0 = Date.now()
+  const sim = simulateSeason(season, teams, state, { ...NFL_SIM, seed: Date.now() % 1e9 })
+  const rows = Object.values(sim).map((x) => ({
+    ...x,
+    p_seed: x.p_seed.map((v) => round(v, 5)),
+    ...Object.fromEntries((['p_div', 'p_playoffs', 'p_bye', 'p_round2', 'p_round3', 'p_sb', 'p_title'] as const).map((k) => [k, round(x[k], 5)])),
+    sims: NFL_SIM.sims,
+  }))
+  const { error } = await db().rpc('rpc_replace_nfl_sim', { p_secret: SECRET(), p_season: season[0].season, p_rows: rows })
+  if (error) throw new Error(`rpc_replace_nfl_sim: ${error.message}`)
+  return { sims: NFL_SIM.sims, ms: Date.now() - t0 }
 }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { ingestNfl } from '@/lib/nfl/ingest'
 
-export const maxDuration = 60
+export const maxDuration = 300
 export const dynamic = 'force-dynamic'
 
 // Separate from /api/cron/ingest so a KSÍ failure cannot take NFL down, or the reverse.
