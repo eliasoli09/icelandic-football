@@ -1,6 +1,7 @@
 import { db } from '../db'
 import { stateFromRows, type EloRow, type EloState } from './elo'
 import type { SimTeam } from './sim'
+import { STATS, type NflPlayer, type PlayerWeek, type SeasonTotal } from './players'
 import type { NflGame, NflTeam } from './types'
 
 export async function nflTeams(): Promise<NflTeam[]> {
@@ -92,4 +93,45 @@ export async function nflSim(season: number): Promise<Record<string, StoredSim>>
     team: r.team, p_div: n(r.p_div), p_playoffs: n(r.p_playoffs), p_bye: n(r.p_bye), p_seed: (r.p_seed as unknown[]).map(n),
     p_round2: n(r.p_round2), p_round3: n(r.p_round3), p_sb: n(r.p_sb), p_title: n(r.p_title), sims: r.sims, run_at: r.run_at,
   }]))
+}
+
+export type PlayerSeasonRow = SeasonTotal & { season_type: 'REG' | 'POST'; name: string; position: string | null; headshot: string | null; rookie_season: number | null }
+
+const toSeason = (r: Record<string, unknown>) =>
+  Object.fromEntries(Object.entries(r).map(([k, v]) => [k, typeof v === 'string' && STATS.includes(k as never) ? Number(v) : v])) as unknown as PlayerSeasonRow
+
+/** Season totals for every player, one season and type; paged (about 2,000 rows). */
+export async function nflPlayerSeasons(season: number, type: 'REG' | 'POST' = 'REG'): Promise<PlayerSeasonRow[]> {
+  const out: PlayerSeasonRow[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_player_season').select('*').eq('season', season).eq('season_type', type).order('player_id').range(from, from + 999)
+    if (error) throw error
+    out.push(...(data ?? []).map(toSeason))
+    if (!data || data.length < 1000) return out
+  }
+}
+
+export async function nflPlayer(id: string): Promise<NflPlayer | null> {
+  const { data, error } = await db().from('nfl_players').select('*').eq('player_id', id).maybeSingle()
+  if (error) throw error
+  return (data as NflPlayer) ?? null
+}
+
+export async function nflPlayerCareer(id: string): Promise<PlayerSeasonRow[]> {
+  const { data, error } = await db().from('nfl_player_season').select('*').eq('player_id', id).order('season').order('season_type', { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(toSeason)
+}
+
+export async function nflPlayerGames(id: string, season: number): Promise<PlayerWeek[]> {
+  const { data, error } = await db().from('nfl_player_weeks').select('*').eq('player_id', id).eq('season', season).order('week')
+  if (error) throw error
+  return (data ?? []) as PlayerWeek[]
+}
+
+/** The one quarterback by this name, if exactly one; two players can share a name. */
+export async function nflQbByName(name: string): Promise<string | null> {
+  const { data, error } = await db().from('nfl_players').select('player_id').eq('name', name).eq('position', 'QB').limit(2)
+  if (error) throw error
+  return data && data.length === 1 ? data[0].player_id : null
 }

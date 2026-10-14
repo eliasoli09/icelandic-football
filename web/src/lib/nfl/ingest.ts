@@ -2,6 +2,7 @@ import { db } from '../db'
 import { parseGames, parseTeams } from './csv'
 import { runElo, type EloRow, type EloState } from './elo'
 import { simulateSeason } from './sim'
+import { ingestPlayers } from './playerIngest'
 import { isPlayed, type NflGame, type NflTeam } from './types'
 
 export const GAMES_URL = 'https://github.com/nflverse/nfldata/raw/master/data/games.csv'
@@ -17,6 +18,7 @@ export interface NflIngestResult {
   warnings: string[]
   elo: { rows: number } | { error: string }
   sim: { sims: number; ms: number } | { error: string }
+  players: { players: number; weeks: number } | { error: string }
 }
 
 /** Hot simulation, chosen by scripts/nfl-sim-backtest.mts; 10,000 runs take a few seconds. */
@@ -78,6 +80,8 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
   const run = runElo(games)
   const elo = await writeElo(run.rows, opts.all ? null : season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
   const sim = await writeSim(current, teams, run.state).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+  // player stats are a separate feed: a failure there leaves the rest untouched
+  const players = await ingestPlayers([season]).then(({ players, weeks }) => ({ players, weeks })).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
 
   return {
     season,
@@ -86,6 +90,7 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
     warnings: ingestWarnings(current, opts.now ?? new Date()),
     elo,
     sim,
+    players,
   }
 }
 
