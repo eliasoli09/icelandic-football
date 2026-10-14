@@ -128,3 +128,9 @@ export function currentRatings(state: EloState, season: number): Map<string, num
   for (const team of state.ratings.keys()) out.set(team, rating(state, team, season, false))
   return out
 }
+
+/** A club's rating going into a game of `season`, without changing the state. */
+export const ratingFor = (state: EloState, team: string, season: number) => rating(state, team, season, false)
+
+/** Elo difference for a game from given ratings: home advantage and byes included. */
+export const diffFor = (state: EloState, g: EloGame, eloHome: number, eloAway: number) => gameDiff(state, g, eloHome, eloAway)
