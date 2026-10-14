@@ -144,8 +144,15 @@ Deildaskiptirinn er falinn á `/nfl/*`.
 - úttak: röð hvers riðils og hverrar deildar ásamt `reason` fyrir hvert sæti sem réðst
   af reglu;
 - jafntefli gilda sem hálfur sigur;
-- röð viðmiða: sigurhlutfall → innbyrðis viðureignir → árangur í riðli (aðeins innan
-  riðils) → árangur í deild → stigamismunur → stafrófsröð.
+- röð viðmiða eftir sigurhlutfall, eins og hjá NFL:
+  - **sama riðli:** innbyrðis viðureignir → árangur í riðli → sameiginlegir mótherjar →
+    árangur í deild → styrkur sigra → stigamismunur → stafróf;
+  - **ólíkum riðlum:** innbyrðis viðureignir (ef allir hafa mæst) → árangur í deild →
+    sameiginlegir mótherjar (minnst 4 leikir) → styrkur sigra → stigamismunur → stafróf.
+  - Styrkur leikjadagskrár, stigaröðun og hlutkesti NFL eru ekki með; stigamismunur og
+    stafróf koma í staðinn.
+  - *Bætt við 14. okt eftir mælingu:* fyrsta útgáfan sleppti sameiginlegum mótherjum og
+    styrk sigra og raðaði 2025 rangt á tveimur stöðum (NE/DEN í AFC-1, SF/LA í NFC-5/6).
 - Þegar þrjú eða fleiri lið eru jöfn er hvert viðmið reiknað á hópinn í heild. Þegar
   eitt lið skilur sig frá byrjar röðunin upp á nýtt fyrir þau sem eftir eru, eins og hjá
   NFL.
