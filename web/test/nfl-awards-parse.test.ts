@@ -34,6 +34,10 @@ describe('parseRookiePage (AP-taflan)', () => {
     expect(roy.filter((w) => w.season === 2003).map((w) => [w.award, w.name])).toEqual([['OROY', 'Anquan Boldin'], ['DROY', 'Terrell Suggs']])
     expect(roy.find((w) => w.season === 2025 && w.award === 'DROY')).toMatchObject({ name: 'Carson Schwesinger', position: 'LB' })
   })
+  it('deilt varnarnýliðaár 1980 tvöfaldar ekki sóknarnýliðann sem nær yfir báðar línur', () => {
+    expect(roy.filter((w) => w.season === 1980 && w.award === 'OROY').map((w) => w.name)).toEqual(['Billy Sims'])
+    expect(roy.filter((w) => w.season === 1980 && w.award === 'DROY').map((w) => w.name).sort()).toEqual(['Al Richardson', 'Buddy Curry'])
+  })
 })
 
 describe('parseSeasonPage', () => {

@@ -42,6 +42,12 @@ function playersIn(c: Cell): string[] {
 
 const yearOf = (s: string) => { const m = /^(\d{4})/.exec(s); return m ? Number(m[1]) : null }
 
+/** A cell spanning two rows (one side of a shared award) must not count its winner twice. */
+function unique<T extends { season: number; award: string; name: string }>(xs: T[]): T[] {
+  const seen = new Set<string>()
+  return xs.filter((x) => { const k = `${x.season}|${x.award}|${x.name}`; if (seen.has(k)) return false; seen.add(k); return true })
+}
+
 /** An award's own page: the winners table is the one headed Season | Player. */
 export function parseAwardPage(html: string, award: Award): Omit<AwardWinner, 'player_id'>[] {
   const $ = load(html)
@@ -62,7 +68,7 @@ export function parseAwardPage(html: string, award: Award): Omit<AwardWinner, 'p
       out.push({ season, award, name, position: names.length === 1 && iPos >= 0 ? r[iPos]?.text || null : null, team: names.length === 1 && iT >= 0 ? r[iT]?.text || null : null })
     }
   }
-  return out
+  return unique(out)
 }
 
 /** The AP table on the rookie page: Season | Offensive (name, team, pos) | Defensive (name, team, pos). */
@@ -78,7 +84,7 @@ export function parseRookiePage(html: string): Omit<AwardWinner, 'player_id'>[] 
       for (const name of names) out.push({ season, award, name, team: names.length === 1 ? r[i + 1].text || null : null, position: names.length === 1 ? r[i + 2].text || null : null })
     }
   }
-  return out
+  return unique(out)
 }
 
 const SEASON_AWARDS: [RegExp, Award][] = [
