@@ -121,3 +121,10 @@ export function stateFromRows(rows: Pick<EloRow, 'team' | 'season' | 'week' | 'e
   }
   return state
 }
+
+/** Every club's rating going into its next game of `season` (reverted if it has not played in it yet). */
+export function currentRatings(state: EloState, season: number): Map<string, number> {
+  const out = new Map<string, number>()
+  for (const team of state.ratings.keys()) out.set(team, rating(state, team, season, false))
+  return out
+}

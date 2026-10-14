@@ -36,3 +36,13 @@ describe('spásnið', () => {
     expect(barColor({ color: '#000000', color2: '#ffffff' })).toBe('var(--text-2)')
   })
 })
+
+import { eloMove } from '../src/lib/nfl/format'
+
+describe('eloMove', () => {
+  it('ör aðeins þegar breytingin rúnnast ekki í núll', () => {
+    expect(eloMove(-0.3)).toEqual({ text: '0', dir: 'flat' })
+    expect(eloMove(17.6)).toEqual({ text: '▲ 18', dir: 'up' })
+    expect(eloMove(-38.2)).toEqual({ text: '▼ 38', dir: 'down' })
+  })
+})

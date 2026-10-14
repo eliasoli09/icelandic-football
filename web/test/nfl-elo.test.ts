@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { ELO_MEAN, eloSpread, movMultiplier, predictGame, runElo, stateFromRows, winProb, type EloParams } from '../src/lib/nfl/elo'
+import { ELO_MEAN, currentRatings, eloSpread, movMultiplier, predictGame, runElo, stateFromRows, winProb, type EloParams } from '../src/lib/nfl/elo'
 import type { NflGame } from '../src/lib/nfl/types'
 
 const P: EloParams = { K: 20, HFA: 48, R: 1 / 3, BYE: 25 }
+const P4: EloParams = { ...P, R: 0.4 }
 let n = 0
 const g = (season: number, week: number, home: string, hs: number | null, away: string, as: number | null, extra: Partial<NflGame> = {}) =>
   ({
@@ -82,5 +83,14 @@ describe('stateFromRows', () => {
     const run = runElo([g(2020, 1, 'A', 30, 'B', 3)], P)
     expect(run.rows[0].p_win + run.rows[1].p_win).toBeCloseTo(1, 12)
     expect(run.rows[0].p_win).toBeCloseTo(winProb(48), 12)
+  })
+})
+
+describe('currentRatings', () => {
+  it('afturhvarf aðeins fyrir lið sem hefur ekki spilað á tímabilinu', () => {
+    const run = runElo([g(2020, 1, 'A', 30, 'B', 3), g(2021, 1, 'A', 20, 'C', 10)], P4)
+    const r = currentRatings(run.state, 2021)
+    expect(r.get('A')).toBe(run.state.ratings.get('A'))
+    expect(r.get('B')).toBeCloseTo(run.state.ratings.get('B')! * 0.6 + ELO_MEAN * 0.4, 9)
   })
 })

@@ -6,7 +6,7 @@ import { ProbSplit } from '@/components/Nfl/ProbSplit'
 import { franchiseOf, predictGame } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { teamForm, type TeamForm } from '@/lib/nfl/form'
-import { modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
+import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
 import { devig } from '@/lib/nfl/odds'
 import { nflGame, nflMeetings, nflSeasonModel } from '@/lib/nfl/queries'
 import { clock, dayLabel, isSmallHours } from '@/lib/nfl/time'
@@ -142,11 +142,10 @@ function TeamPanel({ team, abbr, elo, form, qb, newQb }: { team: NflTeam | undef
         <dt className="muted">Elo</dt>
         <dd className="text-right num font-semibold">
           {elo === null ? 'engin saga' : Math.round(elo)}
-          {change !== null && (
-            <span className="ml-2 text-xs" style={{ color: change >= 0 ? 'var(--win)' : 'var(--loss)' }}>
-              {change >= 0 ? '▲' : '▼'} {Math.abs(Math.round(change))}
-            </span>
-          )}
+          {change !== null && (() => {
+            const m = eloMove(change)
+            return <span className="ml-2 text-xs" style={{ color: m.dir === 'up' ? 'var(--win)' : m.dir === 'down' ? 'var(--loss)' : 'var(--text-2)' }}>{m.text}</span>
+          })()}
         </dd>
         <dt className="muted">Met tímabilsins</dt>
         <dd className="text-right num">{form.record.w}-{form.record.l}{form.record.t ? `-${form.record.t}` : ''}</dd>

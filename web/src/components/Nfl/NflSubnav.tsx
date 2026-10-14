@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 const TABS = [
   { href: '/nfl', label: 'Vikan' },
   { href: '/nfl/stada', label: 'Staðan' },
+  { href: '/nfl/styrkleiki', label: 'Styrkleiki' },
 ]
 
 export function NflSubnav() {

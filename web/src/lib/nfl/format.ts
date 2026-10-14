@@ -45,3 +45,10 @@ export function barColor(team: { color: string; color2: string } | undefined): s
   const ok = (c: string) => { const l = luminance(c); return l > 0.12 && l < 0.85 }
   return ok(team.color) ? team.color : ok(team.color2) ? team.color2 : 'var(--text-2)'
 }
+
+/** Elo movement with an arrow; a change that rounds to zero gets neither arrow nor colour. */
+export function eloMove(change: number): { text: string; dir: 'up' | 'down' | 'flat' } {
+  const r = Math.round(change)
+  if (r === 0) return { text: '0', dir: 'flat' }
+  return r > 0 ? { text: `▲ ${r}`, dir: 'up' } : { text: `▼ ${-r}`, dir: 'down' }
+}
