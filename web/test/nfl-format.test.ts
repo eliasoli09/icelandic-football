@@ -20,3 +20,19 @@ describe('NFL-snið', () => {
     expect(Object.keys(REASON_LABEL).sort()).toEqual(['alpha', 'common', 'conference', 'diff', 'division', 'h2h', 'sov'])
   })
 })
+
+import { barColor, modelSpreadLabel, probLabel } from '../src/lib/nfl/format'
+
+describe('spásnið', () => {
+  it('líkur og forgjöf líkansins á hálfu stigi', () => {
+    expect(probLabel(0.584)).toBe('58%')
+    expect(modelSpreadLabel('DEN', 'SEA', -2.2)).toBe('SEA −2')
+    expect(modelSpreadLabel('DEN', 'SEA', 3.3)).toBe('DEN −3,5')
+    expect(modelSpreadLabel('DEN', 'SEA', 0.1)).toBe('Jafnt')
+  })
+  it('litur sem sést: dökkblár víkur fyrir aukalit', () => {
+    expect(barColor({ color: '#002244', color2: '#69be28' })).toBe('#69be28')
+    expect(barColor({ color: '#e31837', color2: '#ffb612' })).toBe('#e31837')
+    expect(barColor({ color: '#000000', color2: '#ffffff' })).toBe('var(--text-2)')
+  })
+})

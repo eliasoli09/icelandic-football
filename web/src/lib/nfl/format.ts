@@ -25,3 +25,23 @@ export const REASON_LABEL: Record<Criterion, string> = {
   diff: 'raðað eftir stigamismun',
   alpha: 'jafnt á öllu, raðað eftir stafrófi',
 }
+
+export const probLabel = (p: number) => `${Math.round(p * 100)}%`
+
+/** The model's margin on the same scale as Vegas, rounded to the half point. */
+export const modelSpreadLabel = (home: string, away: string, spread: number) =>
+  spreadLabel({ home, away, spread_line: Math.round(spread * 2) / 2 })
+
+const luminance = (hex: string) => {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex)
+  if (!m) return 0.5
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16) / 255)
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+/** The club colour that will show on both themes: navy and black vanish on the dark one. */
+export function barColor(team: { color: string; color2: string } | undefined): string {
+  if (!team) return 'var(--text-2)'
+  const ok = (c: string) => { const l = luminance(c); return l > 0.12 && l < 0.85 }
+  return ok(team.color) ? team.color : ok(team.color2) ? team.color2 : 'var(--text-2)'
+}

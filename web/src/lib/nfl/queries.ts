@@ -1,4 +1,5 @@
 import { db } from '../db'
+import { stateFromRows, type EloRow, type EloState } from './elo'
 import type { NflGame, NflTeam } from './types'
 
 export async function nflTeams(): Promise<NflTeam[]> {
@@ -20,11 +21,61 @@ export async function nflSeasonGames(season: number): Promise<NflGame[]> {
     const { data, error } = await db()
       .from('nfl_games').select('*').eq('season', season).order('kickoff').order('game_id').range(from, from + 999)
     if (error) throw error
-    out.push(...((data ?? []) as NflGame[]).map((g) => ({
-      ...g,
-      spread_line: g.spread_line === null ? null : Number(g.spread_line),
-      total_line: g.total_line === null ? null : Number(g.total_line),
-    })))
+    out.push(...((data ?? []) as NflGame[]).map(normalize))
     if (!data || data.length < 1000) return out
   }
+}
+
+// numeric columns arrive as strings from PostgREST
+const num = (x: unknown) => (x === null || x === undefined ? null : Number(x))
+function normalize(g: NflGame): NflGame {
+  return { ...g, spread_line: num(g.spread_line), total_line: num(g.total_line) }
+}
+
+export async function nflGame(id: string): Promise<NflGame | null> {
+  const { data, error } = await db().from('nfl_games').select('*').eq('game_id', id).maybeSingle()
+  if (error) throw error
+  return data ? normalize(data as NflGame) : null
+}
+
+/** Last meetings of two clubs under any of their names (OAK and LV are one club). */
+export async function nflMeetings(a: string[], b: string[], limit = 5): Promise<NflGame[]> {
+  const A = a.join(',')
+  const B = b.join(',')
+  const { data, error } = await db()
+    .from('nfl_games').select('*')
+    .or(`and(home.in.(${A}),away.in.(${B})),and(home.in.(${B}),away.in.(${A}))`)
+    .not('home_score', 'is', null)
+    .order('kickoff', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+  return (data ?? []).map((g) => normalize(g as NflGame))
+}
+
+export type StoredElo = EloRow
+
+export async function nflEloRows(seasons: number[]): Promise<StoredElo[]> {
+  const out: StoredElo[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db()
+      .from('nfl_elo').select('*').in('season', seasons).order('season').order('week').order('game_id').range(from, from + 999)
+    if (error) throw error
+    out.push(...(data ?? []).map((r) => ({ ...r, elo_before: Number(r.elo_before), elo_after: Number(r.elo_after), p_win: Number(r.p_win) }) as StoredElo))
+    if (!data || data.length < 1000) return out
+  }
+}
+
+export interface SeasonModel {
+  season: number
+  games: NflGame[]
+  teams: NflTeam[]
+  /** This season's and last season's rows, oldest first. */
+  elo: StoredElo[]
+  state: EloState
+}
+
+/** Everything a page needs to show and forecast one season. Last season's rows cover clubs yet to play. */
+export async function nflSeasonModel(season: number): Promise<SeasonModel> {
+  const [games, teams, elo] = await Promise.all([nflSeasonGames(season), nflTeams(), nflEloRows([season - 1, season])])
+  return { season, games, teams, elo, state: stateFromRows(elo, games) }
 }

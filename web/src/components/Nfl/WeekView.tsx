@@ -1,14 +1,17 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react'
 import { NflLogo } from './NflLogo'
+import { ProbSplit } from './ProbSplit'
+import type { Forecast } from '@/lib/nfl/forecast'
 import { clock, dayKey, dayLabel, isSmallHours } from '@/lib/nfl/time'
-import { spreadLabel, totalLabel } from '@/lib/nfl/format'
+import { modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
 import { weekLabel, weekTypes } from '@/lib/nfl/week'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 
-export function WeekView({ season, games, teams, initialWeek }: { season: number; games: NflGame[]; teams: NflTeam[]; initialWeek: number }) {
+export function WeekView({ season, games, teams, initialWeek, forecasts }: { season: number; games: NflGame[]; teams: NflTeam[]; initialWeek: number; forecasts: Record<string, Forecast> }) {
   const byAbbr = useMemo(() => new Map(teams.map((t) => [t.abbr, t])), [teams])
   const weeks = useMemo(() => weekTypes(games), [games])
   const [week, setWeek] = useState(initialWeek)
@@ -57,7 +60,7 @@ export function WeekView({ season, games, teams, initialWeek }: { season: number
           <div key={key}>
             <h2 className="text-sm font-semibold muted mb-2">{dayLabel(list[0].kickoff)}</h2>
             <div className="card divide-y" style={{ borderColor: 'var(--border)' }}>
-              {list.map((g) => <GameRow key={g.game_id} g={g} home={byAbbr.get(g.home)} away={byAbbr.get(g.away)} />)}
+              {list.map((g) => <GameRow key={g.game_id} g={g} f={forecasts[g.game_id]} home={byAbbr.get(g.home)} away={byAbbr.get(g.away)} />)}
             </div>
           </div>
         ))}
@@ -66,7 +69,7 @@ export function WeekView({ season, games, teams, initialWeek }: { season: number
   )
 }
 
-function Side({ team, abbr, score, won }: { team: NflTeam | undefined; abbr: string; score: number | null; won: boolean }) {
+function Side({ team, abbr, score, won, p }: { team: NflTeam | undefined; abbr: string; score: number | null; won: boolean; p: number | null }) {
   return (
     <div className="flex items-center gap-2.5 min-w-0">
       <NflLogo team={team} size={26} />
@@ -74,19 +77,26 @@ function Side({ team, abbr, score, won }: { team: NflTeam | undefined; abbr: str
         <span className="hidden sm:inline">{team?.name ?? abbr}</span>
         <span className="sm:hidden">{abbr}</span>
       </span>
-      {score !== null && <span className={`ml-auto stat text-lg ${won ? '' : 'muted'}`}>{score}</span>}
+      {score !== null ? (
+        <span className={`ml-auto stat text-lg ${won ? '' : 'muted'}`}>{score}</span>
+      ) : p !== null ? (
+        <span className="ml-auto num text-sm font-semibold">{probLabel(p)}</span>
+      ) : null}
     </div>
   )
 }
 
-function GameRow({ g, home, away }: { g: NflGame; home: NflTeam | undefined; away: NflTeam | undefined }) {
+function GameRow({ g, f, home, away }: { g: NflGame; f: Forecast | undefined; home: NflTeam | undefined; away: NflTeam | undefined }) {
   const played = isPlayed(g)
-  const spread = spreadLabel(g)
+  const vegas = spreadLabel(g)
+  const fav = f && (f.pHome >= 0.5 ? { abbr: g.home, p: f.pHome } : { abbr: g.away, p: 1 - f.pHome })
+  const qbs = f?.newQb ? [f.newQb.away, f.newQb.home].filter((x) => x !== null) : []
   return (
-    <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 px-4 py-3" style={{ borderColor: 'var(--border)' }}>
+    <Link href={`/nfl/leikur/${g.game_id}`} className="trow grid grid-cols-[1fr_auto] gap-x-4 gap-y-1.5 px-4 py-3" style={{ borderColor: 'var(--border)' }}>
       <div className="grid gap-1.5 min-w-0">
-        <Side team={away} abbr={g.away} score={g.away_score} won={played && g.away_score! > g.home_score!} />
-        <Side team={home} abbr={g.home} score={g.home_score} won={played && g.home_score! > g.away_score!} />
+        <Side team={away} abbr={g.away} score={g.away_score} won={played && g.away_score! > g.home_score!} p={!played && f ? 1 - f.pHome : null} />
+        <Side team={home} abbr={g.home} score={g.home_score} won={played && g.home_score! > g.away_score!} p={!played && f ? f.pHome : null} />
+        {!played && f && <ProbSplit pHome={f.pHome} home={home} away={away} />}
       </div>
       <div className="text-right text-xs muted grid content-center gap-0.5 num">
         {played ? (
@@ -99,10 +109,18 @@ function GameRow({ g, home, away }: { g: NflGame; home: NflTeam | undefined; awa
             {clock(g.kickoff)}
           </span>
         )}
-        {!played && spread && <span>Forgjöf {spread}</span>}
+        {!played && f?.spread != null && <span>Líkanið {modelSpreadLabel(g.home, g.away, f.spread)}</span>}
+        {!played && vegas && <span>Vegas {vegas}</span>}
         {!played && g.total_line !== null && <span>Heildarstig {totalLabel(g.total_line)}</span>}
+        {played && fav && <span>líkanið gaf {fav.abbr} {probLabel(fav.p)}</span>}
         {g.neutral && g.stadium && <span>{g.stadium}</span>}
       </div>
-    </div>
+      {!played && qbs.map((q) => (
+        <p key={q.qb} className="col-span-2 text-[11px] inline-flex items-center gap-1.5" style={{ color: 'var(--accent)' }}>
+          <AlertTriangle size={12} aria-hidden />
+          Nýr leikstjórnandi: {q.qb} (í stað {q.usual})
+        </p>
+      ))}
+    </Link>
   )
 }
