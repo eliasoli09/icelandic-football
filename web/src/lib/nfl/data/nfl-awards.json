@@ -1,0 +1,2634 @@
+[
+ {
+  "season": 2025,
+  "award": "CPOY",
+  "name": "Christian McCaffrey",
+  "position": "RB",
+  "team": "San Francisco",
+  "player_id": "00-0033280"
+ },
+ {
+  "season": 2025,
+  "award": "DPOY",
+  "name": "Myles Garrett",
+  "position": "DE",
+  "team": "Cleveland",
+  "player_id": "00-0033868"
+ },
+ {
+  "season": 2025,
+  "award": "DROY",
+  "name": "Carson Schwesinger",
+  "team": "Cleveland",
+  "position": "LB",
+  "player_id": "00-0040579"
+ },
+ {
+  "season": 2025,
+  "award": "MVP",
+  "name": "Matthew Stafford",
+  "position": "Quarterback",
+  "team": "Los Angeles Rams",
+  "player_id": "00-0026498"
+ },
+ {
+  "season": 2025,
+  "award": "OPOY",
+  "name": "Jaxon Smith-Njigba",
+  "position": "Wide receiver",
+  "team": "Seattle Seahawks",
+  "player_id": "00-0038543"
+ },
+ {
+  "season": 2025,
+  "award": "OROY",
+  "name": "Tetairoa McMillan",
+  "team": "Carolina",
+  "position": "WR",
+  "player_id": "00-0040124"
+ },
+ {
+  "season": 2024,
+  "award": "CPOY",
+  "name": "Joe Burrow",
+  "position": "QB",
+  "team": "Cincinnati",
+  "player_id": "00-0036442"
+ },
+ {
+  "season": 2024,
+  "award": "DPOY",
+  "name": "Patrick Surtain II",
+  "position": "CB",
+  "team": "Denver",
+  "player_id": "00-0036874"
+ },
+ {
+  "season": 2024,
+  "award": "DROY",
+  "name": "Jared Verse",
+  "team": "LA Rams",
+  "position": "LB",
+  "player_id": "00-0039852"
+ },
+ {
+  "season": 2024,
+  "award": "MVP",
+  "name": "Josh Allen",
+  "position": "Quarterback",
+  "team": "Buffalo Bills",
+  "player_id": "00-0034857"
+ },
+ {
+  "season": 2024,
+  "award": "OPOY",
+  "name": "Saquon Barkley",
+  "position": "Running back",
+  "team": "Philadelphia Eagles",
+  "player_id": "00-0034844"
+ },
+ {
+  "season": 2024,
+  "award": "OROY",
+  "name": "Jayden Daniels",
+  "team": "Washington",
+  "position": "QB",
+  "player_id": "00-0039910"
+ },
+ {
+  "season": 2023,
+  "award": "CPOY",
+  "name": "Joe Flacco",
+  "position": "QB",
+  "team": "Cleveland",
+  "player_id": "00-0026158"
+ },
+ {
+  "season": 2023,
+  "award": "DPOY",
+  "name": "Myles Garrett",
+  "position": "DE",
+  "team": "Cleveland",
+  "player_id": "00-0033868"
+ },
+ {
+  "season": 2023,
+  "award": "DROY",
+  "name": "Will Anderson Jr.",
+  "team": "Houston",
+  "position": "DE",
+  "player_id": "00-0039108"
+ },
+ {
+  "season": 2023,
+  "award": "MVP",
+  "name": "Lamar Jackson",
+  "position": "Quarterback",
+  "team": "Baltimore Ravens",
+  "player_id": "00-0034796"
+ },
+ {
+  "season": 2023,
+  "award": "OPOY",
+  "name": "Christian McCaffrey",
+  "position": "Running back",
+  "team": "San Francisco 49ers",
+  "player_id": "00-0033280"
+ },
+ {
+  "season": 2023,
+  "award": "OROY",
+  "name": "C. J. Stroud",
+  "team": "Houston",
+  "position": "QB",
+  "player_id": "00-0039163"
+ },
+ {
+  "season": 2022,
+  "award": "CPOY",
+  "name": "Geno Smith",
+  "position": "QB",
+  "team": "Seattle",
+  "player_id": "00-0030565"
+ },
+ {
+  "season": 2022,
+  "award": "DPOY",
+  "name": "Nick Bosa",
+  "position": "DE",
+  "team": "San Francisco",
+  "player_id": "00-0035717"
+ },
+ {
+  "season": 2022,
+  "award": "DROY",
+  "name": "Sauce Gardner",
+  "team": "NY Jets",
+  "position": "CB",
+  "player_id": "00-0037190"
+ },
+ {
+  "season": 2022,
+  "award": "MVP",
+  "name": "Patrick Mahomes",
+  "position": "Quarterback",
+  "team": "Kansas City Chiefs",
+  "player_id": "00-0033873"
+ },
+ {
+  "season": 2022,
+  "award": "OPOY",
+  "name": "Justin Jefferson",
+  "position": "Wide receiver",
+  "team": "Minnesota Vikings",
+  "player_id": "00-0036322"
+ },
+ {
+  "season": 2022,
+  "award": "OROY",
+  "name": "Garrett Wilson",
+  "team": "NY Jets",
+  "position": "WR",
+  "player_id": "00-0037740"
+ },
+ {
+  "season": 2021,
+  "award": "CPOY",
+  "name": "Joe Burrow",
+  "position": "QB",
+  "team": "Cincinnati",
+  "player_id": "00-0036442"
+ },
+ {
+  "season": 2021,
+  "award": "DPOY",
+  "name": "T. J. Watt",
+  "position": "LB",
+  "team": "Pittsburgh",
+  "player_id": "00-0033886"
+ },
+ {
+  "season": 2021,
+  "award": "DROY",
+  "name": "Micah Parsons",
+  "team": "Dallas",
+  "position": "LB",
+  "player_id": "00-0036932"
+ },
+ {
+  "season": 2021,
+  "award": "MVP",
+  "name": "Aaron Rodgers",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": "00-0023459"
+ },
+ {
+  "season": 2021,
+  "award": "OPOY",
+  "name": "Cooper Kupp",
+  "position": "Wide receiver",
+  "team": "Los Angeles Rams",
+  "player_id": "00-0033908"
+ },
+ {
+  "season": 2021,
+  "award": "OROY",
+  "name": "Ja'Marr Chase",
+  "team": "Cincinnati",
+  "position": "WR",
+  "player_id": "00-0036900"
+ },
+ {
+  "season": 2020,
+  "award": "CPOY",
+  "name": "Alex Smith",
+  "position": "QB",
+  "team": "Washington",
+  "player_id": "00-0023436"
+ },
+ {
+  "season": 2020,
+  "award": "DPOY",
+  "name": "Aaron Donald",
+  "position": "DT",
+  "team": "LA Rams",
+  "player_id": "00-0031388"
+ },
+ {
+  "season": 2020,
+  "award": "DROY",
+  "name": "Chase Young",
+  "team": "Washington",
+  "position": "DE",
+  "player_id": "00-0036321"
+ },
+ {
+  "season": 2020,
+  "award": "MVP",
+  "name": "Aaron Rodgers",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": "00-0023459"
+ },
+ {
+  "season": 2020,
+  "award": "OPOY",
+  "name": "Derrick Henry",
+  "position": "Running back",
+  "team": "Tennessee Titans",
+  "player_id": "00-0032764"
+ },
+ {
+  "season": 2020,
+  "award": "OROY",
+  "name": "Justin Herbert",
+  "team": "LA Chargers",
+  "position": "QB",
+  "player_id": "00-0036355"
+ },
+ {
+  "season": 2019,
+  "award": "CPOY",
+  "name": "Ryan Tannehill",
+  "position": "QB",
+  "team": "Tennessee",
+  "player_id": "00-0029701"
+ },
+ {
+  "season": 2019,
+  "award": "DPOY",
+  "name": "Stephon Gilmore",
+  "position": "CB",
+  "team": "New England",
+  "player_id": "00-0029542"
+ },
+ {
+  "season": 2019,
+  "award": "DROY",
+  "name": "Nick Bosa",
+  "team": "San Francisco",
+  "position": "DE",
+  "player_id": "00-0035717"
+ },
+ {
+  "season": 2019,
+  "award": "MVP",
+  "name": "Lamar Jackson",
+  "position": "Quarterback",
+  "team": "Baltimore Ravens",
+  "player_id": "00-0034796"
+ },
+ {
+  "season": 2019,
+  "award": "OPOY",
+  "name": "Michael Thomas",
+  "position": "Wide receiver",
+  "team": "New Orleans Saints",
+  "player_id": "00-0032765"
+ },
+ {
+  "season": 2019,
+  "award": "OROY",
+  "name": "Kyler Murray",
+  "team": "Arizona",
+  "position": "QB",
+  "player_id": "00-0035228"
+ },
+ {
+  "season": 2018,
+  "award": "CPOY",
+  "name": "Andrew Luck",
+  "position": "QB",
+  "team": "Indianapolis",
+  "player_id": "00-0029668"
+ },
+ {
+  "season": 2018,
+  "award": "DPOY",
+  "name": "Aaron Donald",
+  "position": "DT",
+  "team": "LA Rams",
+  "player_id": "00-0031388"
+ },
+ {
+  "season": 2018,
+  "award": "DROY",
+  "name": "Shaquille Leonard",
+  "team": "Indianapolis",
+  "position": "LB",
+  "player_id": "00-0034846"
+ },
+ {
+  "season": 2018,
+  "award": "MVP",
+  "name": "Patrick Mahomes",
+  "position": "Quarterback",
+  "team": "Kansas City Chiefs",
+  "player_id": "00-0033873"
+ },
+ {
+  "season": 2018,
+  "award": "OPOY",
+  "name": "Patrick Mahomes",
+  "position": "Quarterback",
+  "team": "Kansas City Chiefs",
+  "player_id": "00-0033873"
+ },
+ {
+  "season": 2018,
+  "award": "OROY",
+  "name": "Saquon Barkley",
+  "team": "NY Giants",
+  "position": "RB",
+  "player_id": "00-0034844"
+ },
+ {
+  "season": 2017,
+  "award": "CPOY",
+  "name": "Keenan Allen",
+  "position": "WR",
+  "team": "LA Chargers",
+  "player_id": "00-0030279"
+ },
+ {
+  "season": 2017,
+  "award": "DPOY",
+  "name": "Aaron Donald",
+  "position": "DT",
+  "team": "LA Rams",
+  "player_id": "00-0031388"
+ },
+ {
+  "season": 2017,
+  "award": "DROY",
+  "name": "Marshon Lattimore",
+  "team": "New Orleans",
+  "position": "CB",
+  "player_id": "00-0033874"
+ },
+ {
+  "season": 2017,
+  "award": "MVP",
+  "name": "Tom Brady",
+  "position": "Quarterback",
+  "team": "New England Patriots",
+  "player_id": "00-0019596"
+ },
+ {
+  "season": 2017,
+  "award": "OPOY",
+  "name": "Todd Gurley",
+  "position": "Running back",
+  "team": "Los Angeles Rams",
+  "player_id": "00-0032241"
+ },
+ {
+  "season": 2017,
+  "award": "OROY",
+  "name": "Alvin Kamara",
+  "team": "New Orleans",
+  "position": "RB",
+  "player_id": "00-0033906"
+ },
+ {
+  "season": 2016,
+  "award": "CPOY",
+  "name": "Jordy Nelson",
+  "position": "WR",
+  "team": "Green Bay",
+  "player_id": "00-0026176"
+ },
+ {
+  "season": 2016,
+  "award": "DPOY",
+  "name": "Khalil Mack",
+  "position": "DE",
+  "team": "Oakland",
+  "player_id": "00-0031040"
+ },
+ {
+  "season": 2016,
+  "award": "DROY",
+  "name": "Joey Bosa",
+  "team": "San Diego",
+  "position": "DE",
+  "player_id": "00-0033156"
+ },
+ {
+  "season": 2016,
+  "award": "MVP",
+  "name": "Matt Ryan",
+  "position": "Quarterback",
+  "team": "Atlanta Falcons",
+  "player_id": "00-0026143"
+ },
+ {
+  "season": 2016,
+  "award": "OPOY",
+  "name": "Matt Ryan",
+  "position": "Quarterback",
+  "team": "Atlanta Falcons",
+  "player_id": "00-0026143"
+ },
+ {
+  "season": 2016,
+  "award": "OROY",
+  "name": "Dak Prescott",
+  "team": "Dallas",
+  "position": "QB",
+  "player_id": "00-0033077"
+ },
+ {
+  "season": 2015,
+  "award": "CPOY",
+  "name": "Eric Berry",
+  "position": "S",
+  "team": "Kansas City",
+  "player_id": "00-0027858"
+ },
+ {
+  "season": 2015,
+  "award": "DPOY",
+  "name": "J. J. Watt",
+  "position": "DE",
+  "team": "Houston",
+  "player_id": "00-0027949"
+ },
+ {
+  "season": 2015,
+  "award": "DROY",
+  "name": "Marcus Peters",
+  "team": "Kansas City",
+  "position": "CB",
+  "player_id": "00-0032165"
+ },
+ {
+  "season": 2015,
+  "award": "MVP",
+  "name": "Cam Newton",
+  "position": "Quarterback",
+  "team": "Carolina Panthers",
+  "player_id": "00-0027939"
+ },
+ {
+  "season": 2015,
+  "award": "OPOY",
+  "name": "Cam Newton",
+  "position": "Quarterback",
+  "team": "Carolina Panthers",
+  "player_id": "00-0027939"
+ },
+ {
+  "season": 2015,
+  "award": "OROY",
+  "name": "Todd Gurley",
+  "team": "St. Louis",
+  "position": "RB",
+  "player_id": "00-0032241"
+ },
+ {
+  "season": 2014,
+  "award": "CPOY",
+  "name": "Rob Gronkowski",
+  "position": "TE",
+  "team": "New England",
+  "player_id": "00-0027656"
+ },
+ {
+  "season": 2014,
+  "award": "DPOY",
+  "name": "J. J. Watt",
+  "position": "DE",
+  "team": "Houston",
+  "player_id": "00-0027949"
+ },
+ {
+  "season": 2014,
+  "award": "DROY",
+  "name": "Aaron Donald",
+  "team": "St. Louis",
+  "position": "DT",
+  "player_id": "00-0031388"
+ },
+ {
+  "season": 2014,
+  "award": "MVP",
+  "name": "Aaron Rodgers",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": "00-0023459"
+ },
+ {
+  "season": 2014,
+  "award": "OPOY",
+  "name": "DeMarco Murray",
+  "position": "Running back",
+  "team": "Dallas Cowboys",
+  "player_id": "00-0028009"
+ },
+ {
+  "season": 2014,
+  "award": "OROY",
+  "name": "Odell Beckham Jr.",
+  "team": "NY Giants",
+  "position": "WR",
+  "player_id": "00-0031235"
+ },
+ {
+  "season": 2013,
+  "award": "CPOY",
+  "name": "Philip Rivers",
+  "position": "QB",
+  "team": "San Diego",
+  "player_id": "00-0022942"
+ },
+ {
+  "season": 2013,
+  "award": "DPOY",
+  "name": "Luke Kuechly",
+  "position": "LB",
+  "team": "Carolina",
+  "player_id": "00-0029248"
+ },
+ {
+  "season": 2013,
+  "award": "DROY",
+  "name": "Sheldon Richardson",
+  "team": "NY Jets",
+  "position": "DE",
+  "player_id": "00-0030573"
+ },
+ {
+  "season": 2013,
+  "award": "MVP",
+  "name": "Peyton Manning",
+  "position": "Quarterback",
+  "team": "Denver Broncos",
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2013,
+  "award": "OPOY",
+  "name": "Peyton Manning",
+  "position": "Quarterback",
+  "team": "Denver Broncos",
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2013,
+  "award": "OROY",
+  "name": "Eddie Lacy",
+  "team": "Green Bay",
+  "position": "RB",
+  "player_id": "00-0030485"
+ },
+ {
+  "season": 2012,
+  "award": "CPOY",
+  "name": "Peyton Manning",
+  "position": "QB",
+  "team": "Denver",
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2012,
+  "award": "DPOY",
+  "name": "J. J. Watt",
+  "position": "DE",
+  "team": "Houston",
+  "player_id": "00-0027949"
+ },
+ {
+  "season": 2012,
+  "award": "DROY",
+  "name": "Luke Kuechly",
+  "team": "Carolina",
+  "position": "LB",
+  "player_id": "00-0029248"
+ },
+ {
+  "season": 2012,
+  "award": "MVP",
+  "name": "Adrian Peterson",
+  "position": "Running back",
+  "team": "Minnesota Vikings",
+  "player_id": "00-0025394"
+ },
+ {
+  "season": 2012,
+  "award": "OPOY",
+  "name": "Adrian Peterson",
+  "position": "Running back",
+  "team": "Minnesota Vikings",
+  "player_id": "00-0025394"
+ },
+ {
+  "season": 2012,
+  "award": "OROY",
+  "name": "Robert Griffin III",
+  "team": "Washington",
+  "position": "QB",
+  "player_id": "00-0029665"
+ },
+ {
+  "season": 2011,
+  "award": "CPOY",
+  "name": "Matthew Stafford",
+  "position": "QB",
+  "team": "Detroit",
+  "player_id": "00-0026498"
+ },
+ {
+  "season": 2011,
+  "award": "DPOY",
+  "name": "Terrell Suggs",
+  "position": "LB",
+  "team": "Baltimore",
+  "player_id": "00-0022161"
+ },
+ {
+  "season": 2011,
+  "award": "DROY",
+  "name": "Von Miller",
+  "team": "Denver",
+  "position": "LB",
+  "player_id": "00-0027940"
+ },
+ {
+  "season": 2011,
+  "award": "MVP",
+  "name": "Aaron Rodgers",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": "00-0023459"
+ },
+ {
+  "season": 2011,
+  "award": "OPOY",
+  "name": "Drew Brees",
+  "position": "Quarterback",
+  "team": "New Orleans Saints",
+  "player_id": "00-0020531"
+ },
+ {
+  "season": 2011,
+  "award": "OROY",
+  "name": "Cam Newton",
+  "team": "Carolina",
+  "position": "QB",
+  "player_id": "00-0027939"
+ },
+ {
+  "season": 2010,
+  "award": "CPOY",
+  "name": "Michael Vick",
+  "position": "QB",
+  "team": "Philadelphia",
+  "player_id": "00-0020245"
+ },
+ {
+  "season": 2010,
+  "award": "DPOY",
+  "name": "Troy Polamalu",
+  "position": "S",
+  "team": "Pittsburgh",
+  "player_id": "00-0022119"
+ },
+ {
+  "season": 2010,
+  "award": "DROY",
+  "name": "Ndamukong Suh",
+  "team": "Detroit",
+  "position": "DT",
+  "player_id": "00-0027855"
+ },
+ {
+  "season": 2010,
+  "award": "MVP",
+  "name": "Tom Brady",
+  "position": "Quarterback",
+  "team": "New England Patriots",
+  "player_id": "00-0019596"
+ },
+ {
+  "season": 2010,
+  "award": "OPOY",
+  "name": "Tom Brady",
+  "position": "Quarterback",
+  "team": "New England Patriots",
+  "player_id": "00-0019596"
+ },
+ {
+  "season": 2010,
+  "award": "OROY",
+  "name": "Sam Bradford",
+  "team": "St. Louis",
+  "position": "QB",
+  "player_id": "00-0027854"
+ },
+ {
+  "season": 2009,
+  "award": "CPOY",
+  "name": "Tom Brady",
+  "position": "QB",
+  "team": "New England",
+  "player_id": "00-0019596"
+ },
+ {
+  "season": 2009,
+  "award": "DPOY",
+  "name": "Charles Woodson",
+  "position": "CB",
+  "team": "Green Bay",
+  "player_id": "00-0018227"
+ },
+ {
+  "season": 2009,
+  "award": "DROY",
+  "name": "Brian Cushing",
+  "team": "Houston",
+  "position": "LB",
+  "player_id": "00-0026991"
+ },
+ {
+  "season": 2009,
+  "award": "MVP",
+  "name": "Peyton Manning",
+  "position": "Quarterback",
+  "team": "Indianapolis Colts",
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2009,
+  "award": "OPOY",
+  "name": "Chris Johnson",
+  "position": "Running back",
+  "team": "Tennessee Titans",
+  "player_id": "00-0026164"
+ },
+ {
+  "season": 2009,
+  "award": "OROY",
+  "name": "Percy Harvin",
+  "team": "Minnesota",
+  "position": "WR",
+  "player_id": "00-0026998"
+ },
+ {
+  "season": 2008,
+  "award": "CPOY",
+  "name": "Chad Pennington",
+  "position": "QB",
+  "team": "Miami",
+  "player_id": "00-0019559"
+ },
+ {
+  "season": 2008,
+  "award": "DPOY",
+  "name": "James Harrison",
+  "position": "LB",
+  "team": "Pittsburgh",
+  "player_id": "00-0020712"
+ },
+ {
+  "season": 2008,
+  "award": "DROY",
+  "name": "Jerod Mayo",
+  "team": "New England",
+  "position": "LB",
+  "player_id": "00-0026150"
+ },
+ {
+  "season": 2008,
+  "award": "MVP",
+  "name": "Peyton Manning",
+  "position": "Quarterback",
+  "team": "Indianapolis Colts",
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2008,
+  "award": "OPOY",
+  "name": "Drew Brees",
+  "position": "Quarterback",
+  "team": "New Orleans Saints",
+  "player_id": "00-0020531"
+ },
+ {
+  "season": 2008,
+  "award": "OROY",
+  "name": "Matt Ryan",
+  "team": "Atlanta",
+  "position": "QB",
+  "player_id": "00-0026143"
+ },
+ {
+  "season": 2007,
+  "award": "CPOY",
+  "name": "Greg Ellis",
+  "position": "DE",
+  "team": "Dallas",
+  "player_id": "00-0004851"
+ },
+ {
+  "season": 2007,
+  "award": "DPOY",
+  "name": "Bob Sanders",
+  "position": "S",
+  "team": "Indianapolis",
+  "player_id": "00-0022944"
+ },
+ {
+  "season": 2007,
+  "award": "DROY",
+  "name": "Patrick Willis",
+  "team": "San Francisco",
+  "position": "LB",
+  "player_id": "00-0025398"
+ },
+ {
+  "season": 2007,
+  "award": "MVP",
+  "name": "Tom Brady",
+  "position": "Quarterback",
+  "team": "New England Patriots",
+  "player_id": "00-0019596"
+ },
+ {
+  "season": 2007,
+  "award": "OPOY",
+  "name": "Tom Brady",
+  "position": "Quarterback",
+  "team": "New England Patriots",
+  "player_id": "00-0019596"
+ },
+ {
+  "season": 2007,
+  "award": "OROY",
+  "name": "Adrian Peterson",
+  "team": "Minnesota",
+  "position": "RB",
+  "player_id": "00-0025394"
+ },
+ {
+  "season": 2006,
+  "award": "CPOY",
+  "name": "Chad Pennington",
+  "position": "QB",
+  "team": "NY Jets",
+  "player_id": "00-0019559"
+ },
+ {
+  "season": 2006,
+  "award": "DPOY",
+  "name": "Jason Taylor",
+  "position": "DE",
+  "team": "Miami",
+  "player_id": "00-0016112"
+ },
+ {
+  "season": 2006,
+  "award": "DROY",
+  "name": "DeMeco Ryans",
+  "team": "Houston",
+  "position": "LB",
+  "player_id": "00-0024248"
+ },
+ {
+  "season": 2006,
+  "award": "MVP",
+  "name": "LaDainian Tomlinson",
+  "position": "Running back",
+  "team": "San Diego Chargers",
+  "player_id": "00-0020536"
+ },
+ {
+  "season": 2006,
+  "award": "OPOY",
+  "name": "LaDainian Tomlinson",
+  "position": "Running back",
+  "team": "San Diego Chargers",
+  "player_id": "00-0020536"
+ },
+ {
+  "season": 2006,
+  "award": "OROY",
+  "name": "Vince Young",
+  "team": "Tennessee",
+  "position": "QB",
+  "player_id": "00-0024218"
+ },
+ {
+  "season": 2005,
+  "award": "CPOY",
+  "name": "Steve Smith Sr.",
+  "position": "WR",
+  "team": "Carolina",
+  "player_id": "00-0020337"
+ },
+ {
+  "season": 2005,
+  "award": "CPOY",
+  "name": "Tedy Bruschi",
+  "position": "LB",
+  "team": "New England",
+  "player_id": "00-0002123"
+ },
+ {
+  "season": 2005,
+  "award": "DPOY",
+  "name": "Brian Urlacher",
+  "position": "LB",
+  "team": "Chicago",
+  "player_id": "00-0019456"
+ },
+ {
+  "season": 2005,
+  "award": "DROY",
+  "name": "Shawne Merriman",
+  "team": "San Diego",
+  "position": "LB",
+  "player_id": "00-0023446"
+ },
+ {
+  "season": 2005,
+  "award": "MVP",
+  "name": "Shaun Alexander",
+  "position": "Running back",
+  "team": "Seattle Seahawks",
+  "player_id": "00-0019647"
+ },
+ {
+  "season": 2005,
+  "award": "OPOY",
+  "name": "Shaun Alexander",
+  "position": "Running back",
+  "team": "Seattle Seahawks",
+  "player_id": "00-0019647"
+ },
+ {
+  "season": 2005,
+  "award": "OROY",
+  "name": "Cadillac Williams",
+  "team": "Tampa Bay",
+  "position": "RB",
+  "player_id": "00-0023440"
+ },
+ {
+  "season": 2004,
+  "award": "CPOY",
+  "name": "Drew Brees",
+  "position": "QB",
+  "team": "San Diego",
+  "player_id": "00-0020531"
+ },
+ {
+  "season": 2004,
+  "award": "DPOY",
+  "name": "Ed Reed",
+  "position": "S",
+  "team": "Baltimore",
+  "player_id": "00-0021377"
+ },
+ {
+  "season": 2004,
+  "award": "DROY",
+  "name": "Jonathan Vilma",
+  "team": "NY Jets",
+  "position": "LB",
+  "player_id": "00-0022778"
+ },
+ {
+  "season": 2004,
+  "award": "MVP",
+  "name": "Peyton Manning",
+  "position": "Quarterback",
+  "team": "Indianapolis Colts",
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2004,
+  "award": "OPOY",
+  "name": "Peyton Manning",
+  "position": "Quarterback",
+  "team": "Indianapolis Colts",
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2004,
+  "award": "OROY",
+  "name": "Ben Roethlisberger",
+  "team": "Pittsburgh",
+  "position": "QB",
+  "player_id": "00-0022924"
+ },
+ {
+  "season": 2003,
+  "award": "CPOY",
+  "name": "Jon Kitna",
+  "position": "QB",
+  "team": "Cincinnati",
+  "player_id": "00-0009311"
+ },
+ {
+  "season": 2003,
+  "award": "DPOY",
+  "name": "Ray Lewis",
+  "position": "LB",
+  "team": "Baltimore",
+  "player_id": "00-0009889"
+ },
+ {
+  "season": 2003,
+  "award": "DROY",
+  "name": "Terrell Suggs",
+  "team": "Baltimore",
+  "position": "LB",
+  "player_id": "00-0022161"
+ },
+ {
+  "season": 2003,
+  "award": "MVP",
+  "name": "Peyton Manning",
+  "position": null,
+  "team": null,
+  "player_id": "00-0010346"
+ },
+ {
+  "season": 2003,
+  "award": "MVP",
+  "name": "Steve McNair",
+  "position": null,
+  "team": null,
+  "player_id": "00-0011024"
+ },
+ {
+  "season": 2003,
+  "award": "OPOY",
+  "name": "Jamal Lewis",
+  "position": "Running back",
+  "team": "Baltimore Ravens",
+  "player_id": "00-0019693"
+ },
+ {
+  "season": 2003,
+  "award": "OROY",
+  "name": "Anquan Boldin",
+  "team": "Arizona",
+  "position": "WR",
+  "player_id": "00-0022084"
+ },
+ {
+  "season": 2002,
+  "award": "CPOY",
+  "name": "Tommy Maddox",
+  "position": "QB",
+  "team": "Pittsburgh",
+  "player_id": "00-0010261"
+ },
+ {
+  "season": 2002,
+  "award": "DPOY",
+  "name": "Derrick Brooks",
+  "position": "LB",
+  "team": "Tampa Bay",
+  "player_id": "00-0001833"
+ },
+ {
+  "season": 2002,
+  "award": "DROY",
+  "name": "Julius Peppers",
+  "team": "Carolina",
+  "position": "DE",
+  "player_id": "00-0021140"
+ },
+ {
+  "season": 2002,
+  "award": "MVP",
+  "name": "Rich Gannon",
+  "position": "Quarterback",
+  "team": "Oakland Raiders",
+  "player_id": "00-0005741"
+ },
+ {
+  "season": 2002,
+  "award": "OPOY",
+  "name": "Priest Holmes",
+  "position": "Running back",
+  "team": "Kansas City Chiefs",
+  "player_id": "00-0007661"
+ },
+ {
+  "season": 2002,
+  "award": "OROY",
+  "name": "Clinton Portis",
+  "team": "Denver",
+  "position": "RB",
+  "player_id": "00-0021179"
+ },
+ {
+  "season": 2001,
+  "award": "CPOY",
+  "name": "Garrison Hearst",
+  "position": "RB",
+  "team": "San Francisco",
+  "player_id": "00-0007180"
+ },
+ {
+  "season": 2001,
+  "award": "DPOY",
+  "name": "Michael Strahan",
+  "position": "DE",
+  "team": "NY Giants",
+  "player_id": "00-0015795"
+ },
+ {
+  "season": 2001,
+  "award": "DROY",
+  "name": "Kendrell Bell",
+  "team": "Pittsburgh",
+  "position": "LB",
+  "player_id": "00-0020317"
+ },
+ {
+  "season": 2001,
+  "award": "MVP",
+  "name": "Kurt Warner",
+  "position": "Quarterback",
+  "team": "St. Louis Rams",
+  "player_id": "00-0017200"
+ },
+ {
+  "season": 2001,
+  "award": "OPOY",
+  "name": "Marshall Faulk",
+  "position": "Running back",
+  "team": "St. Louis Rams",
+  "player_id": "00-0005092"
+ },
+ {
+  "season": 2001,
+  "award": "OROY",
+  "name": "Anthony Thomas",
+  "team": "Chicago",
+  "position": "RB",
+  "player_id": "00-0020403"
+ },
+ {
+  "season": 2000,
+  "award": "CPOY",
+  "name": "Joe Johnson",
+  "position": "DE",
+  "team": "New Orleans",
+  "player_id": "00-0008541"
+ },
+ {
+  "season": 2000,
+  "award": "DPOY",
+  "name": "Ray Lewis",
+  "position": "LB",
+  "team": "Baltimore",
+  "player_id": "00-0009889"
+ },
+ {
+  "season": 2000,
+  "award": "DROY",
+  "name": "Brian Urlacher",
+  "team": "Chicago",
+  "position": "LB",
+  "player_id": "00-0019456"
+ },
+ {
+  "season": 2000,
+  "award": "MVP",
+  "name": "Marshall Faulk",
+  "position": "Running back",
+  "team": "St. Louis Rams",
+  "player_id": "00-0005092"
+ },
+ {
+  "season": 2000,
+  "award": "OPOY",
+  "name": "Marshall Faulk",
+  "position": "Running back",
+  "team": "St. Louis Rams",
+  "player_id": "00-0005092"
+ },
+ {
+  "season": 2000,
+  "award": "OROY",
+  "name": "Mike Anderson",
+  "team": "Denver",
+  "position": "RB",
+  "player_id": "00-0019594"
+ },
+ {
+  "season": 1999,
+  "award": "CPOY",
+  "name": "Bryant Young",
+  "position": "DT",
+  "team": "San Francisco",
+  "player_id": "00-0018405"
+ },
+ {
+  "season": 1999,
+  "award": "DPOY",
+  "name": "Warren Sapp",
+  "position": "DT",
+  "team": "Tampa Bay",
+  "player_id": "00-0014358"
+ },
+ {
+  "season": 1999,
+  "award": "DROY",
+  "name": "Jevon Kearse",
+  "team": "Tennessee",
+  "position": "DE",
+  "player_id": "00-0009056"
+ },
+ {
+  "season": 1999,
+  "award": "MVP",
+  "name": "Kurt Warner",
+  "position": "Quarterback",
+  "team": "St. Louis Rams",
+  "player_id": "00-0017200"
+ },
+ {
+  "season": 1999,
+  "award": "OPOY",
+  "name": "Marshall Faulk",
+  "position": "Running back",
+  "team": "St. Louis Rams",
+  "player_id": "00-0005092"
+ },
+ {
+  "season": 1999,
+  "award": "OROY",
+  "name": "Edgerrin James",
+  "team": "Indianapolis",
+  "position": "RB",
+  "player_id": "00-0008241"
+ },
+ {
+  "season": 1998,
+  "award": "CPOY",
+  "name": "Doug Flutie",
+  "position": "QB",
+  "team": "Buffalo",
+  "player_id": null
+ },
+ {
+  "season": 1998,
+  "award": "DPOY",
+  "name": "Reggie White",
+  "position": "DE",
+  "team": "Green Bay",
+  "player_id": null
+ },
+ {
+  "season": 1998,
+  "award": "DROY",
+  "name": "Charles Woodson",
+  "team": "Oakland",
+  "position": "CB",
+  "player_id": null
+ },
+ {
+  "season": 1998,
+  "award": "MVP",
+  "name": "Terrell Davis",
+  "position": "Running back",
+  "team": "Denver Broncos",
+  "player_id": null
+ },
+ {
+  "season": 1998,
+  "award": "OPOY",
+  "name": "Terrell Davis",
+  "position": "Running back",
+  "team": "Denver Broncos",
+  "player_id": null
+ },
+ {
+  "season": 1998,
+  "award": "OROY",
+  "name": "Randy Moss",
+  "team": "Minnesota",
+  "position": "WR",
+  "player_id": null
+ },
+ {
+  "season": 1997,
+  "award": "DPOY",
+  "name": "Dana Stubblefield",
+  "position": "DT",
+  "team": "San Francisco",
+  "player_id": null
+ },
+ {
+  "season": 1997,
+  "award": "DROY",
+  "name": "Peter Boulware",
+  "team": "Baltimore",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1997,
+  "award": "MVP",
+  "name": "Barry Sanders",
+  "position": null,
+  "team": null,
+  "player_id": null
+ },
+ {
+  "season": 1997,
+  "award": "MVP",
+  "name": "Brett Favre",
+  "position": null,
+  "team": null,
+  "player_id": null
+ },
+ {
+  "season": 1997,
+  "award": "OPOY",
+  "name": "Barry Sanders",
+  "position": "Running back",
+  "team": "Detroit Lions",
+  "player_id": null
+ },
+ {
+  "season": 1997,
+  "award": "OROY",
+  "name": "Warrick Dunn",
+  "team": "Tampa Bay",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1996,
+  "award": "DPOY",
+  "name": "Bruce Smith",
+  "position": "DE",
+  "team": "Buffalo",
+  "player_id": null
+ },
+ {
+  "season": 1996,
+  "award": "DROY",
+  "name": "Simeon Rice",
+  "team": "Arizona",
+  "position": "DE",
+  "player_id": null
+ },
+ {
+  "season": 1996,
+  "award": "MVP",
+  "name": "Brett Favre",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": null
+ },
+ {
+  "season": 1996,
+  "award": "OPOY",
+  "name": "Terrell Davis",
+  "position": "Running back",
+  "team": "Denver Broncos",
+  "player_id": null
+ },
+ {
+  "season": 1996,
+  "award": "OROY",
+  "name": "Eddie George",
+  "team": "Houston",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1995,
+  "award": "DPOY",
+  "name": "Bryce Paup",
+  "position": "LB",
+  "team": "Buffalo",
+  "player_id": null
+ },
+ {
+  "season": 1995,
+  "award": "DROY",
+  "name": "Hugh Douglas",
+  "team": "NY Jets",
+  "position": "DE",
+  "player_id": null
+ },
+ {
+  "season": 1995,
+  "award": "MVP",
+  "name": "Brett Favre",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": null
+ },
+ {
+  "season": 1995,
+  "award": "OPOY",
+  "name": "Brett Favre",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": null
+ },
+ {
+  "season": 1995,
+  "award": "OROY",
+  "name": "Curtis Martin",
+  "team": "New England",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1994,
+  "award": "DPOY",
+  "name": "Deion Sanders",
+  "position": "CB",
+  "team": "San Francisco",
+  "player_id": null
+ },
+ {
+  "season": 1994,
+  "award": "DROY",
+  "name": "Tim Bowens",
+  "team": "Miami",
+  "position": "DT",
+  "player_id": null
+ },
+ {
+  "season": 1994,
+  "award": "MVP",
+  "name": "Steve Young",
+  "position": "Quarterback",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1994,
+  "award": "OPOY",
+  "name": "Barry Sanders",
+  "position": "Running back",
+  "team": "Detroit Lions",
+  "player_id": null
+ },
+ {
+  "season": 1994,
+  "award": "OROY",
+  "name": "Marshall Faulk",
+  "team": "Indianapolis",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1993,
+  "award": "DPOY",
+  "name": "Rod Woodson",
+  "position": "CB",
+  "team": "Pittsburgh",
+  "player_id": null
+ },
+ {
+  "season": 1993,
+  "award": "DROY",
+  "name": "Dana Stubblefield",
+  "team": "San Francisco",
+  "position": "DT",
+  "player_id": null
+ },
+ {
+  "season": 1993,
+  "award": "MVP",
+  "name": "Emmitt Smith",
+  "position": "Running back",
+  "team": "Dallas Cowboys",
+  "player_id": null
+ },
+ {
+  "season": 1993,
+  "award": "OPOY",
+  "name": "Jerry Rice",
+  "position": "Wide receiver",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1993,
+  "award": "OROY",
+  "name": "Jerome Bettis",
+  "team": "LA Rams",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1992,
+  "award": "DPOY",
+  "name": "Cortez Kennedy",
+  "position": "DT",
+  "team": "Seattle",
+  "player_id": null
+ },
+ {
+  "season": 1992,
+  "award": "DROY",
+  "name": "Dale Carter",
+  "team": "Kansas City",
+  "position": "CB",
+  "player_id": null
+ },
+ {
+  "season": 1992,
+  "award": "MVP",
+  "name": "Steve Young",
+  "position": "Quarterback",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1992,
+  "award": "OPOY",
+  "name": "Steve Young",
+  "position": "Quarterback",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1992,
+  "award": "OROY",
+  "name": "Carl Pickens",
+  "team": "Cincinnati",
+  "position": "WR",
+  "player_id": null
+ },
+ {
+  "season": 1991,
+  "award": "DPOY",
+  "name": "Pat Swilling",
+  "position": "LB",
+  "team": "New Orleans",
+  "player_id": null
+ },
+ {
+  "season": 1991,
+  "award": "DROY",
+  "name": "Mike Croel",
+  "team": "Denver",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1991,
+  "award": "MVP",
+  "name": "Thurman Thomas",
+  "position": "Running back",
+  "team": "Buffalo Bills",
+  "player_id": null
+ },
+ {
+  "season": 1991,
+  "award": "OPOY",
+  "name": "Thurman Thomas",
+  "position": "Running back",
+  "team": "Buffalo Bills",
+  "player_id": null
+ },
+ {
+  "season": 1991,
+  "award": "OROY",
+  "name": "Leonard Russell",
+  "team": "New England",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1990,
+  "award": "DPOY",
+  "name": "Bruce Smith",
+  "position": "DE",
+  "team": "Buffalo",
+  "player_id": null
+ },
+ {
+  "season": 1990,
+  "award": "DROY",
+  "name": "Mark Carrier",
+  "team": "Chicago",
+  "position": "S",
+  "player_id": null
+ },
+ {
+  "season": 1990,
+  "award": "MVP",
+  "name": "Joe Montana",
+  "position": "Quarterback",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1990,
+  "award": "OPOY",
+  "name": "Warren Moon",
+  "position": "Quarterback",
+  "team": "Houston Oilers",
+  "player_id": null
+ },
+ {
+  "season": 1990,
+  "award": "OROY",
+  "name": "Emmitt Smith",
+  "team": "Dallas",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1989,
+  "award": "DPOY",
+  "name": "Keith Millard",
+  "position": "DT",
+  "team": "Minnesota",
+  "player_id": null
+ },
+ {
+  "season": 1989,
+  "award": "DROY",
+  "name": "Derrick Thomas",
+  "team": "Kansas City",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1989,
+  "award": "MVP",
+  "name": "Joe Montana",
+  "position": "Quarterback",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1989,
+  "award": "OPOY",
+  "name": "Joe Montana",
+  "position": "Quarterback",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1989,
+  "award": "OROY",
+  "name": "Barry Sanders",
+  "team": "Detroit",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1988,
+  "award": "DPOY",
+  "name": "Mike Singletary",
+  "position": "LB",
+  "team": "Chicago",
+  "player_id": null
+ },
+ {
+  "season": 1988,
+  "award": "DROY",
+  "name": "Erik McMillan",
+  "team": "NY Jets",
+  "position": "S",
+  "player_id": null
+ },
+ {
+  "season": 1988,
+  "award": "MVP",
+  "name": "Boomer Esiason",
+  "position": "Quarterback",
+  "team": "Cincinnati Bengals",
+  "player_id": null
+ },
+ {
+  "season": 1988,
+  "award": "OPOY",
+  "name": "Roger Craig",
+  "position": "Running back",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1988,
+  "award": "OROY",
+  "name": "John Stephens",
+  "team": "New England",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1987,
+  "award": "DPOY",
+  "name": "Reggie White",
+  "position": "DE",
+  "team": "Philadelphia",
+  "player_id": null
+ },
+ {
+  "season": 1987,
+  "award": "DROY",
+  "name": "Shane Conlan",
+  "team": "Buffalo",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1987,
+  "award": "MVP",
+  "name": "John Elway",
+  "position": "Quarterback",
+  "team": "Denver Broncos",
+  "player_id": null
+ },
+ {
+  "season": 1987,
+  "award": "OPOY",
+  "name": "Jerry Rice",
+  "position": "Wide receiver",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1987,
+  "award": "OROY",
+  "name": "Troy Stradford",
+  "team": "Miami",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1986,
+  "award": "DPOY",
+  "name": "Lawrence Taylor",
+  "position": "LB",
+  "team": "NY Giants",
+  "player_id": null
+ },
+ {
+  "season": 1986,
+  "award": "DROY",
+  "name": "Leslie O'Neal",
+  "team": "San Diego",
+  "position": "DE",
+  "player_id": null
+ },
+ {
+  "season": 1986,
+  "award": "MVP",
+  "name": "Lawrence Taylor",
+  "position": "Linebacker",
+  "team": "New York Giants",
+  "player_id": null
+ },
+ {
+  "season": 1986,
+  "award": "OPOY",
+  "name": "Eric Dickerson",
+  "position": "Running back",
+  "team": "Los Angeles Rams",
+  "player_id": null
+ },
+ {
+  "season": 1986,
+  "award": "OROY",
+  "name": "Rueben Mayes",
+  "team": "New Orleans",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1985,
+  "award": "DPOY",
+  "name": "Mike Singletary",
+  "position": "LB",
+  "team": "Chicago",
+  "player_id": null
+ },
+ {
+  "season": 1985,
+  "award": "DROY",
+  "name": "Duane Bickett",
+  "team": "Indianapolis",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1985,
+  "award": "MVP",
+  "name": "Marcus Allen",
+  "position": "Running back",
+  "team": "Los Angeles Raiders",
+  "player_id": null
+ },
+ {
+  "season": 1985,
+  "award": "OPOY",
+  "name": "Marcus Allen",
+  "position": "Running back",
+  "team": "Los Angeles Raiders",
+  "player_id": null
+ },
+ {
+  "season": 1985,
+  "award": "OROY",
+  "name": "Eddie Brown",
+  "team": "Cincinnati",
+  "position": "WR",
+  "player_id": null
+ },
+ {
+  "season": 1984,
+  "award": "DPOY",
+  "name": "Kenny Easley",
+  "position": "S",
+  "team": "Seattle",
+  "player_id": null
+ },
+ {
+  "season": 1984,
+  "award": "DROY",
+  "name": "Bill Maas",
+  "team": "Kansas City",
+  "position": "DT",
+  "player_id": null
+ },
+ {
+  "season": 1984,
+  "award": "MVP",
+  "name": "Dan Marino",
+  "position": "Quarterback",
+  "team": "Miami Dolphins",
+  "player_id": null
+ },
+ {
+  "season": 1984,
+  "award": "OPOY",
+  "name": "Dan Marino",
+  "position": "Quarterback",
+  "team": "Miami Dolphins",
+  "player_id": null
+ },
+ {
+  "season": 1984,
+  "award": "OROY",
+  "name": "Louis Lipps",
+  "team": "Pittsburgh",
+  "position": "WR",
+  "player_id": null
+ },
+ {
+  "season": 1983,
+  "award": "DPOY",
+  "name": "Doug Betters",
+  "position": "DE",
+  "team": "Miami",
+  "player_id": null
+ },
+ {
+  "season": 1983,
+  "award": "DROY",
+  "name": "Vernon Maxwell",
+  "team": "Baltimore",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1983,
+  "award": "MVP",
+  "name": "Joe Theismann",
+  "position": "Quarterback",
+  "team": "Washington Redskins",
+  "player_id": null
+ },
+ {
+  "season": 1983,
+  "award": "OPOY",
+  "name": "Joe Theismann",
+  "position": "Quarterback",
+  "team": "Washington Redskins",
+  "player_id": null
+ },
+ {
+  "season": 1983,
+  "award": "OROY",
+  "name": "Eric Dickerson",
+  "team": "LA Rams",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1982,
+  "award": "DPOY",
+  "name": "Lawrence Taylor",
+  "position": "LB",
+  "team": "NY Giants",
+  "player_id": null
+ },
+ {
+  "season": 1982,
+  "award": "DROY",
+  "name": "Chip Banks",
+  "team": "Cleveland",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1982,
+  "award": "MVP",
+  "name": "Mark Moseley",
+  "position": "Placekicker",
+  "team": "Washington Redskins",
+  "player_id": null
+ },
+ {
+  "season": 1982,
+  "award": "OPOY",
+  "name": "Dan Fouts",
+  "position": "Quarterback",
+  "team": "San Diego Chargers",
+  "player_id": null
+ },
+ {
+  "season": 1982,
+  "award": "OROY",
+  "name": "Marcus Allen",
+  "team": "LA Raiders",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1981,
+  "award": "DPOY",
+  "name": "Lawrence Taylor",
+  "position": "LB",
+  "team": "NY Giants",
+  "player_id": null
+ },
+ {
+  "season": 1981,
+  "award": "DROY",
+  "name": "Lawrence Taylor",
+  "team": "NY Giants",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1981,
+  "award": "MVP",
+  "name": "Ken Anderson",
+  "position": "Quarterback",
+  "team": "Cincinnati Bengals",
+  "player_id": null
+ },
+ {
+  "season": 1981,
+  "award": "OPOY",
+  "name": "Ken Anderson",
+  "position": "Quarterback",
+  "team": "Cincinnati Bengals",
+  "player_id": null
+ },
+ {
+  "season": 1981,
+  "award": "OROY",
+  "name": "George Rogers",
+  "team": "New Orleans",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1980,
+  "award": "DPOY",
+  "name": "Lester Hayes",
+  "position": "CB",
+  "team": "Oakland",
+  "player_id": null
+ },
+ {
+  "season": 1980,
+  "award": "DROY",
+  "name": "Al Richardson",
+  "team": "Atlanta",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1980,
+  "award": "DROY",
+  "name": "Buddy Curry",
+  "team": "Atlanta",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1980,
+  "award": "MVP",
+  "name": "Brian Sipe",
+  "position": "Quarterback",
+  "team": "Cleveland Browns",
+  "player_id": null
+ },
+ {
+  "season": 1980,
+  "award": "OPOY",
+  "name": "Earl Campbell",
+  "position": "Running back",
+  "team": "Houston Oilers",
+  "player_id": null
+ },
+ {
+  "season": 1980,
+  "award": "OROY",
+  "name": "Billy Sims",
+  "team": "Detroit",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1980,
+  "award": "OROY",
+  "name": "Billy Sims",
+  "team": "Detroit",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1979,
+  "award": "DPOY",
+  "name": "Lee Roy Selmon",
+  "position": "DE",
+  "team": "Tampa Bay",
+  "player_id": null
+ },
+ {
+  "season": 1979,
+  "award": "DROY",
+  "name": "Jim Haslett",
+  "team": "Buffalo",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1979,
+  "award": "MVP",
+  "name": "Earl Campbell",
+  "position": "Running back",
+  "team": "Houston Oilers",
+  "player_id": null
+ },
+ {
+  "season": 1979,
+  "award": "OPOY",
+  "name": "Earl Campbell",
+  "position": "Running back",
+  "team": "Houston Oilers",
+  "player_id": null
+ },
+ {
+  "season": 1979,
+  "award": "OROY",
+  "name": "Ottis Anderson",
+  "team": "St. Louis",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1978,
+  "award": "DPOY",
+  "name": "Randy Gradishar",
+  "position": "LB",
+  "team": "Denver",
+  "player_id": null
+ },
+ {
+  "season": 1978,
+  "award": "DROY",
+  "name": "Al Baker",
+  "team": "Detroit",
+  "position": "DE",
+  "player_id": null
+ },
+ {
+  "season": 1978,
+  "award": "MVP",
+  "name": "Terry Bradshaw",
+  "position": "Quarterback",
+  "team": "Pittsburgh Steelers",
+  "player_id": null
+ },
+ {
+  "season": 1978,
+  "award": "OPOY",
+  "name": "Earl Campbell",
+  "position": "Running back",
+  "team": "Houston Oilers",
+  "player_id": null
+ },
+ {
+  "season": 1978,
+  "award": "OROY",
+  "name": "Earl Campbell",
+  "team": "Houston",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1977,
+  "award": "DPOY",
+  "name": "Harvey Martin",
+  "position": "DE",
+  "team": "Dallas",
+  "player_id": null
+ },
+ {
+  "season": 1977,
+  "award": "DROY",
+  "name": "A. J. Duhe",
+  "team": "Miami",
+  "position": "DE",
+  "player_id": null
+ },
+ {
+  "season": 1977,
+  "award": "MVP",
+  "name": "Walter Payton",
+  "position": "Running back",
+  "team": "Chicago Bears",
+  "player_id": null
+ },
+ {
+  "season": 1977,
+  "award": "OPOY",
+  "name": "Walter Payton",
+  "position": "Running back",
+  "team": "Chicago Bears",
+  "player_id": null
+ },
+ {
+  "season": 1977,
+  "award": "OROY",
+  "name": "Tony Dorsett",
+  "team": "Dallas",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1976,
+  "award": "DPOY",
+  "name": "Jack Lambert",
+  "position": "LB",
+  "team": "Pittsburgh",
+  "player_id": null
+ },
+ {
+  "season": 1976,
+  "award": "DROY",
+  "name": "Mike Haynes",
+  "team": "New England",
+  "position": "CB",
+  "player_id": null
+ },
+ {
+  "season": 1976,
+  "award": "MVP",
+  "name": "Bert Jones",
+  "position": "Quarterback",
+  "team": "Baltimore Colts",
+  "player_id": null
+ },
+ {
+  "season": 1976,
+  "award": "OPOY",
+  "name": "Bert Jones",
+  "position": "Quarterback",
+  "team": "Baltimore Colts",
+  "player_id": null
+ },
+ {
+  "season": 1976,
+  "award": "OROY",
+  "name": "Sammy White",
+  "team": "Minnesota",
+  "position": "WR",
+  "player_id": null
+ },
+ {
+  "season": 1975,
+  "award": "DPOY",
+  "name": "Mel Blount",
+  "position": "CB",
+  "team": "Pittsburgh",
+  "player_id": null
+ },
+ {
+  "season": 1975,
+  "award": "DROY",
+  "name": "Robert Brazile",
+  "team": "Houston",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1975,
+  "award": "MVP",
+  "name": "Fran Tarkenton",
+  "position": "Quarterback",
+  "team": "Minnesota Vikings",
+  "player_id": null
+ },
+ {
+  "season": 1975,
+  "award": "OPOY",
+  "name": "Fran Tarkenton",
+  "position": "Quarterback",
+  "team": "Minnesota Vikings",
+  "player_id": null
+ },
+ {
+  "season": 1975,
+  "award": "OROY",
+  "name": "Mike Thomas",
+  "team": "Washington",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1974,
+  "award": "DPOY",
+  "name": "Joe Greene",
+  "position": "DT",
+  "team": "Pittsburgh",
+  "player_id": null
+ },
+ {
+  "season": 1974,
+  "award": "DROY",
+  "name": "Jack Lambert",
+  "team": "Pittsburgh",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1974,
+  "award": "MVP",
+  "name": "Ken Stabler",
+  "position": "Quarterback",
+  "team": "Oakland Raiders",
+  "player_id": null
+ },
+ {
+  "season": 1974,
+  "award": "OPOY",
+  "name": "Ken Stabler",
+  "position": "Quarterback",
+  "team": "Oakland Raiders",
+  "player_id": null
+ },
+ {
+  "season": 1974,
+  "award": "OROY",
+  "name": "Don Woods",
+  "team": "San Diego",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1973,
+  "award": "DPOY",
+  "name": "Dick Anderson",
+  "position": "S",
+  "team": "Miami",
+  "player_id": null
+ },
+ {
+  "season": 1973,
+  "award": "DROY",
+  "name": "Wally Chambers",
+  "team": "Chicago",
+  "position": "DT",
+  "player_id": null
+ },
+ {
+  "season": 1973,
+  "award": "MVP",
+  "name": "O. J. Simpson",
+  "position": "Running back",
+  "team": "Buffalo Bills",
+  "player_id": null
+ },
+ {
+  "season": 1973,
+  "award": "OPOY",
+  "name": "O. J. Simpson",
+  "position": "Running back",
+  "team": "Buffalo Bills",
+  "player_id": null
+ },
+ {
+  "season": 1973,
+  "award": "OROY",
+  "name": "Chuck Foreman",
+  "team": "Minnesota",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1972,
+  "award": "DPOY",
+  "name": "Joe Greene",
+  "position": "DT",
+  "team": "Pittsburgh",
+  "player_id": null
+ },
+ {
+  "season": 1972,
+  "award": "DROY",
+  "name": "Willie Buchanon",
+  "team": "Green Bay",
+  "position": "CB",
+  "player_id": null
+ },
+ {
+  "season": 1972,
+  "award": "MVP",
+  "name": "Larry Brown",
+  "position": "Running back",
+  "team": "Washington Redskins",
+  "player_id": null
+ },
+ {
+  "season": 1972,
+  "award": "OPOY",
+  "name": "Larry Brown",
+  "position": "Running back",
+  "team": "Washington Redskins",
+  "player_id": null
+ },
+ {
+  "season": 1972,
+  "award": "OROY",
+  "name": "Franco Harris",
+  "team": "Pittsburgh",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1971,
+  "award": "DPOY",
+  "name": "Alan Page",
+  "position": "DT",
+  "team": "Minnesota",
+  "player_id": null
+ },
+ {
+  "season": 1971,
+  "award": "DROY",
+  "name": "Isiah Robertson",
+  "team": "LA Rams",
+  "position": "LB",
+  "player_id": null
+ },
+ {
+  "season": 1971,
+  "award": "MVP",
+  "name": "Alan Page",
+  "position": "Defensive tackle",
+  "team": "Minnesota Vikings",
+  "player_id": null
+ },
+ {
+  "season": 1971,
+  "award": "OROY",
+  "name": "John Brockington",
+  "team": "Green Bay",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1970,
+  "award": "DROY",
+  "name": "Bruce Taylor",
+  "team": "San Francisco",
+  "position": "CB",
+  "player_id": null
+ },
+ {
+  "season": 1970,
+  "award": "MVP",
+  "name": "John Brodie",
+  "position": "Quarterback",
+  "team": "San Francisco 49ers",
+  "player_id": null
+ },
+ {
+  "season": 1970,
+  "award": "OROY",
+  "name": "Dennis Shaw",
+  "team": "Buffalo",
+  "position": "QB",
+  "player_id": null
+ },
+ {
+  "season": 1969,
+  "award": "DROY",
+  "name": "Joe Greene",
+  "team": "Pittsburgh",
+  "position": "DT",
+  "player_id": null
+ },
+ {
+  "season": 1969,
+  "award": "MVP",
+  "name": "Roman Gabriel",
+  "position": "Quarterback",
+  "team": "Los Angeles Rams",
+  "player_id": null
+ },
+ {
+  "season": 1969,
+  "award": "OROY",
+  "name": "Calvin Hill",
+  "team": "Dallas",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1968,
+  "award": "DROY",
+  "name": "Claude Humphrey",
+  "team": "Atlanta",
+  "position": "DE",
+  "player_id": null
+ },
+ {
+  "season": 1968,
+  "award": "MVP",
+  "name": "Earl Morrall",
+  "position": "Quarterback",
+  "team": "Baltimore Colts",
+  "player_id": null
+ },
+ {
+  "season": 1968,
+  "award": "OROY",
+  "name": "Earl McCullouch",
+  "team": "Detroit",
+  "position": "WR",
+  "player_id": null
+ },
+ {
+  "season": 1967,
+  "award": "DROY",
+  "name": "Lem Barney",
+  "team": "Detroit",
+  "position": "CB",
+  "player_id": null
+ },
+ {
+  "season": 1967,
+  "award": "MVP",
+  "name": "Johnny Unitas",
+  "position": "Quarterback",
+  "team": "Baltimore Colts",
+  "player_id": null
+ },
+ {
+  "season": 1967,
+  "award": "OROY",
+  "name": "Mel Farr",
+  "team": "Detroit",
+  "position": "RB",
+  "player_id": null
+ },
+ {
+  "season": 1966,
+  "award": "MVP",
+  "name": "Bart Starr",
+  "position": "Quarterback",
+  "team": "Green Bay Packers",
+  "player_id": null
+ },
+ {
+  "season": 1965,
+  "award": "MVP",
+  "name": "Jim Brown",
+  "position": "Fullback",
+  "team": "Cleveland Browns",
+  "player_id": null
+ },
+ {
+  "season": 1964,
+  "award": "MVP",
+  "name": "Johnny Unitas",
+  "position": "Quarterback",
+  "team": "Baltimore Colts",
+  "player_id": null
+ },
+ {
+  "season": 1963,
+  "award": "MVP",
+  "name": "Y. A. Tittle",
+  "position": "Quarterback",
+  "team": "New York Giants",
+  "player_id": null
+ },
+ {
+  "season": 1962,
+  "award": "MVP",
+  "name": "Jim Taylor",
+  "position": "Running back",
+  "team": "Green Bay Packers",
+  "player_id": null
+ },
+ {
+  "season": 1961,
+  "award": "MVP",
+  "name": "Paul Hornung",
+  "position": "Running back",
+  "team": "Green Bay Packers",
+  "player_id": null
+ },
+ {
+  "season": 1960,
+  "award": "MVP",
+  "name": "Norm Van Brocklin",
+  "position": "Quarterback",
+  "team": "Philadelphia Eagles",
+  "player_id": null
+ },
+ {
+  "season": 1959,
+  "award": "MVP",
+  "name": "Johnny Unitas",
+  "position": "Quarterback",
+  "team": "Baltimore Colts",
+  "player_id": null
+ },
+ {
+  "season": 1958,
+  "award": "MVP",
+  "name": "Jim Brown",
+  "position": "Fullback",
+  "team": "Cleveland Browns",
+  "player_id": null
+ },
+ {
+  "season": 1957,
+  "award": "MVP",
+  "name": "Jim Brown",
+  "position": "Fullback",
+  "team": "Cleveland Browns",
+  "player_id": null
+ }
+]
