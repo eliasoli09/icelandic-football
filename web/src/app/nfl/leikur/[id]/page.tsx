@@ -8,7 +8,7 @@ import { seasonForecasts } from '@/lib/nfl/forecast'
 import { teamForm, type TeamForm } from '@/lib/nfl/form'
 import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
 import { devig } from '@/lib/nfl/odds'
-import { nflGame, nflMeetings, nflSeasonModel } from '@/lib/nfl/queries'
+import { nflGame, nflMeetings, nflQbByName, nflSeasonModel } from '@/lib/nfl/queries'
 import { clock, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 import { weekLabel } from '@/lib/nfl/week'
@@ -39,9 +39,10 @@ export default async function NflGamePage({ params }: Props) {
   const vegas = devig(game.home_ml, game.away_ml)
   const home = teams.get(game.home)
   const away = teams.get(game.away)
+  const [awayQbId, homeQbId] = await Promise.all([game.away_qb, game.home_qb].map((q) => (q ? nflQbByName(q).catch(() => null) : null)))
   const sides = [
-    { side: 'away' as const, team: away, abbr: game.away, qb: game.away_qb, newQb: f?.newQb?.away ?? null },
-    { side: 'home' as const, team: home, abbr: game.home, qb: game.home_qb, newQb: f?.newQb?.home ?? null },
+    { side: 'away' as const, team: away, abbr: game.away, qb: game.away_qb, qbId: awayQbId, newQb: f?.newQb?.away ?? null },
+    { side: 'home' as const, team: home, abbr: game.home, qb: game.home_qb, qbId: homeQbId, newQb: f?.newQb?.home ?? null },
   ]
 
   return (
@@ -113,8 +114,8 @@ export default async function NflGamePage({ params }: Props) {
       )}
 
       <section className="grid sm:grid-cols-2 gap-4">
-        {sides.map(({ side, team, abbr, qb, newQb }) => (
-          <TeamPanel key={side} team={team} abbr={abbr} elo={eloNow(side)} form={teamForm(abbr, game.kickoff, model.games, model.elo)} qb={qb} newQb={played ? null : newQb} />
+        {sides.map(({ side, team, abbr, qb, qbId, newQb }) => (
+          <TeamPanel key={side} team={team} abbr={abbr} elo={eloNow(side)} form={teamForm(abbr, game.kickoff, model.games, model.elo)} qb={qb} qbId={qbId} newQb={played ? null : newQb} />
         ))}
       </section>
 
@@ -130,7 +131,7 @@ export default async function NflGamePage({ params }: Props) {
   )
 }
 
-function TeamPanel({ team, abbr, elo, form, qb, newQb }: { team: NflTeam | undefined; abbr: string; elo: number | null; form: TeamForm; qb: string | null; newQb: { qb: string; usual: string } | null }) {
+function TeamPanel({ team, abbr, elo, form, qb, qbId, newQb }: { team: NflTeam | undefined; abbr: string; elo: number | null; form: TeamForm; qb: string | null; qbId: string | null; newQb: { qb: string; usual: string } | null }) {
   const change = form.eloChange5
   return (
     <div className="card p-5 grid gap-3">
@@ -161,7 +162,7 @@ function TeamPanel({ team, abbr, elo, form, qb, newQb }: { team: NflTeam | undef
           )}
         </dd>
         <dt className="muted">Leikstjórnandi</dt>
-        <dd className="text-right">{qb ?? '-'}</dd>
+        <dd className="text-right">{qb && qbId ? <Link href={`/nfl/leikmadur/${qbId}`} className="underline decoration-dotted underline-offset-2">{qb}</Link> : qb ?? '-'}</dd>
       </dl>
       {change !== null && <p className="text-[11px] muted">Breyting á Elo síðustu {form.last5.length} leiki.</p>}
       {newQb && (

@@ -153,3 +153,16 @@ export function statGroups(position: string | null): StatGroup[] {
   if (position && DEFENCE.has(position)) return ['vorn']
   return []
 }
+
+/**
+ * The NFL serves headshots at full size (up to 4 MB). Ask its image service
+ * for a face-cropped square at twice the display size instead (about 11 kB).
+ * Any other URL is left alone.
+ */
+export function headshotUrl(src: string | null, px: number): string | null {
+  if (!src) return null
+  const m = /^(https:\/\/static\.www\.nfl\.com\/image\/(?:upload|private)\/)f_auto,q_auto\/(.+)$/.exec(src)
+  if (!m) return src
+  const s = Math.round(px * 2)
+  return `${m[1]}f_auto,q_auto,w_${s},h_${s},c_fill,g_face/${m[2]}`
+}

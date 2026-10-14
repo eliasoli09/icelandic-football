@@ -77,3 +77,18 @@ describe('smáföll', () => {
     expect(statGroups('LB')).toEqual(['vorn'])
   })
 })
+
+import { headshotUrl } from '../src/lib/nfl/players'
+
+describe('headshotUrl', () => {
+  it('biður um ferning með andliti í tvöfaldri stærð', () => {
+    expect(headshotUrl('https://static.www.nfl.com/image/upload/f_auto,q_auto/league/abc', 44))
+      .toBe('https://static.www.nfl.com/image/upload/f_auto,q_auto,w_88,h_88,c_fill,g_face/league/abc')
+    expect(headshotUrl('https://static.www.nfl.com/image/private/f_auto,q_auto/league/xyz', 26))
+      .toBe('https://static.www.nfl.com/image/private/f_auto,q_auto,w_52,h_52,c_fill,g_face/league/xyz')
+  })
+  it('lætur aðrar slóðir og null í friði', () => {
+    expect(headshotUrl('https://a.espncdn.com/x.png', 40)).toBe('https://a.espncdn.com/x.png')
+    expect(headshotUrl(null, 40)).toBeNull()
+  })
+})
