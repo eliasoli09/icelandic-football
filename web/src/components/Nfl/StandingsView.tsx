@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { MarkBadge, MARK_LEGEND } from './MarkBadge'
 import { NflLogo } from './NflLogo'
+import { probCell } from '@/lib/nfl/bracket'
+import type { Mark } from '@/lib/nfl/clinch'
 import { diffLabel, pctLabel, REASON_LABEL } from '@/lib/nfl/format'
 import { pct, type Criterion, type Ranked, type Standings, type WLT } from '@/lib/nfl/standings'
 import { CONFERENCES, DIVISIONS, type NflTeam } from '@/lib/nfl/types'
@@ -10,7 +13,7 @@ type View = 'ridlar' | 'deild'
 const DIV_NAME = { East: 'Austur', North: 'Norður', South: 'Suður', West: 'Vestur' } as const
 const rec = (r: WLT) => (r.t ? `${r.w}-${r.l}-${r.t}` : `${r.w}-${r.l}`)
 
-export function StandingsView({ season, standings, teams }: { season: number; standings: Standings; teams: NflTeam[] }) {
+export function StandingsView({ season, standings, teams, marks, pPlayoffs }: { season: number; standings: Standings; teams: NflTeam[]; marks: Record<string, Mark | null>; pPlayoffs: Record<string, number> | null }) {
   const byAbbr = useMemo(() => new Map(teams.map((t) => [t.abbr, t])), [teams])
   const [view, setView] = useState<View>('ridlar')
   useEffect(() => {
@@ -44,9 +47,9 @@ export function StandingsView({ season, standings, teams }: { season: number; st
             <h2 className="display text-xl font-extrabold">{c}</h2>
             {view === 'ridlar'
               ? DIVISIONS.map((d) => (
-                  <Table key={d} title={`${c} ${DIV_NAME[d]}`} rows={standings.divisions[c][d]} standings={standings} byAbbr={byAbbr} />
+                  <Table key={d} title={`${c} ${DIV_NAME[d]}`} rows={standings.divisions[c][d]} standings={standings} byAbbr={byAbbr} marks={marks} pPlayoffs={pPlayoffs} />
                 ))
-              : <Table title={`${c}: sæti`} rows={standings.seeds[c]} standings={standings} byAbbr={byAbbr} cutAfter={7} numbered />}
+              : <Table title={`${c}: sæti`} rows={standings.seeds[c]} standings={standings} byAbbr={byAbbr} marks={marks} pPlayoffs={pPlayoffs} cutAfter={7} numbered />}
           </div>
         ))}
       </div>
@@ -57,11 +60,15 @@ export function StandingsView({ season, standings, teams }: { season: number; st
         leikjadagskrár, stigaröðun og hlutkesti) eru hér stigamismunur og stafróf, svo röðin getur stöku sinnum
         vikið frá opinberu stöðunni.
       </p>
+      <p className="text-[11px] muted mt-2 leading-relaxed max-w-2xl">
+        {MARK_LEGEND}{pPlayoffs ? ' "Úrslitak." eru líkur á sæti í úrslitakeppninni úr hermuninni.' : ''}
+      </p>
     </section>
   )
 }
 
-function Table({ title, rows, standings, byAbbr, cutAfter, numbered }: {
+function Table({ title, rows, standings, byAbbr, marks, pPlayoffs, cutAfter, numbered }: {
+  marks: Record<string, Mark | null>; pPlayoffs: Record<string, number> | null
   title: string; rows: Ranked[]; standings: Standings; byAbbr: Map<string, NflTeam>; cutAfter?: number; numbered?: boolean
 }) {
   return (
@@ -82,6 +89,7 @@ function Table({ title, rows, standings, byAbbr, cutAfter, numbered }: {
               <th className="text-right">+/−</th>
               <th className="text-right hidden md:table-cell">Í riðli</th>
               <th className="text-right hidden md:table-cell">Runa</th>
+              {pPlayoffs && <th className="text-right" title="Líkur á sæti í úrslitakeppni, úr hermuninni">Úrslitak.</th>}
             </tr>
           </thead>
           <tbody>
@@ -96,6 +104,7 @@ function Table({ title, rows, standings, byAbbr, cutAfter, numbered }: {
                     <div className="flex items-center gap-2 min-w-0">
                       <NflLogo team={team} size={20} />
                       <span className="font-semibold">{row.abbr}</span>
+                      <MarkBadge mark={marks[row.abbr]} />
                       {row.reason && <span className="muted" aria-hidden>*</span>}
                     </div>
                   </td>
@@ -108,6 +117,7 @@ function Table({ title, rows, standings, byAbbr, cutAfter, numbered }: {
                   <td className="text-right num">{diffLabel(r.pf - r.pa)}</td>
                   <td className="text-right num hidden md:table-cell">{rec(r.div)}</td>
                   <td className="text-right num hidden md:table-cell">{r.streak}</td>
+                  {pPlayoffs && <td className="text-right num">{probCell(pPlayoffs[row.abbr] ?? 0, marks[row.abbr] === 'eliminated')}</td>}
                 </tr>
               )
             })}

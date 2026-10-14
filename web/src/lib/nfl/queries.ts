@@ -1,5 +1,6 @@
 import { db } from '../db'
 import { stateFromRows, type EloRow, type EloState } from './elo'
+import type { SimTeam } from './sim'
 import type { NflGame, NflTeam } from './types'
 
 export async function nflTeams(): Promise<NflTeam[]> {
@@ -78,4 +79,17 @@ export interface SeasonModel {
 export async function nflSeasonModel(season: number): Promise<SeasonModel> {
   const [games, teams, elo] = await Promise.all([nflSeasonGames(season), nflTeams(), nflEloRows([season - 1, season])])
   return { season, games, teams, elo, state: stateFromRows(elo, games) }
+}
+
+export interface StoredSim extends SimTeam { sims: number; run_at: string }
+
+/** The current simulation, one row per club; empty before the first run. */
+export async function nflSim(season: number): Promise<Record<string, StoredSim>> {
+  const { data, error } = await db().from('nfl_sim').select('*').eq('season', season)
+  if (error) throw error
+  const n = (x: unknown) => Number(x)
+  return Object.fromEntries((data ?? []).map((r) => [r.team, {
+    team: r.team, p_div: n(r.p_div), p_playoffs: n(r.p_playoffs), p_bye: n(r.p_bye), p_seed: (r.p_seed as unknown[]).map(n),
+    p_round2: n(r.p_round2), p_round3: n(r.p_round3), p_sb: n(r.p_sb), p_title: n(r.p_title), sims: r.sims, run_at: r.run_at,
+  }]))
 }
