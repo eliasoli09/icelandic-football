@@ -2,8 +2,12 @@ import { FRANCHISE, isPlayed, type NflGame } from './types'
 
 export interface EloParams { K: number; HFA: number; R: number; BYE: number }
 
-/** Chosen by scripts/nfl-backtest.mts on 2002-2014; see the vault, NFL/Líkanið. */
-export const NFL_ELO: EloParams = { K: 20, HFA: 48, R: 1 / 3, BYE: 25 }
+/**
+ * Chosen by scripts/nfl-backtest.mts on 2016-2025. Home advantage has shrunk
+ * (best HFA 55 before 2017, 30-40 since); tuning on recent seasons scored no
+ * worse out of sample on 2020-2025. See the vault, NFL/Líkanið.
+ */
+export const NFL_ELO: EloParams = { K: 20, HFA: 40, R: 0.4, BYE: 35 }
 export const ELO_MEAN = 1505
 
 export const franchiseOf = (abbr: string) => FRANCHISE[abbr] ?? abbr
@@ -19,7 +23,16 @@ export function movMultiplier(margin: number, winnerDiff: number): number {
 
 export type EloGame = Pick<NflGame, 'game_id' | 'season' | 'game_type' | 'week' | 'kickoff' | 'home' | 'away' | 'home_score' | 'away_score' | 'neutral'>
 
-export interface EloRow { game_id: string; team: string; season: number; week: number; elo_before: number; elo_after: number }
+export interface EloRow {
+  game_id: string
+  team: string
+  season: number
+  week: number
+  elo_before: number
+  elo_after: number
+  /** What the model gave this club before kickoff. */
+  p_win: number
+}
 export interface EloRecord { game_id: string; season: number; home: string; away: string; diff: number; pHome: number; margin: number }
 export interface EloState { ratings: Map<string, number>; lastSeason: Map<string, number>; scheduled: Set<string>; params: EloParams }
 
@@ -71,8 +84,8 @@ export function runElo(games: EloGame[], params: EloParams = NFL_ELO) {
     state.ratings.set(h, eh + delta)
     state.ratings.set(a, ea - delta)
     rows.push(
-      { game_id: g.game_id, team: h, season: g.season, week: g.week, elo_before: eh, elo_after: eh + delta },
-      { game_id: g.game_id, team: a, season: g.season, week: g.week, elo_before: ea, elo_after: ea - delta },
+      { game_id: g.game_id, team: h, season: g.season, week: g.week, elo_before: eh, elo_after: eh + delta, p_win: pHome },
+      { game_id: g.game_id, team: a, season: g.season, week: g.week, elo_before: ea, elo_after: ea - delta, p_win: 1 - pHome },
     )
     records.push({ game_id: g.game_id, season: g.season, home: h, away: a, diff, pHome, margin })
   }
@@ -88,4 +101,23 @@ export function predictGame(g: EloGame, state: EloState, params: EloParams = sta
   const eloAway = rating(s, franchiseOf(g.away), g.season, false)
   const diff = gameDiff(s, g, eloHome, eloAway)
   return { eloHome, eloAway, diff, pHome: winProb(diff), spread: eloSpread(diff) }
+}
+
+/**
+ * Rebuild the state from stored rows (latest per club) plus this season's
+ * schedule, so a page can forecast without replaying 7,000 games.
+ */
+export function stateFromRows(rows: Pick<EloRow, 'team' | 'season' | 'week' | 'elo_after'>[], schedule: EloGame[], params: EloParams = NFL_ELO): EloState {
+  const latest = new Map<string, Pick<EloRow, 'season' | 'week' | 'elo_after'>>()
+  for (const r of rows) {
+    const cur = latest.get(r.team)
+    if (!cur || r.season > cur.season || (r.season === cur.season && r.week > cur.week)) latest.set(r.team, r)
+  }
+  const state: EloState = { ratings: new Map(), lastSeason: new Map(), scheduled: new Set(), params }
+  for (const [team, r] of latest) { state.ratings.set(team, r.elo_after); state.lastSeason.set(team, r.season) }
+  for (const g of schedule) if (g.game_type === 'REG') {
+    state.scheduled.add(slot(g.season, g.week, franchiseOf(g.home)))
+    state.scheduled.add(slot(g.season, g.week, franchiseOf(g.away)))
+  }
+  return state
 }

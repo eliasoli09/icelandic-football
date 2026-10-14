@@ -1,5 +1,6 @@
 import { db } from '../db'
 import { parseGames, parseTeams } from './csv'
+import { runElo } from './elo'
 import { isPlayed, type NflGame } from './types'
 
 export const GAMES_URL = 'https://github.com/nflverse/nfldata/raw/master/data/games.csv'
@@ -8,7 +9,7 @@ const SECRET = () => process.env.CRON_SECRET!
 const BATCH = 500
 const STALE_HOURS = 18
 
-export interface NflIngestResult { season: number; games: number; newResults: number; warnings: string[] }
+export interface NflIngestResult { season: number; games: number; newResults: number; warnings: string[]; elo: { rows: number } | { error: string } }
 
 /** The KSÍ scraper once reported newMatches: 0 for six weeks without a word, so say what looks wrong. */
 export function ingestWarnings(season: NflGame[], now: Date, expectedTeams = 32): string[] {
@@ -61,10 +62,29 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
   await call('rpc_upsert_nfl_teams', teams)
   await call('rpc_upsert_nfl_games', rows)
 
+  // Elo is a display layer on top of the results: if it fails, the results still count.
+  const elo = await writeElo(games, opts.all ? null : season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+
   return {
     season,
     games: rows.length,
     newResults: current.filter((g) => isPlayed(g) && !before.has(g.game_id)).length,
     warnings: ingestWarnings(current, opts.now ?? new Date()),
+    elo,
   }
+}
+
+const round = (x: number, d: number) => Math.round(x * 10 ** d) / 10 ** d
+
+/**
+ * Replay every game since 1999 (milliseconds) and write the rows. Daily runs
+ * write only the current season: earlier ratings cannot change unless an old
+ * result does, and `--all` covers that.
+ */
+async function writeElo(games: NflGame[], onlySeason: number | null): Promise<{ rows: number }> {
+  const rows = runElo(games).rows
+    .filter((r) => onlySeason === null || r.season === onlySeason)
+    .map((r) => ({ ...r, elo_before: round(r.elo_before, 2), elo_after: round(r.elo_after, 2), p_win: round(r.p_win, 5) }))
+  await call('rpc_upsert_nfl_elo', rows)
+  return { rows: rows.length }
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ELO_MEAN, eloSpread, movMultiplier, predictGame, runElo, winProb, type EloParams } from '../src/lib/nfl/elo'
+import { ELO_MEAN, eloSpread, movMultiplier, predictGame, runElo, stateFromRows, winProb, type EloParams } from '../src/lib/nfl/elo'
 import type { NflGame } from '../src/lib/nfl/types'
 
 const P: EloParams = { K: 20, HFA: 48, R: 1 / 3, BYE: 25 }
@@ -68,5 +68,19 @@ describe('runElo', () => {
   it('óspilaðir leikir breyta engu en teljast í dagskrá', () => {
     const r = runElo([g(2020, 1, 'A', 10, 'B', 0), g(2020, 2, 'A', null, 'B', null)], P)
     expect(r.records).toHaveLength(1)
+  })
+})
+
+describe('stateFromRows', () => {
+  it('spáir eins og keyrslan sjálf, úr geymdum röðum', () => {
+    const games = [g(2020, 1, 'A', 30, 'B', 3), g(2020, 2, 'B', 21, 'C', 20), g(2020, 3, 'C', null, 'A', null), g(2021, 1, 'A', null, 'B', null)]
+    const run = runElo(games, P)
+    const fromRows = stateFromRows(run.rows, games, P)
+    for (const x of [games[2], games[3]]) expect(predictGame(x, fromRows, P)).toEqual(predictGame(x, run.state, P))
+  })
+  it('geymir líkurnar sem liðið fékk fyrir leik', () => {
+    const run = runElo([g(2020, 1, 'A', 30, 'B', 3)], P)
+    expect(run.rows[0].p_win + run.rows[1].p_win).toBeCloseTo(1, 12)
+    expect(run.rows[0].p_win).toBeCloseTo(winProb(48), 12)
   })
 })
