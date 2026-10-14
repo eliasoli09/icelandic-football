@@ -1,7 +1,7 @@
 import { runElo, eloSpread, type EloGame, type EloParams } from './elo'
 
-/** Parameters are chosen on seasons up to this one and never on later ones. */
-export const TUNE_LAST_SEASON = 2014
+/** First season of the main test window; nothing from it on may choose parameters. */
+export const TEST_FROM = 2015
 
 export interface Pred { p: number; s: number; spread: number; margin: number }
 export interface Score { n: number; logLoss: number; brier: number; acc: number; spreadMae: number }
@@ -22,10 +22,10 @@ export function score(preds: Pred[]): Score {
 }
 
 export const GRID = {
-  K: [15, 20, 25, 30],
-  HFA: [20, 30, 40, 48, 55, 65],
-  R: [0.2, 0.25, 1 / 3, 0.4, 0.5],
-  BYE: [0, 15, 25, 35],
+  K: [15, 20, 25, 30, 35],
+  HFA: [20, 30, 40, 48, 55, 65, 75],
+  R: [0.2, 1 / 3, 0.4, 0.5, 0.6, 0.7],
+  BYE: [0, 15, 25, 35, 50, 65],
 }
 
 /** Model predictions for the played games of [from, to], from a run over everything. */
@@ -35,9 +35,9 @@ export function modelPreds(games: EloGame[], params: EloParams, from: number, to
     .map((r) => ({ game_id: r.game_id, p: r.pHome, s: r.margin > 0 ? 1 : r.margin < 0 ? 0 : 0.5, spread: eloSpread(r.diff), margin: r.margin }))
 }
 
-/** Grid search on log loss. Throws if asked to look at a season it must not see. */
-export function tune(games: EloGame[], from: number, to: number, grid = GRID): { params: EloParams; logLoss: number } {
-  if (to > TUNE_LAST_SEASON) throw new Error(`Stillingar má aðeins velja á tímabilum til og með ${TUNE_LAST_SEASON}, ekki ${to}`)
+/** Grid search on log loss. Throws if the tuning window reaches the seasons it will be tested on. */
+export function tune(games: EloGame[], from: number, to: number, testFrom = TEST_FROM, grid = GRID): { params: EloParams; logLoss: number } {
+  if (to >= testFrom) throw new Error(`Stillingar má aðeins velja á tímabilum fyrir ${testFrom}, ekki til ${to}`)
   let best = { params: { K: 0, HFA: 0, R: 0, BYE: 0 }, logLoss: Infinity }
   for (const K of grid.K) for (const HFA of grid.HFA) for (const R of grid.R) for (const BYE of grid.BYE) {
     const params = { K, HFA, R, BYE }
