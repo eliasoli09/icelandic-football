@@ -8,7 +8,8 @@ import { seasonForecasts } from '@/lib/nfl/forecast'
 import { teamForm, type TeamForm } from '@/lib/nfl/form'
 import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
 import { devig } from '@/lib/nfl/odds'
-import { nflGame, nflMeetings, nflQbByName, nflSeasonModel } from '@/lib/nfl/queries'
+import { nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel } from '@/lib/nfl/queries'
+import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
 import { clock, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 import { weekLabel } from '@/lib/nfl/week'
@@ -30,6 +31,7 @@ export default async function NflGamePage({ params }: Props) {
   const teams = new Map(model.teams.map((t) => [t.abbr, t]))
   const names = (abbr: string) => model.teams.filter((t) => t.franchise === franchiseOf(abbr)).map((t) => t.abbr)
   const meetings = (await nflMeetings(names(game.home), names(game.away), 6)).filter((g) => g.game_id !== game.game_id).slice(0, 5)
+  const news = await nflNews({ teams: [franchiseOf(game.home), franchiseOf(game.away)], sinceDays: 7, limit: 4 }).catch(() => [])
 
   const played = isPlayed(game)
   const f = seasonForecasts(model.games, model.elo, model.state)[game.game_id]
@@ -118,6 +120,14 @@ export default async function NflGamePage({ params }: Props) {
           <TeamPanel key={side} team={team} abbr={abbr} elo={eloNow(side)} form={teamForm(abbr, game.kickoff, model.games, model.elo)} qb={qb} qbId={qbId} newQb={played ? null : newQb} />
         ))}
       </section>
+
+      {news.length > 0 && (
+        <section className="grid gap-3">
+          <h2 className="display text-lg font-extrabold">Fréttir um liðin</h2>
+          <NewsList items={news} compact />
+          <p className="text-[11px] muted">{NEWS_NOTE}</p>
+        </section>
+      )}
 
       <section className="card p-5">
         <h2 className="display text-lg font-extrabold mb-3">Innbyrðis</h2>

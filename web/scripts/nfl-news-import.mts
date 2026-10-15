@@ -5,8 +5,14 @@
  *   --dry  check only, write nothing
  */
 import { readFileSync } from 'fs'
-import { join } from 'path'
-import { webDir } from './_env.mts'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
+
+const webDir = join(dirname(fileURLToPath(import.meta.url)), '..')
+for (const line of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')) {
+  const m = line.match(/^([A-Z_]+)=(.*)$/)
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2]
+}
 
 const { parseReply } = await import(join(webDir, 'src/lib/nfl/news.ts'))
 const { writeSummaries } = await import(join(webDir, 'src/lib/nfl/newsIngest.ts'))

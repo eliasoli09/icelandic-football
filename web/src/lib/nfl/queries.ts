@@ -135,3 +135,15 @@ export async function nflQbByName(name: string): Promise<string | null> {
   if (error) throw error
   return data && data.length === 1 ? data[0].player_id : null
 }
+
+export interface NewsItem { url: string; source: string; published_at: string; teams: string[]; title_is: string; summary_is: string }
+
+/** Summarised items only, newest first; optionally those naming one of `teams`. */
+export async function nflNews(opts: { limit?: number; teams?: string[]; sinceDays?: number } = {}): Promise<NewsItem[]> {
+  let q = db().from('nfl_news').select('url, source, published_at, teams, title_is, summary_is').not('summary_is', 'is', null)
+  if (opts.teams?.length) q = q.overlaps('teams', opts.teams)
+  if (opts.sinceDays) q = q.gte('published_at', new Date(Date.now() - opts.sinceDays * 86400_000).toISOString())
+  const { data, error } = await q.order('published_at', { ascending: false }).limit(opts.limit ?? 50)
+  if (error) throw error
+  return (data ?? []) as NewsItem[]
+}
