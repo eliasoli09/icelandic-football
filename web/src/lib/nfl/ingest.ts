@@ -3,6 +3,7 @@ import { parseGames, parseTeams } from './csv'
 import { runElo, type EloRow, type EloState } from './elo'
 import { simulateSeason } from './sim'
 import { ingestPlayers } from './playerIngest'
+import { fetchNews, summarizeNews } from './newsIngest'
 import { isPlayed, type NflGame, type NflTeam } from './types'
 
 export const GAMES_URL = 'https://github.com/nflverse/nfldata/raw/master/data/games.csv'
@@ -19,6 +20,7 @@ export interface NflIngestResult {
   elo: { rows: number } | { error: string }
   sim: { sims: number; ms: number } | { error: string }
   players: { players: number; weeks: number } | { error: string }
+  news: { found: number; added: number; failed: string[]; summaries: unknown } | { error: string }
 }
 
 /** Hot simulation, chosen by scripts/nfl-sim-backtest.mts; 10,000 runs take a few seconds. */
@@ -82,6 +84,11 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
   const sim = await writeSim(current, teams, run.state).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
   // player stats are a separate feed: a failure there leaves the rest untouched
   const players = await ingestPlayers([season]).then(({ players, weeks }) => ({ players, weeks })).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+  // news last: a slow feed or summariser must not hold up anything above
+  const clubs = teams.filter((t) => t.franchise === t.abbr)
+  const news = await fetchNews(clubs)
+    .then(async (f) => ({ ...f, summaries: await summarizeNews().catch((e) => ({ error: e instanceof Error ? e.message : String(e) })) }))
+    .catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
 
   return {
     season,
@@ -91,6 +98,7 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
     elo,
     sim,
     players,
+    news,
   }
 }
 
