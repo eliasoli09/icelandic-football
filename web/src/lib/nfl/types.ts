@@ -38,6 +38,9 @@ export interface NflGame {
   roof: string | null
   away_qb: string | null
   home_qb: string | null
+  /** gsis ids, the same as nfl_players.player_id; filled for history and the next round only. */
+  away_qb_id: string | null
+  home_qb_id: string | null
 }
 
 /** Old abbreviations point at the club that carries the history today. */

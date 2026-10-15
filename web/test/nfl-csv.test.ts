@@ -29,6 +29,14 @@ describe('parseGames á tímabilinu 2025', () => {
     expect([...types].sort()).toEqual(['CON', 'DIV', 'REG', 'SB', 'WC'])
     expect(games.filter((g) => g.game_type === 'SB')).toHaveLength(1)
   })
+  it('byrjunarleikstjórnendur með auðkenni', () => {
+    const g = games.find((x) => x.game_id === '2025_01_DAL_PHI')!
+    expect(g.away_qb_id).toBe('00-0033077')
+    expect(g.home_qb_id).toBe('00-0036389')
+    const [head, row] = fx('nfl-2025.csv').split('\n')
+    const blank = parseGames(`${head}\n${row.replace('00-0033077', '')}\n`)
+    expect(blank[0].away_qb_id).toBeNull()
+  })
   it('hafnar skrá ef dálk vantar', () => {
     expect(() => parseGames('game_id,season\n2025_01_A_B,2025\n')).toThrow(/dálk/)
   })
