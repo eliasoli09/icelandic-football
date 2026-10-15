@@ -87,3 +87,24 @@ export function ratingAdjuster(p: QbParams, epa: QbEpa): GameAdjuster & { player
     },
   }
 }
+
+/**
+ * EPA of every game a player threw a pass in, from nfl_player_weeks
+ * (about 650 a season since 1999). Read a season at a time, in pages of 1,000.
+ */
+export async function fetchQbEpa(seasons: number[]): Promise<QbEpa> {
+  const { db } = await import('../db')
+  const out: QbEpa = new Map()
+  await Promise.all(seasons.map(async (season) => {
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await db().from('nfl_player_weeks')
+        .select('player_id, week, season_type, passing_epa, rushing_epa')
+        .eq('season', season).gt('attempts', 0)
+        .order('player_id').order('week').order('season_type').range(from, from + 999)
+      if (error) throw new Error(`nfl_player_weeks ${season}: ${error.message}`)
+      for (const r of data) out.set(epaKey(r.player_id, season, r.week, r.season_type), r.passing_epa + r.rushing_epa)
+      if (data.length < 1000) break
+    }
+  }))
+  return out
+}

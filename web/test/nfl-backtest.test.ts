@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { score, tune, TEST_FROM } from '../src/lib/nfl/backtest'
+import { score, tune, tuneBy, TEST_FROM } from '../src/lib/nfl/backtest'
 
 describe('score', () => {
   it('log loss, Brier, hittni og forgjafarskekkja', () => {
@@ -13,6 +13,13 @@ describe('score', () => {
     expect(s.brier).toBeCloseTo((0.04 + 0.16 + 0) / 3, 12)
     expect(s.acc).toBe(1) // ties do not count
     expect(s.spreadMae).toBeCloseTo((4 + 8 + 0) / 3, 12)
+  })
+})
+
+describe('tuneBy', () => {
+  it('velur lægsta og neitar prófunarárunum', () => {
+    expect(tuneBy([3, 1, 2], (x) => x, 2014).best).toBe(1)
+    expect(() => tuneBy([1], (x) => x, TEST_FROM)).toThrow(/2015/)
   })
 })
 

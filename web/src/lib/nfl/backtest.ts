@@ -1,4 +1,4 @@
-import { runElo, eloSpread, type EloGame, type EloParams } from './elo'
+import { runElo, eloSpread, type EloGame, type EloParams, type GameAdjuster } from './elo'
 
 /** First season of the main test window; nothing from it on may choose parameters. */
 export const TEST_FROM = 2015
@@ -29,8 +29,8 @@ export const GRID = {
 }
 
 /** Model predictions for the played games of [from, to], from a run over everything. */
-export function modelPreds(games: EloGame[], params: EloParams, from: number, to: number): (Pred & { game_id: string })[] {
-  return runElo(games, params).records
+export function modelPreds(games: EloGame[], params: EloParams, from: number, to: number, adjuster?: () => GameAdjuster): (Pred & { game_id: string })[] {
+  return runElo(games, params, adjuster?.()).records
     .filter((r) => r.season >= from && r.season <= to)
     .map((r) => ({ game_id: r.game_id, p: r.pHome, s: r.margin > 0 ? 1 : r.margin < 0 ? 0 : 0.5, spread: eloSpread(r.diff), margin: r.margin }))
 }
@@ -44,6 +44,14 @@ export function tune(games: EloGame[], from: number, to: number, testFrom = TEST
     const l = score(modelPreds(games, params, from, to)).logLoss
     if (l < best.logLoss) best = { params, logLoss: l }
   }
+  return best
+}
+
+/** Pick the candidate with the lowest score. Same guard as `tune`: the window must end before the test seasons. */
+export function tuneBy<T>(candidates: T[], run: (c: T) => number, to: number, testFrom = TEST_FROM): { best: T; logLoss: number } {
+  if (to >= testFrom) throw new Error(`Stillingar má aðeins velja á tímabilum fyrir ${testFrom}, ekki til ${to}`)
+  let best = { best: candidates[0], logLoss: Infinity }
+  for (const c of candidates) { const l = run(c); if (l < best.logLoss) best = { best: c, logLoss: l } }
   return best
 }
 
