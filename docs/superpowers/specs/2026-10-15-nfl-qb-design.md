@@ -69,3 +69,22 @@ Leikur án skráðs byrjunarmanns (framtíðarleikir lengra en næsta umferð) f
 
 ## Útgáfa
 Eins og áður: localhost fyrir Elias, ekkert deploy fyrr en "full send".
+
+## Niðurstaða (15. okt): hvorug útgáfan stenst, ekkert fer á síðuna
+Úttakið er í `2026-10-15-nfl-qb-results.txt`.
+- **Fyrsta keyrslan var of jákvæð** (B −0,0071 [−0,0113, −0,0028]). Grunnstillingarnar
+  `NFL_ELO` voru valdar á 2016-2025, sem skarast við prófunarárin. Mælingin velur núna
+  Elo-stillingarnar líka á 2002-2014 (K 25, HFA 55, R 0,5, BYE 35).
+- **Hrein mæling** eftir að leitin var víkkuð þar til engin stilling var á jaðri (t = 0 er
+  eðlilegt gólf):
+  - A: −0,0024 [−0,0052, +0,0005]
+  - B: −0,0029 [−0,0063, +0,0005]
+  - Bæði bilin ná yfir 0.
+- **Stefnan er sú sama í öllum útgáfum**, um 0,0025-0,0035, sem er um 10-15% af bilinu upp í
+  Vegas. Það er þó ekki marktækt, og hvort B stóðst réð breidd leitarinnar. Það er ekki traust
+  niðurstaða.
+- **Stillingar B eru óstöðugar milli tímabila.** Á 2002-2014 var valið c 15, a 0,3, t 0,
+  n0 10, forgildi −30 (í raun algild leikstjórnandaeinkunn). Á 2016-2025 var valið c 15,
+  a 0,02, t 0,02, n0 2, forgildi −6.
+- Grein `nfl-qb` er ekki sameinuð `main`. Taflan `nfl_game_qb` og `rpc_replace_nfl_game_qb`
+  eru í gagnagrunninum, tómar og ónotaðar.

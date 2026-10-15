@@ -25,4 +25,14 @@ describe('seasonForecasts', () => {
     expect(f.newQb?.home).toEqual({ qb: 'Cooper Rush', usual: 'Lamar Jackson' })
     expect(f.newQb?.away).toBeNull()
   })
+  it('leiðrétting fyrir leikstjórnanda fer í spána og fylgir með', () => {
+    const open = games.map((g) => (g.game_id === '2025_05_HOU_BAL' ? { ...g, home_score: null, away_score: null } : g))
+    const run = runElo(open, NFL_ELO)
+    const adj = { home: -60, away: 5 }
+    const f = seasonForecasts(open, run.rows, run.state, { '2025_05_HOU_BAL': adj })['2025_05_HOU_BAL']
+    const g = open.find((x) => x.game_id === '2025_05_HOU_BAL')!
+    expect(f.pHome).toBe(predictGame(g, run.state, NFL_ELO, adj).pHome)
+    expect(f.qbAdj).toEqual(adj)
+    expect(seasonForecasts(open, run.rows, run.state)['2025_05_HOU_BAL'].qbAdj).toBeNull()
+  })
 })

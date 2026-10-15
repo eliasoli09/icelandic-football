@@ -1,25 +1,24 @@
 EPA-línur: 17713; byrjunarmenn með EPA í leiknum: 14502 af 14552
+Elo valið á 2002-2014: { K: 25, HFA: 55, R: 0.5, BYE: 35 }
 
-1) val á 2002-2014 (núverandi líkan: 0.62640)
-   A: P = 60, log loss 0.62320
-   B: {"c":10,"a":0.1,"t":0.02,"n0":2,"prior":-15}, log loss 0.62061
+1) val á 2002-2014 (núverandi líkan: 0.62492)
+   A: P = 60, log loss 0.62211
+   B: {"c":15,"a":0.3,"t":0,"n0":10,"prior":-30}, log loss 0.62001
 
 2) prófun 2015-2025, 3027 leikir með Vegas-verði
-   núverandi log loss 0.63373  hittni 64.7%  forgjafarskekkja 10.15
-   A         log loss 0.63109  hittni 65.3%  forgjafarskekkja 10.13
-   B         log loss 0.62665  hittni 64.8%  forgjafarskekkja 10.09
+   núverandi log loss 0.63603  hittni 64.4%  forgjafarskekkja 10.18
+   A         log loss 0.63367  hittni 64.7%  forgjafarskekkja 10.17
+   B         log loss 0.63311  hittni 63.5%  forgjafarskekkja 10.19
    Vegas     log loss 0.61263  hittni 66.2%  forgjafarskekkja 9.81
-   A − núverandi: -0.00264 [-0.00546, 0.00017]
-   B − núverandi: -0.00709 [-0.01133, -0.00284]
-   B − A:         -0.00444 [-0.00845, -0.00044]
-   B − Vegas:     0.01402 [0.00771, 0.02032]
-   núv. − Vegas:  0.02110 [0.01388, 0.02832]
+   A − núverandi: -0.00236 [-0.00519, 0.00047]
+   B − núverandi: -0.00292 [-0.00631, 0.00047]
+   B − A:         -0.00056 [-0.00399, 0.00288]
+   B − Vegas:     0.02048 [0.01336, 0.02760]
+   núv. − Vegas:  0.02340 [0.01591, 0.03089]
 
-3) úrskurður: B stenst og fer á síðuna
-
-4) lokastillingar B, valdar á 2016-2025: {"best":{"c":15,"a":0.02,"t":0.02,"n0":2,"prior":-6},"logLoss":0.6239449725667559}
+3) úrskurður: hvorug stenst, ekkert fer á síðuna
 
 5) KC 2025 (Mahomes frá í vikum 16-18)
-   núverandi: KC eftir viku 15 1584 → 1567, í lok 2025 1480
-   A: KC eftir viku 15 1580 → 1563, í lok 2025 1482
-   B: KC eftir viku 15 1603 → 1585, í lok 2025 1518
+   núverandi: KC eftir viku 15 1572 → 1550, í lok 2025 1447
+   A: KC eftir viku 15 1567 → 1545, í lok 2025 1449
+   B: KC eftir viku 15 1556 → 1533, í lok 2025 1447

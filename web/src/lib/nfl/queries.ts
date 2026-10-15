@@ -1,5 +1,5 @@
 import { db } from '../db'
-import { stateFromRows, type EloRow, type EloState } from './elo'
+import { stateFromRows, type EloRow, type EloState, type QbAdj } from './elo'
 import type { SimTeam } from './sim'
 import { STATS, type NflPlayer, type PlayerWeek, type SeasonTotal } from './players'
 import type { NflGame, NflTeam } from './types'
@@ -74,12 +74,33 @@ export interface SeasonModel {
   /** This season's and last season's rows, oldest first. */
   elo: StoredElo[]
   state: EloState
+  /** Each side's quarterback adjustment by game_id, for games with listed starters. */
+  qb: Record<string, QbAdj>
+}
+
+/** This season's stored adjustments; none (rather than an error page) if the table cannot be read. */
+export async function nflGameQb(season: number, games: NflGame[]): Promise<Record<string, QbAdj>> {
+  const { data, error } = await db().from('nfl_game_qb').select('game_id, team, adj').eq('season', season).range(0, 999)
+  if (error) { console.error('nfl_game_qb:', error.message); return {} }
+  const home = new Map(games.map((g) => [g.game_id, g.home]))
+  const out: Record<string, QbAdj> = {}
+  for (const r of data ?? []) {
+    const x = (out[r.game_id] ??= { home: 0, away: 0 })
+    x[home.get(r.game_id) === r.team ? 'home' : 'away'] = Number(r.adj)
+  }
+  return out
 }
 
 /** Everything a page needs to show and forecast one season. Last season's rows cover clubs yet to play. */
 export async function nflSeasonModel(season: number): Promise<SeasonModel> {
+  if (process.env.NFL_PREVIEW_ELO === '1') {
+    const { previewModel } = await import('./preview')
+    const [games, teams, p] = await Promise.all([nflSeasonGames(season), nflTeams(), previewModel()])
+    const elo = p.rows.filter((r) => r.season === season || r.season === season - 1)
+    return { season, games, teams, elo, state: stateFromRows(elo, games), qb: p.qb }
+  }
   const [games, teams, elo] = await Promise.all([nflSeasonGames(season), nflTeams(), nflEloRows([season - 1, season])])
-  return { season, games, teams, elo, state: stateFromRows(elo, games) }
+  return { season, games, teams, elo, state: stateFromRows(elo, games), qb: await nflGameQb(season, games) }
 }
 
 export interface StoredSim extends SimTeam { sims: number; run_at: string }

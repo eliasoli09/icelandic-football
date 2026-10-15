@@ -28,6 +28,12 @@ export const REASON_LABEL: Record<Criterion, string> = {
 
 export const probLabel = (p: number) => `${Math.round(p * 100)}%`
 
+/** A starter's adjustment in whole Elo points, signed, with a real minus. */
+export function qbAdjLabel(adj: number): string {
+  const r = Math.round(adj)
+  return r === 0 ? '0 Elo' : `${r > 0 ? '+' : '−'}${Math.abs(r)} Elo`
+}
+
 /** The model's margin on the same scale as Vegas, rounded to the half point. */
 export const modelSpreadLabel = (home: string, away: string, spread: number) =>
   spreadLabel({ home, away, spread_line: Math.round(spread * 2) / 2 })

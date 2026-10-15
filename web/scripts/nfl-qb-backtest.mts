@@ -1,6 +1,7 @@
 /**
  * Quarterback adjustments to NFL Elo, measured forward (spec 2026-10-15-nfl-qb-design.md).
- *  1. A (fixed penalty) and B (EPA rating) tuned on 2002-2014, Elo itself held at NFL_ELO.
+ *  1. Elo tuned on 2002-2014 as in nfl-backtest.mts, then A (fixed penalty) and B
+ *     (EPA rating) tuned on 2002-2014 on top of it.
  *  2. Tested on 2015-2025 against today's model and Vegas, paired 95% intervals.
  *  3. Verdict: a version ships only if its whole interval against today's model is below 0.
  *  4. Production parameters for the winner, tuned on 2016-2025.
@@ -17,7 +18,7 @@ for (const line of readFileSync(join(webDir, '.env.local'), 'utf-8').split('\n')
 }
 const { parseGames } = await import(join(webDir, 'src/lib/nfl/csv.ts'))
 const { GAMES_URL } = await import(join(webDir, 'src/lib/nfl/ingest.ts'))
-const { modelPreds, score, pairedDiff, ll, tuneBy } = await import(join(webDir, 'src/lib/nfl/backtest.ts'))
+const { modelPreds, score, pairedDiff, ll, tuneBy, tune } = await import(join(webDir, 'src/lib/nfl/backtest.ts'))
 const { NFL_ELO, runElo } = await import(join(webDir, 'src/lib/nfl/elo.ts'))
 const { devig } = await import(join(webDir, 'src/lib/nfl/odds.ts'))
 const { changeAdjuster, ratingAdjuster, fetchQbEpa } = await import(join(webDir, 'src/lib/nfl/qbElo.ts'))
@@ -39,11 +40,15 @@ const ci = (d: any) => `${d.mean.toFixed(5)} [${d.lo.toFixed(5)}, ${d.hi.toFixed
 const lls = (xs: any[]) => xs.map((x) => ll(x.p, x.s))
 
 const upTo = (to: number) => games.filter((g: any) => g.season <= to)
-const fit = (adj: (() => any) | undefined, from: number, to: number) => score(modelPreds(upTo(to), NFL_ELO, from, to, adj)).logLoss
-const edge = (name: string, v: number, grid: number[]) => (v === grid[0] || v === grid[grid.length - 1] ? `  (${name} á jaðri)` : '')
+// Elo parameters from before the test seasons: NFL_ELO itself was chosen on 2016-2025
+const ELO = tune(games, 2002, 2014, 2015).params
+console.log('Elo valið á 2002-2014:', ELO)
+let eloFor = ELO
+const fit = (adj: (() => any) | undefined, from: number, to: number) => score(modelPreds(upTo(to), eloFor, from, to, adj)).logLoss
+const edge = (name: string, v: number, grid: number[]) => ((v === grid[0] && v !== 0) || v === grid[grid.length - 1] ? `  (${name} á jaðri)` : '')
 
 const P_GRID = [0, 10, 20, 30, 40, 50, 60, 80, 100, 120]
-const B_GRID = { c: [5, 10, 15, 20, 25, 30, 40], a: [0.01, 0.02, 0.05, 0.1, 0.2], t: [0.01, 0.02, 0.05, 0.1, 0.2], n0: [0, 1, 2, 5], prior: [-30, -20, -15, -12, -9, -6, -3, 0] }
+const B_GRID = { c: [1, 2, 3, 5, 10, 15, 20, 30], a: [0.02, 0.05, 0.1, 0.2, 0.3, 0.5], t: [0, 0.001, 0.003, 0.01, 0.02, 0.05], n0: [0, 1, 2, 5, 10, 20, 40], prior: [-120, -80, -50, -30, -15, -6, 0] }
 const bCands = B_GRID.c.flatMap((c) => B_GRID.a.flatMap((a) => B_GRID.t.flatMap((t) => B_GRID.n0.flatMap((n0) => B_GRID.prior.map((prior) => ({ c, a, t, n0, prior }))))))
 
 function choose(from: number, to: number, testFrom: number) {
@@ -60,9 +65,9 @@ console.log(`   A: P = ${A.best}, log loss ${A.logLoss.toFixed(5)}${edge('P', A.
 console.log(`   B: ${JSON.stringify(B.best)}, log loss ${B.logLoss.toFixed(5)}${Object.entries(B_GRID).map(([k, g]) => edge(k, (B.best as any)[k], g)).join('')}`)
 
 // 2. test
-const now = modelPreds(games, NFL_ELO, 2015, 2025).filter(priced)
-const a = modelPreds(games, NFL_ELO, 2015, 2025, () => changeAdjuster(A.best)).filter(priced)
-const b = modelPreds(games, NFL_ELO, 2015, 2025, () => ratingAdjuster(B.best, epa)).filter(priced)
+const now = modelPreds(games, ELO, 2015, 2025).filter(priced)
+const a = modelPreds(games, ELO, 2015, 2025, () => changeAdjuster(A.best)).filter(priced)
+const b = modelPreds(games, ELO, 2015, 2025, () => ratingAdjuster(B.best, epa)).filter(priced)
 const mk = now.map(asMarket)
 const dA = pairedDiff(lls(a), lls(now))
 const dB = pairedDiff(lls(b), lls(now))
@@ -84,13 +89,14 @@ console.log('\n3) úrskurður:', winner ? `${winner} stenst og fer á síðuna` 
 
 // 4. production parameters
 if (winner) {
+  eloFor = NFL_ELO
   const prod = choose(2016, 2025, 2026)
   console.log(`\n4) lokastillingar ${winner}, valdar á 2016-2025:`, JSON.stringify(winner === 'A' ? prod.A : prod.B))
 }
 
 // 5. Kansas City at the end of 2025
 const show = (label: string, adj?: any) => {
-  const run = runElo(games, NFL_ELO, adj)
+  const run = runElo(games, ELO, adj)
   const kc = run.rows.filter((r: any) => r.team === 'KC' && r.season === 2025)
   const w15 = kc.filter((r: any) => r.week <= 15).at(-1)
   console.log(`   ${label}: KC eftir viku 15 ${w15.elo_before.toFixed(0)} → ${w15.elo_after.toFixed(0)}, í lok 2025 ${kc.at(-1).elo_after.toFixed(0)}`)
