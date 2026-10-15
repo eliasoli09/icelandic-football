@@ -1,4 +1,4 @@
-import { diffFor, franchiseOf, movMultiplier, ratingFor, winProb, type EloState } from './elo'
+import { diffFor, franchiseOf, movMultiplier, ratingFor, winProb, type EloState, type QbAdj } from './elo'
 import { computeStandings } from './standings'
 import { CONFERENCES, DIVISIONS, isPlayed, type Conference, type GameType, type NflGame, type NflTeam } from './types'
 
@@ -37,7 +37,13 @@ export interface SimTeam {
   p_title: number
 }
 
-export interface SimOptions { sims: number; hot: boolean; seed?: number }
+export interface SimOptions {
+  sims: number
+  hot: boolean
+  seed?: number
+  /** Quarterback adjustment by game_id, for games with a listed starter; others get none. */
+  qbAdj?: Record<string, QbAdj>
+}
 
 /** Margin assumed for an Elo update inside a hot simulation. */
 const SIM_MARGIN = 7
@@ -76,7 +82,8 @@ export function simulateSeason(games: NflGame[], teams: NflTeam[], state: EloSta
 
     const simmed: NflGame[] = done.slice()
     for (const g of open) {
-      const diff = diffFor(state, g, r.get(g.home)!, r.get(g.away)!)
+      const adj = opts.qbAdj?.[g.game_id]
+      const diff = diffFor(state, g, r.get(g.home)!, r.get(g.away)!) + (adj ? adj.home - adj.away : 0)
       const homeWon = rand() < winProb(diff)
       update(g.home, g.away, diff, homeWon)
       simmed.push({ ...g, home_score: homeWon ? 1 : 0, away_score: homeWon ? 0 : 1 })

@@ -1,4 +1,5 @@
-import { franchiseOf, type EloGame, type GameAdjuster, type QbAdj } from './elo'
+import { franchiseOf, type EloGame, type EloRecord, type GameAdjuster, type QbAdj } from './elo'
+import type { NflGame } from './types'
 
 /**
  * Two ways to tell Elo who started at quarterback, measured against each
@@ -51,6 +52,13 @@ export interface QbParams {
   /** EPA a game for a starter we know nothing about. */
   prior: number
 }
+
+/**
+ * B with parameters chosen on 2016-2025 (scripts/nfl-qb-backtest.mts). Tested
+ * on 2015-2025 with parameters from 2002-2014: log loss −0.0071 [−0.0113,
+ * −0.0028] against Elo without it. Unknown starters rate at −6 EPA a game.
+ */
+export const NFL_QB: QbParams = { c: 15, a: 0.02, t: 0.02, n0: 2, prior: -6 }
 
 /** Starter EPA (passing + rushing) of one game. */
 export type QbEpa = Map<string, number>
@@ -106,5 +114,23 @@ export async function fetchQbEpa(seasons: number[]): Promise<QbEpa> {
       if (data.length < 1000) break
     }
   }))
+  return out
+}
+
+export interface GameQbRow { game_id: string; team: string; qb_id: string; qb: string | null; adj: number }
+
+/**
+ * One row per side with a listed starter: played games as the run saw them,
+ * unplayed ones from the adjuster after the run (everything played so far).
+ */
+export function gameQbRows(games: (EloGame & Pick<NflGame, 'home_qb' | 'away_qb'>)[], records: EloRecord[], adjuster: GameAdjuster): GameQbRow[] {
+  const ran = new Map(records.map((r) => [r.game_id, { home: r.adjHome, away: r.adjAway }]))
+  const out: GameQbRow[] = []
+  for (const g of games) {
+    if (!g.home_qb_id && !g.away_qb_id) continue
+    const adj = ran.get(g.game_id) ?? adjuster.before(g)
+    if (g.home_qb_id) out.push({ game_id: g.game_id, team: g.home, qb_id: g.home_qb_id, qb: g.home_qb, adj: adj.home })
+    if (g.away_qb_id) out.push({ game_id: g.game_id, team: g.away, qb_id: g.away_qb_id, qb: g.away_qb, adj: adj.away })
+  }
   return out
 }

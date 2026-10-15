@@ -1,6 +1,7 @@
 import { db } from '../db'
 import { parseGames, parseTeams } from './csv'
-import { runElo, type EloRow, type EloState } from './elo'
+import { NFL_ELO, runElo, type EloRow, type EloState, type QbAdj } from './elo'
+import { NFL_QB, fetchQbEpa, gameQbRows, ratingAdjuster, type GameQbRow } from './qbElo'
 import { simulateSeason } from './sim'
 import { ingestPlayers } from './playerIngest'
 import { fetchNews, summarizeNews } from './newsIngest'
@@ -18,6 +19,7 @@ export interface NflIngestResult {
   newResults: number
   warnings: string[]
   elo: { rows: number } | { error: string }
+  qb: { rows: number } | { error: string }
   sim: { sims: number; ms: number } | { error: string }
   players: { players: number; weeks: number } | { error: string }
   news: { found: number; added: number; failed: string[]; summaries: unknown } | { error: string }
@@ -77,13 +79,30 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
   await call('rpc_upsert_nfl_teams', teams)
   await call('rpc_upsert_nfl_games', rows)
 
+  const fail = (e: unknown) => ({ error: e instanceof Error ? e.message : String(e) })
+  // player stats first: the quarterback adjustment reads the latest week's EPA
+  // from them. A failure there leaves the rest untouched.
+  const players = await ingestPlayers([season]).then(({ players, weeks }) => ({ players, weeks })).catch(fail)
+
   // Elo and the simulation are display layers on top of the results: if either
-  // fails, the results still count and the previous simulation stays up.
-  const run = runElo(games)
-  const elo = await writeElo(run.rows, opts.all ? null : season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
-  const sim = await writeSim(current, teams, run.state).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
-  // player stats are a separate feed: a failure there leaves the rest untouched
-  const players = await ingestPlayers([season]).then(({ players, weeks }) => ({ players, weeks })).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+  // fails, the results still count and the previous ones stay up. Without the
+  // quarterbacks' EPA nothing is rewritten, rather than mixing two models.
+  const first = Math.min(...games.map((g) => g.season))
+  const epa = await fetchQbEpa(Array.from({ length: season - first + 1 }, (_, i) => first + i)).catch(fail)
+  let elo: NflIngestResult['elo'], qb: NflIngestResult['qb'], sim: NflIngestResult['sim']
+  if ('error' in epa) {
+    elo = qb = sim = { error: `EPA leikstjórnenda: ${epa.error}` }
+  } else {
+    const adjuster = ratingAdjuster(NFL_QB, epa)
+    const run = runElo(games, NFL_ELO, adjuster)
+    // the next round's adjustments, from everything played so far
+    const qbAdj: Record<string, QbAdj> = Object.fromEntries(current
+      .filter((g) => !isPlayed(g) && (g.home_qb_id || g.away_qb_id))
+      .map((g) => [g.game_id, adjuster.before(g)]))
+    elo = await writeElo(run.rows, opts.all ? null : season).catch(fail)
+    qb = await writeGameQb(season, gameQbRows(current, run.records, adjuster)).catch(fail)
+    sim = await writeSim(current, teams, run.state, qbAdj).catch(fail)
+  }
   // news last: a slow feed or summariser must not hold up anything above
   const clubs = teams.filter((t) => t.franchise === t.abbr)
   const news = await fetchNews(clubs)
@@ -96,6 +115,7 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
     newResults: current.filter((g) => isPlayed(g) && !before.has(g.game_id)).length,
     warnings: ingestWarnings(current, opts.now ?? new Date()),
     elo,
+    qb,
     sim,
     players,
     news,
@@ -117,11 +137,17 @@ async function writeElo(all: EloRow[], onlySeason: number | null): Promise<{ row
   return { rows: rows.length }
 }
 
-async function writeSim(season: NflGame[], allTeams: NflTeam[], state: EloState): Promise<{ sims: number; ms: number }> {
+async function writeGameQb(season: number, rows: GameQbRow[]): Promise<{ rows: number }> {
+  const { error } = await db().rpc('rpc_replace_nfl_game_qb', { p_secret: SECRET(), p_season: season, p_rows: rows.map((r) => ({ ...r, adj: round(r.adj, 1) })) })
+  if (error) throw new Error(`rpc_replace_nfl_game_qb: ${error.message}`)
+  return { rows: rows.length }
+}
+
+async function writeSim(season: NflGame[], allTeams: NflTeam[], state: EloState, qbAdj: Record<string, QbAdj>): Promise<{ sims: number; ms: number }> {
   const names = new Set(season.flatMap((g) => [g.home, g.away]))
   const teams = allTeams.filter((t) => names.has(t.abbr))
   const t0 = Date.now()
-  const sim = simulateSeason(season, teams, state, { ...NFL_SIM, seed: Date.now() % 1e9 })
+  const sim = simulateSeason(season, teams, state, { ...NFL_SIM, seed: Date.now() % 1e9, qbAdj })
   const rows = Object.values(sim).map((x) => ({
     ...x,
     p_seed: x.p_seed.map((v) => round(v, 5)),

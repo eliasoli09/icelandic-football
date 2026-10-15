@@ -81,3 +81,20 @@ describe('B: EPA-einkunn', () => {
     expect(epaKey('x', 2020, 3, 'REG')).toBe('x:2020:3:REG')
   })
 })
+
+describe('gameQbRows', () => {
+  it('spilaðir leikir úr keyrslunni, óspilaðir úr stöðunni eftir hana, aðeins hliðar með byrjunarmann', async () => {
+    const { runElo, NFL_ELO } = await import('../src/lib/nfl/elo')
+    const { gameQbRows } = await import('../src/lib/nfl/qbElo')
+    const w1 = { ...g(1, 'A', 'x', 'B', 'b'), home_qb: 'X Man', away_qb: 'B Man' }
+    const w2 = { ...g(2, 'A', 'y', 'B', null), home_score: null, away_score: null, home_qb: 'Y Man', away_qb: null }
+    const adj = ratingAdjuster({ c: 10, a: 0.5, t: 0.5, n0: 1, prior: 0 }, new Map([[epaKey('x', 2020, 1, 'REG'), 10]]))
+    const run = runElo([w1, w2], NFL_ELO, adj)
+    const rows = gameQbRows([w1, w2], run.records, adj)
+    expect(rows).toEqual([
+      { game_id: w1.game_id, team: 'A', qb_id: 'x', qb: 'X Man', adj: 0 },
+      { game_id: w1.game_id, team: 'B', qb_id: 'b', qb: 'B Man', adj: 0 },
+      { game_id: w2.game_id, team: 'A', qb_id: 'y', qb: 'Y Man', adj: -50 },
+    ])
+  })
+})

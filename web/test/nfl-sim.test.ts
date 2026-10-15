@@ -52,6 +52,14 @@ describe('simulateSeason á 2025 eftir viku 14', () => {
     const twice = simulateSeason(games, teams, state, { sims: 200, hot: true, seed: 3 })
     expect(again).toEqual(twice)
   })
+  it('leiðrétting fyrir leikstjórnanda í næsta leik lækkar líkur liðsins', () => {
+    const next = games.find((g) => g.game_type === 'REG' && g.week === 15)!
+    const plain = simulateSeason(games, teams, state, { sims: 2000, hot: false, seed: 5 })
+    const hurt = simulateSeason(games, teams, state, { sims: 2000, hot: false, seed: 5, qbAdj: { [next.game_id]: { home: -400, away: 0 } } })
+    expect(hurt[next.home].p_playoffs).toBeLessThanOrEqual(plain[next.home].p_playoffs)
+    expect(hurt[next.away].p_playoffs).toBeGreaterThanOrEqual(plain[next.away].p_playoffs)
+    expect(Object.values(hurt).some((x) => x.p_playoffs !== plain[x.team].p_playoffs)).toBe(true)
+  })
   it(`hraði: 2000 hermanir (${ms} ms)`, () => {
     expect(ms).toBeLessThan(20_000)
   })
