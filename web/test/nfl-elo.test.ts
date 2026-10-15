@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ELO_MEAN, currentRatings, eloSpread, movMultiplier, predictGame, runElo, stateFromRows, winProb, type EloParams } from '../src/lib/nfl/elo'
+import { ELO_MEAN, currentRatings, type GameAdjuster, eloSpread, movMultiplier, predictGame, runElo, stateFromRows, winProb, type EloParams } from '../src/lib/nfl/elo'
 import type { NflGame } from '../src/lib/nfl/types'
 
 const P: EloParams = { K: 20, HFA: 48, R: 1 / 3, BYE: 25 }
@@ -92,5 +92,38 @@ describe('currentRatings', () => {
     const r = currentRatings(run.state, 2021)
     expect(r.get('A')).toBe(run.state.ratings.get('A'))
     expect(r.get('B')).toBeCloseTo(run.state.ratings.get('B')! * 0.6 + ELO_MEAN * 0.4, 9)
+  })
+})
+
+describe('leiðrétting fyrir leikstjórnanda', () => {
+  const season = () => [g(2020, 1, 'A', 30, 'B', 3), g(2020, 2, 'B', 21, 'C', 20), g(2020, 3, 'C', 10, 'A', 13), g(2020, 4, 'A', null, 'B', null)]
+  const fixed = (home: number, away = 0): GameAdjuster => ({ before: () => ({ home, away }), after: () => {} })
+  it('engin leiðrétting gefur sömu raðir og án hennar', () => {
+    const games = season()
+    expect(runElo(games, P, fixed(0)).rows).toEqual(runElo(games, P).rows)
+  })
+  it('leiðréttingin fer í líkurnar og heimaliðið tapar minna á tapi sem búist var við', () => {
+    const games = [g(2020, 1, 'A', 10, 'B', 20)]
+    const plain = runElo(games, P)
+    const adj = runElo(games, P, fixed(-100))
+    expect(adj.records[0].pHome).toBeCloseTo(winProb(48 - 100), 12)
+    expect(adj.records[0].adjHome).toBe(-100)
+    const lost = (r: typeof plain) => ELO_MEAN - r.state.ratings.get('A')!
+    expect(lost(adj)).toBeGreaterThan(0)
+    expect(lost(adj)).toBeLessThan(lost(plain))
+  })
+  it('after er kallað einu sinni á hvern spilaðan leik, í tímaröð', () => {
+    const seen: string[] = []
+    const games = season()
+    runElo([...games].reverse(), P, { before: () => ({ home: 0, away: 0 }), after: (x) => { seen.push(x.game_id) } })
+    expect(seen).toEqual(games.slice(0, 3).map((x) => x.game_id))
+  })
+  it('predictGame tekur leiðréttinguna með', () => {
+    const run = runElo(season(), P)
+    const x = season()[3]
+    const base = predictGame(x, run.state, P)
+    const adj = predictGame(x, run.state, P, { home: -50, away: 25 })
+    expect(adj.diff).toBeCloseTo(base.diff - 75, 9)
+    expect(adj.spread).toBeCloseTo(base.spread - 3, 9)
   })
 })

@@ -22,6 +22,18 @@ export function movMultiplier(margin: number, winnerDiff: number): number {
 }
 
 export type EloGame = Pick<NflGame, 'game_id' | 'season' | 'game_type' | 'week' | 'kickoff' | 'home' | 'away' | 'home_score' | 'away_score' | 'neutral'>
+  & Partial<Pick<NflGame, 'home_qb_id' | 'away_qb_id'>>
+
+/** Elo points added to each side before kickoff (the starting quarterback, lib/nfl/qbElo.ts). */
+export interface QbAdj { home: number; away: number }
+const NO_ADJ: QbAdj = { home: 0, away: 0 }
+
+/**
+ * Gives each side's adjustment before a game and learns from it once played.
+ * The update uses the adjusted odds, so a loss the adjustment expected costs
+ * the club little and does not carry into the next season.
+ */
+export interface GameAdjuster { before(g: EloGame): QbAdj; after(g: EloGame): void }
 
 export interface EloRow {
   game_id: string
@@ -33,7 +45,7 @@ export interface EloRow {
   /** What the model gave this club before kickoff. */
   p_win: number
 }
-export interface EloRecord { game_id: string; season: number; home: string; away: string; diff: number; pHome: number; margin: number }
+export interface EloRecord { game_id: string; season: number; home: string; away: string; diff: number; pHome: number; margin: number; adjHome: number; adjAway: number }
 export interface EloState { ratings: Map<string, number>; lastSeason: Map<string, number>; scheduled: Set<string>; params: EloParams }
 
 const slot = (season: number, week: number, team: string) => `${season}:${week}:${team}`
@@ -62,7 +74,7 @@ function gameDiff(state: EloState, g: EloGame, eh: number, ea: number): number {
  * Fold every played game, oldest first. Unplayed games only feed the schedule
  * (bye weeks are read from it, so a future week sees the same byes as history).
  */
-export function runElo(games: EloGame[], params: EloParams = NFL_ELO) {
+export function runElo(games: EloGame[], params: EloParams = NFL_ELO, adjuster?: GameAdjuster) {
   const state: EloState = { ratings: new Map(), lastSeason: new Map(), scheduled: new Set(), params }
   for (const g of games) if (g.game_type === 'REG') {
     state.scheduled.add(slot(g.season, g.week, franchiseOf(g.home)))
@@ -76,7 +88,8 @@ export function runElo(games: EloGame[], params: EloParams = NFL_ELO) {
     const a = franchiseOf(g.away)
     const eh = rating(state, h, g.season, true)
     const ea = rating(state, a, g.season, true)
-    const diff = gameDiff(state, g, eh, ea)
+    const adj = adjuster?.before(g) ?? NO_ADJ
+    const diff = gameDiff(state, g, eh, ea) + adj.home - adj.away
     const pHome = winProb(diff)
     const margin = g.home_score! - g.away_score!
     const s = margin > 0 ? 1 : margin < 0 ? 0 : 0.5
@@ -87,7 +100,8 @@ export function runElo(games: EloGame[], params: EloParams = NFL_ELO) {
       { game_id: g.game_id, team: h, season: g.season, week: g.week, elo_before: eh, elo_after: eh + delta, p_win: pHome },
       { game_id: g.game_id, team: a, season: g.season, week: g.week, elo_before: ea, elo_after: ea - delta, p_win: 1 - pHome },
     )
-    records.push({ game_id: g.game_id, season: g.season, home: h, away: a, diff, pHome, margin })
+    records.push({ game_id: g.game_id, season: g.season, home: h, away: a, diff, pHome, margin, adjHome: adj.home, adjAway: adj.away })
+    adjuster?.after(g)
   }
   return { rows, records, state }
 }
@@ -95,11 +109,11 @@ export function runElo(games: EloGame[], params: EloParams = NFL_ELO) {
 export interface GamePrediction { eloHome: number; eloAway: number; diff: number; pHome: number; spread: number }
 
 /** Forecast an unplayed game from the latest ratings without changing them. */
-export function predictGame(g: EloGame, state: EloState, params: EloParams = state.params): GamePrediction {
+export function predictGame(g: EloGame, state: EloState, params: EloParams = state.params, adj: QbAdj = NO_ADJ): GamePrediction {
   const s = { ...state, params }
   const eloHome = rating(s, franchiseOf(g.home), g.season, false)
   const eloAway = rating(s, franchiseOf(g.away), g.season, false)
-  const diff = gameDiff(s, g, eloHome, eloAway)
+  const diff = gameDiff(s, g, eloHome, eloAway) + adj.home - adj.away
   return { eloHome, eloAway, diff, pHome: winProb(diff), spread: eloSpread(diff) }
 }
 
