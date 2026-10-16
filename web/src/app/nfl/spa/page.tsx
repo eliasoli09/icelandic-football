@@ -1,5 +1,3 @@
-import { existsSync } from 'fs'
-import { join } from 'path'
 import type { Metadata } from 'next'
 import { PickemView } from '@/components/Nfl/Pickem/PickemView'
 import { seasonForecasts } from '@/lib/nfl/forecast'
@@ -9,8 +7,13 @@ import { defaultWeek } from '@/lib/nfl/week'
 
 export const revalidate = 300
 
-// ChatGPT's artwork is optional: the page shows it once the files are in place (spec 6)
-const art = (file: string) => existsSync(join(process.cwd(), 'public/nfl/spaleikur', file)) ? `/nfl/spaleikur/${file}` : null
+/**
+ * ChatGPT's artwork (spec 6): switch each on once its file is in
+ * web/public/nfl/spaleikur/. Checking the disk at build time with a computed
+ * path broke the Turbopack build (vault, NFL/Spáleikur).
+ */
+const ART = { 'hero.webp': false, 'og.png': false }
+const art = (file: keyof typeof ART) => (ART[file] ? `/nfl/spaleikur/${file}` : null)
 
 export function generateMetadata(): Metadata {
   const og = art('og.png')

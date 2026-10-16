@@ -81,7 +81,7 @@ Notendur eru þeir sömu og á stigatöflunni (`game_user`, Supabase Auth með n
 - Notandi án nafns (`game_user`) velur nafn fyrst, eins og á stigatöflunni.
 
 ## 6. Myndefni frá ChatGPT
-Valfrjálst. Síðan sýnir skrá ef hún er til (`existsSync` í server component), annars ekkert:
+Valfrjálst. Rofinn `ART` í `app/nfl/spa/page.tsx` er settur á `true` þegar skráin er komin. Athugun á diski með reiknaðri slóð braut Turbopack-smíðina:
 - `web/public/nfl/spaleikur/hero.webp`: borði efst á `/nfl/spa`, 1600×500, efnið helst í miðju
   (klipptur á síma).
 - `web/public/nfl/spaleikur/og.png`: deilimynd (Open Graph), 1200×630.
