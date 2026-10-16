@@ -18,7 +18,7 @@ export function NflFootball({ paused }: { paused: boolean }) {
       if (disposed) return
       let renderer: InstanceType<typeof THREE.WebGLRenderer>
       try { renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' }) }
-      catch { return }
+      catch { root.dataset.failed = 'true'; return }
       const scene = new THREE.Scene()
       const camera = new THREE.PerspectiveCamera(34, 1, .1, 30)
       camera.position.set(0, 0, 6.4)
@@ -123,7 +123,6 @@ export function NflFootball({ paused }: { paused: boolean }) {
         light.position.set(position[0], position[1], position[2]); scene.add(light)
       }
       root.appendChild(renderer.domElement)
-      root.dataset.ready = 'true'
       let visible = true, visibilityCheckedAt = -Infinity, frame = 0, previous = 0, angle = -.32
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
       const render = () => renderer.render(scene, camera)
@@ -157,6 +156,8 @@ export function NflFootball({ paused }: { paused: boolean }) {
       }
       document.addEventListener('visibilitychange', sync)
       resize(); sync()
+      // one frame after the first render, so the fade-in has a start to transition from
+      requestAnimationFrame(() => { if (!disposed) root.dataset.ready = 'true' })
       cleanup = () => {
         cancelAnimationFrame(frame); observer.disconnect()
         document.removeEventListener('visibilitychange', sync)
@@ -169,7 +170,7 @@ export function NflFootball({ paused }: { paused: boolean }) {
         key.shadow.map?.dispose(); renderer.dispose()
         renderer.domElement.remove(); delete root.dataset.ready
       }
-    }).catch(() => { /* Keep the CSS football if WebGL cannot initialize. */ })
+    }).catch(() => { root.dataset.failed = 'true' })
     return () => { disposed = true; cleanup() }
   }, [])
   return <div className={styles.ballHost} ref={host} aria-hidden="true"><div className={styles.fallbackBall}><span>╫╫╫╫╫╫╫</span></div></div>

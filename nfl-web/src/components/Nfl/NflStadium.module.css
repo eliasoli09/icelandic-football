@@ -18,10 +18,12 @@
 .filters button:hover { transform: translateY(-2px); box-shadow: 0 0 20px #00aaff30; }
 .heroArt { position: absolute; right: -10px; top: -5px; width: 800px; height: 425px; pointer-events: none; }
 .ballHost { position: absolute; inset: -35px 25px -70px -10px; z-index: 1; filter: drop-shadow(0 0 16px #057cfa18); }
-.ballHost canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.fallbackBall { position: absolute; width: 72%; height: 48%; top: 25%; left: 13%; border-radius: 50%; transform: rotate(-28deg); background: radial-gradient(ellipse at 30% 20%, #b06158, #502321 42%, #150f18 75%); box-shadow: inset -8px -10px 15px #189cfb, inset 3px 9px 12px #e97788; }
+/* nothing while three.js loads, then the real ball fades in; the CSS ball only if WebGL fails */
+.ballHost canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .9s ease; }
+.ballHost[data-ready='true'] canvas { opacity: 1; }
+.fallbackBall { display: none; position: absolute; width: 72%; height: 48%; top: 25%; left: 13%; border-radius: 50%; transform: rotate(-28deg); background: radial-gradient(ellipse at 30% 20%, #b06158, #502321 42%, #150f18 75%); box-shadow: inset -8px -10px 15px #189cfb, inset 3px 9px 12px #e97788; }
 .fallbackBall span { position: absolute; left: 28%; top: 19%; color: #fff; font-size: 33px; letter-spacing: 3px; }
-.ballHost[data-ready='true'] .fallbackBall { display: none; }
+.ballHost[data-failed='true'] .fallbackBall { display: block; }
 .heroMotto { position: absolute; right: 0; top: 170px; width: 105px; color: #7fb5f4; font-size: 10px; line-height: 2; letter-spacing: .28em; z-index: 3; }
 .heroMotto i { display: block; width: 24px; height: 3px; background: #ff1745; margin-top: 12px; }
 .motionToggle { position: absolute; right: 12px; bottom: 14px; z-index: 4; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #2876a5; border-radius: 50%; background: #04162ad9; color: #c4eaff; cursor: pointer; }
