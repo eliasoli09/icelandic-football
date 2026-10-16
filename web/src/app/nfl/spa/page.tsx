@@ -7,11 +7,7 @@ import { defaultWeek } from '@/lib/nfl/week'
 
 export const revalidate = 300
 
-/**
- * ChatGPT's artwork (spec 6): switch each on once its file is in
- * web/public/nfl/spaleikur/. Checking the disk at build time with a computed
- * path broke the Turbopack build (vault, NFL/Spáleikur).
- */
+/** ChatGPT's artwork (spec 6): switch each on once its file is in web/public/nfl/spaleikur/. */
 const ART = { 'hero.webp': false, 'og.png': false }
 const art = (file: keyof typeof ART) => (ART[file] ? `/nfl/spaleikur/${file}` : null)
 

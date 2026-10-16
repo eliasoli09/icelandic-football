@@ -407,3 +407,11 @@ h1, h2, h3, .display {
   background: repeating-linear-gradient(180deg, var(--loss) 0 4px, transparent 4px 8px);
 }
 .zone-champ::before { background: var(--win); }
+
+/* Presence-scoped so the NFL atmosphere clears immediately on route changes. */
+body:has([data-league='nfl']) { background: #020c1d; color: #f4f7ff; }
+body:has([data-league='nfl']) > div { --text: #f4f7ff; --text-2: #a9bddf; }
+body:has([data-league='nfl']) header { --bg: #031128; --border: #07598a; --surface: #061930; --text: #f4f7ff; --text-2: #a9bddf; --accent: #ff173e; }
+body:has([data-league='nfl']) header > div:first-child { max-width: 1376px; }
+body:has([data-league='nfl']) main { max-width: 1376px; padding-top: 0; }
+body:has([data-league='nfl']) > footer { color: #a9bddf; }
