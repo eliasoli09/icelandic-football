@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ChevronRight, Trophy } from 'lucide-react'
 import { WeekView } from '@/components/Nfl/WeekView'
+import { LiveStrip } from '@/components/Nfl/Live'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { pickWeek } from '@/lib/nfl/pickem'
 import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
@@ -19,6 +20,7 @@ export default async function NflGamesPage() {
     const open = next ? games.filter((g) => g.week === next.week && new Date(g.kickoff) > now).length : 0
     return (
       <div className="grid gap-6">
+        <LiveStrip teams={teams} />
         {next && (
           <Link href="/spa" className="card card-hover p-4 flex items-center gap-3">
             <Trophy size={22} aria-hidden style={{ color: 'var(--accent)' }} className="shrink-0" />

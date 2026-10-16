@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { AlertTriangle, ArrowLeft } from 'lucide-react'
 import { NflLogo } from '@/components/Nfl/NflLogo'
+import { LiveBox } from '@/components/Nfl/Live'
 import { ProbSplit } from '@/components/Nfl/ProbSplit'
 import { franchiseOf, predictGame } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
@@ -56,6 +57,7 @@ export default async function NflGamePage({ params }: Props) {
         <ArrowLeft size={14} aria-hidden /> {weekLabel(game.game_type, game.week)}
       </Link>
 
+      {!played && <LiveBox gameId={game.game_id} home={home} away={away} />}
       <header className="card p-5 grid gap-4">
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
           {sides.map(({ side, team, abbr }, i) => (
