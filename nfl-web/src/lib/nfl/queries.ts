@@ -147,3 +147,18 @@ export async function nflNews(opts: { limit?: number; teams?: string[]; sinceDay
   if (error) throw error
   return (data ?? []) as NewsItem[]
 }
+
+/** One round's player lines with name, position and photo, for the team of the week. */
+export async function nflRoundLines(season: number, week: number): Promise<import('./stars').StarLine[]> {
+  const cols = 'player_id, team, opponent, game_id, completions, attempts, passing_yards, passing_tds, interceptions, carries, rushing_yards, rushing_tds, receptions, receiving_yards, receiving_tds, fumbles_lost, tackles_solo, tackle_assists, tackles_for_loss, def_sacks, qb_hits, def_interceptions, passes_defended, forced_fumbles, def_tds, nfl_players(name, position, headshot)'
+  const out: import('./stars').StarLine[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_player_weeks').select(cols).eq('season', season).eq('week', week).order('player_id').range(from, from + 999)
+    if (error) throw error
+    for (const r of (data ?? []) as unknown as (Omit<import('./stars').StarLine, 'name' | 'position' | 'headshot'> & { nfl_players: { name: string; position: string | null; headshot: string | null } | null })[]) {
+      const { nfl_players: p, ...rest } = r
+      out.push({ ...rest, name: p?.name ?? 'Óþekktur', position: p?.position ?? null, headshot: p?.headshot ?? null })
+    }
+    if (!data || data.length < 1000) return out
+  }
+}

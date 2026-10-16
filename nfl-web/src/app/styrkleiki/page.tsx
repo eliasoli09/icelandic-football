@@ -1,4 +1,4 @@
-import { StandingsSwitch } from '@/components/Nfl/StandingsSwitch'
+import { ForecastSwitch } from '@/components/Nfl/ForecastSwitch'
 import { PowerView, type PowerRow } from '@/components/Nfl/PowerView'
 import { currentRatings, ELO_MEAN, eloSpread } from '@/lib/nfl/elo'
 import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
@@ -38,7 +38,7 @@ export default async function NflPowerPage() {
 
     return (
       <div className="grid gap-6">
-        <StandingsSwitch active="styrkleiki" />
+        <ForecastSwitch active="styrkleiki" />
         <PowerView season={season} rows={rows} teams={clubs} sentence={NFL_MODEL_SENTENCE} />
       </div>
     )

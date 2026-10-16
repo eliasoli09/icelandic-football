@@ -52,7 +52,7 @@ export default async function NflGamePage({ params }: Props) {
 
   return (
     <article className="grid gap-6">
-      <Link href={`/?vika=${game.week}`} className="text-sm muted inline-flex items-center gap-1.5">
+      <Link href={`/leikir?vika=${game.week}`} className="text-sm muted inline-flex items-center gap-1.5">
         <ArrowLeft size={14} aria-hidden /> {weekLabel(game.game_type, game.week)}
       </Link>
 

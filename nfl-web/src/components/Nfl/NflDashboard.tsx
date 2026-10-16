@@ -23,7 +23,8 @@ function Probability({ value, tone }: { value: number | null; tone: string }) {
   </div>
 }
 
-export function NflDashboard({ rows, sims, season, runAt, error }: { rows: DashboardRow[]; sims: number | null; season: number | null; runAt: string | null; error?: string }) {
+/** `compact`: the Spár tab's version, without the ball (the front page has it). */
+export function NflDashboard({ rows, sims, season, runAt, error, compact = false }: { rows: DashboardRow[]; sims: number | null; season: number | null; runAt: string | null; error?: string; compact?: boolean }) {
   const [filter, setFilter] = useState<DashboardFilter>('AFC')
   const [sort, setSort] = useState<DashboardSort>('wins')
   const [descending, setDescending] = useState(true)
@@ -34,20 +35,20 @@ export function NflDashboard({ rows, sims, season, runAt, error }: { rows: Dashb
   const choose = (value: DashboardFilter) => { setFilter(value); setSort(value === 'Super Bowl' ? 'title' : 'wins'); setDescending(true); setExpanded(false) }
   const sortBy = (value: DashboardSort) => { setSort(value); setDescending(sort === value ? !descending : value !== 'name') }
   return <section className={styles.dashboard} data-paused={paused}>
-    <div className={styles.hero}>
-      <div className={styles.heroArt} aria-hidden="true">
+    <div className={`${styles.hero} ${compact ? styles.heroCompact : ''}`}>
+      {!compact && <div className={styles.heroArt} aria-hidden="true">
         <NflFootball paused={paused} />
         <span className={styles.heroMotto}>STÆRRI LEIKIR<br />SKARPARI SÝN<i /></span>
-      </div>
+      </div>}
       <div className={styles.heroCopy}>
         <p className={styles.eyebrow}>BANDARÍSKI FÓTBOLTINN</p>
-        <h1>NFL</h1>
+        <h1>{compact ? 'Spár' : 'NFL'}</h1>
         <p className={styles.subtitle}>Spáð lokastaða og líkur í úrslitakeppni.</p>
         <div className={styles.filters} aria-label="Veldu deild">
           {(['AFC', 'NFC', 'Super Bowl'] as const).map(value => <button key={value} aria-pressed={filter === value} onClick={() => choose(value)}>{value}</button>)}
         </div>
       </div>
-      <button className={styles.motionToggle} aria-pressed={paused} onClick={() => setPaused(p => !p)} aria-label={paused ? 'Spila hreyfingar' : 'Gera hlé á hreyfingum'} title={paused ? 'Spila hreyfingar' : 'Gera hlé á hreyfingum'}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>
+      {!compact && <button className={styles.motionToggle} aria-pressed={paused} onClick={() => setPaused(p => !p)} aria-label={paused ? 'Spila hreyfingar' : 'Gera hlé á hreyfingum'} title={paused ? 'Spila hreyfingar' : 'Gera hlé á hreyfingum'}>{paused ? <Play size={14} /> : <Pause size={14} />}</button>}
     </div>
     <div className={styles.panels}>
       <section className={styles.panel} aria-labelledby="nfl-forecast-title">

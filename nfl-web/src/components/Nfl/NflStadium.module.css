@@ -8,14 +8,20 @@
 .backdrop::after { content: ''; position: absolute; width: 650px; height: 650px; right: -520px; top: -240px; border: 1px solid #ff174d; border-radius: 28%; transform: rotate(-20deg); box-shadow: 0 0 0 12px #020c1d, 0 0 0 13px #ff174d, 0 0 0 25px #020c1d, 0 0 0 26px #00aaff, 0 0 0 38px #020c1d, 0 0 0 39px #00aaff; }
 .dashboard { position: relative; overflow: clip; }
 .hero { position: relative; min-height: 304px; display: flex; align-items: center; }
+.heroCompact { min-height: 0; }
+.heroHome { min-height: 280px; overflow: clip; border-radius: 18px; }
+.heroHome .heroArt { width: 640px; height: 340px; top: -30px; right: -20px; }
+.filters a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.heroCompact .heroCopy { padding-top: 8px; }
+.heroCompact h1 { font-size: clamp(48px, 5vw, 64px); }
 .heroCopy { position: relative; z-index: 2; text-shadow: 0 2px 18px #001025; padding: 18px 24px 26px; }
 .eyebrow { color: #ff1745; font-size: 13px; font-weight: 800; letter-spacing: .31em; margin: 0 0 6px; }
 .hero h1 { font-family: var(--font-archivo), sans-serif; font-size: clamp(70px, 7vw, 94px); font-weight: 900; line-height: 1.05; letter-spacing: -.045em; color: #f7faff; text-shadow: 0 3px 24px #87a9db25; }
 .subtitle { margin: 9px 0 25px; color: #b4c7ec; font-size: clamp(17px, 2vw, 25px); letter-spacing: -.035em; }
 .filters { display: flex; gap: 12px; }
-.filters button { min-width: 128px; padding: 13px 26px; border: 1px solid #00acff; border-radius: 17px; background: #001025b3; font-size: 15px; font-weight: 650; color: #fff; cursor: pointer; transition: background .2s, transform .2s, box-shadow .2s; }
-.filters button[aria-pressed='true'] { background: linear-gradient(120deg, #f00530, #d70028); box-shadow: 0 0 22px #f0053026, inset 0 0 0 1px #fb4b5f40; }
-.filters button:hover { transform: translateY(-2px); box-shadow: 0 0 20px #00aaff30; }
+.filters button, .filters a { min-width: 128px; padding: 13px 26px; border: 1px solid #00acff; border-radius: 17px; background: #001025b3; font-size: 15px; font-weight: 650; color: #fff; cursor: pointer; transition: background .2s, transform .2s, box-shadow .2s; }
+.filters button[aria-pressed='true'], .filters a[aria-pressed='true'] { background: linear-gradient(120deg, #f00530, #d70028); box-shadow: 0 0 22px #f0053026, inset 0 0 0 1px #fb4b5f40; }
+.filters button:hover, .filters a:hover { transform: translateY(-2px); box-shadow: 0 0 20px #00aaff30; }
 .heroArt { position: absolute; right: -10px; top: -5px; width: 800px; height: 425px; pointer-events: none; }
 .ballHost { position: absolute; inset: -35px 25px -70px -10px; z-index: 1; filter: drop-shadow(0 0 16px #057cfa18); }
 /* nothing while three.js loads, then the real ball fades in; the CSS ball only if WebGL fails */
@@ -85,7 +91,9 @@
 @media (min-width: 1450px) { .forecastTable { font-size: 13px; } .track { width: 82px; } .forecastTable thead th { font-size: 11px; } .divisions li { min-height: 38px; } .panel { padding: 20px; } }
 @media (max-width: 1150px) { .panels { grid-template-columns: minmax(0, 1.9fr) minmax(280px, 1fr); } .heroArt { right: -90px; opacity: .9; } .heroCopy { padding-left: 8px; } .heroMotto { display: none; } .panel { padding: 14px; } .track { width: 52px; } .forecastTable td, .forecastTable tbody th { padding: 9px 6px; } .divisions li { grid-template-columns: 18px 1fr 65px 42px; gap: 5px; } }
 @media (max-width: 950px) { .panels { grid-template-columns: 1fr; } .heroArt { right: -140px; opacity: .65; } .heroCopy { text-shadow: 0 2px 16px #001025; } .track { width: 85px; } .divisionPanel { display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; } .divisionPanel .panelHeading, .divisions { grid-column: 1; } .divisionNote, .textLink, .promo { grid-column: 2; } .divisionNote { grid-row: 1; align-self: center; margin: 0; } .textLink { grid-row: 2; align-self: start; margin-top: 8px; } .promo { grid-row: 2; align-self: end; } }
-@media (max-width: 600px) { .hero { min-height: 350px; align-items: flex-end; } .heroCopy { padding: 100px 0 20px; width: 100%; } .heroArt { width: 440px; height: 285px; right: -110px; top: -30px; opacity: .85; } .ballHost { inset: -5px 0 -35px -20px; } .hero h1 { font-size: 76px; } .eyebrow { font-size: 10px; letter-spacing: .23em; } .subtitle { font-size: 17px; max-width: 250px; margin: 10px 0 21px; line-height: 1.5; } .filters { gap: 9px; } .filters button { min-width: 0; flex: 1; padding: 12px 14px; border-radius: 13px; font-size: 13px; } .motionToggle { top: 16px; bottom: auto; right: 0; } .panels { gap: 16px; } .panelHeading h2 { font-size: 20px; } .badge { font-size: 10px; padding: 5px 9px; } .panel { padding: 15px 12px; border-radius: 13px; } .forecastTable { min-width: 740px; } .panelFooter { align-items: flex-start; margin-top: 18px; gap: 10px; } .panelFooter p { max-width: 62%; font-size: 10px; } .panelFooter button { font-size: 11px; padding: 2px 0; } .divisionPanel { display: block; } .divisions li { grid-template-columns: 22px 1fr 100px 48px; min-height: 38px; } .divisionNote { margin: 20px 0 8px; } .promo { margin-top: 20px; } .dataNote { font-size: 9px; gap: 14px; } .secondaryNav { justify-content: flex-start; } }
+@media (max-width: 600px) { .hero { min-height: 350px; align-items: flex-end; } .heroCopy { padding: 100px 0 20px; width: 100%; } .heroArt { width: 440px; height: 285px; right: -110px; top: -30px; opacity: .85; } .ballHost { inset: -5px 0 -35px -20px; } .hero h1 { font-size: 76px; } .eyebrow { font-size: 10px; letter-spacing: .23em; } .subtitle { font-size: 17px; max-width: 250px; margin: 10px 0 21px; line-height: 1.5; } .filters { gap: 9px; } .filters button, .filters a { min-width: 0; flex: 1; padding: 12px 10px; border-radius: 13px; font-size: 13px; } .motionToggle { top: 16px; bottom: auto; right: 0; } .panels { gap: 16px; } .panelHeading h2 { font-size: 20px; } .badge { font-size: 10px; padding: 5px 9px; } .panel { padding: 15px 12px; border-radius: 13px; } .forecastTable { min-width: 740px; } .panelFooter { align-items: flex-start; margin-top: 18px; gap: 10px; } .panelFooter p { max-width: 62%; font-size: 10px; } .panelFooter button { font-size: 11px; padding: 2px 0; } .divisionPanel { display: block; } .divisions li { grid-template-columns: 22px 1fr 100px 48px; min-height: 38px; } .divisionNote { margin: 20px 0 8px; } .promo { margin-top: 20px; } .dataNote { font-size: 9px; gap: 14px; } .secondaryNav { justify-content: flex-start; } }
 @media (prefers-reduced-motion: reduce) { .shell *, .shell *::before, .shell *::after { animation: none !important; transition: none !important; } }
 
 @media (max-width: 600px) { .backdrop::after { display: none; } .heroArt { opacity: .65; } }
+
+@media (max-width: 600px) { .heroCompact { min-height: 0; } .heroCompact .heroCopy { padding-top: 8px; } .heroHome { min-height: 330px; } .heroHome .heroArt { width: 400px; height: 260px; right: -110px; top: -20px; } }

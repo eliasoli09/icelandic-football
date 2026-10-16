@@ -1,73 +1,73 @@
-import { ChevronRight, Trophy } from 'lucide-react'
-import { pickWeek } from '@/lib/nfl/pickem'
-import { weekLabel } from '@/lib/nfl/week'
-import { WeekView } from '@/components/Nfl/WeekView'
 import Link from 'next/link'
-import { nflCurrentSeason, nflNews, nflSeasonModel, nflSim } from '@/lib/nfl/queries'
-import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
+import { ArrowRight, ChevronRight, Trophy } from 'lucide-react'
 import { ArticleList } from '@/components/Nfl/ArticleList'
+import { HomeGames } from '@/components/Nfl/HomeGames'
+import { HomeHero } from '@/components/Nfl/HomeHero'
 import { nflArticles } from '@/lib/nfl/articles/queries'
+import { currentRatings, franchiseOf } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
-import { NflDashboard } from '@/components/Nfl/NflDashboard'
-import { NflSubnav } from '@/components/Nfl/NflSubnav'
-import { dashboardRows } from '@/lib/nfl/dashboard'
-import { currentRatings } from '@/lib/nfl/elo'
-import styles from '@/components/Nfl/NflStadium.module.css'
-import { defaultWeek } from '@/lib/nfl/week'
+import { pickWeek } from '@/lib/nfl/pickem'
+import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
+import { isPlayed } from '@/lib/nfl/types'
+import { defaultWeek, weekLabel } from '@/lib/nfl/week'
 
 export const revalidate = 300
 
-export default async function NflWeekPage() {
-  try {
-    const season = await nflCurrentSeason()
-    if (!season) return <><NflDashboard rows={[]} sims={null} season={null} runAt={null} /><div className={styles.secondaryNav}><NflSubnav /></div></>
-    const [{ games, teams, elo, state }, news, sim] = await Promise.all([nflSeasonModel(season), nflNews({ limit: 6, sinceDays: 7 }).catch(() => []), nflSim(season).catch(() => ({}))])
-    const articles = await nflArticles({ limit: 3 }).catch(() => [])
-    const forecasts = seasonForecasts(games, elo, state)
-    const rows = dashboardRows(teams, games, currentRatings(state, season), forecasts, sim)
-    const first = Object.values(sim)[0]
-    const now = new Date()
-    const next = pickWeek(games, now)
-    const open = next ? games.filter((g) => g.week === next.week && new Date(g.kickoff) > now).length : 0
-    return (
-      <div>
-        <NflDashboard rows={rows} sims={first?.sims ?? null} runAt={first?.run_at ?? null} season={season} />
-        <div className={styles.secondaryNav}><NflSubnav /></div>
-        <div className={`${styles.existingContent} grid gap-10`}>
-        {next && (
-          <Link href="/spa" className="card card-hover p-4 flex items-center gap-3">
-            <Trophy size={22} aria-hidden style={{ color: 'var(--accent)' }} className="shrink-0" />
-            <span className="min-w-0">
-              <span className="block font-semibold">Spáðu í leiki vikunnar</span>
-              <span className="block text-xs muted">{weekLabel(games.find((g) => g.week === next.week)!.game_type, next.week)}: {open} {open === 1 ? 'leikur opinn' : 'leikir opnir'}. Kepptu við vinina og líkanið.</span>
-            </span>
-            <ChevronRight size={18} aria-hidden className="ml-auto shrink-0 muted" />
-          </Link>
-        )}
-        <WeekView season={season} games={games} teams={teams} initialWeek={defaultWeek(games, new Date())} forecasts={forecasts} />
-        {articles.length > 0 && (
-          <section className="grid gap-3">
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 className="display text-xl font-extrabold">Greinar</h2>
-              <Link href="/greinar" className="text-sm underline decoration-dotted underline-offset-2">Allar greinar</Link>
-            </div>
-            <ArticleList items={articles} />
-          </section>
-        )}
-        {news.length > 0 && (
-          <section className="grid gap-3">
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 className="display text-xl font-extrabold">Fréttir</h2>
-              <Link href="/frettir" className="text-sm underline decoration-dotted underline-offset-2">Allar fréttir</Link>
-            </div>
-            <NewsList items={news} compact />
-            <p className="text-[11px] muted">{NEWS_NOTE}</p>
-          </section>
-        )}
+const More = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <Link href={href} className="text-sm inline-flex items-center gap-1 underline decoration-dotted underline-offset-2">{children} <ArrowRight size={14} aria-hidden /></Link>
+)
+
+/** A short front page: the hero, the week's biggest games, the latest articles and the pick'em. */
+export default async function HomePage() {
+  const season = await nflCurrentSeason().catch(() => null)
+  if (!season) return <HomeHero />
+  const [{ games, teams, elo, state }, articles] = await Promise.all([nflSeasonModel(season), nflArticles({ limit: 3 }).catch(() => [])])
+  const forecasts = seasonForecasts(games, elo, state)
+  const now = new Date()
+  const week = defaultWeek(games, now)
+  const round = games.filter((g) => g.week === week)
+  const ratings = currentRatings(state, season)
+  const strength = (abbr: string) => ratings.get(franchiseOf(abbr)) ?? 1505
+  // the biggest games still to come (by the two sides' ratings), then the latest results to fill four
+  const upcoming = round.filter((g) => !isPlayed(g)).sort((a, b) => strength(b.home) + strength(b.away) - strength(a.home) - strength(a.away))
+  const played = round.filter(isPlayed).sort((a, b) => b.kickoff.localeCompare(a.kickoff))
+  const shown = [...upcoming, ...played].slice(0, 4)
+  const type = round[0]?.game_type ?? 'REG'
+  const next = pickWeek(games, now)
+  const open = next ? games.filter((g) => g.week === next.week && new Date(g.kickoff) > now).length : 0
+
+  return (
+    <div className="grid gap-10">
+      <HomeHero />
+
+      <section className="grid gap-3">
+        <div className="flex items-baseline justify-between gap-3">
+          <h2 className="display text-xl font-extrabold">{upcoming.length ? `Stærstu leikir: ${weekLabel(type, week).toLowerCase()}` : `Úrslit: ${weekLabel(type, week).toLowerCase()}`}</h2>
+          <More href="/leikir">Allir leikir</More>
         </div>
-      </div>
-    )
-  } catch {
-    return <><NflDashboard rows={[]} sims={null} season={null} runAt={null} error="Ekki tókst að sækja gögn. Reyndu aftur síðar." /><div className={styles.secondaryNav}><NflSubnav /></div></>
-  }
+        <HomeGames games={shown} teams={teams} forecasts={forecasts} />
+      </section>
+
+      {next && (
+        <Link href="/spa" className="card card-hover p-4 flex items-center gap-3">
+          <Trophy size={22} aria-hidden style={{ color: 'var(--accent)' }} className="shrink-0" />
+          <span className="min-w-0">
+            <span className="block font-semibold">Spáðu í leiki vikunnar</span>
+            <span className="block text-xs muted">{weekLabel(games.find((g) => g.week === next.week)!.game_type, next.week)}: {open} {open === 1 ? 'leikur opinn' : 'leikir opnir'}. Kepptu við vinina og líkanið.</span>
+          </span>
+          <ChevronRight size={18} aria-hidden className="ml-auto shrink-0 muted" />
+        </Link>
+      )}
+
+      {articles.length > 0 && (
+        <section className="grid gap-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="display text-xl font-extrabold">Nýjustu greinar</h2>
+            <More href="/greinar">Allar greinar</More>
+          </div>
+          <ArticleList items={articles} compact />
+        </section>
+      )}
+    </div>
+  )
 }

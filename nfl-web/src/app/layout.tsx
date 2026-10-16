@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Geist, Geist_Mono, Archivo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SiteShell } from '@/components/Nfl/SiteShell'
+import { NflSubnav } from '@/components/Nfl/NflSubnav'
 import { FOOTBALL_URL, SITE_NAME, SITE_URL } from '@/lib/site'
 import './globals.css'
 
@@ -23,7 +24,7 @@ export const viewport = { themeColor: '#020c1d' }
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="is" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
+      <body data-league="nfl" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
         <header className="relative z-10 border-b" style={{ borderColor: 'var(--border)', background: 'var(--bg)' }}>
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
             <Link href="/" className="display font-extrabold tracking-tight">{SITE_NAME}</Link>
@@ -33,6 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </nav>
           </div>
         </header>
+        <div className="sticky top-0 z-20 border-b backdrop-blur-md" style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--bg) 82%, transparent)' }}>
+          <div className="max-w-6xl mx-auto px-4"><NflSubnav /></div>
+        </div>
         <main className="max-w-6xl mx-auto px-4 py-8">
           <SiteShell>{children}</SiteShell>
         </main>
