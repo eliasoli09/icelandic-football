@@ -28,10 +28,11 @@ export function PickRow({ g, home, away, pick, locked, picks, model, onPick }: {
           opacity: locked && !chosen ? 0.75 : 1,
         }}>
         <NflLogo team={team} size={28} />
-        <span className="min-w-0">
-          <span className="block font-semibold truncate">{team?.name.split(' ').at(-1) ?? abbr}</span>
-          <span className="block text-[11px] muted num">
-            {abbr}{pct !== null ? ` · ${pct}% völdu` : ''}{model === abbr ? ' · Líkanið' : ''}
+        <span className="min-w-0 flex-1">
+          {/* with a score beside it the nickname does not fit a phone: the abbreviation does */}
+          <span className="block font-semibold truncate">{score !== null ? abbr : team?.name.split(' ').at(-1) ?? abbr}</span>
+          <span className="block text-[11px] muted num truncate">
+            {[score === null ? abbr : null, pct !== null ? `${pct}% völdu` : null, model === abbr ? 'Líkanið' : null].filter(Boolean).join(' · ')}
           </span>
         </span>
         {score !== null && <span className="ml-auto stat text-lg">{score}</span>}
@@ -39,8 +40,8 @@ export function PickRow({ g, home, away, pick, locked, picks, model, onPick }: {
     )
   }
   return (
-    <div className="px-3 py-3 grid gap-2">
-      <div className="flex items-center justify-between text-[11px] muted">
+    <div className="px-3 py-3 grid grid-cols-[minmax(0,1fr)] gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 text-[11px] muted">
         <span>{dayLabel(g.kickoff)} · {isSmallHours(g.kickoff) ? 'aðfaranótt ' : ''}{g.time_tbd ? 'tími óákveðinn' : clock(g.kickoff)}</span>
         {points !== null ? (
           <span className="inline-flex items-center gap-1 font-semibold" style={{ color: points > 0 ? 'var(--win)' : 'var(--loss)' }}>

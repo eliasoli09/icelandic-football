@@ -14,7 +14,7 @@ export function PickBoards({ board, me, weekName, leagues, league, onLeague }: {
   const [tab, setTab] = useState<'week' | 'season'>('week')
   const rows = board[tab]
   return (
-    <section className="grid gap-3" aria-label="Stigatöflur">
+    <section className="grid grid-cols-[minmax(0,1fr)] gap-3" aria-label="Stigatöflur">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="display text-xl font-extrabold">Taflan</h3>
         <div className="inline-flex rounded-full border p-1 text-sm" role="group" aria-label="Tímabil töflu" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>

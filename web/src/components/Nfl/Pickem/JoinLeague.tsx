@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Users } from 'lucide-react'
 import { SignIn } from '@/components/Leaderboard/SignIn'
 import { browserDb, whoAmI, type Me } from '@/lib/leaderboard/store'
-import { joinLeague } from '@/lib/nfl/pickStore'
+import { joinLeague, keepInvite, takeInvite } from '@/lib/nfl/pickStore'
 
 /** A league stays closed until you are in it, so its name shows only once you have joined. */
 export function JoinLeague({ code }: { code: string }) {
@@ -17,7 +17,8 @@ export function JoinLeague({ code }: { code: string }) {
   const attempt = useCallback(async () => {
     const who = await whoAmI().catch(() => null)
     setMe(who); setReady(true)
-    if (!who?.name) return
+    if (!who?.name) { keepInvite(code); return }
+    takeInvite()
     const out = await joinLeague(code)
     if (out.ok) router.replace(`/nfl/spa?deild=${out.id}`)
     else setError(out.message)

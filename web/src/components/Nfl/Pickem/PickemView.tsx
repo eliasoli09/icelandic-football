@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Lock, Trophy } from 'lucide-react'
 import { SignIn } from '@/components/Leaderboard/SignIn'
 import { browserDb, whoAmI, type Me } from '@/lib/leaderboard/store'
 import { MODEL_ID, lastGameOf, modelPicks, seasonBoard, weekBoard, type Tiebreak, type UserPick } from '@/lib/nfl/pickem'
-import { flushPicks, loadPicks, loadTiebreaks, myLeagues, namesOf, queuePick, queuedPicks, savePick, saveTiebreak, type League } from '@/lib/nfl/pickStore'
+import { flushPicks, joinLeague, takeInvite, loadPicks, loadTiebreaks, myLeagues, namesOf, queuePick, queuedPicks, savePick, saveTiebreak, type League } from '@/lib/nfl/pickStore'
 import { weekLabel, weekTypes } from '@/lib/nfl/week'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 import { PickRow } from './PickRow'
@@ -28,6 +28,7 @@ export function PickemView({ season, games, teams, pHome, initialWeek, hero }: {
   const [names, setNames] = useState<Map<string, string>>(new Map())
   const [leagues, setLeagues] = useState<League[]>([])
   const [note, setNote] = useState<Note>(null)
+  const [league, setLeague] = useState<string>('all')
   const [now, setNow] = useState(() => Date.now())
 
   // locks follow the clock: re-check every half minute while the page is open
@@ -48,6 +49,12 @@ export function PickemView({ season, games, teams, pHome, initialWeek, hero }: {
       const saved = await flushPicks(who.id)
       setLocal({})
       if (saved) setNote({ kind: 'good', text: `${saved} ${saved === 1 ? 'spá vistaðist' : 'spár vistuðust'} af þessu tæki.` })
+      const invite = takeInvite()
+      if (invite) {
+        const joined = await joinLeague(invite)
+        if (joined.ok) { setLeague(joined.id); setNote({ kind: 'good', text: `Þú ert kominn í ${joined.name}.` }) }
+        else setNote({ kind: 'bad', text: joined.message })
+      }
     } else setLocal(queuedPicks())
     await reload(who)
     setReady(true)
@@ -60,7 +67,6 @@ export function PickemView({ season, games, teams, pHome, initialWeek, hero }: {
   }, [signedIn])
 
   // ?vika= and ?deild= from a shared link or the invite page
-  const [league, setLeague] = useState<string>('all')
   useEffect(() => {
     const q = new URLSearchParams(window.location.search)
     const v = Number(q.get('vika'))
@@ -119,7 +125,7 @@ export function PickemView({ season, games, teams, pHome, initialWeek, hero }: {
   }, [games, visible, tiebreaks, names, season, week, league, leagues])
 
   return (
-    <div className="grid gap-8">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-8">
       {hero && (
         // eslint-disable-next-line @next/next/no-img-element -- one local banner
         <img src={hero} alt="" className="w-full h-36 sm:h-52 object-cover rounded-2xl" />
@@ -135,15 +141,14 @@ export function PickemView({ season, games, teams, pHome, initialWeek, hero }: {
       </header>
 
       {ready && !me?.name && (
-        <div className="grid gap-2">
-          <p className="text-sm font-semibold">Skráðu þig inn til að vista spárnar og komast á töfluna. Það sem þú velur núna bíður á meðan.</p>
-          <SignIn me={me} onDone={() => { void signedIn() }} />
-        </div>
+        <p className="text-sm">
+          <a href="#innskraning" className="font-semibold underline decoration-dotted underline-offset-2">Skráðu þig inn</a> til að vista spárnar og komast á töfluna. Það sem þú velur bíður á meðan, í þessu tæki.
+        </p>
       )}
 
       {note && <p className="text-sm font-semibold" role="status" style={{ color: note.kind === 'good' ? 'var(--win)' : 'var(--loss)' }}>{note.text}</p>}
 
-      <section className="grid gap-4">
+      <section className="grid grid-cols-[minmax(0,1fr)] gap-4">
         <div className="flex items-center justify-between gap-3">
           <button className="w-11 h-11 rounded-full border inline-flex items-center justify-center disabled:opacity-30" style={{ borderColor: 'var(--border)' }}
             disabled={idx <= 0} onClick={() => setWeek(weeks[idx - 1][0])} aria-label="Fyrri umferð">
@@ -177,6 +182,12 @@ export function PickemView({ season, games, teams, pHome, initialWeek, hero }: {
             }} />
         )}
       </section>
+
+      {ready && !me?.name && (
+        <div id="innskraning" className="scroll-mt-20">
+          <SignIn me={me} onDone={() => { void signedIn() }} />
+        </div>
+      )}
 
       <PickBoards board={board} me={me?.id ?? null} weekName={weekLabel(type, week)} leagues={leagues} league={league} onLeague={setLeague} />
 

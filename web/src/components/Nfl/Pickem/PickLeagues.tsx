@@ -26,7 +26,7 @@ export function PickLeagues({ me, leagues, names, onChanged, onError }: {
   }
 
   return (
-    <section className="grid gap-3" aria-label="Deildirnar mínar">
+    <section className="grid grid-cols-[minmax(0,1fr)] gap-3" aria-label="Deildirnar mínar">
       <h3 className="display text-xl font-extrabold inline-flex items-center gap-2"><Users size={18} aria-hidden /> Deildirnar mínar</h3>
       <p className="text-sm muted">Stofnaðu deild fyrir vinina, vinnustaðinn eða fjölskylduna og sendu þeim boðstengilinn.</p>
       {leagues.length > 0 && (

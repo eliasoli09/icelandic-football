@@ -26,7 +26,7 @@ export default async function NflWeekPage() {
             <Trophy size={22} aria-hidden style={{ color: 'var(--accent)' }} className="shrink-0" />
             <span className="min-w-0">
               <span className="block font-semibold">Spáðu í leiki vikunnar</span>
-              <span className="block text-xs muted">{open} {open === 1 ? 'leikur opinn' : 'leikir opnir'} í {weekLabel(games.find((g) => g.week === next.week)!.game_type, next.week).toLowerCase()}. Kepptu við vinina og líkanið.</span>
+              <span className="block text-xs muted">{weekLabel(games.find((g) => g.week === next.week)!.game_type, next.week)}: {open} {open === 1 ? 'leikur opinn' : 'leikir opnir'}. Kepptu við vinina og líkanið.</span>
             </span>
             <ChevronRight size={18} aria-hidden className="ml-auto shrink-0 muted" />
           </Link>

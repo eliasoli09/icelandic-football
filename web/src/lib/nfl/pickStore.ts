@@ -107,3 +107,10 @@ export async function flushPicks(player: string): Promise<number> {
   try { localStorage.removeItem(QUEUE) } catch { /* nothing to clear */ }
   return saved
 }
+
+/** An invite opened before signing in: kept so a confirmation e-mail detour does not lose it. */
+const INVITE = 'nfl-spa:bod'
+export function keepInvite(code: string) { try { localStorage.setItem(INVITE, code) } catch { /* the link still works */ } }
+export function takeInvite(): string | null {
+  try { const c = localStorage.getItem(INVITE); localStorage.removeItem(INVITE); return c } catch { return null }
+}
