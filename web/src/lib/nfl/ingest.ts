@@ -4,6 +4,7 @@ import { runElo, type EloRow, type EloState } from './elo'
 import { simulateSeason } from './sim'
 import { ingestPlayers } from './playerIngest'
 import { fetchNews, summarizeNews } from './newsIngest'
+import { draftArticles, type ArticleRun } from './articles/ingest'
 import { isPlayed, type NflGame, type NflTeam } from './types'
 
 export const GAMES_URL = 'https://github.com/nflverse/nfldata/raw/master/data/games.csv'
@@ -21,6 +22,7 @@ export interface NflIngestResult {
   sim: { sims: number; ms: number } | { error: string }
   players: { players: number; weeks: number } | { error: string }
   news: { found: number; added: number; failed: string[]; summaries: unknown } | { error: string }
+  articles: ArticleRun | { error: string }
 }
 
 /** Hot simulation, chosen by scripts/nfl-sim-backtest.mts; 10,000 runs take a few seconds. */
@@ -90,6 +92,9 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
     .then(async (f) => ({ ...f, summaries: await summarizeNews().catch((e) => ({ error: e instanceof Error ? e.message : String(e) })) }))
     .catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
 
+  // articles last of all: they read the results, Elo, simulation and player stats written above
+  const articles = await draftArticles(season, opts.now ?? new Date()).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+
   return {
     season,
     games: rows.length,
@@ -99,6 +104,7 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
     sim,
     players,
     news,
+    articles,
   }
 }
 
