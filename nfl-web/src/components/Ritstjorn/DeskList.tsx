@@ -38,10 +38,13 @@ function Desk({ me }: { me: { id: string; name: string | null } }) {
           <p className="text-xs font-bold tracking-widest inline-flex items-center gap-1.5" style={{ color: 'var(--accent)' }}><Newspaper size={13} aria-hidden /> RITSTJÓRN</p>
           <h1 className="display text-3xl font-extrabold">NFL-greinar</h1>
         </div>
+        <div className="flex flex-wrap gap-2">
+        <Link href="/ritstjorn/sludur" className="rounded-full border px-4 min-h-[40px] font-semibold inline-flex items-center" style={{ borderColor: 'var(--border)' }}>Slúður og skipti</Link>
         <button className="rounded-full px-4 min-h-[40px] font-semibold inline-flex items-center gap-2" style={{ background: 'var(--accent)', color: 'var(--accent-ink)' }}
           onClick={async () => { try { router.push(`/ritstjorn/${await newArticle(me.id)}`) } catch (e) { setError((e as Error).message) } }}>
           <FilePlus2 size={16} aria-hidden /> Ný grein
         </button>
+        </div>
       </header>
       <div className="inline-flex w-fit rounded-full border p-1 text-sm" style={{ borderColor: 'var(--border)' }}>
         {(['draft', 'published'] as const).map((s) => (

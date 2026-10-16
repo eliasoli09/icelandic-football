@@ -61,3 +61,38 @@ export async function deleteArticle(id: string): Promise<void> {
   const { error } = await browserDb().from('nfl_article').delete().eq('id', id)
   if (error) throw new Error(error.message)
 }
+
+export interface DeskNews { url: string; source: string; title: string; title_is: string | null; published_at: string; teams: string[]; rumour: boolean; heat: 'heitt' | 'volgt' | 'kalt' | null }
+
+/** The last fortnight's news, trade talk first, for flagging rumours and setting heat. */
+export async function recentNews(): Promise<DeskNews[]> {
+  const since = new Date(Date.now() - 14 * 86400_000).toISOString()
+  const { data, error } = await browserDb().from('nfl_news').select('url, source, title, title_is, published_at, teams, rumour, heat')
+    .gte('published_at', since).order('rumour', { ascending: false }).order('published_at', { ascending: false }).range(0, 399)
+  if (error) throw new Error(error.message)
+  return (data ?? []) as DeskNews[]
+}
+
+export async function flagNews(url: string, patch: Partial<Pick<DeskNews, 'rumour' | 'heat'>>): Promise<void> {
+  const { data, error } = await browserDb().from('nfl_news').update(patch).eq('url', url).select('url')
+  if (error) throw new Error(error.message)
+  if (!data?.length) throw new Error('Vistaðist ekki: ertu enn skráð(ur) inn sem ritstjóri?')
+}
+
+export interface DeskTrade { id: string; traded_on: string; moves: { player: string; from: string; to: string }[]; compensation: string; source_url: string | null }
+
+export async function listTrades(): Promise<DeskTrade[]> {
+  const { data, error } = await browserDb().from('nfl_trade').select('id, traded_on, moves, compensation, source_url').order('traded_on', { ascending: false }).range(0, 199)
+  if (error) throw new Error(error.message)
+  return (data ?? []) as DeskTrade[]
+}
+
+export async function addTrade(t: Omit<DeskTrade, 'id'>, by: string): Promise<void> {
+  const { error } = await browserDb().from('nfl_trade').insert({ ...t, created_by: by })
+  if (error) throw new Error(error.message)
+}
+
+export async function deleteTrade(id: string): Promise<void> {
+  const { error } = await browserDb().from('nfl_trade').delete().eq('id', id)
+  if (error) throw new Error(error.message)
+}

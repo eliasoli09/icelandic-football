@@ -162,3 +162,21 @@ export async function nflRoundLines(season: number, week: number): Promise<impor
     if (!data || data.length < 1000) return out
   }
 }
+
+export type RumourItem = NewsItem & { heat: import('./rumours').Heat | null }
+
+/** Summarised trade talk from the last month, newest first. */
+export async function nflRumours(limit = 100): Promise<RumourItem[]> {
+  const { data, error } = await db().from('nfl_news').select('url, source, published_at, teams, title_is, summary_is, heat')
+    .eq('rumour', true).not('summary_is', 'is', null).gte('published_at', new Date(Date.now() - 30 * 86400_000).toISOString())
+    .order('published_at', { ascending: false }).limit(limit)
+  if (error) throw error
+  return (data ?? []) as RumourItem[]
+}
+
+/** Confirmed trades, newest first. */
+export async function nflTrades(): Promise<import('./rumours').Trade[]> {
+  const { data, error } = await db().from('nfl_trade').select('id, traded_on, moves, compensation, source_url').order('traded_on', { ascending: false }).order('created_at', { ascending: false }).limit(200)
+  if (error) throw error
+  return (data ?? []) as import('./rumours').Trade[]
+}

@@ -1,4 +1,5 @@
 import { db } from '../db'
+import { isRumour } from './rumours'
 import { buildPrompt, detectTeams, NEWS_FEEDS, parseReply, parseRss, validateSummary, type FeedItem, type Summary } from './news'
 
 const SECRET = () => process.env.CRON_SECRET!
@@ -7,13 +8,13 @@ export const SUMMARY_BATCH = 20
 
 /** Pull the four feeds and store items not seen before. A feed that fails is reported, not fatal. */
 export async function fetchNews(teams: { abbr: string; name: string }[]): Promise<{ found: number; added: number; failed: string[] }> {
-  const items: (FeedItem & { teams: string[] })[] = []
+  const items: (FeedItem & { teams: string[]; rumour: boolean })[] = []
   const failed: string[] = []
   await Promise.all(NEWS_FEEDS.map(async (f) => {
     try {
       const res = await fetch(f.url, { headers: UA, cache: 'no-store', signal: AbortSignal.timeout(20_000) })
       if (!res.ok) throw new Error(String(res.status))
-      for (const it of parseRss(await res.text(), f.source)) items.push({ ...it, teams: detectTeams(`${it.title} ${it.description}`, teams) })
+      for (const it of parseRss(await res.text(), f.source)) items.push({ ...it, teams: detectTeams(`${it.title} ${it.description}`, teams), rumour: isRumour(`${it.title} ${it.description}`) })
     } catch (e) {
       failed.push(`${f.source}: ${e instanceof Error ? e.message : String(e)}`)
     }
@@ -24,11 +25,11 @@ export async function fetchNews(teams: { abbr: string; name: string }[]): Promis
   return { found: items.length, added: data as number, failed }
 }
 
-/** Newest items still without an Icelandic summary, from the last week. */
+/** Items still without an Icelandic summary from the last week: trade talk first, then the newest. */
 export async function pendingNews(limit = SUMMARY_BATCH): Promise<FeedItem[]> {
   const since = new Date(Date.now() - 7 * 86400_000).toISOString()
   const { data, error } = await db().from('nfl_news').select('url, source, title, description, published_at')
-    .is('summary_is', null).gte('published_at', since).order('published_at', { ascending: false }).limit(limit)
+    .is('summary_is', null).gte('published_at', since).order('rumour', { ascending: false }).order('published_at', { ascending: false }).limit(limit)
   if (error) throw error
   return (data ?? []) as FeedItem[]
 }
