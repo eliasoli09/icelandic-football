@@ -38,7 +38,7 @@ export function modelPicks(games: PickGame[], pHome: Map<string, number>): UserP
 const byKickoff = (a: PickGame, b: PickGame) => a.kickoff.localeCompare(b.kickoff) || a.game_id.localeCompare(b.game_id)
 
 /** The round's last game by kickoff: its total is the tiebreak. */
-export function lastGameOf(games: PickGame[], season: number, week: number): PickGame | null {
+export function lastGameOf<T extends PickGame>(games: T[], season: number, week: number): T | null {
   const round = games.filter((g) => g.season === season && g.week === week).sort(byKickoff)
   return round[round.length - 1] ?? null
 }

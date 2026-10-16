@@ -7,8 +7,8 @@ import { usePathname } from 'next/navigation'
 const TABS = [
   { href: '/nfl', label: 'Vikan' },
   { href: '/nfl/stada', label: 'Staðan' },
-  { href: '/nfl/styrkleiki', label: 'Styrkleiki' },
   { href: '/nfl/urslitakeppni', label: 'Úrslitakeppnin', short: 'Úrslit' },
+  { href: '/nfl/spa', label: 'Spáleikur', short: 'Spá' },
   { href: '/nfl/leikmenn', label: 'Leikmenn' },
 ]
 
@@ -17,7 +17,10 @@ export function NflSubnav() {
   return (
     <nav aria-label="NFL" className="inline-flex max-w-full overflow-x-auto rounded-full border p-1 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
       {TABS.map((t) => {
-        const active = pathname === t.href || (t.href === '/nfl/leikmenn' && (pathname.startsWith('/nfl/leikmadur') || pathname.startsWith('/nfl/verdlaun')))
+        const active = pathname === t.href
+          || (t.href === '/nfl/leikmenn' && (pathname.startsWith('/nfl/leikmadur') || pathname.startsWith('/nfl/verdlaun')))
+          || (t.href === '/nfl/stada' && pathname === '/nfl/styrkleiki')
+          || (t.href === '/nfl/spa' && pathname.startsWith('/nfl/spa/'))
         return (
           <Link
             key={t.href}

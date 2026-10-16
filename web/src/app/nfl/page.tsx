@@ -1,3 +1,6 @@
+import { ChevronRight, Trophy } from 'lucide-react'
+import { pickWeek } from '@/lib/nfl/pickem'
+import { weekLabel } from '@/lib/nfl/week'
 import { WeekView } from '@/components/Nfl/WeekView'
 import Link from 'next/link'
 import { nflCurrentSeason, nflNews, nflSeasonModel } from '@/lib/nfl/queries'
@@ -13,8 +16,21 @@ export default async function NflWeekPage() {
     if (!season) return <p className="muted">Engir leikir fundust.</p>
     const [{ games, teams, elo, state }, news] = await Promise.all([nflSeasonModel(season), nflNews({ limit: 6, sinceDays: 7 }).catch(() => [])])
     const forecasts = seasonForecasts(games, elo, state)
+    const now = new Date()
+    const next = pickWeek(games, now)
+    const open = next ? games.filter((g) => g.week === next.week && new Date(g.kickoff) > now).length : 0
     return (
       <div className="grid gap-10">
+        {next && (
+          <Link href="/nfl/spa" className="card card-hover p-4 flex items-center gap-3">
+            <Trophy size={22} aria-hidden style={{ color: 'var(--accent)' }} className="shrink-0" />
+            <span className="min-w-0">
+              <span className="block font-semibold">Spáðu í leiki vikunnar</span>
+              <span className="block text-xs muted">{open} {open === 1 ? 'leikur opinn' : 'leikir opnir'} í {weekLabel(games.find((g) => g.week === next.week)!.game_type, next.week).toLowerCase()}. Kepptu við vinina og líkanið.</span>
+            </span>
+            <ChevronRight size={18} aria-hidden className="ml-auto shrink-0 muted" />
+          </Link>
+        )}
         <WeekView season={season} games={games} teams={teams} initialWeek={defaultWeek(games, new Date())} forecasts={forecasts} />
         {news.length > 0 && (
           <section className="grid gap-3">

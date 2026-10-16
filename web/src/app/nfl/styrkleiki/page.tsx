@@ -1,3 +1,4 @@
+import { StandingsSwitch } from '@/components/Nfl/StandingsSwitch'
 import { PowerView, type PowerRow } from '@/components/Nfl/PowerView'
 import { currentRatings, ELO_MEAN, eloSpread } from '@/lib/nfl/elo'
 import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
@@ -35,7 +36,12 @@ export default async function NflPowerPage() {
       })
       .sort((a, b) => b.elo - a.elo)
 
-    return <PowerView season={season} rows={rows} teams={clubs} sentence={NFL_MODEL_SENTENCE} />
+    return (
+      <div className="grid gap-6">
+        <StandingsSwitch active="styrkleiki" />
+        <PowerView season={season} rows={rows} teams={clubs} sentence={NFL_MODEL_SENTENCE} />
+      </div>
+    )
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>
   }
