@@ -10,6 +10,8 @@ import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@
 import { devig } from '@/lib/nfl/odds'
 import { nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel } from '@/lib/nfl/queries'
 import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
+import { ArticleList } from '@/components/Nfl/ArticleList'
+import { nflGameArticles } from '@/lib/nfl/articles/queries'
 import { clock, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 import { weekLabel } from '@/lib/nfl/week'
@@ -31,6 +33,7 @@ export default async function NflGamePage({ params }: Props) {
   const teams = new Map(model.teams.map((t) => [t.abbr, t]))
   const names = (abbr: string) => model.teams.filter((t) => t.franchise === franchiseOf(abbr)).map((t) => t.abbr)
   const meetings = (await nflMeetings(names(game.home), names(game.away), 6)).filter((g) => g.game_id !== game.game_id).slice(0, 5)
+  const articles = await nflGameArticles(game.game_id, game.season, game.week).catch(() => [])
   const news = await nflNews({ teams: [franchiseOf(game.home), franchiseOf(game.away)], sinceDays: 7, limit: 4 }).catch(() => [])
 
   const played = isPlayed(game)
@@ -121,6 +124,12 @@ export default async function NflGamePage({ params }: Props) {
         ))}
       </section>
 
+      {articles.length > 0 && (
+        <section className="grid gap-3">
+          <h2 className="display text-lg font-extrabold">Greinar um leikinn</h2>
+          <ArticleList items={articles} compact />
+        </section>
+      )}
       {news.length > 0 && (
         <section className="grid gap-3">
           <h2 className="display text-lg font-extrabold">Fréttir um liðin</h2>

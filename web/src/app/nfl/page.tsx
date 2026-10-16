@@ -5,6 +5,8 @@ import { WeekView } from '@/components/Nfl/WeekView'
 import Link from 'next/link'
 import { nflCurrentSeason, nflNews, nflSeasonModel, nflSim } from '@/lib/nfl/queries'
 import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
+import { ArticleList } from '@/components/Nfl/ArticleList'
+import { nflArticles } from '@/lib/nfl/articles/queries'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { NflDashboard } from '@/components/Nfl/NflDashboard'
 import { NflSubnav } from '@/components/Nfl/NflSubnav'
@@ -20,6 +22,7 @@ export default async function NflWeekPage() {
     const season = await nflCurrentSeason()
     if (!season) return <><NflDashboard rows={[]} sims={null} season={null} runAt={null} /><div className={styles.secondaryNav}><NflSubnav /></div></>
     const [{ games, teams, elo, state }, news, sim] = await Promise.all([nflSeasonModel(season), nflNews({ limit: 6, sinceDays: 7 }).catch(() => []), nflSim(season).catch(() => ({}))])
+    const articles = await nflArticles({ limit: 3 }).catch(() => [])
     const forecasts = seasonForecasts(games, elo, state)
     const rows = dashboardRows(teams, games, currentRatings(state, season), forecasts, sim)
     const first = Object.values(sim)[0]
@@ -42,6 +45,15 @@ export default async function NflWeekPage() {
           </Link>
         )}
         <WeekView season={season} games={games} teams={teams} initialWeek={defaultWeek(games, new Date())} forecasts={forecasts} />
+        {articles.length > 0 && (
+          <section className="grid gap-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className="display text-xl font-extrabold">Greinar</h2>
+              <Link href="/nfl/greinar" className="text-sm underline decoration-dotted underline-offset-2">Allar greinar</Link>
+            </div>
+            <ArticleList items={articles} />
+          </section>
+        )}
         {news.length > 0 && (
           <section className="grid gap-3">
             <div className="flex items-baseline justify-between gap-3">
