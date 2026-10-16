@@ -13,7 +13,6 @@ const NAV = [
   { href: '/elo', label: 'Elo' },
   { href: '/tafla', label: 'Tafla' },
   { href: '/leikir', label: 'Leikir' },
-  { href: '/nfl', label: 'NFL' },
   { href: '/thin-spa', label: 'Þín spá' },
   { href: '/leikjaherbergi', label: 'Leikjaherbergið' },
   { href: '/topp10', label: 'Tenaball' },
@@ -99,7 +98,6 @@ export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
 
         <div className="hidden md:block">
           {pathname.startsWith('/kort') ? <span className="text-[10px] muted whitespace-nowrap">Besta + Lengju · 2026</span> :
-           pathname.startsWith('/nfl') ? null :
           <LeagueSwitcher size="sm" />
           }
         </div>
@@ -137,7 +135,7 @@ export function Nav({ updatedLabel }: { updatedLabel: string | null }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
         >
-          {!pathname.startsWith('/kort') && !pathname.startsWith('/nfl') && <div className="md:hidden flex justify-center"><LeagueSwitcher size="sm" /></div>}
+          {!pathname.startsWith('/kort') && <div className="md:hidden flex justify-center"><LeagueSwitcher size="sm" /></div>}
           <div className="grid grid-cols-2 gap-1.5">
             {NAV.map((n) => {
               const active = isActive(n.href)

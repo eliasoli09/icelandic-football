@@ -3,10 +3,6 @@
     {
       "path": "/api/cron/ingest",
       "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/cron/nfl",
-      "schedule": "0 8 * * *"
     }
   ]
 }

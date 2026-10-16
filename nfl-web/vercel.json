@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/nfl",
+      "schedule": "0 8 * * *"
+    }
+  ]
+}
