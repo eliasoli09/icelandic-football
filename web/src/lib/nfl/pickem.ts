@@ -3,7 +3,7 @@ import { isPlayed, type NflGame } from './types'
 /** The pick'em game on /nfl/spa: points, the model as a player, the boards. Pure; the page feeds it. */
 
 export type PickGame = Pick<NflGame, 'game_id' | 'season' | 'week' | 'game_type' | 'kickoff' | 'home' | 'away' | 'home_score' | 'away_score'>
-export interface Pick { player: string; game_id: string; pick: string }
+export interface UserPick { player: string; game_id: string; pick: string }
 export interface Tiebreak { player: string; season: number; week: number; total: number }
 export interface BoardRow {
   id: string
@@ -28,7 +28,7 @@ export function pickPoints(pick: string, g: PickGame): number | null {
 }
 
 /** The model picks the side it gave the better chance before kickoff; the home side on an even call. */
-export function modelPicks(games: PickGame[], pHome: Map<string, number>): Pick[] {
+export function modelPicks(games: PickGame[], pHome: Map<string, number>): UserPick[] {
   return games.flatMap((g) => {
     const p = pHome.get(g.game_id)
     return p === undefined ? [] : [{ player: MODEL_ID, game_id: g.game_id, pick: p >= 0.5 ? g.home : g.away }]
@@ -49,7 +49,7 @@ export function pickWeek(games: PickGame[], now: Date): { season: number; week: 
   return next ? { season: next.season, week: next.week } : null
 }
 
-function tally(games: PickGame[], picks: Pick[]) {
+function tally(games: PickGame[], picks: UserPick[]) {
   const byId = new Map(games.map((g) => [g.game_id, g]))
   const out = new Map<string, { points: number; picks: number }>()
   for (const p of picks) {
@@ -85,7 +85,7 @@ function rows(tallies: Map<string, { points: number; picks: number }>, names: Ma
   }))
 }
 
-export function weekBoard(games: PickGame[], picks: Pick[], tiebreaks: Tiebreak[], names: Map<string, string>, season: number, week: number): BoardRow[] {
+export function weekBoard(games: PickGame[], picks: UserPick[], tiebreaks: Tiebreak[], names: Map<string, string>, season: number, week: number): BoardRow[] {
   const round = games.filter((g) => g.season === season && g.week === week)
   const last = lastGameOf(round, season, week)
   const total = last && isPlayed(last) ? last.home_score! + last.away_score! : null
@@ -93,6 +93,6 @@ export function weekBoard(games: PickGame[], picks: Pick[], tiebreaks: Tiebreak[
   return place(rows(tally(round, picks), names, (id) => (total === null || !guess.has(id) ? null : Math.abs(guess.get(id)! - total))))
 }
 
-export function seasonBoard(games: PickGame[], picks: Pick[], names: Map<string, string>, season: number): BoardRow[] {
+export function seasonBoard(games: PickGame[], picks: UserPick[], names: Map<string, string>, season: number): BoardRow[] {
   return place(rows(tally(games.filter((g) => g.season === season), picks), names, () => null))
 }
