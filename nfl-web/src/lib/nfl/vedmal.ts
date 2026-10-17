@@ -116,3 +116,53 @@ export function sidePoints(scored: number, scoredGames: number, conceded: number
   const def = (conceded + k * league) / (concededGames + k)
   return (off * def) / league
 }
+
+/** The stats a player market reads from a game line. */
+export interface StatLine {
+  attempts: number; passing_yards: number; interceptions: number; sacks_taken: number
+  carries: number; rushing_yards: number; targets: number; receptions: number; receiving_yards: number
+  def_sacks: number; qb_hits: number; tackles_solo: number; tackle_assists: number
+}
+
+/**
+ * A player market. `per` is the player's number in a game. `faced` is what the
+ * opponent does about it: `against` sums the stat over everyone who played the
+ * opponent (a defence's yards allowed), `own` sums `oppStat` over the opponent's
+ * own players (an offence's sacks taken). A `chance` market shows P(one or more).
+ */
+export interface Market {
+  key: 'pass' | 'rec' | 'catches' | 'sacks' | 'ints'
+  title: string
+  unit: string
+  kind: 'number' | 'chance'
+  per: (l: StatLine) => number
+  faced: 'against' | 'own'
+  oppStat: (l: StatLine) => number
+  /** Who is listed: from the player's last game and his per-game averages so far. */
+  eligible: (last: StatLine, avg: StatLine) => boolean
+}
+
+const tackles = (l: StatLine) => l.tackles_solo + l.tackle_assists + l.def_sacks + l.qb_hits
+export const MARKETS: Market[] = [
+  { key: 'pass', title: 'Sendingamestir', unit: 'spáðir sendingajardar', kind: 'number', per: (l) => l.passing_yards, faced: 'against', oppStat: (l) => l.passing_yards, eligible: (last) => last.attempts >= 15 },
+  { key: 'rec', title: 'Gripmestir', unit: 'spáðir gripjardar', kind: 'number', per: (l) => l.receiving_yards, faced: 'against', oppStat: (l) => l.receiving_yards, eligible: (last, avg) => last.targets >= 1 && avg.targets >= 3 },
+  { key: 'catches', title: 'Flest grip', unit: 'spáð grip', kind: 'number', per: (l) => l.receptions, faced: 'against', oppStat: (l) => l.receptions, eligible: (last, avg) => last.targets >= 1 && avg.targets >= 3 },
+  { key: 'sacks', title: 'Líklegastir til að fella', unit: 'líkur á fellu', kind: 'chance', per: (l) => l.def_sacks, faced: 'own', oppStat: (l) => l.sacks_taken, eligible: (last, avg) => tackles(last) > 0 && avg.def_sacks + avg.qb_hits > 0 },
+  { key: 'ints', title: 'Líklegastir til að kasta hlerun', unit: 'líkur á hlerun', kind: 'chance', per: (l) => l.interceptions, faced: 'against', oppStat: (l) => l.interceptions, eligible: (last) => last.attempts >= 15 },
+]
+
+export interface StatParams { prev: number; kDef: number; a: number; k: number; prior: number }
+
+/**
+ * A player's number in the coming game: his average (last season at weight
+ * `prev`), pulled towards `prior` (a typical listed player) by `k` games, times
+ * what the opponent concedes against the league (pulled by `kDef` games),
+ * times the team factor to the power `a`.
+ */
+export function statProjection(cur: { games: number; total: number }, prev: { games: number; total: number }, opp: { total: number; games: number }, league: number, factor: number, P: StatParams): number {
+  const g = cur.games + P.prev * prev.games
+  if (g <= 0 || league <= 0) return 0
+  const base = (cur.total + P.prev * prev.total + P.k * P.prior) / (g + P.k)
+  const def = (opp.total + P.kDef * league) / (opp.games + P.kDef) / league
+  return base * def * factor ** P.a
+}

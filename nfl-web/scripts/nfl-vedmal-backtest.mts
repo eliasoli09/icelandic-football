@@ -20,6 +20,7 @@ const { parsePlayerWeeks } = await import(join(webDir, 'src/lib/nfl/players.ts')
 const { weeksUrl } = await import(join(webDir, 'src/lib/nfl/playerIngest.ts'))
 const { runElo, franchiseOf } = await import(join(webDir, 'src/lib/nfl/elo.ts'))
 const V = await import(join(webDir, 'src/lib/nfl/vedmal.ts'))
+const { devig } = await import(join(webDir, 'src/lib/nfl/odds.ts'))
 
 const cache = join(tmpdir(), 'nflverse-cache')
 mkdirSync(cache, { recursive: true })
@@ -190,6 +191,111 @@ const totTest = totalRows.filter(test)
 const totals = { k: bestK, mix: bestMix, test: { rows: totTest.length, mae: mae(totTest, totF(bestK)), maeMix: mae(totTest, mix(bestMix)), maeVegas: mae(totTest, (r) => r.vegas) } }
 console.log('heildarstig:', `k=${bestK} MAE ${totals.test.mae.toFixed(2)}, blanda ${bestMix} ${totals.test.maeMix.toFixed(2)} (Vegas ${totals.test.maeVegas.toFixed(2)})`)
 
-const out = { made: new Date().toISOString().slice(0, 10), slipSeasons: [FIRST, LAST], slipWeight, train: [FIRST + 1, TRAIN_TO], test: [TRAIN_TO + 1, LAST], slips, slipsTest, slipsModelOnly, td, rush, totals }
+
+// ---------- 5. more player markets ----------
+// Same shape as rushing: the player's average times what the opponent concedes, times the team factor to a power.
+const STAT_KEYS = ['attempts', 'passing_yards', 'interceptions', 'sacks_taken', 'carries', 'rushing_yards', 'targets', 'receptions', 'receiving_yards', 'def_sacks', 'qb_hits', 'tackles_solo', 'tackle_assists'] as const
+const zeroLine = () => Object.fromEntries(STAT_KEYS.map((k) => [k, 0])) as any
+const marketRows: Record<string, any[]> = Object.fromEntries(V.MARKETS.map((m: any) => [m.key, []]))
+for (let s = FIRST + 1; s <= LAST; s++) {
+  const prevRows = weeksBy.get(s - 1)!
+  const prevGames = reg.filter((g) => g.season === s - 1)
+  const leaguePts = prevGames.reduce((t, g) => t + g.home_score + g.away_score, 0) / (2 * prevGames.length)
+  const league = Object.fromEntries(V.MARKETS.map((m: any) => [m.key, prevRows.reduce((t, r) => t + m.oppStat(r), 0) / (2 * prevGames.length)]))
+  const prevTot = new Map<string, any>()
+  for (const r of prevRows) { const t = prevTot.get(r.player_id) ?? { games: 0, ...zeroLine() }; t.games++; for (const k of STAT_KEYS) t[k] += r[k]; prevTot.set(r.player_id, t) }
+  const rows = weeksBy.get(s)!
+  for (let w = 4; w <= lastWeek(s); w++) {
+    const before = rows.filter((r) => r.week < w)
+    const cur = new Map<string, any>()
+    for (const r of before) { const t = cur.get(r.player_id) ?? { games: 0, ...zeroLine() }; t.games++; for (const k of STAT_KEYS) t[k] += r[k]; cur.set(r.player_id, t) }
+    const faced: Record<string, Map<string, { total: number; games: Set<string> }>> = {}
+    for (const m of V.MARKETS as any[]) {
+      const f = new Map<string, { total: number; games: Set<string> }>()
+      for (const r of before) { const key = fr(m.faced === 'against' ? r.opponent : r.team); const x = f.get(key) ?? { total: 0, games: new Set() }; x.total += m.oppStat(r); x.games.add(r.game_id); f.set(key, x) }
+      faced[m.key] = f
+    }
+    const done = reg.filter((g) => g.season === s && g.week < w)
+    const pts = new Map<string, { for: number; games: number }>()
+    for (const g of done) for (const [t, f] of [[g.home, g.home_score], [g.away, g.away_score]]) { const x = pts.get(fr(t)) ?? { for: 0, games: 0 }; x.for += f; x.games++; pts.set(fr(t), x) }
+    const lastGame = new Map<string, string>()
+    for (const g of [...done].sort((a, b) => a.week - b.week)) { lastGame.set(fr(g.home), g.game_id); lastGame.set(fr(g.away), g.game_id) }
+    const actual = new Map(rows.filter((r) => r.week === w).map((r) => [r.player_id, r]))
+    for (const g of reg.filter((x) => x.season === s && x.week === w)) for (const home of [true, false]) {
+      const team = fr(home ? g.home : g.away), opp = fr(home ? g.away : g.home)
+      const tp = pts.get(team) ?? { for: 0, games: 0 }
+      const factor = V.teamFactor(V.impliedPoints(g, home), tp.for, tp.games, leaguePts, 4)
+      for (const r of before) {
+        if (fr(r.team) !== team || lastGame.get(team) !== r.game_id) continue
+        const y = actual.get(r.player_id)
+        if (!y || fr(y.team) !== team) continue
+        const c = cur.get(r.player_id)!, pv = prevTot.get(r.player_id) ?? { games: 0, ...zeroLine() }
+        const avg = Object.fromEntries(STAT_KEYS.map((k) => [k, c[k] / c.games])) as any
+        for (const m of V.MARKETS as any[]) {
+          if (!m.eligible(r, avg)) continue
+          const o = faced[m.key].get(opp) ?? { total: 0, games: new Set() }
+          marketRows[m.key].push({ s, cur: { games: c.games, total: m.per(c) }, prev: { games: pv.games, total: m.per(pv) }, opp: { total: o.total, games: o.games.size }, league: league[m.key], factor, y: m.per(y) })
+        }
+      }
+    }
+  }
+}
+const markets: Record<string, any> = {}
+for (const m of V.MARKETS as any[]) {
+  const rs = marketRows[m.key]
+  const proj = (P: any) => (r: any) => V.statProjection(r.cur, r.prev, r.opp, r.league, r.factor, P)
+  const score = (rows: any[], P: any) => m.kind === 'number' ? mae(rows, proj(P)) : ll(rows.map((r) => ({ ...r, y: r.y > 0 ? 1 : 0 })), (r: any) => V.tdChance(Math.max(proj(P)(r), 0.005)))
+  // a typical listed player's number a game, from the training seasons
+  const prior = rs.filter(train).reduce((t, r) => t + r.y, 0) / rs.filter(train).length
+  let best: any = null
+  for (const prev of [0, 0.1, 0.25, 0.5, 1]) for (const kDef of [1, 2, 4, 8, 16, 1e9]) for (const a of [0, 0.5, 1]) for (const k of [0, 1, 2, 4, 8, 16, 32]) {
+    const sc = score(rs.filter(train), { prev, kDef, a, k, prior })
+    if (!best || sc < best.sc) best = { P: { prev, kDef, a, k, prior }, sc }
+  }
+  const t = rs.filter(test)
+  const naive = { prev: 0, kDef: 1e9, a: 0, k: 0, prior }
+  const flat = { prev: 0, kDef: 1e9, a: 0, k: 1e9, prior }
+  markets[m.key] = { params: best.P, test: { rows: t.length, score: score(t, best.P), naive: score(t, naive), flat: score(t, flat), metric: m.kind === 'number' ? 'mae' : 'logloss' } }
+  console.log(`${m.key.padEnd(8)} ${JSON.stringify(best.P)} ${markets[m.key].test.metric} ${markets[m.key].test.score.toFixed(4)} (meðaltal tímabils ${markets[m.key].test.naive.toFixed(4)}, allir eins ${markets[m.key].test.flat.toFixed(4)}), n=${t.length}`)
+}
+
+// ---------- 6. player stats in the win chance ----------
+// Can the players' EPA (offence per game, defence allowed per game) add anything to the market's chance?
+// logit p = logit(market) + c1 * EPA difference + c2 * (Elo logit − market logit), fitted on 2016-2021.
+const logit = (p: number) => Math.log(p / (1 - p))
+const sig = (x: number) => 1 / (1 + Math.exp(-x))
+const winRows: any[] = []
+for (let s = FIRST + 1; s <= LAST; s++) {
+  const rows = weeksBy.get(s)!
+  for (let w = 4; w <= lastWeek(s); w++) {
+    const before = rows.filter((r) => r.week < w)
+    const off = new Map<string, { epa: number; games: Set<string> }>(), def = new Map<string, { epa: number; games: Set<string> }>()
+    for (const r of before) {
+      const e = r.passing_epa + r.rushing_epa
+      const a = off.get(fr(r.team)) ?? { epa: 0, games: new Set() }; a.epa += e; a.games.add(r.game_id); off.set(fr(r.team), a)
+      const d = def.get(fr(r.opponent)) ?? { epa: 0, games: new Set() }; d.epa += e; d.games.add(r.game_id); def.set(fr(r.opponent), d)
+    }
+    // per game, pulled to zero by 3 games
+    const net = (t: string) => { const o = off.get(t), d = def.get(t); return (o ? o.epa / (o.games.size + 3) : 0) - (d ? d.epa / (d.games.size + 3) : 0) }
+    for (const g of reg.filter((x) => x.season === s && x.week === w)) {
+      const m = devig(g.home_ml, g.away_ml), pe = pHome.get(g.game_id)
+      if (!m || pe === undefined || g.home_score === g.away_score) continue
+      winRows.push({ s, market: m.home, elo: pe, epa: (net(fr(g.home)) - net(fr(g.away))) / 10, y: g.home_score > g.away_score ? 1 : 0 })
+    }
+  }
+}
+const winP = (c: number[]) => (r: any) => sig(logit(r.market) + c[0] * r.epa + c[1] * (logit(r.elo) - logit(r.market)))
+let coef = [0, 0]
+for (let it = 0; it < 4000; it++) {
+  const gr = [0, 0]
+  for (const r of winRows.filter(train)) { const e = winP(coef)(r) - r.y; gr[0] += e * r.epa; gr[1] += e * (logit(r.elo) - logit(r.market)) }
+  const n = winRows.filter(train).length
+  coef = coef.map((c, i) => c - 0.5 * gr[i] / n)
+}
+const winTest = winRows.filter(test)
+const winModel = { coef, test: { rows: winTest.length, loglossMarket: ll(winTest, (r) => r.market), loglossBlend: ll(winTest, winP(coef)), loglossElo: ll(winTest, (r) => r.elo) } }
+console.log(`sigurlíkur ${TRAIN_TO + 1}-${LAST}: markaður ${winModel.test.loglossMarket.toFixed(4)}, markaður + leikmenn/Elo ${winModel.test.loglossBlend.toFixed(4)} (stuðlar ${coef.map((c) => c.toFixed(3)).join(', ')}), Elo eitt ${winModel.test.loglossElo.toFixed(4)}`)
+
+const out = { made: new Date().toISOString().slice(0, 10), slipSeasons: [FIRST, LAST], slipWeight, train: [FIRST + 1, TRAIN_TO], test: [TRAIN_TO + 1, LAST], slips, slipsTest, slipsModelOnly, td, rush, totals, markets, winModel }
 writeFileSync(join(webDir, 'src/lib/nfl/data/vedmal-backtest.json'), JSON.stringify(out, null, 2) + '\n')
 console.log('skrifað: src/lib/nfl/data/vedmal-backtest.json')
