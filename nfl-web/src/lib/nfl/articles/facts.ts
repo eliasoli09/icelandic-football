@@ -90,7 +90,7 @@ function standouts(lines: GameStatLine[], team: string) {
   const r = top('rushing_yards')
   if (r && r.carries > 0) out.hlaupari = `${r.name}: ${r.carries} hlaup, ${r.rushing_yards} jardar, ${r.rushing_tds} snertimörk`
   const c = top('receiving_yards')
-  if (c && c.receptions > 0) out.gripari = `${c.name}: ${c.receptions} grip, ${c.receiving_yards} jardar, ${c.receiving_tds} snertimörk`
+  if (c && c.receptions > 0) out.utherji = `${c.name}: ${c.receptions} grip, ${c.receiving_yards} jardar, ${c.receiving_tds} snertimörk`
   const d = [...own].sort((a, b) => (b.def_sacks * 3 + b.def_interceptions * 4 + b.forced_fumbles * 3 + b.tackles_solo) - (a.def_sacks * 3 + a.def_interceptions * 4 + a.forced_fumbles * 3 + a.tackles_solo))[0]
   if (d && (d.def_sacks || d.def_interceptions || d.tackles_solo)) {
     out.varnarmadur = `${d.name}: ${d.tackles_solo + d.tackle_assists} tæklingar, ${d.def_sacks.toString().replace('.', ',')} fellur, ${d.def_interceptions} hleranir`

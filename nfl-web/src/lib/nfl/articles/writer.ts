@@ -19,7 +19,7 @@ Reglur:
 2. Hver tala í greininni verður að standa í pakkanum, eins og hún er skrifuð þar (t.d. 64%, −2,5, 3-2). Reiknaðu ekkert nýtt.
 3. Nöfn liða og leikmanna haldast óbreytt. Tímar eru íslenskir; skrifaðu þá eins og í pakkanum.
 4. Orðaval: leikstjórnandi (quarterback), snertimark (touchdown), vallarmark (field goal), aukastig (extra point),
-   sjálfsmark (safety), hlerun (interception), fella (sack), grip (reception), jardar (yards), forgjöf (spread),
+   sjálfsmark (safety), útherji (wide receiver), innherji (tight end), hlerun (interception), fella (sack), grip (reception), jardar (yards), forgjöf (spread),
    heildarstig (total), riðill (division), deild (AFC/NFC), deildarkeppni (regular season), úrslitakeppni (playoffs),
    umspil (Wild Card), 8 liða úrslit (Divisional), undanúrslit (Conference Championship), framlenging (overtime),
    nýliði (rookie). "Líkanið" er Elo-spálíkan síðunnar; "Vegas" eru veðbankarnir.

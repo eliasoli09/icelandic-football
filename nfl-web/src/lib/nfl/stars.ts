@@ -7,7 +7,7 @@
 export type StarSlot = 'QB' | 'RB' | 'WR' | 'TE' | 'FLEX' | 'DL' | 'LB' | 'DB'
 
 export const SLOT_LABEL: Record<StarSlot, string> = {
-  QB: 'Leikstjórnandi', RB: 'Hlaupari', WR: 'Gripari', TE: 'Innherji', FLEX: 'Flex',
+  QB: 'Leikstjórnandi', RB: 'Hlaupari', WR: 'Útherji', TE: 'Innherji', FLEX: 'Flex',
   DL: 'Varnarlína', LB: 'Línuvörður', DB: 'Varnarbakvörður',
 }
 

@@ -80,7 +80,7 @@ export default async function StarTeamPage({ searchParams }: Props) {
             Sóknarmenn fá stig eins og í fantasy: 1 fyrir hverja 25 sendingajarda, 1 fyrir hverja 10 hlaupa- eða gripjarda, ½ fyrir grip,
             4 fyrir snertimarkssendingu og 6 fyrir annað snertimark, −2 fyrir hlerun eða boltamissi. Varnarmenn: 4 fyrir fellu,
             5 fyrir hlerun, 4 fyrir þvingaðan boltamissi, 6 fyrir snertimark, 1,5 fyrir tæklingu fyrir tap og varða sendingu, 1 fyrir tæklingu.
-            Flex er besti hlaupari, gripari eða innherji sem ekki er þegar í liðinu.
+            Flex er besti hlaupari, útherji eða innherji sem ekki er þegar í liðinu.
           </p>
         </>
       )}
