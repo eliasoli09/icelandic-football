@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { ArrowLeft, Bot } from 'lucide-react'
 import { ARTICLE_KIND } from '@/components/Nfl/ArticleList'
 import { Markdown } from '@/lib/nfl/articles/markdown'
+import { Comments } from '@/components/Nfl/Comments'
 import { nflArticle } from '@/lib/nfl/articles/queries'
 import { dayLabel } from '@/lib/nfl/time'
 
@@ -47,6 +48,7 @@ export default async function NflArticlePage({ params }: Props) {
         </p>
       )}
       {a.game_id && <Link href={`/leikur/${a.game_id}`} className="text-sm underline decoration-dotted underline-offset-2 w-fit">Leikurinn: tölur og spá</Link>}
+      <Comments target={`grein:${a.slug}`} />
     </article>
   )
 }

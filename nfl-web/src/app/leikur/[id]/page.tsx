@@ -5,6 +5,7 @@ import { NflLogo } from '@/components/Nfl/NflLogo'
 import { LiveBox } from '@/components/Nfl/Live'
 import { TvBadge } from '@/components/Nfl/TvBadge'
 import { PollBox } from '@/components/Nfl/PollBox'
+import { Comments } from '@/components/Nfl/Comments'
 import { ProbSplit } from '@/components/Nfl/ProbSplit'
 import { franchiseOf, predictGame } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
@@ -154,6 +155,7 @@ export default async function NflGamePage({ params }: Props) {
           </ul>
         )}
       </section>
+      <Comments target={`leikur:${game.game_id}`} />
     </article>
   )
 }
