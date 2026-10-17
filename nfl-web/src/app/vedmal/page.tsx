@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Bomb, Flame, Footprints, Hand, Send, Shield, Sigma, Target, Trophy, Zap } from 'lucide-react'
 import { NflLogo } from '@/components/Nfl/NflLogo'
 import { PlayerHead } from '@/components/Nfl/PlayerHead'
+import { TrackButton } from '@/components/Nfl/TrackButton'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { probLabel } from '@/lib/nfl/format'
 import { availability, STATUS_LABEL } from '@/lib/nfl/injuries'
@@ -104,6 +105,7 @@ export default async function VedmalPage() {
                   <span><span className="block text-[11px] muted">Líkur</span><span className="num font-bold text-lg">{probLabel(s.p)}</span></span>
                   <span className="text-right"><span className="block text-[11px] muted">Sanngjarn stuðull</span><span className="num font-extrabold text-2xl" style={{ color: 'var(--accent)' }}>{dec(s.fair)}</span></span>
                 </div>
+                <TrackButton name={`Snertimarka${s.picks.length === 2 ? 'tvenna' : 'þrenna'}`} odds={Math.round(s.fair * 100) / 100} fair legs={s.picks.map((p) => ({ kind: 'td', game_id: p.game_id, player_id: p.player_id, name: p.name, team: p.team }))} />
               </article>
             ))}
           </div>
@@ -217,6 +219,7 @@ function SlipCard({ k, name, target, slip, team }: { k: string; name: string; ta
               <span className="num font-extrabold text-2xl" style={{ color: 'var(--accent)' }}>{dec(slip.odds)}</span>
             </span>
           </div>
+          <TrackButton name={name} odds={Math.round(slip.odds * 100) / 100} legs={slip.legs.map((l) => ({ kind: 'win', game_id: l.game_id, team: l.team, odds: Math.round(l.odds * 100) / 100 }))} />
         </>
       )}
       <p className="text-[11px] muted">

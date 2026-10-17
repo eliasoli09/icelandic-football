@@ -4,9 +4,10 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-/** Ten tabs on every page; on a phone the row scrolls sideways and keeps the active tab in view. */
+/** Eleven tabs on every page; on a phone the row scrolls sideways and keeps the active tab in view. */
 const TABS: { href: string; label: string; also?: (p: string) => boolean }[] = [
   { href: '/', label: 'Forsíða' },
+  { href: '/stjornbord', label: 'Stjórnborð' },
   { href: '/leikir', label: 'Leikir', also: (p) => p.startsWith('/leikur/') },
   { href: '/spar', label: 'Spár', also: (p) => p === '/styrkleiki' },
   { href: '/stada', label: 'Staðan' },

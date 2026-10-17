@@ -127,11 +127,12 @@ export const PLAN_WINDOW_MS = 4 * 3600 * 1000
 
 /**
  * Seconds between polls so the day's requests come close to `budget`: each poll
- * costs one scoreboard request plus one events request per game under way, so
- * the day's cost is (time any game is on + the sum of each game's time on) /
- * interval. The quota resets at midnight UTC, so the day is a UTC day.
+ * costs `base` requests while any game is on plus `perGame` for each game under
+ * way (the scoreboard and one events request: 1 and 1; the stats: 0 and 2), so
+ * the day's cost is (base × time any game is on + perGame × the sum of each
+ * game's time on) / interval. The quota resets at midnight UTC, so the day is a UTC day.
  */
-export function planInterval(kickoffs: string[], dayUtc: Date, budget: number, floor = 15): number {
+export function planInterval(kickoffs: string[], dayUtc: Date, budget: number, floor = 15, base = 1, perGame = 1): number {
   const start = Date.UTC(dayUtc.getUTCFullYear(), dayUtc.getUTCMonth(), dayUtc.getUTCDate())
   const end = start + 86400_000
   const spans = kickoffs
@@ -145,7 +146,7 @@ export function planInterval(kickoffs: string[], dayUtc: Date, budget: number, f
     if (a > curB) { union += curB - curA; curA = a; curB = b } else curB = Math.max(curB, b)
   }
   union += curB - curA
-  return Math.max(floor, Math.ceil((union + sum) / 1000 / Math.max(1, budget)))
+  return Math.max(floor, Math.ceil((base * union + perGame * sum) / 1000 / Math.max(1, budget)))
 }
 
 /** The US Eastern date of a kickoff, which is how api-sports dates games (EST is close enough for kickoff times). */
@@ -183,4 +184,64 @@ export function liveWinProb(spread: number, homeScore: number, awayScore: number
   const margin = homeScore - awayScore
   if (left <= 0) return margin > 0 ? 1 : margin < 0 ? 0 : 0.5
   return phi((margin + spread * left) / (MARGIN_SD * Math.sqrt(left)))
+}
+
+/** A player's line in a game, as api-sports counts it: the numbers fantasy points and bets need. */
+export interface LivePlayer {
+  name: string
+  /** api-sports team name, e.g. "Denver Broncos". */
+  team: string
+  passYds: number; passTd: number; ints: number
+  rushYds: number; rushTd: number
+  rec: number; recYds: number; recTd: number
+  fumLost: number; twoPt: number
+  /** A kicker's points as api-sports counts them (three a field goal, one an extra point). */
+  kPts: number
+}
+
+const count = (v: unknown) => { const n = Number(String(v ?? '').replace(/,/g, '')); return Number.isFinite(n) ? n : 0 }
+const stat = (stats: { name?: string; value?: unknown }[] | undefined, name: string) => count(stats?.find((x) => x.name === name)?.value)
+
+/** Every player with a line in a /games/statistics/players reply, groups merged per player. */
+export function parsePlayerStats(json: unknown): LivePlayer[] {
+  const teams = (json as { response?: unknown[] })?.response
+  if (!Array.isArray(teams)) return []
+  const out = new Map<string, LivePlayer>()
+  for (const t of teams as { team?: { name?: string }; groups?: { name?: string; players?: { player?: { id?: number; name?: string }; statistics?: { name?: string; value?: unknown }[] }[] }[] }[]) {
+    const team = t.team?.name ?? ''
+    for (const g of t.groups ?? []) for (const p of g.players ?? []) {
+      const name = p.player?.name
+      if (!name) continue
+      const key = `${team}|${p.player?.id ?? name}`
+      const x = out.get(key) ?? { name, team, passYds: 0, passTd: 0, ints: 0, rushYds: 0, rushTd: 0, rec: 0, recYds: 0, recTd: 0, fumLost: 0, twoPt: 0, kPts: 0 }
+      const s = p.statistics
+      if (g.name === 'Passing') { x.passYds += stat(s, 'yards'); x.passTd += stat(s, 'passing touch downs'); x.ints += stat(s, 'interceptions'); x.twoPt += stat(s, 'two pt') }
+      if (g.name === 'Rushing') { x.rushYds += stat(s, 'yards'); x.rushTd += stat(s, 'rushing touch downs'); x.twoPt += stat(s, 'two pt') }
+      if (g.name === 'Receiving') { x.rec += stat(s, 'total receptions'); x.recYds += stat(s, 'yards'); x.recTd += stat(s, 'receiving touch downs'); x.twoPt += stat(s, 'two pt') }
+      if (g.name === 'Fumbles') x.fumLost += stat(s, 'lost')
+      if (g.name === 'Kicking') x.kPts += stat(s, 'points')
+      out.set(key, x)
+    }
+  }
+  return [...out.values()]
+}
+
+/** What a team did in a game: red-zone touchdowns from trips ("2-3"), and its defence for fantasy. */
+export interface LiveTeamStats { team: string; rzMade: number; rzAtt: number; sacks: number; ints: number; fumRec: number; safeties: number; defTd: number; pointsAgainst: number }
+
+/** One row per team of a /games/statistics/teams reply. */
+export function parseTeamStats(json: unknown): LiveTeamStats[] {
+  const rows = (json as { response?: unknown[] })?.response
+  if (!Array.isArray(rows)) return []
+  type S = { total?: unknown; made_att?: string }
+  return (rows as { team?: { name?: string }; statistics?: Record<string, S | undefined> }[]).flatMap((r) => {
+    const st = r.statistics ?? {}
+    if (!r.team?.name) return []
+    const m = /^(\d+)\s*-\s*(\d+)$/.exec(st.red_zone?.made_att ?? '')
+    return [{
+      team: r.team.name, rzMade: m ? Number(m[1]) : 0, rzAtt: m ? Number(m[2]) : 0,
+      sacks: count(st.sacks?.total), ints: count(st.interceptions?.total), fumRec: count(st.fumbles_recovered?.total),
+      safeties: count(st.safeties?.total), defTd: count(st.int_touchdowns?.total), pointsAgainst: count(st.points_against?.total),
+    }]
+  })
 }
