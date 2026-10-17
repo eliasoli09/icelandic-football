@@ -39,6 +39,7 @@ const GAME_COLUMNS = [
   'game_id', 'season', 'game_type', 'week', 'gameday', 'gametime', 'away_team', 'away_score',
   'home_team', 'home_score', 'location', 'overtime', 'away_moneyline', 'home_moneyline',
   'spread_line', 'total_line', 'div_game', 'roof', 'stadium', 'away_qb_name', 'home_qb_name',
+  'over_odds', 'under_odds', 'home_spread_odds', 'away_spread_odds',
 ] as const
 const TEAM_COLUMNS = ['team_abbr', 'team_name', 'team_conf', 'team_division', 'team_color', 'team_color2'] as const
 const GAME_TYPES = new Set<GameType>(['REG', 'WC', 'DIV', 'CON', 'SB'])
@@ -72,6 +73,10 @@ export function parseGames(csv: string): NflGame[] {
       total_line: num(r.total_line),
       away_ml: num(r.away_moneyline),
       home_ml: num(r.home_moneyline),
+      over_odds: num(r.over_odds),
+      under_odds: num(r.under_odds),
+      home_spread_odds: num(r.home_spread_odds),
+      away_spread_odds: num(r.away_spread_odds),
       div_game: r.div_game === '1',
       stadium: text(r.stadium),
       roof: text(r.roof),

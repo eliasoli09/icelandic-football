@@ -13,14 +13,14 @@ const LEG_LABEL: Record<LegStatus, string> = { won: 'Unnið', ahead: 'Yfir', los
 const dec = (x: number) => x.toFixed(2).replace('.', ',')
 const kr = (x: number) => `${Math.round(x).toLocaleString('de-DE')} kr.`
 
-const legText = (l: BetLeg) => l.kind === 'win' ? `${l.team} vinnur` : l.kind === 'td' ? `${l.name} skorar` : `${l.name} yfir ${String(l.line).replace('.', ',')} ${STAT_LABEL[l.stat]}`
+const legText = (l: BetLeg) => l.kind === 'win' ? `${l.team} vinnur` : l.kind === 'td' ? `${l.name} skorar` : l.kind === 'total' ? `${l.side === 'over' ? 'Yfir' : 'Undir'} ${String(l.line).replace('.', ',')} stig` : `${l.name} yfir ${String(l.line).replace('.', ',')} ${STAT_LABEL[l.stat]}`
 
 /** Tracked slips, each leg against the live score and stats. */
 export function Bets({ ctx, board, update }: { ctx: Ctx; board: Board; update: (f: (b: Board) => Board) => void }) {
   const [building, setBuilding] = useState(false)
   const live = new Map((ctx.live?.games ?? []).map((g) => [g.game_id, g]))
   const player = (l: BetLeg) => {
-    if (l.kind === 'win') return undefined
+    if (l.kind === 'win' || l.kind === 'total') return undefined
     const s = ctx.stats?.games.find((g) => g.game_id === l.game_id)
     return s ? findLive({ name: l.name, team: l.team }, s.players) : undefined
   }
@@ -40,7 +40,7 @@ export function Bets({ ctx, board, update }: { ctx: Ctx; board: Board; update: (
           <article key={s.id} className="rounded-xl border p-3 grid gap-2" style={{ borderColor: status === 'won' ? 'var(--win)' : status === 'lost' ? 'var(--loss)' : 'var(--border)' }}>
             <header className="flex items-center gap-2">
               <span className="font-semibold">{s.name}</span>
-              {s.odds && <span className="text-xs muted num">{s.fair ? 'sanngj. ' : ''}stuðull {dec(s.odds)}</span>}
+              {s.odds && <span className="text-xs muted num">{s.fair ? 'áætl. ' : ''}stuðull {dec(s.odds)}</span>}
               <span className="ml-auto text-xs font-bold" style={{ color: status === 'won' ? 'var(--win)' : status === 'lost' ? 'var(--loss)' : 'var(--text-2)' }}>{status === 'won' ? 'UNNINN' : status === 'lost' ? 'TAPAÐUR' : 'Í GANGI'}</span>
               <button onClick={() => remove(s.id)} aria-label="Eyða seðli" className="muted p-1"><Trash2 size={13} /></button>
             </header>

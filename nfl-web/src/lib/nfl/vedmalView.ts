@@ -3,7 +3,7 @@ import { franchiseOf } from './elo'
 import { isUnavailable, type InjuryStatus } from './injuries'
 import type { Forecast } from './forecast'
 import { isPlayed, type GameType, type NflGame } from './types'
-import { MARKETS, SLIPS, bestSlip, gameLegs, impliedPoints, rushProjection, statProjection, tdChance, tdRate, teamFactor, type Market, type Slip, type StatLine, type Usage } from './vedmal'
+import { MARKETS, MIN_LEGS, MIN_LINE, PROP_MARGIN, SLIPS, SLIP_OVER, bestSlip, estimatedOdds, gameLegs, impliedPoints, lineFor, probOver, rushProjection, statProjection, tdChance, tdRate, teamFactor, totalLegs, type Leg, type Market, type Slip, type StatLine, type Usage, type YardStat } from './vedmal'
 
 export const BACKTEST = test
 
@@ -36,7 +36,8 @@ export interface VedmalWeek {
   type: GameType
   /** Games of the round not yet started. */
   games: NflGame[]
-  slips: { key: string; name: string; target: number; slip: Slip | null }[]
+  /** Each slip as the likeliest from every pick, and the likeliest with at least one player pick. */
+  slips: { key: string; name: string; target: number; slip: Slip | null; withPlayer: Slip | null }[]
   scorers: PlayerPick[]
   scorerSlips: ScorerSlip[]
   rushers: PlayerPick[]
@@ -50,6 +51,11 @@ const zero = (): Tot => ({ games: 0, ...Object.fromEntries(STAT_FIELDS.map((k) =
 const add = (t: Tot, l: Stats) => { t.games++; for (const k of STAT_FIELDS) t[k] += l[k]; return t }
 const usage = (t: Tot): Usage => ({ games: t.games, carries: t.carries, targets: t.targets, tds: t.rushing_tds + t.receiving_tds, rushYards: t.rushing_yards })
 const per = (t: Tot, k: keyof Stats) => (t.games ? t[k] / t.games : 0)
+
+/** Player picks offered to the slips per game: the likeliest scorers, and the top players by projection at two lines each. */
+const PLAYER_PICKS = { td: 3, rush: 3, rec: 3, pass: 2 } as const
+const LINE_CHANCES = [0.85, 0.75]
+const SLIP_MAX_LEGS = 6
 
 /** Markets that beat a plain season average and one number for everyone in the backtest, the latter by half a per cent or more (interceptions do not). */
 export const SHOWN_MARKETS = MARKETS.filter((m) => {
@@ -73,11 +79,10 @@ export function vedmalWeek(games: NflGame[], forecasts: Record<string, Forecast>
   const hurt = injured(week)
   const fr = franchiseOf
 
-  const choices = round.map((g) => gameLegs(g, forecasts[g.game_id]?.pHome, test.slipWeight)).filter((l) => l.length)
-  const slips = SLIPS.map((s) => ({ ...s, slip: bestSlip(choices, s.target) }))
+  const winLegs = round.map((g) => gameLegs(g, forecasts[g.game_id]?.pHome, test.slipWeight)).filter((l) => l.length)
 
   const favourites: Favourite[] = []
-  for (const legs of choices) for (const l of legs) {
+  for (const legs of winLegs) for (const l of legs) {
     const g = round.find((x) => x.game_id === l.game_id)!
     const model = l.home ? forecasts[g.game_id].pHome : 1 - forecasts[g.game_id].pHome
     if (l.p >= 0.5) favourites.push({ team: l.team, opp: l.opp, game: g, p: l.p, model })
@@ -152,6 +157,31 @@ export function vedmalWeek(games: NflGame[], forecasts: Record<string, Forecast>
   }
   scorers.sort((a, b) => b.value - a.value)
   rushers.sort((a, b) => b.value - a.value)
+
+  // the slips: each game's winners and totals at the bookmaker's prices, and its likeliest player picks at estimated prices
+  const pool = () => round.map((g) => slipChoices(g)).filter((l) => l.length)
+  const slips = SLIPS.map((s) => {
+    const choices = pool()
+    return { ...s, slip: bestSlip(choices, s.target, SLIP_OVER, MIN_LEGS, SLIP_MAX_LEGS), withPlayer: bestSlip(choices, s.target, SLIP_OVER, MIN_LEGS, SLIP_MAX_LEGS, true) }
+  })
+  function slipChoices(g: NflGame): Leg[] {
+    const legs: Leg[] = [...gameLegs(g, forecasts[g.game_id]?.pHome, test.slipWeight), ...totalLegs(g)]
+    const inGame = (list: PlayerPick[]) => list.filter((p) => p.game_id === g.game_id && !p.status)
+    const base = (p: PlayerPick) => ({ game_id: g.game_id, kickoff: g.kickoff, team: p.team, opp: p.opp, home: p.team === g.home, estimated: true, player: { id: p.player_id, name: p.name, position: p.position, headshot: p.headshot } })
+    for (const p of inGame(scorers).slice(0, PLAYER_PICKS.td)) legs.push({ ...base(p), kind: 'td', odds: estimatedOdds(p.value, PROP_MARGIN.td), p: p.value, market: p.value })
+    const yards: [YardStat, PlayerPick[]][] = [['rush', rushers], ['rec', byMarket.get('rec') ?? []], ['pass', byMarket.get('pass') ?? []]]
+    for (const [stat, list] of yards) {
+      const q = (test.lines as Record<YardStat, { q: number[] }>)[stat].q
+      for (const p of [...inGame(list)].sort((a, b) => b.value - a.value).slice(0, PLAYER_PICKS[stat])) for (const target of LINE_CHANCES) {
+        const line = lineFor(target, p.value, q)
+        if (line === null || line < MIN_LINE[stat]) continue
+        const pr = probOver(line, p.value, q)
+        legs.push({ ...base(p), kind: 'yards', stat, line, odds: estimatedOdds(pr, PROP_MARGIN.yards), p: pr, market: pr })
+      }
+    }
+    // likeliest first, so the search finds a strong slip early and cuts the rest
+    return legs.sort((a, b) => b.p - a.p)
+  }
 
   // touchdown doubles and trebles: the likeliest scorers, one per game
   const scorerSlips: ScorerSlip[] = []

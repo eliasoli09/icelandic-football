@@ -4,9 +4,28 @@ import type { NflGame } from './types'
 /** A European (decimal) price from an American moneyline. */
 export const decimalOdds = (ml: number) => (ml < 0 ? 1 + 100 / -ml : 1 + ml / 100)
 
-/** One side of one game on a slip: the bookmaker's price, the model's chance and the bookmaker's chance without its margin. */
-export interface Leg { game_id: string; team: string; opp: string; home: boolean; kickoff: string; odds: number; p: number; market: number }
-export interface Slip { legs: Leg[]; odds: number; p: number; market: number }
+export type LegKind = 'win' | 'over' | 'under' | 'td' | 'yards'
+export type YardStat = 'pass' | 'rush' | 'rec'
+
+/**
+ * One pick on a slip: the price, our chance and the bookmaker's chance without
+ * its margin. Wins and totals carry the bookmaker's own price; player picks have
+ * no bookmaker price in our data, so theirs is `estimated`: our chance with a
+ * typical bookmaker margin on top, and `market` is our own chance.
+ */
+export interface Leg {
+  kind: LegKind
+  game_id: string; kickoff: string
+  /** The side picked (win), the home side (totals), the player's club (player picks). */
+  team: string; opp: string; home: boolean
+  odds: number; p: number; market: number
+  /** The total's line (over/under) or the yards line. */
+  line?: number
+  estimated?: boolean
+  player?: { id: string; name: string; position: string | null; headshot: string | null }
+  stat?: YardStat
+}
+export interface Slip { legs: Leg[]; odds: number; p: number; market: number; estimated: boolean }
 
 export const SLIPS = [
   { key: 'double', name: 'Double Trouble', target: 2 },
@@ -26,28 +45,89 @@ export function gameLegs(g: Pick<NflGame, 'game_id' | 'home' | 'away' | 'kickoff
   const m = devig(g.home_ml, g.away_ml)
   if (!m || pHome === undefined) return []
   const p = weight * pHome + (1 - weight) * m.home
-  const base = { game_id: g.game_id, kickoff: g.kickoff }
+  const base = { kind: 'win' as const, game_id: g.game_id, kickoff: g.kickoff }
   return [
     { ...base, team: g.home, opp: g.away, home: true, odds: decimalOdds(g.home_ml!), p, market: m.home },
     { ...base, team: g.away, opp: g.home, home: false, odds: decimalOdds(g.away_ml!), p: 1 - p, market: m.away },
   ]
 }
 
+/** Over and under the game's total at the bookmaker's prices; the chance is the margin-free market's (Vegas beat our own totals). */
+export function totalLegs(g: Pick<NflGame, 'game_id' | 'home' | 'away' | 'kickoff' | 'total_line' | 'over_odds' | 'under_odds'>): Leg[] {
+  const m = devig(g.over_odds ?? null, g.under_odds ?? null)
+  if (!m || g.total_line === null) return []
+  const base = { game_id: g.game_id, kickoff: g.kickoff, team: g.home, opp: g.away, home: true, line: g.total_line }
+  return [
+    { ...base, kind: 'over', odds: decimalOdds(g.over_odds!), p: m.home, market: m.home },
+    { ...base, kind: 'under', odds: decimalOdds(g.under_odds!), p: m.away, market: m.away },
+  ]
+}
+
+/**
+ * Margins bookmakers typically build into player prices, used to estimate a
+ * price we do not have: alternative yards lines carry about 8%, anytime
+ * touchdown scorer markets about 20%.
+ */
+export const PROP_MARGIN = { yards: 0.08, td: 0.2 } as const
+/** An estimated bookmaker price for a chance `p`: fair odds less the margin, never below 1.01. */
+export const estimatedOdds = (p: number, margin: number) => Math.max(1.01, 1 / (p * (1 + margin)))
+
+/**
+ * Where a player's number lands against his projection: `q[i]` is the
+ * (i+1)/(n+1) quantile of actual ÷ projected, from the backtest. The chance of
+ * going over `line` reads it off by interpolation.
+ */
+export function probOver(line: number, proj: number, q: number[]): number {
+  if (proj <= 0 || !q.length) return 0
+  const r = line / proj, n = q.length
+  if (r < q[0]) return 1 - (r / q[0]) * (1 / (n + 1))
+  if (r >= q[n - 1]) return 1 / (n + 1) / 2
+  let i = 0
+  while (i < n - 1 && q[i + 1] <= r) i++
+  const f = (i + 1 + (r - q[i]) / Math.max(1e-9, q[i + 1] - q[i])) / (n + 1)
+  return Math.max(0, Math.min(1, 1 - f))
+}
+
+/** The lowest lines bookmakers' ladders usually offer (25+ rushing, 20+ receiving, 175+ passing yards). */
+export const MIN_LINE: Record<YardStat, number> = { rush: 24.5, rec: 19.5, pass: 174.5 }
+
+/** The highest x.5 line a player goes over with chance `p` or more. */
+export function lineFor(p: number, proj: number, q: number[]): number | null {
+  if (proj <= 0) return null
+  let line = Math.floor(proj) + 0.5
+  while (line > 0.5 && probOver(line, proj, q) < p) line -= 1
+  return line > 0.5 && probOver(line, proj, q) >= p ? line : null
+}
+
 /**
  * The slip the model rates likeliest among those priced between `target` and
  * `target × SLIP_OVER`, at most one leg per game. Games are treated as
- * independent. Every search over the games; a branch stops once its price is
- * over the ceiling or its chance can no longer beat the best found, since each
- * leg only raises the price and lowers the chance.
+ * independent. A depth-first search over the games; a branch stops once its
+ * price is over the ceiling, once it has reached the price, or once its chance
+ * can no longer beat the best found: each leg raises the price and lowers the
+ * chance, and no leg gives more than `kmax` chance-times-price. With
+ * `needPlayer`, only slips with at least one player pick count.
  */
-export function bestSlip(games: Leg[][], target: number, over = SLIP_OVER, minLegs = MIN_LEGS, maxLegs = MAX_LEGS): Slip | null {
+export const isPlayerLeg = (l: Leg) => l.kind === 'td' || l.kind === 'yards'
+
+export function bestSlip(games: Leg[][], target: number, over = SLIP_OVER, minLegs = MIN_LEGS, maxLegs = MAX_LEGS, needPlayer = false): Slip | null {
   const hi = target * over
   let best: { legs: Leg[]; odds: number; p: number } | null = null
   const legs: Leg[] = []
+  // no leg pays more than this per unit of chance (chance × price); with the margin in, it is under 1
+  const kmax = Math.max(1e-9, ...games.flat().map((l) => l.p * l.odds))
   const go = (i: number, odds: number, p: number) => {
     if (best && p <= best.p) return
-    if (legs.length >= minLegs && odds >= target && odds <= hi) best = { legs: [...legs], odds, p }
+    const ok = !needPlayer || legs.some(isPlayerLeg)
+    if (ok && legs.length >= minLegs && odds >= target && odds <= hi) best = { legs: [...legs], odds, p }
     if (i === games.length || legs.length === maxLegs) return
+    // at the price already: more legs only lower the chance
+    if (ok && odds >= target && legs.length >= minLegs) return
+    // the rest must raise the price by target/odds, which costs at least that much chance (less kmax per leg)
+    if (best && odds < target) {
+      const k = kmax <= 1 ? kmax : kmax ** (maxLegs - legs.length)
+      if (p * (odds / target) * k <= best.p) return
+    }
     for (const leg of games[i]) {
       if (odds * leg.odds > hi) continue
       legs.push(leg)
@@ -59,7 +139,7 @@ export function bestSlip(games: Leg[][], target: number, over = SLIP_OVER, minLe
   go(0, 1, 1)
   if (!best) return null
   const b = best as { legs: Leg[]; odds: number; p: number }
-  return { ...b, market: b.legs.reduce((m, l) => m * l.market, 1) }
+  return { ...b, market: b.legs.reduce((m, l) => m * l.market, 1), estimated: b.legs.some((l) => l.estimated) }
 }
 
 /** Points the bookmaker expects from one side: half the total, plus or minus half the spread (nflverse: positive favours home). */

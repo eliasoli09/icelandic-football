@@ -55,6 +55,16 @@ describe('bet legs', () => {
     expect(legState(leg, g({}), line({ rushYds: 80 })).status).toBe('won')
     expect(legState(leg, g({ final: true }), line({ rushYds: 60 })).status).toBe('lost')
   })
+  it('a total: over won once passed, under lost once passed', () => {
+    const over = { kind: 'total' as const, game_id: 'g', team: 'KC', side: 'over' as const, line: 44.5 }
+    expect(legState(over, g({}), undefined)).toEqual({ status: 'open', now: '24 / 44,5' })
+    expect(legState(over, g({ homeScore: 30, awayScore: 17 }), undefined).status).toBe('won')
+    expect(legState(over, g({ final: true }), undefined).status).toBe('lost')
+    const under = { ...over, side: 'under' as const }
+    expect(legState(under, g({}), undefined).status).toBe('ahead')
+    expect(legState(under, g({ homeScore: 30, awayScore: 17 }), undefined).status).toBe('lost')
+    expect(legState(under, g({ final: true }), undefined).status).toBe('won')
+  })
   it('a slip', () => {
     expect(slipStatus([{ status: 'won', now: null }, { status: 'lost', now: null }])).toBe('lost')
     expect(slipStatus([{ status: 'won', now: null }, { status: 'won', now: null }])).toBe('won')

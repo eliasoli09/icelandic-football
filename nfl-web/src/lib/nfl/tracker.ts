@@ -40,6 +40,7 @@ export type BetLeg =
   | { kind: 'win'; game_id: string; team: string; odds?: number }
   | { kind: 'td'; game_id: string; player_id: string; name: string; team: string }
   | { kind: 'yards'; game_id: string; player_id: string; name: string; team: string; stat: 'pass' | 'rush' | 'rec'; line: number }
+  | { kind: 'total'; game_id: string; team: string; side: 'over' | 'under'; line: number }
 
 export interface TrackedSlip { id: string; name: string; legs: BetLeg[]; odds: number | null; stake: number | null; fair?: boolean; created: string }
 
@@ -66,6 +67,14 @@ export function legState(leg: BetLeg, game: GameNow | undefined, player: LivePla
     const now = `${us}-${them}`
     if (game.final) return { status: us > them ? 'won' : 'lost', now }
     return { status: us > them ? 'ahead' : us < them ? 'behind' : 'open', now }
+  }
+  if (leg.kind === 'total') {
+    if (!game || !started) return { status: 'open', now: null }
+    const total = game.homeScore! + game.awayScore!
+    const now = `${total} / ${String(leg.line).replace('.', ',')}`
+    // an over is won the moment it is passed; an under is lost the moment it is
+    if (leg.side === 'over') return { status: total > leg.line ? 'won' : game.final ? 'lost' : 'open', now }
+    return { status: total > leg.line ? 'lost' : game.final ? 'won' : 'ahead', now }
   }
   if (leg.kind === 'td') {
     const tds = player ? player.rushTd + player.recTd : 0

@@ -126,8 +126,8 @@ for (let s = FIRST + 1; s <= LAST; s++) {
           const y = actual.get(r.player_id)
           if (!y || fr(y.team) !== team) continue
           const cur = curU.get(r.player_id) ?? zero(), prev = prevU.get(r.player_id) ?? zero()
-          if (r.carries + r.targets > 0) tdRows.push({ s, cur, prev, implied: V.impliedPoints(g, home), teamPts: tp.for, teamGames: tp.games, leaguePts, y: y.rushing_tds + y.receiving_tds > 0 ? 1 : 0 })
-          if (cur.games && cur.carries / cur.games >= 5 && r.carries > 0) rushRows.push({ s, cur, prev, allowed: op.yards, oppGames: op.games.size, leagueRush, y: y.rushing_yards })
+          if (r.carries + r.targets > 0) tdRows.push({ s, w, g: g.game_id, pid: r.player_id, team, cur, prev, implied: V.impliedPoints(g, home), teamPts: tp.for, teamGames: tp.games, leaguePts, y: y.rushing_tds + y.receiving_tds > 0 ? 1 : 0 })
+          if (cur.games && cur.carries / cur.games >= 5 && r.carries > 0) rushRows.push({ s, w, g: g.game_id, pid: r.player_id, team, cur, prev, allowed: op.yards, oppGames: op.games.size, leagueRush, y: y.rushing_yards })
         }
       }
       const h = pts.get(fr(g.home)) ?? { for: 0, against: 0, games: 0 }, a = pts.get(fr(g.away)) ?? { for: 0, against: 0, games: 0 }
@@ -234,7 +234,7 @@ for (let s = FIRST + 1; s <= LAST; s++) {
         for (const m of V.MARKETS as any[]) {
           if (!m.eligible(r, avg)) continue
           const o = faced[m.key].get(opp) ?? { total: 0, games: new Set() }
-          marketRows[m.key].push({ s, cur: { games: c.games, total: m.per(c) }, prev: { games: pv.games, total: m.per(pv) }, opp: { total: o.total, games: o.games.size }, league: league[m.key], factor, y: m.per(y) })
+          marketRows[m.key].push({ s, w, g: g.game_id, pid: r.player_id, team, cur: { games: c.games, total: m.per(c) }, prev: { games: pv.games, total: m.per(pv) }, opp: { total: o.total, games: o.games.size }, league: league[m.key], factor, y: m.per(y) })
         }
       }
     }
@@ -296,6 +296,90 @@ const winTest = winRows.filter(test)
 const winModel = { coef, test: { rows: winTest.length, loglossMarket: ll(winTest, (r) => r.market), loglossBlend: ll(winTest, winP(coef)), loglossElo: ll(winTest, (r) => r.elo) } }
 console.log(`sigurlíkur ${TRAIN_TO + 1}-${LAST}: markaður ${winModel.test.loglossMarket.toFixed(4)}, markaður + leikmenn/Elo ${winModel.test.loglossBlend.toFixed(4)} (stuðlar ${coef.map((c) => c.toFixed(3)).join(', ')}), Elo eitt ${winModel.test.loglossElo.toFixed(4)}`)
 
-const out = { made: new Date().toISOString().slice(0, 10), slipSeasons: [FIRST, LAST], slipWeight, train: [FIRST + 1, TRAIN_TO], test: [TRAIN_TO + 1, LAST], slips, slipsTest, slipsModelOnly, td, rush, totals, markets, winModel }
+
+// ---------- 7. player lines and fuller slips ----------
+// How actual numbers fall around the projection (actual ÷ projected), from the training seasons; a line's chance reads off it.
+const quant = (xs: number[], n = 49) => { const v = [...xs].sort((a, b) => a - b); return Array.from({ length: n }, (_, i) => v[Math.min(v.length - 1, Math.floor(((i + 1) / (n + 1)) * v.length))]) }
+const projOf: Record<string, (r: any) => number> = {
+  rush: rushF(bestRush.P),
+  rec: (r: any) => V.statProjection(r.cur, r.prev, r.opp, r.league, r.factor, markets.rec.params),
+  pass: (r: any) => V.statProjection(r.cur, r.prev, r.opp, r.league, r.factor, markets.pass.params),
+}
+const yardRows: Record<string, any[]> = { rush: rushRows, rec: marketRows.rec, pass: marketRows.pass }
+const lines: Record<string, any> = {}
+for (const [k, rows] of Object.entries(yardRows)) {
+  const ratios = rows.filter(train).map((r) => ({ p: projOf[k](r), y: r.y })).filter((x) => x.p > 5).map((x) => x.y / x.p)
+  const q = quant(ratios).map((x) => Math.round(x * 1000) / 1000)
+  const calib = [0.65, 0.75, 0.85].map((target) => {
+    let n = 0, hit = 0, said = 0
+    for (const r of rows.filter(test)) {
+      const pr = projOf[k](r); const L = V.lineFor(target, pr, q)
+      if (L === null) continue
+      n++; said += V.probOver(L, pr, q); hit += r.y > L ? 1 : 0
+    }
+    return { target, n, said: said / n, hit: hit / n }
+  })
+  lines[k] = { q, calib }
+  console.log(`línur ${k}: ` + calib.map((c) => `${(100 * c.target).toFixed(0)}% → sagt ${(100 * c.said).toFixed(1)}%, gekk ${(100 * c.hit).toFixed(1)}% (n=${c.n})`).join(' | '))
+}
+
+// Slips that may also carry totals (bookmaker prices) and player picks (estimated prices), one pick a game, 2022-2025.
+const tdF = tdP(bestTd.P)
+function fullChoices(wk: any[], s: number, w: number, withPlayers: boolean) {
+  return wk.map((g) => {
+    const legs: any[] = [...V.gameLegs(g, pHome.get(g.game_id), slipWeight), ...V.totalLegs(g)]
+    if (withPlayers) {
+      const td = tdRows.filter((r) => r.s === s && r.w === w && r.g === g.game_id).map((r) => ({ r, p: tdF(r) })).sort((a, b) => b.p - a.p).slice(0, 3)
+      for (const { r, p } of td) legs.push({ kind: 'td', game_id: g.game_id, team: r.team, pid: r.pid, odds: V.estimatedOdds(p, V.PROP_MARGIN.td), p, market: p, estimated: true, y: r.y })
+      for (const k of ['rush', 'rec', 'pass']) {
+        const rows = yardRows[k].filter((r) => r.s === s && r.w === w && r.g === g.game_id).map((r) => ({ r, pr: projOf[k](r) })).sort((a, b) => b.pr - a.pr).slice(0, k === 'pass' ? 2 : 3)
+        for (const { r, pr } of rows) for (const target of [0.85, 0.75]) {
+          const L = V.lineFor(target, pr, lines[k].q)
+          if (L === null || L < V.MIN_LINE[k]) continue
+          const p = V.probOver(L, pr, lines[k].q)
+          legs.push({ kind: 'yards', stat: k, line: L, game_id: g.game_id, team: r.team, pid: r.pid, odds: V.estimatedOdds(p, V.PROP_MARGIN.yards), p, market: p, estimated: true, y: r.y })
+        }
+      }
+    }
+    return legs.sort((a, b) => b.p - a.p)
+  }).filter((l) => l.length)
+}
+function legHit(l: any, g: any) {
+  const total = g.home_score + g.away_score
+  if (l.kind === 'win') return l.home ? g.home_score > g.away_score : g.away_score > g.home_score
+  if (l.kind === 'over') return total > l.line
+  if (l.kind === 'under') return total < l.line
+  if (l.kind === 'td') return l.y > 0
+  return l.y > l.line
+}
+function runFull(from: number, to: number, withPlayers: boolean, needPlayer = false) {
+  const out: Record<string, any> = {}
+  for (const sl of V.SLIPS) out[sl.key] = { weeks: 0, hits: 0, p: 0, legs: 0, kinds: {} as Record<string, number> }
+  for (let s = from; s <= to; s++) for (let w = 4; w <= lastWeek(s); w++) {
+    const wk = reg.filter((g) => g.season === s && g.week === w)
+    const byId = new Map(wk.map((g) => [g.game_id, g]))
+    const choices = fullChoices(wk, s, w, withPlayers)
+    for (const sl of V.SLIPS) {
+      const slip = V.bestSlip(choices, sl.target, V.SLIP_OVER, V.MIN_LEGS, 6, needPlayer)
+      if (!slip) continue
+      const o = out[sl.key]
+      o.weeks++; o.p += slip.p; o.legs += slip.legs.length
+      o.hits += slip.legs.every((l: any) => legHit(l, byId.get(l.game_id))) ? 1 : 0
+      for (const l of slip.legs) o.kinds[l.kind] = (o.kinds[l.kind] ?? 0) + 1
+    }
+  }
+  return Object.fromEntries(Object.entries(out).map(([k, o]) => [k, { weeks: o.weeks, hits: o.hits, hitRate: o.hits / o.weeks, said: o.p / o.weeks, avgLegs: o.legs / o.weeks, kinds: o.kinds }]))
+}
+const t0 = Date.now()
+const slipsPlain = runFull(TRAIN_TO + 1, LAST, false)
+const slipsPlayers = runFull(TRAIN_TO + 1, LAST, true)
+const slipsWithPlayer = runFull(TRAIN_TO + 1, LAST, true, true)
+for (const [label, r] of [['sigur + yfir/undir', slipsPlain], ['+ leikmenn', slipsPlayers], ['minnst einn leikmaður', slipsWithPlayer]] as const) {
+  console.log(`seðlar ${TRAIN_TO + 1}-${LAST}, ${label}:`)
+  for (const [k, o] of Object.entries(r) as [string, any][]) console.log(`  ${k.padEnd(10)} ${o.hits}/${o.weeks} = ${(100 * o.hitRate).toFixed(1)}%  sagt ${(100 * o.said).toFixed(1)}%  leggir ${o.avgLegs.toFixed(1)}  ${JSON.stringify(o.kinds)}`)
+}
+console.log(`(${((Date.now() - t0) / 1000).toFixed(1)} s)`)
+
+const out = { made: new Date().toISOString().slice(0, 10), slipSeasons: [FIRST, LAST], slipWeight, train: [FIRST + 1, TRAIN_TO], test: [TRAIN_TO + 1, LAST], slips, slipsTest, slipsModelOnly, td, rush, totals, markets, winModel, lines, slipsPlain, slipsPlayers, slipsWithPlayer }
 writeFileSync(join(webDir, 'src/lib/nfl/data/vedmal-backtest.json'), JSON.stringify(out, null, 2) + '\n')
 console.log('skrifað: src/lib/nfl/data/vedmal-backtest.json')

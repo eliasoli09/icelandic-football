@@ -33,6 +33,10 @@ export interface NflGame {
   total_line: number | null
   away_ml: number | null
   home_ml: number | null
+  over_odds?: number | null
+  under_odds?: number | null
+  home_spread_odds?: number | null
+  away_spread_odds?: number | null
   div_game: boolean
   stadium: string | null
   roof: string | null

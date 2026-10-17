@@ -9,7 +9,8 @@ import { availability, STATUS_LABEL } from '@/lib/nfl/injuries'
 import { nflCurrentSeason, nflInjuries, nflSeasonModel, nflVedmalData, type InjuryList } from '@/lib/nfl/queries'
 import { clock, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import type { NflTeam } from '@/lib/nfl/types'
-import type { Slip } from '@/lib/nfl/vedmal'
+import type { Leg, Slip, YardStat } from '@/lib/nfl/vedmal'
+import type { BetLeg } from '@/lib/nfl/tracker'
 import { BACKTEST, vedmalWeek, type PlayerPick } from '@/lib/nfl/vedmalView'
 import { weekLabel } from '@/lib/nfl/week'
 
@@ -74,10 +75,11 @@ export default async function VedmalPage() {
       <section className="grid gap-3 content-start" aria-label="Seðlar vikunnar">
         <h2 className="display text-xl font-extrabold">Seðlar vikunnar</h2>
         <div className="grid gap-3 md:grid-cols-3">
-          {view.slips.map((s) => <SlipCard key={s.key} k={s.key} name={s.name} target={s.target} slip={s.slip} team={team} />)}
+          {view.slips.map((s) => <SlipCard key={s.key} k={s.key} name={s.name} target={s.target} slip={s.slip} withPlayer={s.withPlayer} team={team} />)}
         </div>
         <p className="text-xs muted max-w-prose">
-          Hver seðill er sá líklegasti sem nær stuðlinum (mest 15% yfir), einn sigurvegari úr leik. Líkurnar eru líkur veðbankanna eftir að álag þeirra er dregið frá.
+          Hver seðill er sá líklegasti sem nær stuðlinum (mest 15% yfir), mest einn leggur úr hverjum leik. Sigur og yfir/undir eru á stuðlum veðbankanna og með líkum þeirra eftir að álag er dregið frá.
+          Leikmannaleggir (snertimark, jardar) eru með líkum okkar, og þar sem við höfum ekki stuðla veðbanka á leikmenn er stuðullinn áætlaður (≈): líkurnar okkar með álagi eins og veðbankar leggja yfirleitt á slík veðmál. Athugaðu raunverulega stuðulinn áður en þú veðjar. Leikmannaleggir hækka ekki líkurnar: veðbankar leggja meira álag á þá en á sigurveðmál, svo fyrir sama stuðul eru líkurnar lægri. Þess vegna er leikmannaútgáfan sér, með því sem hún kostar.
           Elo-líkanið okkar fékk að velja í prófun á {B.test[0]}-{B.test[1]} og gerði það verr: seðlarnir þess sögðust ganga upp í {probLabel(B.slipsModelOnly.double.modelP)} tilvika (Double Trouble) en gerðu það í {probLabel(B.slipsModelOnly.double.hitRate)}.
           Líkanið velur einmitt leikina þar sem það er ósammála markaðnum, og þar hefur markaðurinn oftast rétt fyrir sér.
         </p>
@@ -184,9 +186,11 @@ export default async function VedmalPage() {
   )
 }
 
-function SlipCard({ k, name, target, slip, team }: { k: string; name: string; target: number; slip: Slip | null; team: Map<string, NflTeam> }) {
+function SlipCard({ k, name, target, slip, withPlayer, team }: { k: string; name: string; target: number; slip: Slip | null; withPlayer: Slip | null; team: Map<string, NflTeam> }) {
   const Icon = SLIP_ICON[k as keyof typeof SLIP_ICON]
-  const past = BACKTEST.slips[k as keyof typeof BACKTEST.slips]
+  const past = BACKTEST.slipsPlayers[k as keyof typeof BACKTEST.slipsPlayers]
+  const pastP = BACKTEST.slipsWithPlayer[k as keyof typeof BACKTEST.slipsWithPlayer]
+  const same = !!slip && !!withPlayer && slip.legs.length === withPlayer.legs.length && slip.legs.every((l, i) => l === withPlayer.legs[i])
   return (
     <article className="card p-4 grid gap-3 content-start">
       <header className="flex items-center justify-between gap-2">
@@ -196,18 +200,7 @@ function SlipCard({ k, name, target, slip, team }: { k: string; name: string; ta
       {!slip ? <p className="text-sm muted">Enginn seðill nær þessum stuðli úr leikjunum sem eftir eru.</p> : (
         <>
           <ul className="grid gap-2">
-            {slip.legs.map((l) => (
-              <li key={l.game_id}>
-                <Link href={`/leikur/${l.game_id}`} className="trow rounded-lg grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 px-2 py-1.5 -mx-2">
-                  <NflLogo team={team.get(l.team)} size={28} />
-                  <span className="min-w-0">
-                    <span className="block font-semibold truncate">{team.get(l.team)?.name ?? l.team} vinnur</span>
-                    <span className="block text-xs muted truncate">{l.home ? 'gegn' : 'á útivelli gegn'} {l.opp} · {when(l.kickoff)}</span>
-                  </span>
-                  <span className="num font-semibold">{dec(l.odds)}</span>
-                </Link>
-              </li>
-            ))}
+            {slip.legs.map((l) => <LegRow key={l.game_id} l={l} team={team} />)}
           </ul>
           <div className="flex items-end justify-between border-t pt-3" style={{ borderColor: 'var(--border)' }}>
             <span>
@@ -215,19 +208,59 @@ function SlipCard({ k, name, target, slip, team }: { k: string; name: string; ta
               <span className="num font-bold text-lg">{probLabel(slip.p)}</span>
             </span>
             <span className="text-right">
-              <span className="block text-[11px] muted">Heildarstuðull</span>
-              <span className="num font-extrabold text-2xl" style={{ color: 'var(--accent)' }}>{dec(slip.odds)}</span>
+              <span className="block text-[11px] muted">{slip.estimated ? 'Áætlaður heildarstuðull' : 'Heildarstuðull'}</span>
+              <span className="num font-extrabold text-2xl" style={{ color: 'var(--accent)' }}>{slip.estimated ? '≈ ' : ''}{dec(slip.odds)}</span>
             </span>
           </div>
-          <TrackButton name={name} odds={Math.round(slip.odds * 100) / 100} legs={slip.legs.map((l) => ({ kind: 'win', game_id: l.game_id, team: l.team, odds: Math.round(l.odds * 100) / 100 }))} />
+          <TrackButton name={name} odds={Math.round(slip.odds * 100) / 100} fair={slip.estimated} legs={slip.legs.map(trackLeg)} />
         </>
       )}
+      {withPlayer && !same && (
+        <details className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: 'var(--border)' }}>
+          <summary className="cursor-pointer font-semibold">Með leikmönnum: {probLabel(withPlayer.p)} á ≈ {dec(withPlayer.odds)}{slip ? <span className="muted font-normal"> ({Math.round((slip.p - withPlayer.p) * 100)} prósentustigum minna)</span> : null}</summary>
+          <ul className="grid gap-2 mt-2">{withPlayer.legs.map((l) => <LegRow key={l.game_id} l={l} team={team} />)}</ul>
+          <div className="mt-2"><TrackButton name={`${name} með leikmönnum`} odds={Math.round(withPlayer.odds * 100) / 100} fair legs={withPlayer.legs.map(trackLeg)} /></div>
+        </details>
+      )}
       <p className="text-[11px] muted">
-        Ferill {BACKTEST.slipSeasons[0]}-{BACKTEST.slipSeasons[1]}: gekk upp {past.hits} af {past.weeks} vikum ({probLabel(past.hitRate)}).
-        1.000 kr. á hverja viku: {kr(1000 * past.weeks)} lagðar undir, {kr(1000 * past.weeks * (1 + past.roi))} til baka
+        Prófað á {BACKTEST.test[0]}-{BACKTEST.test[1]}: gekk upp {past.hits} af {past.weeks} vikum ({probLabel(past.hitRate)}); líkurnar sögðu {probLabel(past.said)}.
+        Með leikmönnum: {probLabel(pastP.hitRate)}, líkurnar sögðu {probLabel(pastP.said)}.
       </p>
     </article>
   )
+}
+
+const STAT_WORD: Record<YardStat, string> = { rush: 'hlaupajarda', rec: 'gripjarda', pass: 'sendingajarda' }
+const line1 = (x: number) => String(x).replace('.', ',')
+
+/** One pick on a slip: who or what, the game, and the price (≈ when estimated). */
+function LegRow({ l, team }: { l: Leg; team: Map<string, NflTeam> }) {
+  const game = `${l.kind === 'win' ? (l.home ? 'gegn' : 'á útivelli gegn') + ' ' + l.opp : l.kind === 'over' || l.kind === 'under' ? `${l.opp} @ ${l.team}` : `${l.team} ${l.home ? 'gegn' : '@'} ${l.opp}`} · ${when(l.kickoff)}`
+  const what = l.kind === 'win' ? `${team.get(l.team)?.name ?? l.team} vinnur`
+    : l.kind === 'over' ? `Yfir ${line1(l.line!)} stig` : l.kind === 'under' ? `Undir ${line1(l.line!)} stig`
+    : l.kind === 'td' ? `${l.player!.name} skorar` : `${l.player!.name}: ${line1(l.line!)}+ ${STAT_WORD[l.stat!]}`
+  const href = l.player ? `/leikmadur/${l.player.id}` : `/leikur/${l.game_id}`
+  return (
+    <li>
+      <Link href={href} className="trow rounded-lg grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 px-2 py-1.5 -mx-2">
+        {l.player ? <PlayerHead name={l.player.name} src={l.player.headshot} color={team.get(l.team)?.color} size={28} /> : <NflLogo team={team.get(l.team)} size={28} />}
+        <span className="min-w-0">
+          <span className="block font-semibold leading-snug">{what}</span>
+          <span className="block text-xs muted truncate">{game} · {probLabel(l.p)}</span>
+        </span>
+        <span className="num font-semibold" title={l.estimated ? 'Áætlaður stuðull: við höfum ekki stuðla veðbanka á leikmenn' : undefined}>{l.estimated ? '≈' : ''}{dec(l.odds)}</span>
+      </Link>
+    </li>
+  )
+}
+
+/** A slip pick as the dashboard follows it. */
+function trackLeg(l: Leg): BetLeg {
+  const odds = Math.round(l.odds * 100) / 100
+  if (l.kind === 'win') return { kind: 'win', game_id: l.game_id, team: l.team, odds }
+  if (l.kind === 'over' || l.kind === 'under') return { kind: 'total', game_id: l.game_id, team: l.team, side: l.kind, line: l.line! }
+  const p = { game_id: l.game_id, player_id: l.player!.id, name: l.player!.name, team: l.team }
+  return l.kind === 'td' ? { kind: 'td', ...p } : { kind: 'yards', ...p, stat: l.stat!, line: l.line! }
 }
 
 function PlayerList({ icon: Icon, title, unit, picks, fmt, team, note, basis }: { icon: typeof Target; title: string; unit: string; picks: PlayerPick[]; fmt: (v: number) => string; team: Map<string, NflTeam>; note: string; basis: (p: PlayerPick) => string }) {
