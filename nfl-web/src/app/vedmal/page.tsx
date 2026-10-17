@@ -4,7 +4,8 @@ import { NflLogo } from '@/components/Nfl/NflLogo'
 import { PlayerHead } from '@/components/Nfl/PlayerHead'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { probLabel } from '@/lib/nfl/format'
-import { nflCurrentSeason, nflSeasonModel, nflVedmalData } from '@/lib/nfl/queries'
+import { availability, STATUS_LABEL } from '@/lib/nfl/injuries'
+import { nflCurrentSeason, nflInjuries, nflSeasonModel, nflVedmalData, type InjuryList } from '@/lib/nfl/queries'
 import { clock, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import type { NflTeam } from '@/lib/nfl/types'
 import type { Slip } from '@/lib/nfl/vedmal'
@@ -25,12 +26,17 @@ const SLIP_ICON = { double: Zap, sprengjan: Flame, bomban: Bomb } as const
 export default async function VedmalPage() {
   let view: ReturnType<typeof vedmalWeek> = null
   let teams: NflTeam[] = []
+  let inj: InjuryList = { week: null, rows: [] }
   try {
     const season = await nflCurrentSeason()
     if (season) {
       const [model, data] = await Promise.all([nflSeasonModel(season), nflVedmalData(season)])
       teams = model.teams
-      view = vedmalWeek(model.games, seasonForecasts(model.games, model.elo, model.state), data.lines, data.prev, data.leaguePts, data.leagueRush, new Date())
+      const now = new Date()
+      const next = model.games.filter((g) => new Date(g.kickoff) > now && g.home_score === null).sort((a, b) => a.kickoff.localeCompare(b.kickoff))[0]
+      // a missing injury list must not take the page down: the players just are not filtered
+      inj = next ? await nflInjuries(season, next.week).catch(() => ({ week: null, rows: [] })) : inj
+      view = vedmalWeek(model.games, seasonForecasts(model.games, model.elo, model.state), data.lines, data.prev, data.leaguePts, data.leagueRush, now, (wk) => availability(inj.rows, inj.week, wk))
     }
   } catch {
     return <p className="muted">Ekki tókst að sækja gögn. Reyndu aftur síðar.</p>
@@ -47,6 +53,7 @@ export default async function VedmalPage() {
           <span className="rounded-full border px-2 py-0.5 text-xs font-bold" style={{ borderColor: 'var(--border)' }}>18+</span>
         </div>
         <p className="muted text-sm">{weekLabel(view.type, view.week)} · {view.games.length} {view.games.length === 1 ? 'leikur' : 'leikir'} eftir · uppfært á 5 mínútna fresti</p>
+        {inj.week !== view.week && <p className="text-xs muted">Meiðslaskýrsla vikunnar er ekki komin; aðeins leikmenn á meiðslalista eru teknir út. <Link href="/leikmenn/meidsli" className="underline">Meiðslalistinn</Link></p>}
       </header>
 
       <section className="grid gap-3 content-start" aria-label="Seðlar vikunnar">
@@ -63,7 +70,7 @@ export default async function VedmalPage() {
 
       <div className="grid gap-8 lg:grid-cols-2">
         <PlayerList icon={Target} title="Líklegustu snertimarksskorararnir" unit="líkur á snertimarki" picks={view.scorers} fmt={(v) => probLabel(v)} team={team}
-          note={`Hlaup eða grip. Prófað á ${B.test[0]}-${B.test[1]}: þeir sem fengu 50-60% skoruðu í ${probLabel(B.td.test.buckets[5].scored)} tilvika, 30-40% í ${probLabel(B.td.test.buckets[3].scored)}. Aðeins leikmenn sem spiluðu síðasta leik liðsins; meiðsli vikunnar eru ekki tekin með.`} />
+          note={`Hlaup eða grip. Prófað á ${B.test[0]}-${B.test[1]}: þeir sem fengu 50-60% skoruðu í ${probLabel(B.td.test.buckets[5].scored)} tilvika, 30-40% í ${probLabel(B.td.test.buckets[3].scored)}. Aðeins leikmenn sem spiluðu síðasta leik liðsins; þeir sem eru frá eða ólíklegir samkvæmt meiðslaskýrslunni eru teknir út.`} />
         <PlayerList icon={Footprints} title="Hlaupamestir" unit="spáðir hlaupajardar" picks={view.rushers} fmt={(v) => String(Math.round(v))} team={team}
           note={`Meðaltal leikmannsins á tímabilinu, leiðrétt eftir því hve mikið mótherjinn gefur eftir. Skeikar að jafnaði um ${Math.round(B.rush.test.mae)} jarda í leik.`} />
 
@@ -179,7 +186,7 @@ function PlayerList({ icon: Icon, title, unit, picks, fmt, team, note }: { icon:
                 <span className="text-xs muted num">{i + 1}</span>
                 <PlayerHead name={p.name} src={p.headshot} color={team.get(p.team)?.color} size={32} />
                 <span className="min-w-0">
-                  <span className="block font-semibold truncate">{p.name}</span>
+                  <span className="block font-semibold truncate">{p.name}{p.status && <span className="ml-1.5 rounded px-1 py-px text-[10px] font-bold align-middle" style={{ background: 'color-mix(in srgb, var(--loss) 18%, transparent)', color: 'var(--loss)' }}>{STATUS_LABEL[p.status].toUpperCase()}</span>}</span>
                   <span className="block text-xs muted truncate">{p.position ?? ''} · {p.team} gegn {p.opp}</span>
                 </span>
                 <span className="num font-bold" style={{ color: 'var(--accent)' }} title={unit}>{fmt(p.value)}</span>

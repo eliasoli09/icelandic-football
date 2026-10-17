@@ -226,3 +226,16 @@ export async function nflVedmalData(season: number): Promise<VedmalData> {
     leagueRush: prev.reduce((t, p) => t + p.rushYards, 0) / n,
   }
 }
+
+export interface InjuryList { week: number | null; rows: import('./injuries').Injury[] }
+
+/** The newest injury week on file up to `week`, every listed player in it. */
+export async function nflInjuries(season: number, week: number): Promise<InjuryList> {
+  const { data: last, error: e1 } = await db().from('nfl_injury').select('week').eq('season', season).lte('week', week).order('week', { ascending: false }).limit(1)
+  if (e1) throw e1
+  const w = last?.[0]?.week as number | undefined
+  if (w === undefined) return { week: null, rows: [] }
+  const { data, error } = await db().from('nfl_injury').select('team, player_id, name, position, status, injury, practice, source').eq('season', season).eq('week', w).range(0, 1999)
+  if (error) throw error
+  return { week: w, rows: (data ?? []) as import('./injuries').Injury[] }
+}

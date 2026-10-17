@@ -1,5 +1,6 @@
 import test from './data/vedmal-backtest.json'
 import { franchiseOf } from './elo'
+import { isUnavailable, type InjuryStatus } from './injuries'
 import type { Forecast } from './forecast'
 import { isPlayed, type GameType, type NflGame } from './types'
 import { NO_USAGE, SLIPS, bestSlip, gameLegs, impliedPoints, rushProjection, tdChance, tdRate, teamFactor, type Slip, type Usage } from './vedmal'
@@ -15,7 +16,7 @@ export interface VedmalLine {
 /** Last season's totals for a player. */
 export type PrevTotal = Usage & { player_id: string }
 
-export interface PlayerPick { player_id: string; name: string; position: string | null; headshot: string | null; team: string; opp: string; game_id: string; value: number }
+export interface PlayerPick { player_id: string; name: string; position: string | null; headshot: string | null; team: string; opp: string; game_id: string; value: number; status: InjuryStatus | null }
 export interface GameTotal { game: NflGame; total: number; home: number; away: number }
 export interface Favourite { team: string; opp: string; game: NflGame; p: number; model: number }
 
@@ -39,12 +40,14 @@ const plus = (a: Usage, b: Usage): Usage => ({ games: a.games + b.games, carries
  * touchdown chances, rushing yards, game totals and favourites. Slips and
  * favourites use the margin-free market at the weight the backtest chose; the
  * player numbers use the knobs it chose. `lines` are this season's games so far.
+ * `injured` (from `availability`) drops players who will not play and marks the doubtful.
  */
-export function vedmalWeek(games: NflGame[], forecasts: Record<string, Forecast>, lines: VedmalLine[], prev: PrevTotal[], leaguePts: number, leagueRush: number, now: Date): VedmalWeek | null {
+export function vedmalWeek(games: NflGame[], forecasts: Record<string, Forecast>, lines: VedmalLine[], prev: PrevTotal[], leaguePts: number, leagueRush: number, now: Date, injured: (week: number) => Map<string, InjuryStatus> = () => new Map()): VedmalWeek | null {
   const upcoming = games.filter((g) => !isPlayed(g) && new Date(g.kickoff) > now).sort((a, b) => a.kickoff.localeCompare(b.kickoff))
   if (!upcoming.length) return null
   const { week, game_type: type } = upcoming[0]
   const round = upcoming.filter((g) => g.week === week && g.game_type === type)
+  const hurt = injured(week)
   const fr = franchiseOf
 
   const choices = round.map((g) => gameLegs(g, forecasts[g.game_id]?.pHome, test.slipWeight)).filter((l) => l.length)
@@ -82,8 +85,10 @@ export function vedmalWeek(games: NflGame[], forecasts: Record<string, Forecast>
     const op = allowed.get(opp) ?? { yards: 0, games: new Set() }
     for (const l of lines) {
       if (fr(l.team) !== team || latest.get(team)?.game !== l.game_id) continue
+      const status = hurt.get(l.player_id) ?? null
+      if (status && isUnavailable(status)) continue
       const c = cur.get(l.player_id) ?? NO_USAGE, p = last.get(l.player_id) ?? NO_USAGE
-      const who = { player_id: l.player_id, name: l.name, position: l.position, headshot: l.headshot, team: home ? g.home : g.away, opp: home ? g.away : g.home, game_id: g.game_id }
+      const who = { player_id: l.player_id, name: l.name, position: l.position, headshot: l.headshot, team: home ? g.home : g.away, opp: home ? g.away : g.home, game_id: g.game_id, status }
       if (l.carries + l.targets > 0) scorers.push({ ...who, value: tdChance(tdRate(c, p, P) * factor) })
       if (l.carries > 0 && c.games && c.carries / c.games >= 5) rushers.push({ ...who, value: rushProjection(c, p, op.yards, op.games.size, leagueRush, R) })
     }

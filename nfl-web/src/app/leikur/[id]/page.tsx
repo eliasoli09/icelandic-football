@@ -7,12 +7,13 @@ import { TvBadge } from '@/components/Nfl/TvBadge'
 import { PollBox } from '@/components/Nfl/PollBox'
 import { Comments } from '@/components/Nfl/Comments'
 import { ProbSplit } from '@/components/Nfl/ProbSplit'
+import { InjuryTeam } from '@/components/Nfl/InjuryTeam'
 import { franchiseOf, predictGame } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { teamForm, type TeamForm } from '@/lib/nfl/form'
 import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
 import { devig } from '@/lib/nfl/odds'
-import { nflBroadcasts, nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel } from '@/lib/nfl/queries'
+import { nflBroadcasts, nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel, nflInjuries } from '@/lib/nfl/queries'
 import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
 import { ArticleList } from '@/components/Nfl/ArticleList'
 import { nflGameArticles } from '@/lib/nfl/articles/queries'
@@ -39,6 +40,7 @@ export default async function NflGamePage({ params }: Props) {
   const meetings = (await nflMeetings(names(game.home), names(game.away), 6)).filter((g) => g.game_id !== game.game_id).slice(0, 5)
   const tv = (await nflBroadcasts(game.season).catch(() => ({} as Record<string, never>)))[game.game_id]
   const articles = await nflGameArticles(game.game_id, game.season, game.week).catch(() => [])
+  const injuries = isPlayed(game) ? null : await nflInjuries(game.season, game.week).catch(() => null)
   const news = await nflNews({ teams: [franchiseOf(game.home), franchiseOf(game.away)], sinceDays: 7, limit: 4 }).catch(() => [])
 
   const played = isPlayed(game)
@@ -130,6 +132,16 @@ export default async function NflGamePage({ params }: Props) {
           <TeamPanel key={side} team={team} abbr={abbr} elo={eloNow(side)} form={teamForm(abbr, game.kickoff, model.games, model.elo)} qb={qb} qbId={qbId} newQb={played ? null : newQb} />
         ))}
       </section>
+
+      {injuries && injuries.week !== null && injuries.week >= game.week - 1 && (
+        <section className="card p-5 grid gap-3">
+          <h2 className="display text-lg font-extrabold">Meiðsli</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {sides.map(({ side, team, abbr }) => <InjuryTeam key={side} team={team} abbr={abbr} rows={injuries.rows.filter((r) => franchiseOf(r.team) === franchiseOf(abbr))} />)}
+          </div>
+          {injuries.week !== game.week && <p className="text-xs muted">Skýrsla vikunnar er ekki komin; sýnd er skýrsla {injuries.week}. viku.</p>}
+        </section>
+      )}
 
       <PollBox gameId={game.game_id} home={home} away={away} pHome={f?.pHome ?? null} locked={played || new Date(game.kickoff).getTime() <= Date.now()} />
 

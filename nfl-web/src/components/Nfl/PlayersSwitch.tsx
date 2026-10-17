@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-/** Tölfræði | Verðlaun | Stjörnulið under the "Leikmenn" tab. */
-export function PlayersSwitch({ active }: { active: 'tolfraedi' | 'verdlaun' | 'stjornulid' }) {
-  const tabs = [['tolfraedi', '/leikmenn', 'Tölfræði'], ['verdlaun', '/verdlaun', 'Verðlaun'], ['stjornulid', '/leikmenn/stjornulid', 'Stjörnulið']] as const
+/** Tölfræði | Verðlaun | Stjörnulið | Meiðsli under the "Leikmenn" tab. */
+export function PlayersSwitch({ active }: { active: 'tolfraedi' | 'verdlaun' | 'stjornulid' | 'meidsli' }) {
+  const tabs = [['tolfraedi', '/leikmenn', 'Tölfræði'], ['verdlaun', '/verdlaun', 'Verðlaun'], ['stjornulid', '/leikmenn/stjornulid', 'Stjörnulið'], ['meidsli', '/leikmenn/meidsli', 'Meiðsli']] as const
   return (
     <nav aria-label="Leikmenn" className="inline-flex w-fit max-w-full overflow-x-auto rounded-full border p-1 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
       {tabs.map(([key, href, label]) => (

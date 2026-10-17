@@ -1,4 +1,5 @@
 import { db } from '../db'
+import { injuriesUrl, parseInjuries, rostersUrl } from './injuries'
 import { parsePlayerWeeks, parsePlayers, type NflPlayer, type PlayerWeek } from './players'
 
 const BASE = 'https://github.com/nflverse/nflverse-data/releases/download'
@@ -45,4 +46,14 @@ export async function ingestPlayers(seasons: number[], log: (s: string) => void 
     log(`${season}: ${list.length} leikmenn, ${rows.length} leikir`)
   }
   return { seasons: seasons.length, players, weeks }
+}
+
+/** The latest week's injury report and reserve list, replacing that week whole. */
+export async function ingestInjuries(season: number): Promise<{ week: number; rows: number } | { week: null; rows: 0 }> {
+  const [report, roster] = await Promise.all([text(injuriesUrl(season)), text(rostersUrl(season))])
+  const w = parseInjuries(report, roster, season)
+  if (!w) return { week: null, rows: 0 }
+  const { error } = await db().rpc('rpc_replace_nfl_injuries', { p_secret: SECRET(), p_season: season, p_week: w.week, p_rows: w.rows.map((r) => ({ ...r, game_type: w.game_type })) })
+  if (error) throw new Error(`rpc_replace_nfl_injuries: ${error.message}`)
+  return { week: w.week, rows: w.rows.length }
 }
