@@ -421,9 +421,9 @@ body:has([data-league='nfl']) > footer { color: #a9bddf; }
   position: fixed; inset: auto 0 0 0; z-index: 40;
   display: grid; grid-template-columns: repeat(5, 1fr);
   padding: 0 4px env(safe-area-inset-bottom);
-  background: color-mix(in srgb, #020c1d 97%, transparent);
+  background: #020c1d;
   border-top: 1px solid #0b3a62;
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 -8px 24px #020c1d;
 }
 .dock-item {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
