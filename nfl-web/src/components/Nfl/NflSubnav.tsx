@@ -4,8 +4,8 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-/** Eleven tabs on every page; on a phone the row scrolls sideways and keeps the active tab in view. */
-const TABS: { href: string; label: string; also?: (p: string) => boolean }[] = [
+/** Eleven tabs on every page from a tablet up (phones get MobileDock); the row scrolls sideways and keeps the active tab in view. */
+export const TABS: { href: string; label: string; also?: (p: string) => boolean }[] = [
   { href: '/', label: 'Forsíða' },
   { href: '/stjornbord', label: 'Stjórnborð' },
   { href: '/leikir', label: 'Leikir', also: (p) => p.startsWith('/leikur/') },

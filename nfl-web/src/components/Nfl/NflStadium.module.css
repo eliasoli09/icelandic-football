@@ -97,3 +97,22 @@
 @media (max-width: 600px) { .backdrop::after { display: none; } .heroArt { opacity: .65; } }
 
 @media (max-width: 600px) { .heroCompact { min-height: 0; } .heroCompact .heroCopy { padding-top: 8px; } .heroHome { min-height: 330px; } .heroHome .heroArt { width: 400px; height: 260px; right: -110px; top: -20px; } }
+
+/* Phones: the header is an introduction, not the page. Compact, with the content in view at once. */
+@media (max-width: 600px) {
+  .hero, .heroHome { min-height: 0; align-items: flex-start; }
+  .heroCopy { padding: 14px 0 6px; width: 100%; }
+  .heroHome .heroCopy { padding: 22px 16px 18px; }
+  .hero h1 { font-size: 56px; line-height: 1; }
+  .heroCompact h1 { font-size: 40px; }
+  .eyebrow { font-size: 10px; margin-bottom: 4px; }
+  .subtitle { font-size: 15px; line-height: 1.45; max-width: 270px; margin: 8px 0 16px; }
+  .filters { gap: 8px; overflow-x: auto; scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .filters button, .filters a { flex: 0 0 auto; min-width: 0; padding: 9px 16px; border-radius: 999px; font-size: 13px; }
+  .heroHome .heroArt { width: 300px; height: 200px; right: -96px; top: -12px; opacity: .5; }
+  .heroArt { width: 300px; height: 200px; right: -110px; top: -20px; opacity: .45; }
+  .motionToggle { display: none; }
+  /* no staggered entrances: on a phone they read as empty boxes */
+  .panel, .forecastTable tbody tr { animation: none; }
+}

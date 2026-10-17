@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Archivo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SiteShell } from '@/components/Nfl/SiteShell'
 import { NflSubnav } from '@/components/Nfl/NflSubnav'
+import { MobileDock } from '@/components/Nfl/MobileDock'
 import { FOOTBALL_URL, SITE_NAME, SITE_URL } from '@/lib/site'
 import './globals.css'
 
@@ -19,27 +20,28 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
 }
 
-export const viewport = { themeColor: '#020c1d' }
+export const viewport = { themeColor: '#020c1d', viewportFit: 'cover' as const }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="is" className="dark">
       <body data-league="nfl" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
         <header className="relative z-10 border-b" style={{ borderColor: 'var(--border)', background: 'var(--bg)' }}>
-          <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
+          <div className="max-w-6xl mx-auto px-4 h-12 md:h-14 flex items-center justify-between gap-3">
             <Link href="/" className="display font-extrabold tracking-tight">{SITE_NAME}</Link>
-            <nav className="flex items-center gap-4 text-xs">
+            <nav className="hidden md:flex items-center gap-4 text-xs">
               <Link href="/um" className="muted">Um síðuna</Link>
               <a href={FOOTBALL_URL} className="muted underline decoration-dotted underline-offset-2">Íslenskur fótbolti</a>
             </nav>
           </div>
         </header>
-        <div className="sticky top-0 z-20 border-b backdrop-blur-md" style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--bg) 82%, transparent)' }}>
+        <div className="hidden md:block sticky top-0 z-20 border-b backdrop-blur-md" style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--bg) 82%, transparent)' }}>
           <div className="max-w-6xl mx-auto px-4"><NflSubnav /></div>
         </div>
-        <main className="max-w-6xl mx-auto px-4 py-8">
+        <main className="max-w-6xl mx-auto px-4 py-5 md:py-8">
           <SiteShell>{children}</SiteShell>
         </main>
+        <MobileDock />
         <Analytics />
       </body>
     </html>

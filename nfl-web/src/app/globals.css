@@ -415,3 +415,55 @@ body:has([data-league='nfl']) header { --bg: #031128; --border: #07598a; --surfa
 body:has([data-league='nfl']) header > div:first-child { max-width: 1376px; }
 body:has([data-league='nfl']) main { max-width: 1376px; padding-top: 0; }
 body:has([data-league='nfl']) > footer { color: #a9bddf; }
+
+/* ─── Phone navigation: a scoreboard dock at the bottom, and a sheet for the rest ─── */
+.dock {
+  position: fixed; inset: auto 0 0 0; z-index: 40;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  padding: 0 4px env(safe-area-inset-bottom);
+  background: color-mix(in srgb, #020c1d 97%, transparent);
+  border-top: 1px solid #0b3a62;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+.dock-item {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  min-height: 58px; font-size: 10.5px; font-weight: 600; letter-spacing: .01em; color: #8ea9cf;
+  -webkit-tap-highlight-color: transparent;
+}
+/* the active tab lights up like a stadium scoreboard: a red bar along the top edge */
+.dock-item::before {
+  content: ''; position: absolute; top: -1px; left: 22%; right: 22%; height: 3px; border-radius: 0 0 3px 3px;
+  background: #ff1745; box-shadow: 0 0 12px #ff1745aa, 0 0 2px #ff1745; opacity: 0; transform: scaleX(.4);
+  transition: opacity .2s ease, transform .25s ease;
+}
+.dock-item[data-on='true'] { color: #f4f7ff; }
+.dock-item[data-on='true']::before { opacity: 1; transform: scaleX(1); }
+.dock-item:active { transform: scale(.96); }
+.dock-live { position: absolute; top: -2px; right: -5px; width: 8px; height: 8px; border-radius: 50%; background: #ff1745; box-shadow: 0 0 0 2px #020c1d; animation: pulse-dot 2s ease-in-out infinite; }
+.dock-sheet { position: fixed; inset: 0; z-index: 50; }
+.dock-scrim { position: absolute; inset: 0; background: #000a; border: 0; }
+.dock-panel {
+  position: absolute; inset: auto 0 0 0; max-height: 82vh; overflow-y: auto;
+  padding: 16px 16px calc(20px + env(safe-area-inset-bottom));
+  background: #061930; border-top: 1px solid #16456b; border-radius: 20px 20px 0 0;
+  box-shadow: 0 -20px 60px #000a; animation: sheet-up .22s ease-out;
+}
+.dock-tile {
+  display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px;
+  border: 1px solid #16456b; border-radius: 14px; background: #0a2142; font-weight: 600; font-size: 14px;
+}
+.dock-tile[data-on='true'] { border-color: #ff1745; box-shadow: inset 0 0 0 1px #ff174566; }
+.dock-tile svg { color: #08b8ff; }
+.dock-link { display: flex; align-items: center; gap: 10px; min-height: 44px; color: #a9bddf; }
+@keyframes sheet-up { from { transform: translateY(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .dock-panel, .dock-live { animation: none; } .dock-item::before { transition: none; } }
+/* these rules sit outside Tailwind's layers, so md:hidden alone cannot hide them */
+@media (min-width: 768px) { .dock, .dock-sheet { display: none; } }
+
+/* ─── Phones: lighter surfaces and room for the dock ─── */
+@media (max-width: 767px) {
+  /* a blur behind every card over the stadium photo paints late while scrolling: solid surfaces instead */
+  .card { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface-solid, #061930); }
+  body:has([data-league='nfl']) main { padding-top: 18px; padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+  .card-hover:hover, .card-3d-hover:hover { transform: none; }
+}

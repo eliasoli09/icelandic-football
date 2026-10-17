@@ -24,6 +24,8 @@ export interface Ctx {
 }
 
 export const when = (iso: string) => `${dayLabel(iso)} ${isSmallHours(iso) ? 'aðfaranótt ' : 'kl. '}${clock(iso)}`
+/** "sun. 13:30": the day and time in a phone-wide row. */
+export const shortWhen = (iso: string) => `${dayLabel(iso).split(' ')[0].slice(0, 3).toLowerCase()}. ${isSmallHours(iso) ? 'aðfaranótt ' : ''}${clock(iso)}`
 const state = (g: LiveRow) => `${g.statusLabel}${g.clock && g.live && g.status !== 'HT' ? ` · ${g.clock}` : ''}`
 export const Empty = ({ children }: { children: React.ReactNode }) => <p className="text-sm muted">{children}</p>
 
@@ -36,7 +38,7 @@ export function LiveGames({ ctx }: { ctx: Ctx }) {
       <div className="grid gap-2">
         <Empty>Enginn leikur í gangi. Næstu leikir:</Empty>
         <ul className="grid gap-1.5 text-sm">{next.map((g) => (
-          <li key={g.game_id}><Link href={`/leikur/${g.game_id}`} className="flex items-center gap-2"><NflLogo team={ctx.teams.get(g.away)} size={18} />{g.away} <span className="muted">@</span> <NflLogo team={ctx.teams.get(g.home)} size={18} />{g.home}<span className="ml-auto text-xs muted">{when(g.kickoff)}</span></Link></li>
+          <li key={g.game_id}><Link href={`/leikur/${g.game_id}`} className="flex items-center gap-2"><NflLogo team={ctx.teams.get(g.away)} size={18} />{g.away} <span className="muted">@</span> <NflLogo team={ctx.teams.get(g.home)} size={18} />{g.home}<span className="ml-auto text-xs muted whitespace-nowrap">{shortWhen(g.kickoff)}</span></Link></li>
         ))}</ul>
       </div>
     ) : <Empty>Engir leikir fram undan í þessari umferð.</Empty>

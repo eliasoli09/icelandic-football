@@ -93,31 +93,36 @@ function GameRow({ g, f, home, away, tv }: { g: NflGame; f: Forecast | undefined
   const vegas = spreadLabel(g)
   const fav = f && (f.pHome >= 0.5 ? { abbr: g.home, p: f.pHome } : { abbr: g.away, p: 1 - f.pHome })
   const qbs = f?.newQb ? [f.newQb.away, f.newQb.home].filter((x) => x !== null) : []
+  // the lines under the time; on a phone they go in one row under the game instead
+  const details = [
+    !played && f?.spread != null ? `Líkanið ${modelSpreadLabel(g.home, g.away, f.spread)}` : null,
+    !played && vegas ? `Vegas ${vegas}` : null,
+    !played && g.total_line !== null ? `Heildarstig ${totalLabel(g.total_line)}` : null,
+    played && fav ? `líkanið gaf ${fav.abbr} ${probLabel(fav.p)}` : null,
+    g.neutral && g.stadium ? g.stadium : null,
+  ].filter((x): x is string => !!x)
   return (
-    <Link href={`/leikur/${g.game_id}`} className="trow grid grid-cols-[1fr_auto] gap-x-4 gap-y-1.5 px-4 py-3" style={{ borderColor: 'var(--border)' }}>
+    <Link href={`/leikur/${g.game_id}`} className="trow grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1.5 px-4 py-3" style={{ borderColor: 'var(--border)' }}>
       <div className="grid gap-1.5 min-w-0">
         <Side team={away} abbr={g.away} score={g.away_score} won={played && g.away_score! > g.home_score!} p={!played && f ? 1 - f.pHome : null} />
         <Side team={home} abbr={g.home} score={g.home_score} won={played && g.home_score! > g.away_score!} p={!played && f ? f.pHome : null} />
         {!played && f && <ProbSplit pHome={f.pHome} home={home} away={away} />}
       </div>
-      <div className="text-right text-xs muted grid content-center gap-0.5 num">
+      <div className="text-right text-xs muted grid content-center gap-0.5 num min-w-[4.5rem]">
         {played ? (
           <span className="font-semibold" style={{ color: 'var(--text)' }}>Lokið{g.overtime ? ' · framl.' : ''}</span>
         ) : g.time_tbd ? (
           <span>Tími óákveðinn</span>
         ) : (
-          <span className="font-semibold" style={{ color: 'var(--text)' }}>
-            {isSmallHours(g.kickoff) && <span className="muted font-normal">aðfaranótt </span>}
+          <span className="font-semibold text-sm sm:text-xs" style={{ color: 'var(--text)' }}>
+            {isSmallHours(g.kickoff) && <span className="muted font-normal block sm:inline text-[10px] sm:text-xs">aðfaranótt </span>}
             {clock(g.kickoff)}
           </span>
         )}
-        {!played && f?.spread != null && <span>Líkanið {modelSpreadLabel(g.home, g.away, f.spread)}</span>}
-        {!played && vegas && <span>Vegas {vegas}</span>}
-        {!played && g.total_line !== null && <span>Heildarstig {totalLabel(g.total_line)}</span>}
-        {played && fav && <span>líkanið gaf {fav.abbr} {probLabel(fav.p)}</span>}
-        {g.neutral && g.stadium && <span>{g.stadium}</span>}
+        {details.map((d) => <span key={d} className="hidden sm:block">{d}</span>)}
         {!played && <TvBadge b={tv} className="justify-end" />}
       </div>
+      {details.length > 0 && <p className="sm:hidden col-span-2 text-[11px] muted num">{details.join(' · ')}</p>}
       {!played && qbs.map((q) => (
         <p key={q.qb} className="col-span-2 text-[11px] inline-flex items-center gap-1.5" style={{ color: 'var(--accent)' }}>
           <AlertTriangle size={12} aria-hidden />

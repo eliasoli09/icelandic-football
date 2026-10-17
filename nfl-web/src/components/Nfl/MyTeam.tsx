@@ -50,7 +50,7 @@ export function MyTeam({ cards, teams }: { cards: TeamCard[]; teams: NflTeam[] }
   const c = cards.find((x) => x.abbr === team)
   const picker = (
     <select aria-label="Veldu liðið þitt" value={team ?? ''} onChange={(e) => void choose(e.target.value || null)}
-      className="rounded-lg border px-3 min-h-[36px] text-sm" style={{ borderColor: 'var(--border)', background: 'var(--surface)', color: 'var(--text)' }}>
+      className="rounded-lg border px-3 min-h-[40px] text-sm w-full sm:w-auto" style={{ borderColor: 'var(--border)', background: 'var(--surface)', color: 'var(--text)' }}>
       <option value="">{team ? 'Ekkert lið' : 'Veldu liðið þitt'}</option>
       {cards.map((x) => <option key={x.abbr} value={x.abbr}>{x.name}</option>)}
     </select>
@@ -61,7 +61,7 @@ export function MyTeam({ cards, teams }: { cards: TeamCard[]; teams: NflTeam[] }
       <Heart size={20} aria-hidden style={{ color: 'var(--accent)' }} />
       <span className="font-semibold">Með hverjum heldur þú?</span>
       <span className="text-sm muted">Veldu lið og forsíðan sýnir það fyrst.</span>
-      <span className="ml-auto">{picker}</span>
+      <span className="w-full sm:w-auto sm:ml-auto">{picker}</span>
     </section>
   )
 
