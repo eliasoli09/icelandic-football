@@ -189,3 +189,40 @@ export async function nflBroadcasts(season: number): Promise<Record<string, Broa
   if (error) throw error
   return Object.fromEntries((data ?? []).map((r) => [r.game_id as string, { channel: r.channel as string, note: r.note as string }]))
 }
+
+export interface VedmalData {
+  lines: import('./vedmalView').VedmalLine[]
+  prev: import('./vedmalView').PrevTotal[]
+  leaguePts: number
+  leagueRush: number
+}
+
+/** This season's player lines with names, last season's regular-season totals and the league's averages from last season, for /vedmal. */
+export async function nflVedmalData(season: number): Promise<VedmalData> {
+  const cols = 'player_id, week, game_id, team, opponent, carries, targets, rushing_tds, receiving_tds, rushing_yards, nfl_players(name, position, headshot)'
+  const lines: import('./vedmalView').VedmalLine[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_player_weeks').select(cols).eq('season', season).eq('season_type', 'REG').order('player_id').order('week').range(from, from + 999)
+    if (error) throw error
+    for (const r of (data ?? []) as unknown as (Omit<import('./vedmalView').VedmalLine, 'name' | 'position' | 'headshot'> & { nfl_players: { name: string; position: string | null; headshot: string | null } | null })[]) {
+      const { nfl_players: p, ...rest } = r
+      lines.push({ ...rest, name: p?.name ?? 'Óþekktur', position: p?.position ?? null, headshot: p?.headshot ?? null })
+    }
+    if (!data || data.length < 1000) break
+  }
+  const prev: import('./vedmalView').PrevTotal[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_player_season').select('player_id, games, carries, targets, rushing_tds, receiving_tds, rushing_yards')
+      .eq('season', season - 1).eq('season_type', 'REG').order('player_id').range(from, from + 999)
+    if (error) throw error
+    for (const r of data ?? []) prev.push({ player_id: r.player_id, games: Number(r.games), carries: Number(r.carries), targets: Number(r.targets), tds: Number(r.rushing_tds) + Number(r.receiving_tds), rushYards: Number(r.rushing_yards) })
+    if (!data || data.length < 1000) break
+  }
+  const last = (await nflSeasonGames(season - 1)).filter((g) => g.game_type === 'REG' && g.home_score !== null)
+  const n = Math.max(1, 2 * last.length)
+  return {
+    lines, prev,
+    leaguePts: last.length ? last.reduce((t, g) => t + g.home_score! + g.away_score!, 0) / n : 22,
+    leagueRush: prev.reduce((t, p) => t + p.rushYards, 0) / n,
+  }
+}

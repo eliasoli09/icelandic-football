@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-/** Nine tabs on every page; on a phone the row scrolls sideways and keeps the active tab in view. */
+/** Ten tabs on every page; on a phone the row scrolls sideways and keeps the active tab in view. */
 const TABS: { href: string; label: string; also?: (p: string) => boolean }[] = [
   { href: '/', label: 'Forsíða' },
   { href: '/leikir', label: 'Leikir', also: (p) => p.startsWith('/leikur/') },
@@ -13,6 +13,7 @@ const TABS: { href: string; label: string; also?: (p: string) => boolean }[] = [
   { href: '/urslitakeppni', label: 'Úrslitakeppnin' },
   { href: '/sludur', label: 'Slúður' },
   { href: '/spa', label: 'Spáleikur', also: (p) => p.startsWith('/spa/') },
+  { href: '/vedmal', label: 'Veðmál' },
   { href: '/leikmenn', label: 'Leikmenn', also: (p) => p.startsWith('/leikmadur') || p.startsWith('/leikmenn/') || p === '/verdlaun' },
   { href: '/greinar', label: 'Greinar', also: (p) => p.startsWith('/grein/') || p === '/frettir' },
 ]
