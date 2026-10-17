@@ -3,6 +3,7 @@ import { stateFromRows, type EloRow, type EloState } from './elo'
 import type { SimTeam } from './sim'
 import { STATS, type NflPlayer, type PlayerWeek, type SeasonTotal } from './players'
 import type { NflGame, NflTeam } from './types'
+import { STAT_FIELDS } from './vedmalView'
 
 export async function nflTeams(): Promise<NflTeam[]> {
   const { data, error } = await db().from('nfl_teams').select('*').range(0, 999)
@@ -194,28 +195,32 @@ export interface VedmalData {
   lines: import('./vedmalView').VedmalLine[]
   prev: import('./vedmalView').PrevTotal[]
   leaguePts: number
-  leagueRush: number
+  /** Last season's team-games (two a game), to turn its totals into a league average. */
+  teamGames: number
 }
 
-/** This season's player lines with names, last season's regular-season totals and the league's averages from last season, for /vedmal. */
+/** This season's player lines with names, last season's regular-season totals and the league's points from last season, for /vedmal. */
 export async function nflVedmalData(season: number): Promise<VedmalData> {
-  const cols = 'player_id, week, game_id, team, opponent, carries, targets, rushing_tds, receiving_tds, rushing_yards, nfl_players(name, position, headshot)'
+  const stats = STAT_FIELDS.join(', ')
+  const cols = `player_id, week, game_id, team, opponent, ${stats}, nfl_players(name, position, headshot)`
   const lines: import('./vedmalView').VedmalLine[] = []
   for (let from = 0; ; from += 1000) {
     const { data, error } = await db().from('nfl_player_weeks').select(cols).eq('season', season).eq('season_type', 'REG').order('player_id').order('week').range(from, from + 999)
     if (error) throw error
     for (const r of (data ?? []) as unknown as (Omit<import('./vedmalView').VedmalLine, 'name' | 'position' | 'headshot'> & { nfl_players: { name: string; position: string | null; headshot: string | null } | null })[]) {
       const { nfl_players: p, ...rest } = r
-      lines.push({ ...rest, name: p?.name ?? 'Óþekktur', position: p?.position ?? null, headshot: p?.headshot ?? null })
+      lines.push({ ...rest, ...Object.fromEntries(STAT_FIELDS.map((k) => [k, Number(rest[k])])), name: p?.name ?? 'Óþekktur', position: p?.position ?? null, headshot: p?.headshot ?? null })
     }
     if (!data || data.length < 1000) break
   }
   const prev: import('./vedmalView').PrevTotal[] = []
   for (let from = 0; ; from += 1000) {
-    const { data, error } = await db().from('nfl_player_season').select('player_id, games, carries, targets, rushing_tds, receiving_tds, rushing_yards')
+    const { data, error } = await db().from('nfl_player_season').select(`player_id, games, ${stats}`)
       .eq('season', season - 1).eq('season_type', 'REG').order('player_id').range(from, from + 999)
     if (error) throw error
-    for (const r of data ?? []) prev.push({ player_id: r.player_id, games: Number(r.games), carries: Number(r.carries), targets: Number(r.targets), tds: Number(r.rushing_tds) + Number(r.receiving_tds), rushYards: Number(r.rushing_yards) })
+    for (const r of (data ?? []) as unknown as Record<string, string | number>[]) {
+      prev.push({ player_id: String(r.player_id), games: Number(r.games), ...Object.fromEntries(STAT_FIELDS.map((k) => [k, Number(r[k])])) } as import('./vedmalView').PrevTotal)
+    }
     if (!data || data.length < 1000) break
   }
   const last = (await nflSeasonGames(season - 1)).filter((g) => g.game_type === 'REG' && g.home_score !== null)
@@ -223,7 +228,7 @@ export async function nflVedmalData(season: number): Promise<VedmalData> {
   return {
     lines, prev,
     leaguePts: last.length ? last.reduce((t, g) => t + g.home_score! + g.away_score!, 0) / n : 22,
-    leagueRush: prev.reduce((t, p) => t + p.rushYards, 0) / n,
+    teamGames: n,
   }
 }
 
