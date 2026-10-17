@@ -32,3 +32,12 @@ Forgjöf = forgjöf Elo-líkansins fyrir leik. Í leikslok 1 / ½ / 0.
 ## Prófanir
 Þáttari á dæmi, pörun liða, tími eftir, líkur í beinni (byrjun = fyrir leik, rétt átt, 1 í lok),
 glugginn sem ræður hvort fyrirspurn fer út. Útgáfa: localhost, svo "full send".
+
+## Breyting 17. okt: kvótinn nýttur (ósk Eliasar, Pro-áskrift, 7.500 á dag)
+- Bilið er reiknað fyrir hvern UTC-dag (`planInterval`): (tíminn sem einhver leikur er í gangi +
+  summa leiktíma) / `NFL_LIVE_BUDGET` (sjálfgefið 7.000), aldrei styttra en `NFL_LIVE_MIN_INTERVAL`
+  (15 s). Stór sunnudagur um 30 s, einn leikur 15 s.
+- Atvik eru sótt fyrir alla leiki í gangi í hverri umferð (`NFL_LIVE_EVENTS=0` slekkur), svo
+  notkunin fylgir dagskránni, ekki því hvaða síður eru opnar. Vafrinn spyr jafnoft og þjónninn.
+- Ekkert er sótt nema einhver hafi síðuna opna: 7.000 er þak, ekki markmið sem næst án lesenda.
+- Ef áskriftin fer aftur í ókeypis: `NFL_LIVE_BUDGET=90` í Vercel.

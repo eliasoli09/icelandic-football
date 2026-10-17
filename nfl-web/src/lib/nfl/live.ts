@@ -122,6 +122,32 @@ export function liveWindow<G extends { kickoff: string; home_score: number | nul
   })
 }
 
+/** How long after kickoff a game is planned for in the request budget (most end within 3.5 hours). */
+export const PLAN_WINDOW_MS = 4 * 3600 * 1000
+
+/**
+ * Seconds between polls so the day's requests come close to `budget`: each poll
+ * costs one scoreboard request plus one events request per game under way, so
+ * the day's cost is (time any game is on + the sum of each game's time on) /
+ * interval. The quota resets at midnight UTC, so the day is a UTC day.
+ */
+export function planInterval(kickoffs: string[], dayUtc: Date, budget: number, floor = 15): number {
+  const start = Date.UTC(dayUtc.getUTCFullYear(), dayUtc.getUTCMonth(), dayUtc.getUTCDate())
+  const end = start + 86400_000
+  const spans = kickoffs
+    .map((k) => [Math.max(start, new Date(k).getTime()), Math.min(end, new Date(k).getTime() + PLAN_WINDOW_MS)] as const)
+    .filter(([a, b]) => b > a)
+    .sort((x, y) => x[0] - y[0])
+  if (!spans.length) return floor
+  let union = 0, sum = 0, curA = spans[0][0], curB = spans[0][1]
+  for (const [a, b] of spans) {
+    sum += b - a
+    if (a > curB) { union += curB - curA; curA = a; curB = b } else curB = Math.max(curB, b)
+  }
+  union += curB - curA
+  return Math.max(floor, Math.ceil((union + sum) / 1000 / Math.max(1, budget)))
+}
+
 /** The US Eastern date of a kickoff, which is how api-sports dates games (EST is close enough for kickoff times). */
 export const easternDate = (kickoffIso: string) => new Date(new Date(kickoffIso).getTime() - 5 * 3600 * 1000).toISOString().slice(0, 10)
 

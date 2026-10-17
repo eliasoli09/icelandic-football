@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { seasonForecasts } from '@/lib/nfl/forecast'
-import { API_SPORTS_BASE, NFL_LEAGUE, STATUS_LABEL, easternDate, fractionLeft, liveWindow, liveWinProb, parseEvents, parseGames, teamAbbr, type LiveEvent } from '@/lib/nfl/live'
+import { API_SPORTS_BASE, NFL_LEAGUE, STATUS_LABEL, easternDate, fractionLeft, liveWindow, liveWinProb, parseEvents, parseGames, planInterval, teamAbbr, type LiveEvent } from '@/lib/nfl/live'
 import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
 
 export const dynamic = 'force-dynamic'
@@ -20,15 +20,19 @@ export interface LiveRow {
   /** Our live home win probability; the pre-game one before the first score is known. */
   pHome: number | null
   pHomePre: number | null
+  /** Scoring plays, when events are on. */
+  events?: LiveEvent[]
 }
-export interface LiveReply { enabled: boolean; interval: number; games: LiveRow[]; events?: LiveEvent[]; error?: string }
+export interface LiveReply { enabled: boolean; interval: number; games: LiveRow[]; error?: string }
 
-/** Seconds between requests to api-sports: the free plan's 100 a day last a long Sunday at 8 minutes. */
-const INTERVAL = () => Math.max(30, Number(process.env.NFL_LIVE_INTERVAL) || 480)
+/** Requests a day to aim at (Pro allows 7,500), and the shortest gap worth polling at. */
+const BUDGET = () => Number(process.env.NFL_LIVE_BUDGET) || 7000
+const FLOOR = () => Number(process.env.NFL_LIVE_MIN_INTERVAL) || 15
+const EVENTS = () => process.env.NFL_LIVE_EVENTS !== '0'
 
-async function upstream(path: string, key: string): Promise<unknown> {
+async function upstream(path: string, key: string, interval: number): Promise<unknown> {
   // the data cache makes this one request per interval, however many readers poll
-  const res = await fetch(`${API_SPORTS_BASE}${path}`, { headers: { 'x-apisports-key': key }, next: { revalidate: INTERVAL() } })
+  const res = await fetch(`${API_SPORTS_BASE}${path}`, { headers: { 'x-apisports-key': key }, next: { revalidate: interval } })
   if (!res.ok) throw new Error(`api-sports svaraði ${res.status}`)
   const body = await res.json()
   const errors = body?.errors
@@ -41,23 +45,26 @@ async function upstream(path: string, key: string): Promise<unknown> {
  * with our own live win probability. No key, nothing live, or a failing feed:
  * an empty list, and the pages simply show nothing live.
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   // localhost only: NFL_LIVE_MOCK=1 shows two made-up live games, to see the boxes without a key or a game on
   if (process.env.NFL_LIVE_MOCK === '1' && process.env.NODE_ENV !== 'production') return NextResponse.json(await mock())
   const key = process.env.API_SPORTS_NFL_KEY
-  const interval = INTERVAL()
+  let interval = FLOOR()
   if (!key) return NextResponse.json({ enabled: false, interval, games: [] } satisfies LiveReply)
   try {
     const season = await nflCurrentSeason()
     if (!season) return NextResponse.json({ enabled: true, interval, games: [] } satisfies LiveReply)
     const model = await nflSeasonModel(season)
-    const under = liveWindow(model.games, new Date())
+    const now = new Date()
+    // spread today's budget over today's games: about 30 s on a full Sunday, the floor on a quiet Thursday
+    interval = planInterval(model.games.map((g) => g.kickoff), now, BUDGET(), FLOOR())
+    const under = liveWindow(model.games, now)
     if (!under.length) return NextResponse.json({ enabled: true, interval, games: [] } satisfies LiveReply)
 
     const clubs = model.teams.filter((t) => t.franchise === t.abbr)
     const forecasts = seasonForecasts(model.games, model.elo, model.state)
     const dates = [...new Set(under.map((g) => easternDate(g.kickoff)))]
-    const feed = (await Promise.all(dates.map((d) => upstream(`/games?league=${NFL_LEAGUE}&season=${season}&date=${d}&timezone=America/New_York`, key)))).flatMap(parseGames)
+    const feed = (await Promise.all(dates.map((d) => upstream(`/games?league=${NFL_LEAGUE}&season=${season}&date=${d}&timezone=America/New_York`, key, interval)))).flatMap(parseGames)
 
     const games: (LiveRow & { apiId: number })[] = []
     for (const g of under) {
@@ -73,13 +80,12 @@ export async function GET(req: NextRequest) {
       })
     }
 
-    // scoring plays cost a request a game: only for the game page asking, and only when switched on
-    const want = req.nextUrl.searchParams.get('game')
-    let events: LiveEvent[] | undefined
-    const one = want ? games.find((g) => g.game_id === want) : undefined
-    if (one && process.env.NFL_LIVE_EVENTS === '1') events = parseEvents(await upstream(`/games/events?id=${one.apiId}`, key))
+    // scoring plays for every game under way each poll, so the day's use follows the schedule, not the readers
+    if (EVENTS()) await Promise.all(games.filter((g) => g.live || g.final).map(async (g) => {
+      try { g.events = parseEvents(await upstream(`/games/events?id=${g.apiId}`, key, interval)) } catch { /* the score still shows */ }
+    }))
 
-    return NextResponse.json({ enabled: true, interval, games: games.map(({ apiId: _, ...g }) => g), ...(events ? { events } : {}) } satisfies LiveReply)
+    return NextResponse.json({ enabled: true, interval, games: games.map(({ apiId: _, ...g }) => g) } satisfies LiveReply)
   } catch (e) {
     return NextResponse.json({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies LiveReply)
   }
@@ -99,5 +105,6 @@ async function mock(): Promise<LiveReply> {
       live: true, final: false, pHome: liveWinProb(f?.spread ?? 0, h, a, fractionLeft(quarter, clock, status)), pHomePre: f?.pHome ?? null,
     }
   })
-  return { enabled: true, interval: 60, games, events: [{ quarter: 'Q1', minute: '09:02', team: '', player: null, type: 'TD', comment: 'Sýnidæmi: snertimark', homeScore: 7, awayScore: 0 }] }
+  const events: LiveEvent[] = [{ quarter: 'First', minute: '9:02', team: '', player: null, type: 'TD', comment: 'J.K. Dobbins 4 Yd Rush (Wil Lutz Kick)', homeScore: 7, awayScore: 0 }]
+  return { enabled: true, interval: 30, games: games.map((g) => ({ ...g, events })) }
 }

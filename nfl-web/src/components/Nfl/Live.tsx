@@ -10,25 +10,24 @@ import type { NflTeam } from '@/lib/nfl/types'
 import { NflLogo } from './NflLogo'
 import { ProbSplit } from './ProbSplit'
 
-const POLL_MS = 60_000
-
-/** Poll our live route while the tab is visible; null until the first answer. */
-function useLive(gameId?: string): LiveReply | null {
+/** Poll our live route as often as the server refreshes, while the tab is visible; null until the first answer. */
+function useLive(): LiveReply | null {
   const [data, setData] = useState<LiveReply | null>(null)
+  const every = Math.max(15, data?.interval ?? 60) * 1000
   useEffect(() => {
     let alive = true
     const load = async () => {
       if (document.hidden) return
       try {
-        const res = await fetch(`/api/nfl/live${gameId ? `?game=${encodeURIComponent(gameId)}` : ''}`, { cache: 'no-store' })
+        const res = await fetch('/api/nfl/live', { cache: 'no-store' })
         if (res.ok && alive) setData(await res.json())
       } catch { /* the next poll tries again */ }
     }
     void load()
-    const t = setInterval(load, POLL_MS)
+    const t = setInterval(load, every)
     document.addEventListener('visibilitychange', load)
     return () => { alive = false; clearInterval(t); document.removeEventListener('visibilitychange', load) }
-  }, [gameId])
+  }, [every])
   return data
 }
 
@@ -67,7 +66,7 @@ export function LiveStrip({ teams }: { teams: NflTeam[] }) {
 
 /** The game page's live box: score, quarter, clock, live win probability and scoring plays. */
 export function LiveBox({ gameId, home, away }: { gameId: string; home: NflTeam | undefined; away: NflTeam | undefined }) {
-  const data = useLive(gameId)
+  const data = useLive()
   const g = data?.games.find((x) => x.game_id === gameId)
   if (!g) return null
   return (
@@ -93,9 +92,9 @@ export function LiveBox({ gameId, home, away }: { gameId: string; home: NflTeam 
           </div>
         </div>
       )}
-      {data?.events && data.events.length > 0 && (
+      {g.events && g.events.length > 0 && (
         <ol className="grid gap-1.5 text-sm border-t pt-3" style={{ borderColor: 'var(--border)' }}>
-          {[...data.events].reverse().map((e, i) => (
+          {[...g.events].reverse().map((e, i) => (
             <li key={i} className="grid grid-cols-[4.5rem_minmax(0,1fr)_auto] gap-2">
               <span className="muted text-xs num">{quarterLabel(e.quarter)}{e.minute ? ` ${e.minute}` : ''}</span>
               <span className="min-w-0"><span className="font-semibold">{EVENT_LABEL[e.type] ?? e.type}:</span> {playIs(e.comment)}</span>
@@ -104,7 +103,7 @@ export function LiveBox({ gameId, home, away }: { gameId: string; home: NflTeam 
           ))}
         </ol>
       )}
-      <p className="text-[11px] muted">Uppfærist sjálfkrafa á {Math.round((data?.interval ?? 480) / 60)} mín. fresti. Gögn: API-Sports. Líkurnar eru okkar eigin, út frá stöðunni, tímanum sem eftir er og spá Elo-líkansins fyrir leik.</p>
+      <p className="text-[11px] muted">Uppfærist sjálfkrafa á {data?.interval ?? 60} sek. fresti. Gögn: API-Sports. Líkurnar eru okkar eigin, út frá stöðunni, tímanum sem eftir er og spá Elo-líkansins fyrir leik.</p>
     </section>
   )
 }

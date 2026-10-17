@@ -85,3 +85,26 @@ describe('atvik á íslensku', async () => {
     expect([quarterLabel('First'), quarterLabel('Overtime')]).toEqual(['1. lh.', 'Framl.'])
   })
 })
+
+describe('planInterval: kvótinn nýttur', async () => {
+  const { planInterval } = await import('../src/lib/nfl/live')
+  const day = new Date('2026-10-18T12:00:00Z')
+  // a Sunday: 9 early games, 4 late, one at night (UTC kickoffs)
+  const sunday = [...Array(9).fill('2026-10-18T17:00:00Z'), ...Array(4).fill('2026-10-18T20:25:00Z'), '2026-10-19T00:20:00Z']
+  it('stór sunnudagur: um hálfmínútu bil, og dagurinn kostar um 7.000', () => {
+    const i = planInterval(sunday, day, 7000)
+    expect(i).toBeGreaterThan(25)
+    expect(i).toBeLessThan(40)
+  })
+  it('einn leikur: lágmarksbilið, ekkert hraðar', () => {
+    expect(planInterval(['2026-10-23T00:15:00Z'], new Date('2026-10-23T03:00:00Z'), 7000)).toBe(15)
+  })
+  it('leikur sem byrjar fyrir miðnætti telst aðeins með þann hluta sem fellur á daginn', () => {
+    // 3 h 40 min of a 4 h window fall on the 19th
+    const i = planInterval(['2026-10-18T23:40:00Z'], new Date('2026-10-19T01:00:00Z'), 1, 1)
+    expect(i).toBe(2 * 220 * 60)
+  })
+  it('enginn leikur: lágmarksbilið (og ekkert er sótt hvort sem er)', () => {
+    expect(planInterval([], day, 7000)).toBe(15)
+  })
+})
