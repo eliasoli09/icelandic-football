@@ -180,3 +180,12 @@ export async function nflTrades(): Promise<import('./rumours').Trade[]> {
   if (error) throw error
   return (data ?? []) as import('./rumours').Trade[]
 }
+
+export interface Broadcast { channel: string; note: string }
+
+/** Games shown on Icelandic TV this season, by game id (editors list them on /ritstjorn/sjonvarp). */
+export async function nflBroadcasts(season: number): Promise<Record<string, Broadcast>> {
+  const { data, error } = await db().from('nfl_broadcast').select('game_id, channel, note').like('game_id', `${season}_%`).range(0, 999)
+  if (error) throw error
+  return Object.fromEntries((data ?? []).map((r) => [r.game_id as string, { channel: r.channel as string, note: r.note as string }]))
+}

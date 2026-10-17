@@ -8,7 +8,7 @@ import { nflArticles } from '@/lib/nfl/articles/queries'
 import { currentRatings, franchiseOf } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { pickWeek } from '@/lib/nfl/pickem'
-import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
+import { nflBroadcasts, nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
 import { isPlayed } from '@/lib/nfl/types'
 import { defaultWeek, weekLabel } from '@/lib/nfl/week'
 
@@ -22,7 +22,7 @@ const More = ({ href, children }: { href: string; children: React.ReactNode }) =
 export default async function HomePage() {
   const season = await nflCurrentSeason().catch(() => null)
   if (!season) return <HomeHero />
-  const [{ games, teams, elo, state }, articles] = await Promise.all([nflSeasonModel(season), nflArticles({ limit: 3 }).catch(() => [])])
+  const [{ games, teams, elo, state }, articles, broadcasts] = await Promise.all([nflSeasonModel(season), nflArticles({ limit: 3 }).catch(() => []), nflBroadcasts(season).catch(() => ({}))])
   const forecasts = seasonForecasts(games, elo, state)
   const now = new Date()
   const week = defaultWeek(games, now)
@@ -47,7 +47,7 @@ export default async function HomePage() {
           <h2 className="display text-xl font-extrabold">{upcoming.length ? `Stærstu leikir: ${weekLabel(type, week).toLowerCase()}` : `Úrslit: ${weekLabel(type, week).toLowerCase()}`}</h2>
           <More href="/leikir">Allir leikir</More>
         </div>
-        <HomeGames games={shown} teams={teams} forecasts={forecasts} />
+        <HomeGames games={shown} teams={teams} forecasts={forecasts} broadcasts={broadcasts} />
       </section>
 
       {next && (

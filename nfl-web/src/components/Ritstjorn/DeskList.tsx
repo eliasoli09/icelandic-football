@@ -40,6 +40,8 @@ function Desk({ me }: { me: { id: string; name: string | null } }) {
         </div>
         <div className="flex flex-wrap gap-2">
         <Link href="/ritstjorn/sludur" className="rounded-full border px-4 min-h-[40px] font-semibold inline-flex items-center" style={{ borderColor: 'var(--border)' }}>Slúður og skipti</Link>
+        <Link href="/ritstjorn/sjonvarp" className="rounded-full border px-4 min-h-[40px] font-semibold inline-flex items-center" style={{ borderColor: 'var(--border)' }}>Sjónvarp</Link>
+        <Link href="/ritstjorn/athugasemdir" className="rounded-full border px-4 min-h-[40px] font-semibold inline-flex items-center" style={{ borderColor: 'var(--border)' }}>Athugasemdir</Link>
         <button className="rounded-full px-4 min-h-[40px] font-semibold inline-flex items-center gap-2" style={{ background: 'var(--accent)', color: 'var(--accent-ink)' }}
           onClick={async () => { try { router.push(`/ritstjorn/${await newArticle(me.id)}`) } catch (e) { setError((e as Error).message) } }}>
           <FilePlus2 size={16} aria-hidden /> Ný grein

@@ -3,13 +3,14 @@ import Link from 'next/link'
 import { AlertTriangle, ArrowLeft } from 'lucide-react'
 import { NflLogo } from '@/components/Nfl/NflLogo'
 import { LiveBox } from '@/components/Nfl/Live'
+import { TvBadge } from '@/components/Nfl/TvBadge'
 import { ProbSplit } from '@/components/Nfl/ProbSplit'
 import { franchiseOf, predictGame } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { teamForm, type TeamForm } from '@/lib/nfl/form'
 import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
 import { devig } from '@/lib/nfl/odds'
-import { nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel } from '@/lib/nfl/queries'
+import { nflBroadcasts, nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel } from '@/lib/nfl/queries'
 import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
 import { ArticleList } from '@/components/Nfl/ArticleList'
 import { nflGameArticles } from '@/lib/nfl/articles/queries'
@@ -34,6 +35,7 @@ export default async function NflGamePage({ params }: Props) {
   const teams = new Map(model.teams.map((t) => [t.abbr, t]))
   const names = (abbr: string) => model.teams.filter((t) => t.franchise === franchiseOf(abbr)).map((t) => t.abbr)
   const meetings = (await nflMeetings(names(game.home), names(game.away), 6)).filter((g) => g.game_id !== game.game_id).slice(0, 5)
+  const tv = (await nflBroadcasts(game.season).catch(() => ({} as Record<string, never>)))[game.game_id]
   const articles = await nflGameArticles(game.game_id, game.season, game.week).catch(() => [])
   const news = await nflNews({ teams: [franchiseOf(game.home), franchiseOf(game.away)], sinceDays: 7, limit: 4 }).catch(() => [])
 
@@ -79,6 +81,7 @@ export default async function NflGamePage({ params }: Props) {
           </div>
         </div>
         {game.stadium && <p className="text-xs muted text-center">{game.stadium}{game.neutral ? ' (hlutlaus völlur)' : ''}</p>}
+        {!played && <p className="text-center"><TvBadge b={tv} /></p>}
       </header>
 
       {f && (

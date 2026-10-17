@@ -1,13 +1,15 @@
 import Link from 'next/link'
 import { NflLogo } from './NflLogo'
 import { ProbSplit } from './ProbSplit'
+import { TvBadge } from './TvBadge'
+import type { Broadcast } from '@/lib/nfl/queries'
 import type { Forecast } from '@/lib/nfl/forecast'
 import { probLabel } from '@/lib/nfl/format'
 import { clock, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 
 /** A few games of the week as cards: probabilities before kickoff, the score after. */
-export function HomeGames({ games, teams, forecasts }: { games: NflGame[]; teams: NflTeam[]; forecasts: Record<string, Forecast> }) {
+export function HomeGames({ games, teams, forecasts, broadcasts = {} }: { games: NflGame[]; teams: NflTeam[]; forecasts: Record<string, Forecast>; broadcasts?: Record<string, Broadcast> }) {
   const team = new Map(teams.map((t) => [t.abbr, t]))
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -23,7 +25,7 @@ export function HomeGames({ games, teams, forecasts }: { games: NflGame[]; teams
         )
         return (
           <Link key={g.game_id} href={`/leikur/${g.game_id}`} className="card card-hover p-4 grid gap-2">
-            <span className="text-[11px] muted">{dayLabel(g.kickoff)} · {played ? 'Lokið' : `${isSmallHours(g.kickoff) ? 'aðfaranótt ' : ''}${clock(g.kickoff)}`}</span>
+            <span className="text-[11px] muted flex flex-wrap items-center justify-between gap-x-2"><span>{dayLabel(g.kickoff)} · {played ? 'Lokið' : `${isSmallHours(g.kickoff) ? 'aðfaranótt ' : ''}${clock(g.kickoff)}`}</span>{!played && <TvBadge b={broadcasts[g.game_id]} />}</span>
             {side(g.away, f ? 1 - f.pHome : null, g.away_score)}
             {side(g.home, f ? f.pHome : null, g.home_score)}
             {!played && f && <ProbSplit pHome={f.pHome} home={team.get(g.home)} away={team.get(g.away)} />}

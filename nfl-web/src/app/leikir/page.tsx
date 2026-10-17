@@ -4,7 +4,8 @@ import { WeekView } from '@/components/Nfl/WeekView'
 import { LiveStrip } from '@/components/Nfl/Live'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { pickWeek } from '@/lib/nfl/pickem'
-import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
+import { nflBroadcasts, nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
+import { GamesSwitch } from '@/components/Nfl/GamesSwitch'
 import { defaultWeek, weekLabel } from '@/lib/nfl/week'
 
 export const revalidate = 300
@@ -14,12 +15,13 @@ export default async function NflGamesPage() {
   try {
     const season = await nflCurrentSeason()
     if (!season) return <p className="muted">Engir leikir fundust.</p>
-    const { games, teams, elo, state } = await nflSeasonModel(season)
+    const [{ games, teams, elo, state }, broadcasts] = await Promise.all([nflSeasonModel(season), nflBroadcasts(season).catch(() => ({}))])
     const now = new Date()
     const next = pickWeek(games, now)
     const open = next ? games.filter((g) => g.week === next.week && new Date(g.kickoff) > now).length : 0
     return (
       <div className="grid gap-6">
+        <GamesSwitch active="leikir" />
         <LiveStrip teams={teams} />
         {next && (
           <Link href="/spa" className="card card-hover p-4 flex items-center gap-3">
@@ -31,7 +33,7 @@ export default async function NflGamesPage() {
             <ChevronRight size={18} aria-hidden className="ml-auto shrink-0 muted" />
           </Link>
         )}
-        <WeekView season={season} games={games} teams={teams} initialWeek={defaultWeek(games, now)} forecasts={seasonForecasts(games, elo, state)} />
+        <WeekView season={season} games={games} teams={teams} initialWeek={defaultWeek(games, now)} forecasts={seasonForecasts(games, elo, state)} broadcasts={broadcasts} />
       </div>
     )
   } catch {

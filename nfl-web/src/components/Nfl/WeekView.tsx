@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react'
 import { NflLogo } from './NflLogo'
+import { TvBadge } from './TvBadge'
+import type { Broadcast } from '@/lib/nfl/queries'
 import { ProbSplit } from './ProbSplit'
 import type { Forecast } from '@/lib/nfl/forecast'
 import { clock, dayKey, dayLabel, isSmallHours } from '@/lib/nfl/time'
@@ -11,7 +13,7 @@ import { modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/
 import { weekLabel, weekTypes } from '@/lib/nfl/week'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 
-export function WeekView({ season, games, teams, initialWeek, forecasts }: { season: number; games: NflGame[]; teams: NflTeam[]; initialWeek: number; forecasts: Record<string, Forecast> }) {
+export function WeekView({ season, games, teams, initialWeek, forecasts, broadcasts = {} }: { season: number; games: NflGame[]; teams: NflTeam[]; initialWeek: number; forecasts: Record<string, Forecast>; broadcasts?: Record<string, Broadcast> }) {
   const byAbbr = useMemo(() => new Map(teams.map((t) => [t.abbr, t])), [teams])
   const weeks = useMemo(() => weekTypes(games), [games])
   const [week, setWeek] = useState(initialWeek)
@@ -60,7 +62,7 @@ export function WeekView({ season, games, teams, initialWeek, forecasts }: { sea
           <div key={key}>
             <h2 className="text-sm font-semibold muted mb-2">{dayLabel(list[0].kickoff)}</h2>
             <div className="card divide-y" style={{ borderColor: 'var(--border)' }}>
-              {list.map((g) => <GameRow key={g.game_id} g={g} f={forecasts[g.game_id]} home={byAbbr.get(g.home)} away={byAbbr.get(g.away)} />)}
+              {list.map((g) => <GameRow key={g.game_id} g={g} f={forecasts[g.game_id]} home={byAbbr.get(g.home)} away={byAbbr.get(g.away)} tv={broadcasts[g.game_id]} />)}
             </div>
           </div>
         ))}
@@ -86,7 +88,7 @@ function Side({ team, abbr, score, won, p }: { team: NflTeam | undefined; abbr: 
   )
 }
 
-function GameRow({ g, f, home, away }: { g: NflGame; f: Forecast | undefined; home: NflTeam | undefined; away: NflTeam | undefined }) {
+function GameRow({ g, f, home, away, tv }: { g: NflGame; f: Forecast | undefined; home: NflTeam | undefined; away: NflTeam | undefined; tv?: Broadcast }) {
   const played = isPlayed(g)
   const vegas = spreadLabel(g)
   const fav = f && (f.pHome >= 0.5 ? { abbr: g.home, p: f.pHome } : { abbr: g.away, p: 1 - f.pHome })
@@ -114,6 +116,7 @@ function GameRow({ g, f, home, away }: { g: NflGame; f: Forecast | undefined; ho
         {!played && g.total_line !== null && <span>Heildarstig {totalLabel(g.total_line)}</span>}
         {played && fav && <span>líkanið gaf {fav.abbr} {probLabel(fav.p)}</span>}
         {g.neutral && g.stadium && <span>{g.stadium}</span>}
+        {!played && <TvBadge b={tv} className="justify-end" />}
       </div>
       {!played && qbs.map((q) => (
         <p key={q.qb} className="col-span-2 text-[11px] inline-flex items-center gap-1.5" style={{ color: 'var(--accent)' }}>
