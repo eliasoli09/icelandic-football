@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Tv } from 'lucide-react'
 import { GamesSwitch } from '@/components/Nfl/GamesSwitch'
 import { NflLogo } from '@/components/Nfl/NflLogo'
-import { nflBroadcasts, nflCurrentSeason, nflSeasonGames, nflTeams } from '@/lib/nfl/queries'
+import { nflBroadcasts, nflCurrentSeason, nflSeasonGames, nflTeams, type Broadcast } from '@/lib/nfl/queries'
 import { clock, dayKey, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import { isPlayed } from '@/lib/nfl/types'
 
@@ -12,7 +12,7 @@ export const metadata = { title: 'NFL í sjónvarpinu', description: 'Hvaða NFL
 export default async function TvPage() {
   const season = await nflCurrentSeason().catch(() => null)
   if (!season) return <p className="muted">Engir leikir fundust.</p>
-  const [games, teams, tv] = await Promise.all([nflSeasonGames(season), nflTeams(), nflBroadcasts(season).catch(() => ({}))])
+  const [games, teams, tv] = await Promise.all([nflSeasonGames(season), nflTeams(), nflBroadcasts(season).catch(() => ({} as Record<string, Broadcast>))])
   const byAbbr = new Map(teams.map((t) => [t.abbr, t]))
   const now = Date.now()
   // what is on from today on: games not yet over with a listing
