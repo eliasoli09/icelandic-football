@@ -27,11 +27,17 @@ const SLIP_ICON = { double: Zap, sprengjan: Flame, bomban: Bomb } as const
 const n0 = (x: number) => String(Math.round(x))
 const n1 = (x: number) => x.toFixed(1).replace('.', ',').replace(',0', '')
 const last3 = (p: PlayerPick, f: (x: number) => string) => p.basis.recent.length ? ` · síðustu ${p.basis.recent.length}: ${p.basis.recent.map(f).join(', ')}` : ''
-/** "Meðaltal 88 · síðustu 3: 102, 75, 91 · LAC gefur 131 í leik (deild 117)" */
-const basisLine = (f: (x: number) => string, opp: (p: PlayerPick, x: string, lg: string) => string) => (p: PlayerPick) =>
-  `Meðaltal ${f(p.basis.avg)}${last3(p, f)}${p.basis.opp !== null && p.basis.league !== null ? ` · ${opp(p, f(p.basis.opp), f(p.basis.league))}` : ''}`
+/** The numbers behind a pick: the player's own ("Meðaltal 88 · síðustu 3: 102, 75, 91") and, where phones have room for less, the opponent's ("LAC gefur 131 í leik (deild 117)"). */
+type BasisText = [mine: string, more: string]
+const basisLine = (f: (x: number) => string, opp: (p: PlayerPick, x: string, lg: string) => string) => (p: PlayerPick): BasisText =>
+  [`Meðaltal ${f(p.basis.avg)}${last3(p, f)}`, p.basis.opp !== null && p.basis.league !== null ? opp(p, f(p.basis.opp), f(p.basis.league)) : '']
+/** Touchdowns: the count and the last three games, then the usage behind them. */
+const tdBasis = (p: PlayerPick): BasisText => {
+  const [count, use] = (p.basis.note ?? '').split(' · ')
+  return [`${count ?? ''}${last3(p, n0)}`, use ?? '']
+}
 const gives = (what: string) => (p: PlayerPick, x: string, lg: string) => `${p.opp} gefur ${x} ${what} í leik (deild ${lg})`
-const MARKET_VIEW: Record<string, { icon: typeof Target; fmt: (v: number) => string; basis: (p: PlayerPick) => string }> = {
+const MARKET_VIEW: Record<string, { icon: typeof Target; fmt: (v: number) => string; basis: (p: PlayerPick) => BasisText }> = {
   pass: { icon: Send, fmt: n0, basis: basisLine(n0, gives('sendingajarda')) },
   rec: { icon: Hand, fmt: n0, basis: basisLine(n0, gives('gripjarda')) },
   catches: { icon: Hand, fmt: n1, basis: basisLine(n1, gives('grip')) },
@@ -119,7 +125,7 @@ export default async function VedmalPage() {
       )}
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <PlayerList icon={Target} title="Líklegustu snertimarksskorararnir" unit="líkur á snertimarki" picks={view.scorers} fmt={(v) => probLabel(v)} team={team} basis={(p) => `${p.basis.note ?? ''}${last3(p, n0)}`}
+        <PlayerList icon={Target} title="Líklegustu snertimarksskorararnir" unit="líkur á snertimarki" picks={view.scorers} fmt={(v) => probLabel(v)} team={team} basis={tdBasis}
           note={`Hlaup eða grip. Prófað á ${B.test[0]}-${B.test[1]}: þeir sem fengu 50-60% skoruðu í ${probLabel(B.td.test.buckets[5].scored)} tilvika, 30-40% í ${probLabel(B.td.test.buckets[3].scored)}. Aðeins leikmenn sem spiluðu síðasta leik liðsins; þeir sem eru frá eða ólíklegir samkvæmt meiðslaskýrslunni eru teknir út.`} />
         <PlayerList icon={Footprints} title="Hlaupamestir" unit="spáðir hlaupajardar" picks={view.rushers} fmt={n0} team={team} basis={basisLine(n0, gives('hlaupajarda'))}
           note={`Meðaltal leikmannsins á tímabilinu, leiðrétt eftir því hve mikið mótherjinn gefur eftir. Skeikar að jafnaði um ${Math.round(B.rush.test.mae)} jarda í leik.`} />
@@ -263,27 +269,43 @@ function trackLeg(l: Leg): BetLeg {
   return l.kind === 'td' ? { kind: 'td', ...p } : { kind: 'yards', ...p, stat: l.stat!, line: l.line! }
 }
 
-function PlayerList({ icon: Icon, title, unit, picks, fmt, team, note, basis }: { icon: typeof Target; title: string; unit: string; picks: PlayerPick[]; fmt: (v: number) => string; team: Map<string, NflTeam>; note: string; basis: (p: PlayerPick) => string }) {
+/** On a phone the top five show and the rest open on demand; from a tablet up, all of them. */
+const PHONE_ROWS = 5
+
+function PlayerList({ icon: Icon, title, unit, picks, fmt, team, note, basis }: { icon: typeof Target; title: string; unit: string; picks: PlayerPick[]; fmt: (v: number) => string; team: Map<string, NflTeam>; note: string; basis: (p: PlayerPick) => BasisText }) {
+  const row = (p: PlayerPick, i: number, cls = '') => {
+    const [mine, more] = basis(p)
+    return (
+      <li key={p.player_id} className={cls}>
+        <Link href={`/leikmadur/${p.player_id}`} className="trow grid grid-cols-[1.25rem_auto_minmax(0,1fr)_auto] items-start gap-3 px-4 py-2.5">
+          <span className="text-xs muted num pt-2">{i + 1}</span>
+          <PlayerHead name={p.name} src={p.headshot} color={team.get(p.team)?.color} size={32} />
+          <span className="min-w-0">
+            <span className="block font-semibold truncate">{p.name}{p.status && <span className="ml-1.5 rounded px-1 py-px text-[10px] font-bold align-middle" style={{ background: 'color-mix(in srgb, var(--loss) 18%, transparent)', color: 'var(--loss)' }}>{STATUS_LABEL[p.status].toUpperCase()}</span>}</span>
+            <span className="block text-xs muted truncate">{p.position ?? ''} · {p.team} gegn {p.opp}</span>
+            <span className="block text-[11px] muted">{mine}{more && <span className="hidden sm:inline"> · {more}</span>}</span>
+          </span>
+          <span className="num font-bold" style={{ color: 'var(--accent)' }} title={unit}>{fmt(p.value)}</span>
+        </Link>
+      </li>
+    )
+  }
+  const rest = picks.slice(PHONE_ROWS)
   return (
     <section className="grid gap-3 content-start" aria-label={title}>
       <h2 className="display text-xl font-extrabold inline-flex items-center gap-2"><Icon size={18} aria-hidden /> {title}</h2>
       {!picks.length ? <p className="text-sm muted">Engin gögn um leikmenn enn á þessu tímabili.</p> : (
-        <ol className="card divide-y" style={{ borderColor: 'var(--border)' }}>
-          {picks.map((p, i) => (
-            <li key={p.player_id}>
-              <Link href={`/leikmadur/${p.player_id}`} className="trow grid grid-cols-[1.25rem_auto_minmax(0,1fr)_auto] items-start gap-3 px-4 py-2.5">
-                <span className="text-xs muted num pt-2">{i + 1}</span>
-                <PlayerHead name={p.name} src={p.headshot} color={team.get(p.team)?.color} size={32} />
-                <span className="min-w-0">
-                  <span className="block font-semibold truncate">{p.name}{p.status && <span className="ml-1.5 rounded px-1 py-px text-[10px] font-bold align-middle" style={{ background: 'color-mix(in srgb, var(--loss) 18%, transparent)', color: 'var(--loss)' }}>{STATUS_LABEL[p.status].toUpperCase()}</span>}</span>
-                  <span className="block text-xs muted truncate">{p.position ?? ''} · {p.team} gegn {p.opp}</span>
-                  <span className="block text-[11px] muted">{basis(p)}</span>
-                </span>
-                <span className="num font-bold" style={{ color: 'var(--accent)' }} title={unit}>{fmt(p.value)}</span>
-              </Link>
-            </li>
-          ))}
-        </ol>
+        <div className="card overflow-hidden">
+          <ol className="divide-y" style={{ borderColor: 'var(--border)' }}>
+            {picks.map((p, i) => row(p, i, i >= PHONE_ROWS ? 'hidden sm:block' : ''))}
+          </ol>
+          {rest.length > 0 && (
+            <details className="sm:hidden border-t" style={{ borderColor: 'var(--border)' }}>
+              <summary className="px-4 min-h-[44px] flex items-center text-sm font-semibold cursor-pointer" style={{ color: 'var(--accent)' }}>Sýna {rest.length} í viðbót</summary>
+              <ol className="divide-y border-t" style={{ borderColor: 'var(--border)' }}>{rest.map((p, i) => row(p, i + PHONE_ROWS))}</ol>
+            </details>
+          )}
+        </div>
       )}
       <p className="text-xs muted">{note}</p>
     </section>

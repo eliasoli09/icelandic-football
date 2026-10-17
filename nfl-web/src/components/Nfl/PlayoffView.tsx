@@ -23,6 +23,7 @@ export function PlayoffView({ season, teams, sim, marks, today, likely, runAt, s
 
   return (
     <section className="grid gap-6">
+      <h1 className="display text-3xl font-extrabold -mb-3">Úrslitakeppnin</h1>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm muted max-w-xl">
           {view === 'idag'

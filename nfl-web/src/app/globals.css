@@ -467,3 +467,8 @@ body:has([data-league='nfl']) > footer { color: #a9bddf; }
   body:has([data-league='nfl']) main { padding-top: 18px; padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
   .card-hover:hover, .card-3d-hover:hover { transform: none; }
 }
+/* A one-column grid's track is 'auto', which grows to its widest child (a table, a long name) and pushes the
+   page sideways. On a phone every grid without its own base grid-cols gets a track that can shrink. */
+@media (max-width: 639px) {
+  main .grid:not([class*=' grid-cols-']):not([class^='grid-cols-']) { grid-template-columns: minmax(0, 1fr); }
+}

@@ -32,14 +32,14 @@ export default async function TvPage() {
           <ul className="card divide-y" style={{ borderColor: 'var(--border)' }}>
             {list.map((g) => (
               <li key={g.game_id}>
-                <Link href={`/leikur/${g.game_id}`} className="trow grid grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-3 px-4 py-3">
-                  <span className="num font-semibold">{isSmallHours(g.kickoff) ? <span className="text-[11px] muted block font-normal">aðfaranótt</span> : null}{clock(g.kickoff)}</span>
+                <Link href={`/leikur/${g.game_id}`} className="trow grid grid-cols-[3.75rem_minmax(0,1fr)] sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-3">
+                  <span className="num font-semibold sm:row-auto row-span-2">{isSmallHours(g.kickoff) ? <span className="text-[11px] muted block font-normal">aðfaranótt</span> : null}{clock(g.kickoff)}</span>
                   <span className="flex items-center gap-2 min-w-0">
-                    <NflLogo team={byAbbr.get(g.away)} size={22} /> <span className="truncate">{byAbbr.get(g.away)?.name ?? g.away}</span>
+                    <NflLogo team={byAbbr.get(g.away)} size={22} /> <span className="truncate"><span className="sm:hidden">{g.away}</span><span className="hidden sm:inline">{byAbbr.get(g.away)?.name ?? g.away}</span></span>
                     <span className="muted">@</span>
-                    <NflLogo team={byAbbr.get(g.home)} size={22} /> <span className="truncate">{byAbbr.get(g.home)?.name ?? g.home}</span>
+                    <NflLogo team={byAbbr.get(g.home)} size={22} /> <span className="truncate"><span className="sm:hidden">{g.home}</span><span className="hidden sm:inline">{byAbbr.get(g.home)?.name ?? g.home}</span></span>
                   </span>
-                  <span className="text-sm font-semibold inline-flex items-center gap-1.5" style={{ color: 'var(--accent)' }}><Tv size={14} aria-hidden /> {tv[g.game_id].channel}</span>
+                  <span className="text-sm font-semibold inline-flex items-center gap-1.5 sm:justify-self-end" style={{ color: 'var(--accent)' }}><Tv size={14} aria-hidden /> {tv[g.game_id].channel}</span>
                 </Link>
                 {tv[g.game_id].note && <p className="px-4 pb-3 -mt-1 text-xs muted">{tv[g.game_id].note}</p>}
               </li>

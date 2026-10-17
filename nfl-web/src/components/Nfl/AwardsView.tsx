@@ -55,7 +55,7 @@ export function AwardsView({ season, week, firstWeek, panels, teams }: { season:
         ))}
       </div>
 
-      <div className="card p-5 grid gap-4">
+      <div className="card p-4 sm:p-5 grid gap-4 grid-cols-[minmax(0,1fr)]">
         <div>
           <h2 className="display text-xl font-extrabold">{AWARD_LABEL[award]} <span className="muted text-base font-semibold">({award})</span></h2>
           <p className="text-xs muted mt-1">
