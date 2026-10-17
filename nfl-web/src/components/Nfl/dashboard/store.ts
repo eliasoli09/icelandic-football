@@ -48,13 +48,28 @@ function readLocal(): Board | null {
 }
 function writeLocal(b: Board) { try { localStorage.setItem(KEY, JSON.stringify(b)) } catch { /* this device forgets */ } }
 
-/** Add a slip from another page (Veðmálin) to this device's board; it syncs to the account next time the board opens. */
+const QUEUE = 'nfl:stjornbord:nyir'
+
+/**
+ * Add a slip from another page (Veðmálin). It waits in a queue rather than in
+ * this device's board, so a stale board on this device can never win over the
+ * account's newer one just because a slip was added; the board takes the queue
+ * in when it opens, whichever copy wins.
+ */
 export function trackSlip(slip: Omit<TrackedSlip, 'id' | 'created'>): void {
-  const b = readLocal() ?? DEFAULT_BOARD()
-  if (!b.widgets.some((w) => w.kind === 'bets')) b.widgets.unshift({ id: uid(), kind: 'bets', wide: false })
-  b.bets = [{ ...slip, id: uid(), created: now() }, ...b.bets].slice(0, 30)
-  b.updated = now()
-  writeLocal(b)
+  try {
+    const q = JSON.parse(localStorage.getItem(QUEUE) ?? '[]') as TrackedSlip[]
+    localStorage.setItem(QUEUE, JSON.stringify([...q, { ...slip, id: uid(), created: now() }].slice(-30)))
+  } catch { /* this device forgets */ }
+}
+function takeQueue(): TrackedSlip[] {
+  try { const q = JSON.parse(localStorage.getItem(QUEUE) ?? '[]'); localStorage.removeItem(QUEUE); return Array.isArray(q) ? q : [] } catch { return [] }
+}
+/** The queued slips on top of a board, and a bets widget if it has none. */
+function withQueued(b: Board, q: TrackedSlip[]): Board {
+  if (!q.length) return b
+  const widgets = b.widgets.some((w) => w.kind === 'bets') ? b.widgets : [{ id: uid(), kind: 'bets' as const, wide: false }, ...b.widgets]
+  return { ...b, widgets, bets: [...[...q].reverse(), ...b.bets].slice(0, 30), updated: now() }
 }
 
 /**
@@ -67,17 +82,23 @@ export function useBoard() {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    const local = readLocal() ?? DEFAULT_BOARD()
+    const queued = takeQueue()
+    const saved = readLocal() ?? DEFAULT_BOARD()
+    // shown at once with the queue in, but compared with the account as it was before the queue
+    const local = withQueued(saved, queued)
     setBoard(local)
+    writeLocal(local)
     void (async () => {
       const who = await whoAmI().catch(() => null)
       if (!who) return
       setMe(who.id)
       const { data } = await browserDb().from('nfl_dashboard').select('layout, fantasy, bets, updated_at').eq('user_id', who.id).maybeSingle()
-      if (data && new Date(data.updated_at) > new Date(local.updated)) {
-        const remote: Board = { v: 1, widgets: data.layout as Widget[], fantasy: data.fantasy as Board['fantasy'], bets: data.bets as TrackedSlip[], updated: data.updated_at }
-        if (valid(remote) && remote.fantasy?.roster) { setBoard(remote); writeLocal(remote) }
-      } else if (!data || new Date(data.updated_at) < new Date(local.updated)) {
+      const remote: Board | null = data ? { v: 1, widgets: data.layout as Widget[], fantasy: data.fantasy as Board['fantasy'], bets: data.bets as TrackedSlip[], updated: data.updated_at } : null
+      if (remote && valid(remote) && remote.fantasy?.roster && new Date(remote.updated) > new Date(saved.updated)) {
+        const next = withQueued(remote, queued)
+        setBoard(next); writeLocal(next)
+        if (queued.length) await save(who.id, next)
+      } else if (!remote || new Date(remote.updated).getTime() !== new Date(local.updated).getTime()) {
         await save(who.id, local)
       }
     })()
