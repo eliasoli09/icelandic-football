@@ -4,6 +4,7 @@ import { AlertTriangle, ArrowLeft } from 'lucide-react'
 import { NflLogo } from '@/components/Nfl/NflLogo'
 import { LiveBox } from '@/components/Nfl/Live'
 import { TvBadge } from '@/components/Nfl/TvBadge'
+import { PollBox } from '@/components/Nfl/PollBox'
 import { ProbSplit } from '@/components/Nfl/ProbSplit'
 import { franchiseOf, predictGame } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
@@ -128,6 +129,8 @@ export default async function NflGamePage({ params }: Props) {
           <TeamPanel key={side} team={team} abbr={abbr} elo={eloNow(side)} form={teamForm(abbr, game.kickoff, model.games, model.elo)} qb={qb} qbId={qbId} newQb={played ? null : newQb} />
         ))}
       </section>
+
+      <PollBox gameId={game.game_id} home={home} away={away} pHome={f?.pHome ?? null} locked={played || new Date(game.kickoff).getTime() <= Date.now()} />
 
       {articles.length > 0 && (
         <section className="grid gap-3">
