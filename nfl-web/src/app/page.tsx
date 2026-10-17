@@ -4,11 +4,13 @@ import { ArticleList } from '@/components/Nfl/ArticleList'
 import { HomeGames } from '@/components/Nfl/HomeGames'
 import { HomeHero } from '@/components/Nfl/HomeHero'
 import { LiveStrip } from '@/components/Nfl/Live'
+import { MyTeam } from '@/components/Nfl/MyTeam'
+import { teamCards } from '@/lib/nfl/myteam'
 import { nflArticles } from '@/lib/nfl/articles/queries'
 import { currentRatings, franchiseOf } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { pickWeek } from '@/lib/nfl/pickem'
-import { nflBroadcasts, nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
+import { nflBroadcasts, nflCurrentSeason, nflNews, nflSeasonModel } from '@/lib/nfl/queries'
 import { isPlayed } from '@/lib/nfl/types'
 import { defaultWeek, weekLabel } from '@/lib/nfl/week'
 
@@ -23,6 +25,7 @@ export default async function HomePage() {
   const season = await nflCurrentSeason().catch(() => null)
   if (!season) return <HomeHero />
   const [{ games, teams, elo, state }, articles, broadcasts] = await Promise.all([nflSeasonModel(season), nflArticles({ limit: 3 }).catch(() => []), nflBroadcasts(season).catch(() => ({}))])
+  const news = await nflNews({ limit: 120, sinceDays: 10 }).catch(() => [])
   const forecasts = seasonForecasts(games, elo, state)
   const now = new Date()
   const week = defaultWeek(games, now)
@@ -41,6 +44,7 @@ export default async function HomePage() {
     <div className="grid gap-10">
       <HomeHero />
       <LiveStrip teams={teams} />
+      <MyTeam cards={teamCards(games, teams, forecasts, news)} teams={teams} />
 
       <section className="grid gap-3">
         <div className="flex items-baseline justify-between gap-3">
