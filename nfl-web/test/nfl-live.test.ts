@@ -73,3 +73,15 @@ describe('líkur í beinni', () => {
     expect(fractionLeft(null, null, 'FT')).toBe(0)
   })
 })
+
+describe('atvik á íslensku', async () => {
+  const { playIs, quarterLabel } = await import('../src/lib/nfl/live')
+  it('algeng mynstur úr raunverulegu svari api-sports', () => {
+    expect(playIs('J.K. Dobbins 4 Yd Rush (Wil Lutz Kick)')).toBe('J.K. Dobbins, 4 jarda hlaup (aukastig: Wil Lutz)')
+    expect(playIs('Jason Myers 55 Yd Field Goal')).toBe('Jason Myers, 55 jarda vallarmark')
+    expect(playIs('George Holani 1 Yd Rush (Sam Darnold Pass to Rashid Shaheed for Two-Point Conversion)')).toBe('George Holani, 1 jarda hlaup (og 2 stig til viðbótar)')
+    expect(playIs('Puka Nacua 23 Yd pass from Matthew Stafford (Joshua Karty Kick)')).toBe('Puka Nacua greip 23 jarda sendingu frá Matthew Stafford (aukastig: Joshua Karty)')
+    expect(playIs('Something unusual happened')).toBe('Something unusual happened')
+    expect([quarterLabel('First'), quarterLabel('Overtime')]).toEqual(['1. lh.', 'Framl.'])
+  })
+})

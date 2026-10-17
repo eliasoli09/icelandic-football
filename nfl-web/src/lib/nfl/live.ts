@@ -62,6 +62,38 @@ export function parseGames(json: unknown): LiveGame[] {
   return out
 }
 
+const QUARTER_LABEL: Record<string, string> = { first: '1. lh.', second: '2. lh.', third: '3. lh.', fourth: '4. lh.', overtime: 'Framl.' }
+export const quarterLabel = (q: string) => QUARTER_LABEL[q.toLowerCase()] ?? q
+
+export const EVENT_LABEL: Record<string, string> = { TD: 'Snertimark', FG: 'Vallarmark', SF: 'Sjálfsmark', PAT: 'Aukastig' }
+
+/**
+ * The feed's play descriptions in Icelandic for the common patterns
+ * ("J.K. Dobbins 4 Yd Rush (Wil Lutz Kick)"); anything else stays as given.
+ */
+export function playIs(comment: string): string {
+  const m = /^(.*?)\s*\((.*)\)\s*$/.exec(comment)
+  const main = (m ? m[1] : comment).trim()
+  const extra = m ? m[2].trim() : ''
+  const rules: [RegExp, string][] = [
+    [/^(.+?) (\d+) Yd Rush$/i, '$1, $2 jarda hlaup'],
+    [/^(.+?) (\d+) Yd pass from (.+)$/i, '$1 greip $2 jarda sendingu frá $3'],
+    [/^(.+?) (\d+) Yd Field Goal$/i, '$1, $2 jarda vallarmark'],
+    [/^(.+?) (\d+) Yd Interception Return$/i, '$1 hleraði og hljóp $2 jarda í snertimark'],
+    [/^(.+?) (\d+) Yd Fumble Return$/i, '$1 náði boltamissi og hljóp $2 jarda í snertimark'],
+  ]
+  let out = main
+  for (const [re, to] of rules) if (re.test(main)) { out = main.replace(re, to); break }
+  if (extra) {
+    const kick = /^(.+?) Kick$/i.exec(extra)
+    if (kick) out += ` (aukastig: ${kick[1]})`
+    else if (/two-point conversion/i.test(extra)) out += ' (og 2 stig til viðbótar)'
+    else if (/kick (failed|blocked)/i.test(extra) || /failed/i.test(extra)) out += ' (aukastigið mistókst)'
+    else out += ` (${extra})`
+  }
+  return out
+}
+
 /** Scoring plays and other events of a /games/events reply. */
 export function parseEvents(json: unknown): LiveEvent[] {
   const rows = (json as { response?: unknown[] })?.response

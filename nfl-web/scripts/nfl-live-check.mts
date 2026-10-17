@@ -23,7 +23,7 @@ const status = await get('/status')
 console.log('Áskrift:', JSON.stringify(status.response?.subscription ?? status.errors), '| fyrirspurnir í dag:', JSON.stringify(status.response?.requests ?? null))
 const season = await nflCurrentSeason()
 const league = await get('/leagues?id=1')
-const seasons = (league.response?.[0]?.seasons ?? []).map((s: { year: number | string }) => String(s.year))
+const seasons = (league.response?.[0]?.seasons ?? []).map((s: { year: number | string }) => String(s.year)).sort()
 console.log(`Tímabil í boði fyrir NFL: ${seasons.slice(-5).join(', ')}${seasons.includes(String(season)) ? '' : `  << ${season} VANTAR: ókeypis áskriftin nær líklega ekki yfir það`}`)
 
 const date = process.argv[2] ?? new Date(Date.now() - 5 * 3600_000).toISOString().slice(0, 10)

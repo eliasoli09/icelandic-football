@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Radio } from 'lucide-react'
 import type { LiveReply, LiveRow } from '@/app/api/nfl/live/route'
 import { probLabel } from '@/lib/nfl/format'
+import { EVENT_LABEL, playIs, quarterLabel } from '@/lib/nfl/live'
 import type { NflTeam } from '@/lib/nfl/types'
 import { NflLogo } from './NflLogo'
 import { ProbSplit } from './ProbSplit'
@@ -95,9 +96,9 @@ export function LiveBox({ gameId, home, away }: { gameId: string; home: NflTeam 
       {data?.events && data.events.length > 0 && (
         <ol className="grid gap-1.5 text-sm border-t pt-3" style={{ borderColor: 'var(--border)' }}>
           {[...data.events].reverse().map((e, i) => (
-            <li key={i} className="grid grid-cols-[3.5rem_minmax(0,1fr)_auto] gap-2">
-              <span className="muted text-xs num">{e.quarter}{e.minute ? ` ${e.minute}` : ''}</span>
-              <span className="min-w-0"><span className="font-semibold">{e.type}</span> {e.comment}</span>
+            <li key={i} className="grid grid-cols-[4.5rem_minmax(0,1fr)_auto] gap-2">
+              <span className="muted text-xs num">{quarterLabel(e.quarter)}{e.minute ? ` ${e.minute}` : ''}</span>
+              <span className="min-w-0"><span className="font-semibold">{EVENT_LABEL[e.type] ?? e.type}:</span> {playIs(e.comment)}</span>
               <span className="num text-xs">{e.awayScore ?? ''}-{e.homeScore ?? ''}</span>
             </li>
           ))}
