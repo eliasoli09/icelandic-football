@@ -5,10 +5,7 @@ import styles from './NflStadium.module.css'
 import { createFootballLeather, footballRadius } from './footballSurface'
 import { createFootballTrails } from './footballTrails'
 
-/**
- * Decorative scene; rendering stops offscreen and in hidden tabs. A click throws
- * the ball: it rockets away into the distance with fire behind it and comes back.
- */
+/** Decorative scene; rendering stops offscreen, in hidden tabs and when paused. */
 export function NflFootball({ paused = false }: { paused?: boolean }) {
   const host = useRef<HTMLDivElement>(null)
   const pausedRef = useRef(paused)
@@ -128,77 +125,6 @@ export function NflFootball({ paused = false }: { paused?: boolean }) {
       root.appendChild(renderer.domElement)
       let visible = true, visibilityCheckedAt = -Infinity, frame = 0, previous = 0, angle = -.32
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-      // ── The throw: embers are additive sprites from one pool, each with its own material for colour and fade
-      const fireCanvas = document.createElement('canvas'); fireCanvas.width = 64; fireCanvas.height = 64
-      const fctx = fireCanvas.getContext('2d')!
-      const flame = fctx.createRadialGradient(32, 32, 0, 32, 32, 32)
-      flame.addColorStop(0, '#ffffffff'); flame.addColorStop(.25, '#fff2b0ee'); flame.addColorStop(.55, '#ff8a1a66'); flame.addColorStop(1, '#ff2a0000')
-      fctx.fillStyle = flame; fctx.fillRect(0, 0, 64, 64)
-      const fireTexture = new THREE.CanvasTexture(fireCanvas)
-      const embers = Array.from({ length: 320 }, () => {
-        const material = new THREE.SpriteMaterial({ map: fireTexture, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false })
-        const sprite = new THREE.Sprite(material); sprite.visible = false; scene.add(sprite)
-        return { sprite, material, vel: new THREE.Vector3(), life: 0, max: 1, size: 1 }
-      })
-      let nextEmber = 0
-      const hot = new THREE.Color('#fff4c4'), warm = new THREE.Color('#ff9a1f'), ember = new THREE.Color('#ff2d10')
-      // an ember at `at`, drifting a little the way the ball came from; never towards the camera, or it swells into a blob
-      const emit = (at: InstanceType<typeof THREE.Vector3>, back: InstanceType<typeof THREE.Vector3>, spread: number, size = 1) => {
-        const e = embers[nextEmber]; nextEmber = (nextEmber + 1) % embers.length
-        e.sprite.position.copy(at).add(new THREE.Vector3((Math.random() - .5) * spread, (Math.random() - .5) * spread, 0))
-        e.vel.set(back.x, back.y, 0).multiplyScalar(.5 + Math.random() * .6).add(new THREE.Vector3((Math.random() - .5) * .35, (Math.random() - .2) * .35, 0))
-        e.max = e.life = .32 + Math.random() * .3; e.size = (.16 + Math.random() * .14) * size; e.sprite.visible = true
-      }
-      const stepEmbers = (dt: number) => {
-        for (const e of embers) {
-          if (e.life <= 0) continue
-          e.life -= dt
-          if (e.life <= 0) { e.sprite.visible = false; continue }
-          const k = 1 - e.life / e.max
-          e.sprite.position.addScaledVector(e.vel, dt); e.vel.multiplyScalar(1 - dt * 1.8); e.vel.y += dt * .9
-          e.sprite.scale.setScalar(e.size * (1 + k * 1.6))
-          e.material.color.copy(k < .35 ? hot.clone().lerp(warm, k / .35) : warm.clone().lerp(ember, (k - .35) / .65))
-          e.material.opacity = (1 - k) ** 1.4
-        }
-      }
-      // seconds since the throw, -1 at rest: a pull back, the throw into the distance, a beat, and back to rest
-      let thrown = -1
-      const PULL = .14, AWAY = 1.15, GONE = 1.6, BACK = 2.5
-      // where the throw ends: up and to the right, the way the nose points, and far off, still inside the frame
-      const FAR = { x: 8, y: 5, z: -32 }
-      const easeOutBack = (k: number) => 1 + 2.4 * (k - 1) ** 3 + 1.4 * (k - 1) ** 2
-      const tail = new THREE.Vector3(), towards = new THREE.Vector3(), last = new THREE.Vector3()
-      const throwBall = () => { if (thrown < 0 && !reduce.matches) { thrown = 0; visible = true } }
-      renderer.domElement.addEventListener('pointerdown', throwBall)
-      const stepThrow = (dt: number) => {
-        thrown += dt
-        last.copy(holder.position)
-        let x = 0, y = 0, z = 0, s = 1.24
-        if (thrown < PULL) { const k = Math.sin(thrown / PULL * Math.PI / 2); x = -.22 * k; y = -.16 * k; z = .5 * k }
-        else if (thrown < AWAY) {
-          const k = (thrown - PULL) / (AWAY - PULL), e = k * k
-          x = -.22 + (FAR.x + .22) * e; y = -.16 + (FAR.y + .16) * e + Math.sin(k * Math.PI) * .8; z = .5 + (FAR.z - .5) * k ** 1.4
-          football.rotation.y += dt * 26
-        } else if (thrown < GONE) { x = FAR.x; y = FAR.y; z = FAR.z; s = 0 }
-        else if (thrown < BACK) {
-          const k = (thrown - GONE) / (BACK - GONE), e = easeOutBack(k), r = 1 - Math.min(1, e)
-          x = FAR.x * (1 - e); y = FAR.y * (1 - e); z = FAR.z * r; s = 1.24
-          football.rotation.y += dt * 26 * (1 - k)
-        } else { thrown = -1 }
-        holder.position.set(x, y, z); holder.scale.setScalar(s)
-        // a streak of fire along the path it just flew, sparks while it comes back
-        towards.subVectors(holder.position, last)
-        const flying = thrown > PULL && thrown < AWAY, landing = thrown > GONE && thrown < GONE + .5
-        if ((flying || landing) && towards.lengthSq() > 0) {
-          const back = towards.clone().normalize().multiplyScalar(-1)
-          const n = flying ? 10 : 3
-          for (let i = 0; i < n; i++) {
-            tail.copy(last).lerp(holder.position, i / n).addScaledVector(back, flying ? .9 : .7)
-            emit(tail, back, .12, flying ? 1 : .6)
-          }
-        }
-      }
       const render = () => renderer.render(scene, camera)
       const resize = () => {
         const { width, height } = root.getBoundingClientRect()
@@ -217,10 +143,9 @@ export function NflFootball({ paused = false }: { paused?: boolean }) {
         }
         if (visible && !pausedRef.current && !reduce.matches) {
           angle += dt * .22
+          football.rotation.y = angle
           trails.update((angle + .32) / .22)
-          if (thrown >= 0) stepThrow(dt)
-          else { football.rotation.y = angle; holder.position.set(0, Math.sin(angle * 1.3) * .065, 0); holder.scale.setScalar(1.24) }
-          stepEmbers(dt)
+          holder.position.y = Math.sin(angle * 1.3) * .065
           render()
         }
         frame = requestAnimationFrame(tick)
@@ -235,9 +160,6 @@ export function NflFootball({ paused = false }: { paused?: boolean }) {
       requestAnimationFrame(() => { if (!disposed) root.dataset.ready = 'true' })
       cleanup = () => {
         cancelAnimationFrame(frame); observer.disconnect()
-        renderer.domElement.removeEventListener('pointerdown', throwBall)
-        for (const e of embers) e.material.dispose()
-        fireTexture.dispose()
         document.removeEventListener('visibilitychange', sync)
         scene.traverse(object => {
           if (object instanceof THREE.Mesh) object.geometry.dispose()

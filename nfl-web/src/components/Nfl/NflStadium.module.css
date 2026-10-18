@@ -126,5 +126,3 @@
   .heroHome .subtitle { grid-column: 1 / -1; grid-row: 3; }
   .heroHome .filters { grid-column: 1 / -1; grid-row: 4; }
 }
-/* the ball can be thrown: a click sends it off with fire behind it */
-.heroHome .heroArt { pointer-events: auto; cursor: pointer; -webkit-tap-highlight-color: transparent; }
