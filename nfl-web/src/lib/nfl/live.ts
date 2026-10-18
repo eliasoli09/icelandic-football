@@ -28,11 +28,11 @@ export interface LiveEvent { quarter: string; minute: string | null; team: strin
 
 const QUARTER: Record<string, number> = { Q1: 1, Q2: 2, Q3: 3, Q4: 4, OT: 5 }
 const FINAL = new Set(['FT', 'AOT'])
-const LIVE = new Set(['Q1', 'Q2', 'Q3', 'Q4', 'OT', 'HT'])
+const LIVE = new Set(['Q1', 'Q2', 'Q3', 'Q4', 'OT', 'HT', 'BT'])
 
 export const STATUS_LABEL: Record<string, string> = {
   NS: 'Ekki hafinn', Q1: '1. leikhluti', Q2: '2. leikhluti', HT: 'Hálfleikur', Q3: '3. leikhluti', Q4: '4. leikhluti',
-  OT: 'Framlenging', FT: 'Lokið', AOT: 'Lokið eftir framlengingu', CANC: 'Aflýst', PST: 'Frestað', SUSP: 'Hlé',
+  OT: 'Framlenging', BT: 'Leikhlutaskil', FT: 'Lokið', AOT: 'Lokið eftir framlengingu', CANC: 'Aflýst', PST: 'Frestað', SUSP: 'Hlé',
 }
 
 const num = (x: unknown): number | null => (typeof x === 'number' && Number.isFinite(x) ? x : typeof x === 'string' && x.trim() !== '' && Number.isFinite(Number(x)) ? Number(x) : null)
@@ -45,7 +45,10 @@ export function parseGames(json: unknown): LiveGame[] {
   const out: LiveGame[] = []
   for (const r of rows as Record<string, any>[]) {
     const g = r?.game ?? {}
-    const status = String(g?.status?.short ?? '')
+    // between quarters the feed gives no short code, only "End of Period"; the quarter that ended is the last one scored
+    const between = !g?.status?.short && /end of period/i.test(String(g?.status?.long ?? ''))
+    const status = between ? 'BT' : String(g?.status?.short ?? '')
+    const ended = between ? [4, 3, 2, 1].find((q) => r?.scores?.home?.[`quarter_${q}`] != null) ?? null : null
     const home = r?.teams?.home?.name, away = r?.teams?.away?.name
     if (typeof g?.id !== 'number' || typeof home !== 'string' || typeof away !== 'string') continue
     const timer = typeof g?.status?.timer === 'string' && /^\d{1,2}:\d{2}$/.test(g.status.timer) ? g.status.timer : null
@@ -53,8 +56,8 @@ export function parseGames(json: unknown): LiveGame[] {
       apiId: g.id, home, away,
       homeScore: total(r?.scores?.home), awayScore: total(r?.scores?.away),
       status,
-      quarter: QUARTER[status] ?? null,
-      clock: timer,
+      quarter: QUARTER[status] ?? ended,
+      clock: between ? '00:00' : timer,
       live: LIVE.has(status),
       final: FINAL.has(status),
     })

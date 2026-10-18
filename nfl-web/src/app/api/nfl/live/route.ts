@@ -44,10 +44,11 @@ export async function GET(_req: NextRequest) {
     interval = under.interval
     const games: (LiveRow & { apiId: number })[] = under.games
     // scoring plays for every game under way each poll, so the day's use follows the schedule, not the readers
+    let partial = false
     if (EVENTS()) await Promise.all(games.filter((g) => g.live || g.final).map(async (g) => {
-      try { g.events = parseEvents(await upstream(`/games/events?id=${g.apiId}`, key, interval)) } catch { /* the score still shows */ }
+      try { g.events = parseEvents(await upstream(`/games/events?id=${g.apiId}`, key, interval)) } catch { partial = true /* the score still shows */ }
     }))
-    return shared({ enabled: true, interval, games: games.map(({ apiId: _, ...g }) => g) } satisfies LiveReply)
+    return shared({ enabled: true, interval, games: games.map(({ apiId: _, ...g }) => g) } satisfies LiveReply, partial)
   } catch (e) {
     return shared({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies LiveReply)
   }

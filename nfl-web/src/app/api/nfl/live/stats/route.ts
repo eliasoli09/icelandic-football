@@ -25,14 +25,16 @@ export async function GET(_req: NextRequest) {
     interval = planInterval(model.games.map((g) => g.kickoff), new Date(), STATS_BUDGET(), STATS_FLOOR(), 0, 2)
     const clubs = model.teams.filter((t) => t.franchise === t.abbr)
     const abbr = (name: string) => teamAbbr(name, clubs) ?? name
+    let partial = false
+    const failed = () => { partial = true; return [] }
     const out = await Promise.all(games.filter((g) => g.live || g.final).map(async (g): Promise<StatsGame> => {
       const [p, t] = await Promise.all([
-        upstream(`/games/statistics/players?id=${g.apiId}`, key, interval).then(parsePlayerStats).catch(() => []),
-        upstream(`/games/statistics/teams?id=${g.apiId}`, key, interval).then(parseTeamStats).catch(() => []),
+        upstream(`/games/statistics/players?id=${g.apiId}`, key, interval).then(parsePlayerStats).catch(failed),
+        upstream(`/games/statistics/teams?id=${g.apiId}`, key, interval).then(parseTeamStats).catch(failed),
       ])
       return { game_id: g.game_id, players: p.map((x) => ({ ...x, team: abbr(x.team) })), teams: t.map((x) => ({ ...x, team: abbr(x.team) })) }
     }))
-    return shared({ enabled: true, interval, games: out } satisfies StatsReply)
+    return shared({ enabled: true, interval, games: out } satisfies StatsReply, partial)
   } catch (e) {
     return shared({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies StatsReply)
   }

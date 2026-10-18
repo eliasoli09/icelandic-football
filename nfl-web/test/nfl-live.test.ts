@@ -108,3 +108,10 @@ describe('planInterval: kvótinn nýttur', async () => {
     expect(planInterval([], day, 7000)).toBe(15)
   })
 })
+
+describe('parseGames between quarters', () => {
+  it('reads "End of Period" with no short code as a live break after the last scored quarter', () => {
+    const g = parseGames({ response: [{ game: { id: 7, status: { short: null, long: 'End of Period', timer: null } }, teams: { home: { name: 'New York Giants' }, away: { name: 'New Orleans Saints' } }, scores: { home: { quarter_1: 7, quarter_2: null, total: 7 }, away: { quarter_1: 0, quarter_2: null, total: 0 } } }] })[0]
+    expect([g.status, g.live, g.quarter, g.clock]).toEqual(['BT', true, 1, '00:00'])
+  })
+})

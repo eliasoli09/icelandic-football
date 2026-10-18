@@ -10,21 +10,24 @@ export const STATS_BUDGET = () => Number(process.env.NFL_STATS_BUDGET) || 2500
 export const LIVE_FLOOR = () => Number(process.env.NFL_LIVE_MIN_INTERVAL) || 15
 export const STATS_FLOOR = () => Number(process.env.NFL_STATS_MIN_INTERVAL) || 60
 
-/** The latest reply for each path in this instance, kept for the interval; a failure is kept too, so a rate limit is not hammered. */
-const recent = new Map<string, { at: number; reply: Promise<unknown> }>()
+/** How long a failed request is kept before it is tried again, so a rate limit is not hammered but does not linger. */
+const RETRY_MS = 20_000
+
+/** The latest reply for each path in this instance: a good one for the interval, a failure for RETRY_MS. */
+const recent = new Map<string, { at: number; ttl: number; reply: Promise<unknown> }>()
 
 export function upstream(path: string, key: string, interval: number): Promise<unknown> {
   const hit = recent.get(path)
-  if (hit && Date.now() - hit.at < interval * 1000) return hit.reply
-  const reply = fetchUpstream(path, key, interval)
-  recent.set(path, { at: Date.now(), reply })
-  reply.catch(() => { /* the callers handle it */ })
-  return reply
+  if (hit && Date.now() - hit.at < hit.ttl) return hit.reply
+  const entry = { at: Date.now(), ttl: interval * 1000, reply: fetchUpstream(path, key) }
+  recent.set(path, entry)
+  entry.reply.catch(() => { entry.ttl = RETRY_MS })
+  return entry.reply
 }
 
-async function fetchUpstream(path: string, key: string, interval: number): Promise<unknown> {
-  // the data cache makes this one request per interval, however many readers poll
-  const res = await fetch(`${API_SPORTS_BASE}${path}`, { headers: { 'x-apisports-key': key }, next: { revalidate: interval } })
+async function fetchUpstream(path: string, key: string): Promise<unknown> {
+  // not the data cache: api-sports answers errors (a rate limit) with 200, and those must not be kept as data
+  const res = await fetch(`${API_SPORTS_BASE}${path}`, { headers: { 'x-apisports-key': key }, cache: 'no-store' })
   if (!res.ok) throw new Error(`api-sports svaraði ${res.status}`)
   const body = await res.json()
   const errors = body?.errors
@@ -32,9 +35,9 @@ async function fetchUpstream(path: string, key: string, interval: number): Promi
   return body
 }
 
-/** A live reply the CDN keeps for the polling interval, so readers share one function call (and its api-sports requests) per interval. */
-export function shared<T extends { interval: number; error?: string }>(body: T): NextResponse<T> {
-  const ttl = body.error ? LIVE_FLOOR() : body.interval
+/** A live reply the CDN keeps for the polling interval, so readers share one function call (and its api-sports requests) per interval; a failed or partial one only briefly. */
+export function shared<T extends { interval: number; error?: string }>(body: T, partial = false): NextResponse<T> {
+  const ttl = body.error || partial ? LIVE_FLOOR() : body.interval
   return NextResponse.json(body, { headers: { 'Cache-Control': `public, s-maxage=${ttl}, stale-while-revalidate=${ttl}` } })
 }
 
