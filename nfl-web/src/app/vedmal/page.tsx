@@ -34,7 +34,7 @@ function Pills({ label, items, active, small = false }: { label: string; items: 
       {items.map((i) => (
         <Link key={i.key} href={i.href} aria-current={i.key === active ? 'page' : undefined} scroll={false}
           className={`shrink-0 rounded-full border font-semibold ${small ? 'px-3 min-h-[34px] text-[13px]' : 'px-4 min-h-[38px] text-sm'} inline-flex items-center`}
-          style={i.key === active ? { background: 'var(--text)', borderColor: 'var(--text)', color: 'var(--surface)' } : { borderColor: 'var(--border-strong)', background: 'var(--surface)' }}>
+          style={i.key === active ? { background: 'var(--pill)', borderColor: 'transparent', color: '#ffffff' } : { borderColor: 'var(--border-strong)', background: 'var(--surface)' }}>
           {i.label}
         </Link>
       ))}

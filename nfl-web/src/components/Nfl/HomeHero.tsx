@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
 import { NflFootball } from './NflFootball'
@@ -9,11 +9,14 @@ import styles from './NflStadium.module.css'
 /** The front page's header: the ball, the name and the three ways in. */
 export function HomeHero() {
   const [paused, setPaused] = useState(false)
+  // on an NFL Sunday the line above the title says so; set after load, so the server and browser agree
+  const [sunday, setSunday] = useState(false)
+  useEffect(() => { setSunday(new Date().getUTCDay() === 0) }, [])
   return (
     <section className={`${styles.hero} ${styles.heroHome}`} data-paused={paused}>
       <div className={styles.heroArt} aria-hidden="true"><NflFootball paused={paused} /></div>
       <div className={styles.heroCopy}>
-        <p className={styles.eyebrow}>BANDARÍSKI FÓTBOLTINN</p>
+        <p className={styles.eyebrow}>{sunday ? 'ÞAÐ ER NFL-SUNNUDAGUR' : 'BANDARÍSKI FÓTBOLTINN'}</p>
         <h1>NFL</h1>
         <p className={styles.subtitle}>Spár, staðan, spáleikur og greinar, á íslensku og íslenskum tíma.</p>
         <div className={styles.filters}>
