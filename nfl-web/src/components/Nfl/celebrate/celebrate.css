@@ -1,0 +1,91 @@
+/* Score banners: one bar per touchdown or field goal, Premier League style. Every
+   piece starts hidden and runs on its own delay, so a banner is one paint of CSS. */
+
+.cel { position: relative; --bw: min(92vw, 660px); width: var(--bw); --h: clamp(54px, 12vw, 72px); font-family: var(--font-archivo), sans-serif; pointer-events: none; animation: cel-out 420ms ease-in 4380ms both; }
+.cel * { box-sizing: border-box; }
+.cel-bar { position: relative; height: var(--h); }
+.cel-bg { position: absolute; inset: 0; background: var(--c1); border-radius: 3px; box-shadow: 0 18px 40px rgb(0 0 0 / .45); overflow: hidden; animation: cel-open 380ms cubic-bezier(.2,.8,.2,1) both; }
+.cel-bg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 34%, rgb(255 255 255 / .07) 34% 36%, transparent 36% 60%, rgb(0 0 0 / .12)); }
+.cel-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / .35) 45%, transparent 60%); transform: translateX(-120%); animation: cel-sheen 900ms ease-out 1300ms both; }
+.cel-slash { position: absolute; top: 0; bottom: 0; left: 22%; width: 16%; background: var(--c2); clip-path: polygon(30% 0, 62% 0, 46% 38%, 72% 38%, 40% 100%, 8% 100%, 26% 58%, 2% 58%); transform-origin: left; animation: cel-slash 300ms ease-out 640ms both; }
+.cel-slash::after { content: ''; position: absolute; inset: 0; background: var(--ink); clip-path: polygon(62% 0, 80% 0, 64% 38%, 90% 38%, 58% 100%, 40% 100%, 72% 38%, 46% 38%); }
+.cel-abbr { position: absolute; left: 4%; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: min(calc(var(--h) * .5), calc(var(--bw) * .062)); letter-spacing: .01em; color: #fff; text-shadow: 0 2px 0 var(--ink); animation: cel-in-left 360ms cubic-bezier(.2,.8,.2,1) 160ms both; }
+.cel-slot { position: absolute; left: 30%; top: 50%; width: calc(var(--h) * 1.05); height: calc(var(--h) * 1.05); margin: calc(var(--h) * -.525) 0 0 calc(var(--h) * -.525); filter: drop-shadow(0 3px 6px rgb(0 0 0 / .5)); animation: cel-pop 420ms cubic-bezier(.3,1.6,.5,1) 1150ms both; }
+.cel-runner { position: absolute; top: 50%; left: 0; width: calc(var(--h) * 1.25); height: calc(var(--h) * 1.25); margin-top: calc(var(--h) * -.625); filter: drop-shadow(0 0 10px var(--c2)); animation: cel-run 800ms linear 380ms both; z-index: 4; }
+.cel-word { position: absolute; left: 39%; right: 3%; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; white-space: nowrap; font-weight: 900; font-size: min(calc(var(--h) * .5), calc(var(--bw) * .052)); letter-spacing: .02em; color: var(--word); text-shadow: 0 2px 0 rgb(0 0 0 / .35); animation: cel-wipe 370ms linear 720ms both; z-index: 2; }
+.cel-word .cel-g { color: var(--c2); display: inline-block; margin: 0 .02em; }
+.cel-fx { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.cel-fx.clip { overflow: hidden; border-radius: 3px; }
+.cel-fx.under { z-index: 0; }
+
+/* the chip under the bar: score, quarter and the play */
+.cel-chip { position: relative; margin: 0 auto; width: max-content; max-width: 92%; background: #170b2e; color: #fff; padding: 6px 16px 7px; border-radius: 0 0 8px 8px; font-weight: 800; font-size: clamp(13px, 3.4vw, 17px); letter-spacing: .03em; font-variant-numeric: tabular-nums; animation: cel-drop 340ms cubic-bezier(.2,.8,.2,1) 1250ms both; }
+.cel-play { margin: 4px auto 0; width: max-content; max-width: 92%; background: rgb(10 20 48 / .92); color: #cfd8f5; padding: 4px 12px; border-radius: 6px; font: 600 12.5px/1.3 var(--font-geist-sans), sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: cel-drop 340ms cubic-bezier(.2,.8,.2,1) 1500ms both; }
+
+/* how each word lands */
+.cel-word[data-type='italic'] { font-style: italic; transform: skewX(-8deg); }
+.cel-word[data-type='stamp'] { animation: cel-stamp 380ms cubic-bezier(.3,1.5,.5,1) 1050ms both; }
+.cel-stage[data-type='stamp'] .cel-bar { animation: cel-thud 300ms ease-out 1300ms both; }
+.cel-word[data-type='shimmer'] .cel-t { background: linear-gradient(100deg, var(--word) 0 40%, #fff 50%, var(--word) 60% 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: cel-shimmer 1400ms linear 1100ms infinite; text-shadow: none; }
+.cel-word[data-type='glow'] .cel-t { animation: cel-glow 900ms ease-in-out 1100ms infinite alternate; }
+.cel-word[data-type='scratch'] { filter: url(#cel-rough); letter-spacing: .05em; }
+.cel-word[data-type='scratch'] .cel-t { display: inline-block; transform: rotate(-2deg); }
+
+/* building blocks the effects place with --d (delay), --x, --y, --dx, --dy, --r, --s */
+.cel-p { position: absolute; left: var(--x); top: var(--y); width: var(--s, 14px); height: var(--s, 14px); color: var(--pc, #fff); animation-delay: var(--d, 0ms); animation-fill-mode: both; animation-timing-function: cubic-bezier(.2,.7,.3,1); }
+.cel-p > svg { width: 100%; height: 100%; display: block; }
+.fly { animation-name: cel-fly; animation-duration: var(--t, 1400ms); }
+.fall { animation-name: cel-fall; animation-duration: var(--t, 2600ms); animation-timing-function: linear; }
+.pop { animation-name: cel-pop-fade; animation-duration: var(--t, 2600ms); }
+.blink { animation-name: cel-blink; animation-duration: var(--t, 700ms); animation-iteration-count: 4; }
+.ring { border: 3px solid var(--pc, #fff); border-radius: 50%; animation-name: cel-ring; animation-duration: var(--t, 1100ms); animation-timing-function: ease-out; }
+.streak { height: 2px; width: var(--w, 30%); border-radius: 2px; background: linear-gradient(90deg, transparent, var(--pc, #fff)); animation-name: cel-streak; animation-duration: var(--t, 600ms); animation-timing-function: ease-in; }
+.flash { position: absolute; inset: 0; background: var(--pc, #fff); animation: cel-flash var(--t, 380ms) ease-out var(--d, 0ms) both; border-radius: 3px; }
+.draw path, .draw polyline, .draw line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: cel-draw var(--t, 260ms) ease-out var(--d, 0ms) forwards; }
+.grow { transform-origin: bottom; animation: cel-grow var(--t, 420ms) cubic-bezier(.3,1.4,.5,1) var(--d, 0ms) both; }
+.spin { animation: cel-spin var(--t, 1600ms) linear var(--d, 0ms) infinite; }
+.sway { animation-name: cel-sway; animation-duration: var(--t, 3000ms); animation-timing-function: ease-in-out; }
+.beat { animation: cel-beat 260ms ease-out var(--d, 0ms) both; }
+.say { position: absolute; font-weight: 900; color: var(--pc, #fff); text-shadow: 0 2px 0 rgb(0 0 0 / .45); animation: cel-say 620ms cubic-bezier(.2,1.4,.4,1) var(--d, 0ms) both; }
+
+@keyframes cel-open { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes cel-out { to { opacity: 0; transform: translateY(-12px) scale(.98); } }
+@keyframes cel-in-left { from { opacity: 0; transform: translate(-24px, -50%); } to { opacity: 1; transform: translate(0, -50%); } }
+@keyframes cel-run { 0% { transform: translateX(calc(var(--bw) * -.2)) rotate(-25deg) scale(.8); opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { transform: translateX(calc(var(--bw) * 1.08)) rotate(20deg) scale(1.05); opacity: 0; } }
+@keyframes cel-wipe { from { clip-path: inset(-40% 100% -40% 0); } to { clip-path: inset(-40% 0 -40% 0); } }
+@keyframes cel-pop { 0% { transform: scale(0) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes cel-slash { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes cel-sheen { to { transform: translateX(120%); } }
+@keyframes cel-drop { from { transform: translateY(-100%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes cel-stamp { 0% { transform: scale(1.9); opacity: 0; } 60% { opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes cel-thud { 0% { transform: translateY(0); } 30% { transform: translateY(5px); } 60% { transform: translateY(-2px); } 100% { transform: none; } }
+@keyframes cel-shimmer { from { background-position: 100% 0; } to { background-position: -160% 0; } }
+@keyframes cel-glow { from { text-shadow: 0 0 6px var(--c2), 0 0 2px #fff; } to { text-shadow: 0 0 22px var(--c2), 0 0 8px var(--c2); } }
+@keyframes cel-fly { 0% { transform: translate(0, 0) rotate(0) scale(.4); opacity: 0; } 12% { opacity: 1; transform: translate(calc(var(--dx) * .12), calc(var(--dy) * .12)) rotate(calc(var(--r) * .12)) scale(1); } 100% { transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(.7); opacity: 0; } }
+@keyframes cel-fall { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 50% { transform: translate(var(--dx), calc(var(--dy) * .5)) rotate(calc(var(--r) * .5)); } 90% { opacity: 1; } 100% { transform: translate(0, var(--dy)) rotate(var(--r)); opacity: 0; } }
+@keyframes cel-pop-fade { 0% { transform: scale(0) rotate(var(--r, 0deg)); opacity: 0; } 12% { transform: scale(1.2) rotate(var(--r, 0deg)); opacity: 1; } 20% { transform: scale(1) rotate(var(--r, 0deg)); } 85% { opacity: 1; } 100% { opacity: 0; transform: scale(1) rotate(var(--r, 0deg)); } }
+@keyframes cel-blink { 0%, 100% { opacity: 0; transform: scale(.6); } 50% { opacity: 1; transform: scale(1); } }
+@keyframes cel-ring { from { transform: translate(-50%, -50%) scale(.2); opacity: .95; } to { transform: translate(-50%, -50%) scale(5); opacity: 0; } }
+@keyframes cel-streak { from { transform: translateX(-100%); opacity: 0; } 20% { opacity: 1; } to { transform: translateX(var(--dx, 400%)); opacity: 0; } }
+@keyframes cel-flash { 0% { opacity: 0; } 15% { opacity: var(--o, .75); } 100% { opacity: 0; } }
+@keyframes cel-draw { to { stroke-dashoffset: 0; } }
+@keyframes cel-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes cel-spin { to { transform: rotate(360deg); } }
+@keyframes cel-sway { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 25% { transform: translate(var(--dx), calc(var(--dy) * .25)) rotate(var(--r)); } 50% { transform: translate(calc(var(--dx) * -1), calc(var(--dy) * .5)) rotate(calc(var(--r) * -1)); } 75% { transform: translate(var(--dx), calc(var(--dy) * .75)) rotate(var(--r)); } 90% { opacity: 1; } 100% { transform: translate(0, var(--dy)) rotate(0); opacity: 0; } }
+@keyframes cel-beat { 0% { transform: scale(1); } 35% { transform: scale(1.045); } 100% { transform: scale(1); } }
+@keyframes cel-say { 0% { transform: translate(-50%, 10px) scale(.4); opacity: 0; } 30% { transform: translate(-50%, -6px) scale(1.15); opacity: 1; } 70% { opacity: 1; } 100% { transform: translate(-50%, -18px) scale(1); opacity: 0; } }
+@keyframes cel-shake { 0%, 100% { transform: none; } 20% { transform: translate(-4px, 1px); } 40% { transform: translate(4px, -1px); } 60% { transform: translate(-3px, 0); } 80% { transform: translate(2px, 1px); } }
+.shake { animation: cel-shake 380ms ease-out var(--d, 0ms) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cel, .cel * { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
+  .cel { animation: cel-out 300ms ease-in 4300ms both !important; }
+  .cel-runner, .cel-fx { display: none; }
+}
+@keyframes cel-grow-x { from { transform: scaleX(0); opacity: 1; } 80% { opacity: 1; } to { transform: scaleX(1); opacity: .5; } }
+@keyframes cel-rise { from { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } to { transform: translateY(-160%); opacity: 0; } }
+@keyframes cel-wing { from { transform: scaleX(var(--sx, 1)) rotate(40deg) scale(.2); opacity: 0; } to { opacity: .55; } }
+@keyframes cel-eq { from { transform: scaleY(.15); } to { transform: scaleY(1); } }
+@keyframes cel-flag { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes cel-wave-y { from { transform: skewY(0); } to { transform: skewY(-3deg); } }
+@keyframes cel-flicker { from { transform: scaleY(.85) skewX(-4deg); } to { transform: scaleY(1.1) skewX(4deg); } }

@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, type DragEvent } from 'react'
+import { useMemo, useState, type DragEvent } from 'react'
 import { ArrowDown, ArrowUp, Columns2, GripVertical, Plus, Settings2, X } from 'lucide-react'
 import type { Broadcast } from '@/lib/nfl/queries'
 import type { TeamCard } from '@/lib/nfl/myteam'
 import type { NflGame, NflTeam } from '@/lib/nfl/types'
+import { CelebrationLayer } from '../celebrate/CelebrationLayer'
 import { MyTeam } from '../MyTeam'
 import { Bets } from './Bets'
 import { Fantasy } from './Fantasy'
@@ -22,8 +23,9 @@ export function Dashboard({ teams, round, tv, cards }: { teams: NflTeam[]; round
   const [editing, setEditing] = useState(false)
   const [dragging, setDragging] = useState<string | null>(null)
   const { live, stats } = useFeeds(!!board?.widgets.some((w) => NEEDS_STATS.has(w.kind)))
+  const teamMap = useMemo(() => new Map(teams.map((t) => [t.abbr, t])), [teams])
   if (!board) return null
-  const ctx: Ctx = { teams: new Map(teams.map((t) => [t.abbr, t])), round, tv, live, stats }
+  const ctx: Ctx = { teams: teamMap, round, tv, live, stats }
 
   const setWidgets = (f: (w: Widget[]) => Widget[]) => update((b) => ({ ...b, widgets: f(b.widgets) }))
   const move = (id: string, by: number) => setWidgets((ws) => {
@@ -45,6 +47,7 @@ export function Dashboard({ teams, round, tv, cards }: { teams: NflTeam[]; round
 
   return (
     <div className="grid gap-4">
+      <CelebrationLayer live={live} teams={teamMap} />
       <header className="flex flex-wrap items-center gap-3">
         <h1 className="display text-3xl font-extrabold">Stjórnborðið</h1>
         {anyLive && <span className="text-[11px] font-bold tracking-widest inline-flex items-center gap-1.5" style={{ color: 'var(--accent)' }}><span className="live-dot" aria-hidden /> Í BEINNI</span>}
