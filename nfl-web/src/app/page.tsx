@@ -3,7 +3,6 @@ import { ArrowRight, ChevronRight, Trophy } from 'lucide-react'
 import { ArticleList } from '@/components/Nfl/ArticleList'
 import { HomeGames } from '@/components/Nfl/HomeGames'
 import { HomeHero } from '@/components/Nfl/HomeHero'
-import { LiveStrip } from '@/components/Nfl/Live'
 import { MyTeam } from '@/components/Nfl/MyTeam'
 import { teamCards } from '@/lib/nfl/myteam'
 import { nflArticles } from '@/lib/nfl/articles/queries'
@@ -43,7 +42,6 @@ export default async function HomePage() {
   return (
     <div className="grid gap-10">
       <HomeHero />
-      <LiveStrip teams={teams} />
       <MyTeam cards={teamCards(games, teams, forecasts, news)} teams={teams} />
 
       <section className="grid gap-3">

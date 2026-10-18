@@ -110,3 +110,19 @@
   /* no staggered entrances: on a phone they read as empty boxes */
   .panel, .forecastTable tbody tr { animation: none; }
 }
+
+/* The front page's ball sits whole in its own box beside the title; the card's edge never cuts it. */
+.heroHome { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 42%); align-items: center; overflow: hidden; min-height: 0; }
+.heroHome .heroCopy { order: 1; }
+.heroHome .heroArt { order: 2; position: relative; inset: auto; top: auto; right: auto; width: 100%; height: auto; aspect-ratio: 1.35; margin: 14px 12px 14px 0; opacity: 1; }
+.heroHome .ballHost { inset: 5% 7%; }
+@media (max-width: 600px) {
+  /* the title and the ball share the top row; the line and the buttons run full width under them */
+  .heroHome { grid-template-columns: minmax(0, 1fr) 46%; grid-template-rows: auto auto auto auto; align-items: start; padding: 20px 16px 18px; column-gap: 8px; }
+  .heroHome .heroCopy { display: contents; }
+  .heroHome .eyebrow { grid-column: 1 / -1; grid-row: 1; }
+  .heroHome h1 { grid-column: 1; grid-row: 2; align-self: center; }
+  .heroHome .heroArt { grid-column: 2; grid-row: 2; width: 100%; height: auto; right: auto; top: auto; opacity: 1; }
+  .heroHome .subtitle { grid-column: 1 / -1; grid-row: 3; }
+  .heroHome .filters { grid-column: 1 / -1; grid-row: 4; }
+}
