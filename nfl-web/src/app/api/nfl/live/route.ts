@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { STATUS_LABEL, fractionLeft, liveWinProb, parseEvents, type LiveEvent } from '@/lib/nfl/live'
-import { LIVE_FLOOR, gamesUnderWay, upstream } from '@/lib/nfl/liveFeed'
+import { LIVE_FLOOR, gamesUnderWay, shared, upstream } from '@/lib/nfl/liveFeed'
 import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
 
 export const dynamic = 'force-dynamic'
@@ -47,9 +47,9 @@ export async function GET(_req: NextRequest) {
     if (EVENTS()) await Promise.all(games.filter((g) => g.live || g.final).map(async (g) => {
       try { g.events = parseEvents(await upstream(`/games/events?id=${g.apiId}`, key, interval)) } catch { /* the score still shows */ }
     }))
-    return NextResponse.json({ enabled: true, interval, games: games.map(({ apiId: _, ...g }) => g) } satisfies LiveReply)
+    return shared({ enabled: true, interval, games: games.map(({ apiId: _, ...g }) => g) } satisfies LiveReply)
   } catch (e) {
-    return NextResponse.json({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies LiveReply)
+    return shared({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies LiveReply)
   }
 }
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { parsePlayerStats, parseTeamStats, planInterval, teamAbbr, type LivePlayer, type LiveTeamStats } from '@/lib/nfl/live'
-import { STATS_BUDGET, STATS_FLOOR, gamesUnderWay, upstream } from '@/lib/nfl/liveFeed'
+import { STATS_BUDGET, STATS_FLOOR, gamesUnderWay, shared, upstream } from '@/lib/nfl/liveFeed'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,7 +21,7 @@ export async function GET(_req: NextRequest) {
   if (!key) return NextResponse.json({ enabled: false, interval, games: [] } satisfies StatsReply)
   try {
     const { model, games } = await gamesUnderWay(key)
-    if (!model) return NextResponse.json({ enabled: true, interval, games: [] } satisfies StatsReply)
+    if (!model) return shared({ enabled: true, interval, games: [] } satisfies StatsReply)
     interval = planInterval(model.games.map((g) => g.kickoff), new Date(), STATS_BUDGET(), STATS_FLOOR(), 0, 2)
     const clubs = model.teams.filter((t) => t.franchise === t.abbr)
     const abbr = (name: string) => teamAbbr(name, clubs) ?? name
@@ -32,9 +32,9 @@ export async function GET(_req: NextRequest) {
       ])
       return { game_id: g.game_id, players: p.map((x) => ({ ...x, team: abbr(x.team) })), teams: t.map((x) => ({ ...x, team: abbr(x.team) })) }
     }))
-    return NextResponse.json({ enabled: true, interval, games: out } satisfies StatsReply)
+    return shared({ enabled: true, interval, games: out } satisfies StatsReply)
   } catch (e) {
-    return NextResponse.json({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies StatsReply)
+    return shared({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies StatsReply)
   }
 }
 

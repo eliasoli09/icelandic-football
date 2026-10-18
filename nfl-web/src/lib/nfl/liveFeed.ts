@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server'
 import { seasonForecasts } from './forecast'
 import { API_SPORTS_BASE, NFL_LEAGUE, STATUS_LABEL, easternDate, fractionLeft, liveWindow, liveWinProb, parseGames, planInterval, teamAbbr } from './live'
 import { nflCurrentSeason, nflSeasonModel, type SeasonModel } from './queries'
@@ -9,7 +10,19 @@ export const STATS_BUDGET = () => Number(process.env.NFL_STATS_BUDGET) || 2500
 export const LIVE_FLOOR = () => Number(process.env.NFL_LIVE_MIN_INTERVAL) || 15
 export const STATS_FLOOR = () => Number(process.env.NFL_STATS_MIN_INTERVAL) || 60
 
-export async function upstream(path: string, key: string, interval: number): Promise<unknown> {
+/** The latest reply for each path in this instance, kept for the interval; a failure is kept too, so a rate limit is not hammered. */
+const recent = new Map<string, { at: number; reply: Promise<unknown> }>()
+
+export function upstream(path: string, key: string, interval: number): Promise<unknown> {
+  const hit = recent.get(path)
+  if (hit && Date.now() - hit.at < interval * 1000) return hit.reply
+  const reply = fetchUpstream(path, key, interval)
+  recent.set(path, { at: Date.now(), reply })
+  reply.catch(() => { /* the callers handle it */ })
+  return reply
+}
+
+async function fetchUpstream(path: string, key: string, interval: number): Promise<unknown> {
   // the data cache makes this one request per interval, however many readers poll
   const res = await fetch(`${API_SPORTS_BASE}${path}`, { headers: { 'x-apisports-key': key }, next: { revalidate: interval } })
   if (!res.ok) throw new Error(`api-sports svaraði ${res.status}`)
@@ -17,6 +30,12 @@ export async function upstream(path: string, key: string, interval: number): Pro
   const errors = body?.errors
   if (errors && (Array.isArray(errors) ? errors.length : Object.keys(errors).length)) throw new Error(`api-sports: ${JSON.stringify(errors)}`)
   return body
+}
+
+/** A live reply the CDN keeps for the polling interval, so readers share one function call (and its api-sports requests) per interval. */
+export function shared<T extends { interval: number; error?: string }>(body: T): NextResponse<T> {
+  const ttl = body.error ? LIVE_FLOOR() : body.interval
+  return NextResponse.json(body, { headers: { 'Cache-Control': `public, s-maxage=${ttl}, stale-while-revalidate=${ttl}` } })
 }
 
 export interface FeedGame {
