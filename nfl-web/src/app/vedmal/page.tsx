@@ -24,6 +24,23 @@ const dec = (x: number, d = 2) => x.toFixed(d).replace('.', ',')
 const kr = (x: number) => `${Math.round(x).toLocaleString('de-DE')} kr.`
 const when = (iso: string) => `${dayLabel(iso)} ${isSmallHours(iso) ? 'aðfaranótt ' : 'kl. '}${clock(iso)}`
 const SLIP_ICON = { double: Zap, sprengjan: Flame, bomban: Bomb } as const
+const TABS = [{ key: 'sedlar', label: 'Seðlar' }, { key: 'leikmenn', label: 'Leikmenn' }, { key: 'leikir', label: 'Leikir' }]
+const LIST_LABEL: Record<string, string> = { pass: 'Sendingar', rec: 'Gripjardar', catches: 'Grip', sacks: 'Fellur', ints: 'Hleranir' }
+
+/** A row of links that reads as tabs: the active one filled. */
+function Pills({ label, items, active, small = false }: { label: string; items: { key: string; label: string; href: string }[]; active: string; small?: boolean }) {
+  return (
+    <nav aria-label={label} className="flex gap-1.5 overflow-x-auto [scrollbar-width:none] -mx-4 px-4 sm:mx-0 sm:px-0">
+      {items.map((i) => (
+        <Link key={i.key} href={i.href} aria-current={i.key === active ? 'page' : undefined} scroll={false}
+          className={`shrink-0 rounded-full border font-semibold ${small ? 'px-3 min-h-[34px] text-[13px]' : 'px-4 min-h-[38px] text-sm'} inline-flex items-center`}
+          style={i.key === active ? { background: 'var(--text)', borderColor: 'var(--text)', color: 'var(--surface)' } : { borderColor: 'var(--border-strong)', background: 'var(--surface)' }}>
+          {i.label}
+        </Link>
+      ))}
+    </nav>
+  )
+}
 const n0 = (x: number) => String(Math.round(x))
 const n1 = (x: number) => x.toFixed(1).replace('.', ',').replace(',0', '')
 const last3 = (p: PlayerPick, f: (x: number) => string) => p.basis.recent.length ? ` · síðustu ${p.basis.recent.length}: ${p.basis.recent.map(f).join(', ')}` : ''
@@ -45,7 +62,8 @@ const MARKET_VIEW: Record<string, { icon: typeof Target; fmt: (v: number) => str
   ints: { icon: Shield, fmt: (v) => probLabel(v), basis: basisLine(n1, gives('hleranir')) },
 }
 
-export default async function VedmalPage() {
+export default async function VedmalPage({ searchParams }: { searchParams: Promise<{ syn?: string; listi?: string }> }) {
+  const sp = await searchParams
   let view: ReturnType<typeof vedmalWeek> = null
   let teams: NflTeam[] = []
   let inj: InjuryList = { week: null, rows: [] }
@@ -67,135 +85,136 @@ export default async function VedmalPage() {
   const team = new Map(teams.map((t) => [t.abbr, t]))
   const B = BACKTEST
 
+  const tab = TABS.some((t) => t.key === sp.syn) ? sp.syn! : 'sedlar'
+  const lists: { key: string; label: string; el: React.ReactNode }[] = [
+    { key: 'snertimork', label: 'Snertimörk', el: <PlayerList icon={Target} title="Líklegustu snertimarksskorararnir" unit="líkur á snertimarki" picks={view.scorers} fmt={(v) => probLabel(v)} team={team} basis={tdBasis} /> },
+    { key: 'hlaup', label: 'Hlaup', el: <PlayerList icon={Footprints} title="Hlaupamestir" unit="spáðir hlaupajardar" picks={view.rushers} fmt={n0} team={team} basis={basisLine(n0, gives('hlaupajarda'))} /> },
+    ...view.markets.map((m) => {
+      const mv = MARKET_VIEW[m.key]
+      return { key: m.key, label: LIST_LABEL[m.key] ?? m.title, el: <PlayerList icon={mv.icon} title={m.title} unit={m.unit} picks={m.picks} fmt={mv.fmt} team={team} basis={mv.basis} /> }
+    }),
+  ]
+  const list = lists.find((l) => l.key === sp.listi) ?? lists[0]
+  const href = (q: Record<string, string>) => `/vedmal?${new URLSearchParams(q)}`
+
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-6">
       <header className="grid gap-1">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="display text-3xl font-extrabold">Veðmálin</h1>
           <span className="rounded-full border px-2 py-0.5 text-xs font-bold" style={{ borderColor: 'var(--border)' }}>18+</span>
         </div>
-        <p className="muted text-sm">{weekLabel(view.type, view.week)} · {view.games.length} {view.games.length === 1 ? 'leikur' : 'leikir'} eftir · uppfært á 5 mínútna fresti</p>
+        <p className="muted text-sm">{weekLabel(view.type, view.week)} · {view.games.length} {view.games.length === 1 ? 'leikur' : 'leikir'} eftir</p>
         {inj.week !== view.week && <p className="text-xs muted">Meiðslaskýrsla vikunnar er ekki komin; aðeins leikmenn á meiðslalista eru teknir út. <Link href="/leikmenn/meidsli" className="underline">Meiðslalistinn</Link></p>}
       </header>
 
-      <section className="grid gap-3 content-start" aria-label="Seðlar vikunnar">
-        <h2 className="display text-xl font-extrabold">Seðlar vikunnar</h2>
-        <div className="grid gap-3 md:grid-cols-3">
-          {view.slips.map((s) => <SlipCard key={s.key} k={s.key} name={s.name} target={s.target} slip={s.slip} withPlayer={s.withPlayer} team={team} />)}
-        </div>
-        <p className="text-xs muted max-w-prose">
-          Hver seðill er sá líklegasti sem nær stuðlinum (mest 15% yfir), mest einn leggur úr hverjum leik. Sigur og yfir/undir eru á stuðlum veðbankanna og með líkum þeirra eftir að álag er dregið frá.
-          Leikmannaleggir (snertimark, jardar) eru með líkum okkar, og þar sem við höfum ekki stuðla veðbanka á leikmenn er stuðullinn áætlaður (≈): líkurnar okkar með álagi eins og veðbankar leggja yfirleitt á slík veðmál. Athugaðu raunverulega stuðulinn áður en þú veðjar. Leikmannaleggir hækka ekki líkurnar: veðbankar leggja meira álag á þá en á sigurveðmál, svo fyrir sama stuðul eru líkurnar lægri. Þess vegna er leikmannaútgáfan sér, með því sem hún kostar.
-          Elo-líkanið okkar fékk að velja í prófun á {B.test[0]}-{B.test[1]} og gerði það verr: seðlarnir þess sögðust ganga upp í {probLabel(B.slipsModelOnly.double.modelP)} tilvika (Double Trouble) en gerðu það í {probLabel(B.slipsModelOnly.double.hitRate)}.
-          Líkanið velur einmitt leikina þar sem það er ósammála markaðnum, og þar hefur markaðurinn oftast rétt fyrir sér.
-        </p>
-      </section>
+      <Pills label="Veðmálin" items={TABS.map((t) => ({ key: t.key, label: t.label, href: href({ syn: t.key }) }))} active={tab} />
 
-      {view.scorerSlips.length > 0 && (
-        <section className="grid gap-3" aria-label="Snertimarkaseðillinn">
-          <h2 className="display text-xl font-extrabold inline-flex items-center gap-2"><Target size={18} aria-hidden /> Snertimarkaseðillinn</h2>
-          <div className="grid gap-3 md:grid-cols-2">
-            {view.scorerSlips.map((s) => (
-              <article key={s.picks.length} className="card p-4 grid gap-3 content-start">
-                <p className="display text-lg font-extrabold">{s.picks.length === 2 ? 'Tvenna' : 'Þrenna'}: allir skora</p>
-                <ul className="grid gap-2">
-                  {s.picks.map((p) => (
-                    <li key={p.player_id}>
-                      <Link href={`/leikmadur/${p.player_id}`} className="trow rounded-lg grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 px-2 py-1.5 -mx-2">
-                        <PlayerHead name={p.name} src={p.headshot} color={team.get(p.team)?.color} size={30} />
-                        <span className="min-w-0"><span className="block font-semibold truncate">{p.name} skorar</span><span className="block text-xs muted truncate">{p.position ?? ''} · {p.team} gegn {p.opp}</span></span>
-                        <span className="num font-semibold">{probLabel(p.value)}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex items-end justify-between border-t pt-3" style={{ borderColor: 'var(--border)' }}>
-                  <span><span className="block text-[11px] muted">Líkur</span><span className="num font-bold text-lg">{probLabel(s.p)}</span></span>
-                  <span className="text-right"><span className="block text-[11px] muted">Sanngjarn stuðull</span><span className="num font-extrabold text-2xl" style={{ color: 'var(--accent)' }}>{dec(s.fair)}</span></span>
-                </div>
-                <TrackButton name={`Snertimarka${s.picks.length === 2 ? 'tvenna' : 'þrenna'}`} odds={Math.round(s.fair * 100) / 100} fair legs={s.picks.map((p) => ({ kind: 'td', game_id: p.game_id, player_id: p.player_id, name: p.name, team: p.team }))} />
-              </article>
-            ))}
+      {tab === 'sedlar' && (
+        <div className="grid gap-6">
+          <div className="grid gap-3 md:grid-cols-3">
+            {view.slips.map((s) => <SlipCard key={s.key} k={s.key} name={s.name} target={s.target} slip={s.slip} withPlayer={s.withPlayer} team={team} />)}
           </div>
-          <p className="text-xs muted max-w-prose">
-            Líklegustu snertimarksskorararnir, einn úr hverjum leik. Stuðullinn er okkar eigin, reiknaður beint úr líkunum án álags.
-            Veðbankar borga yfirleitt minna fyrir snertimörk; ef þeirra stuðull er hærri en þessi er það veðmál með virði samkvæmt líkaninu.
-          </p>
-        </section>
+          {view.scorerSlips.length > 0 && (
+            <section className="grid gap-3" aria-label="Snertimarkaseðillinn">
+              <h2 className="display text-xl font-extrabold inline-flex items-center gap-2"><Target size={18} aria-hidden /> Snertimarkaseðillinn</h2>
+              <div className="grid gap-3 md:grid-cols-2">
+                {view.scorerSlips.map((s) => (
+                  <article key={s.picks.length} className="card p-4 grid gap-3 content-start">
+                    <p className="display text-lg font-extrabold">{s.picks.length === 2 ? 'Tvenna' : 'Þrenna'}: allir skora</p>
+                    <ul className="grid gap-2">
+                      {s.picks.map((p) => (
+                        <li key={p.player_id}>
+                          <Link href={`/leikmadur/${p.player_id}`} className="trow rounded-lg grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 px-2 py-1.5 -mx-2">
+                            <PlayerHead name={p.name} src={p.headshot} color={team.get(p.team)?.color} size={30} />
+                            <span className="min-w-0"><span className="block font-semibold truncate">{p.name} skorar</span><span className="block text-xs muted truncate">{p.position ?? ''} · {p.team} gegn {p.opp}</span></span>
+                            <span className="num font-semibold">{probLabel(p.value)}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex items-end justify-between border-t pt-3" style={{ borderColor: 'var(--border)' }}>
+                      <span><span className="block text-[11px] muted">Líkur</span><span className="num font-bold text-lg">{probLabel(s.p)}</span></span>
+                      <span className="text-right"><span className="block text-[11px] muted">Sanngjarn stuðull</span><span className="num font-extrabold text-2xl" style={{ color: 'var(--accent)' }}>{dec(s.fair)}</span></span>
+                    </div>
+                    <TrackButton name={`Snertimarka${s.picks.length === 2 ? 'tvenna' : 'þrenna'}`} odds={Math.round(s.fair * 100) / 100} fair legs={s.picks.map((p) => ({ kind: 'td', game_id: p.game_id, player_id: p.player_id, name: p.name, team: p.team }))} />
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-2">
-        <PlayerList icon={Target} title="Líklegustu snertimarksskorararnir" unit="líkur á snertimarki" picks={view.scorers} fmt={(v) => probLabel(v)} team={team} basis={tdBasis}
-          note={`Hlaup eða grip. Prófað á ${B.test[0]}-${B.test[1]}: þeir sem fengu 50-60% skoruðu í ${probLabel(B.td.test.buckets[5].scored)} tilvika, 30-40% í ${probLabel(B.td.test.buckets[3].scored)}. Aðeins leikmenn sem spiluðu síðasta leik liðsins; þeir sem eru frá eða ólíklegir samkvæmt meiðslaskýrslunni eru teknir út.`} />
-        <PlayerList icon={Footprints} title="Hlaupamestir" unit="spáðir hlaupajardar" picks={view.rushers} fmt={n0} team={team} basis={basisLine(n0, gives('hlaupajarda'))}
-          note={`Meðaltal leikmannsins á tímabilinu, leiðrétt eftir því hve mikið mótherjinn gefur eftir. Skeikar að jafnaði um ${Math.round(B.rush.test.mae)} jarda í leik.`} />
-        {view.markets.map((m) => {
-          const mv = MARKET_VIEW[m.key]
-          const test = m.test.metric === 'mae'
-            ? `Skeikar að jafnaði um ${n1(m.test.score)} á ${B.test[0]}-${B.test[1]}, meðaltal tímabilsins eitt um ${n1(m.test.naive)}.`
-            : `Prófað á ${B.test[0]}-${B.test[1]}: betra en meðaltal tímabilsins og betra en að gefa öllum sömu líkur.`
-          return <PlayerList key={m.key} icon={mv.icon} title={m.title} unit={m.unit} picks={m.picks} fmt={mv.fmt} team={team} basis={mv.basis} note={m.key === 'pass' ? `${test} Hleranir eru ekki með: þar gerði spáin ekki betur en að gefa öllum sömu líkur.` : test} />
-        })}
+      {tab === 'leikmenn' && (
+        <div className="grid gap-4">
+          <Pills label="Listar" small items={lists.map((l) => ({ key: l.key, label: l.label, href: href({ syn: 'leikmenn', listi: l.key }) }))} active={list.key} />
+          <div className="max-w-2xl w-full">{list.el}</div>
+        </div>
+      )}
 
-        <section className="grid gap-3 content-start" aria-label="Markahæstu leikirnir">
-          <h2 className="display text-xl font-extrabold inline-flex items-center gap-2"><Sigma size={18} aria-hidden /> Markahæstu leikirnir</h2>
-          <ul className="card divide-y" style={{ borderColor: 'var(--border)' }}>
-            {view.totals.slice(0, 8).map((x) => (
-              <li key={x.game.game_id}>
-                <Link href={`/leikur/${x.game.game_id}`} className="trow grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5">
-                  <span className="min-w-0">
-                    <span className="flex items-center gap-1.5 font-semibold truncate">
-                      <NflLogo team={team.get(x.game.away)} size={20} /> {x.game.away} <span className="muted font-normal">{dec(x.away, 1)}</span>
-                      <span className="muted font-normal">@</span>
-                      <NflLogo team={team.get(x.game.home)} size={20} /> {x.game.home} <span className="muted font-normal">{dec(x.home, 1)}</span>
+      {tab === 'leikir' && (
+        <div className="grid gap-8 lg:grid-cols-2">
+          <section className="grid gap-3 content-start" aria-label="Sigurstranglegustu">
+            <h2 className="display text-xl font-extrabold inline-flex items-center gap-2"><Trophy size={18} aria-hidden /> Sigurstranglegustu</h2>
+            <ul className="card divide-y" style={{ borderColor: 'var(--border)' }}>
+              {view.favourites.slice(0, 10).map((f) => (
+                <li key={`${f.game.game_id}:${f.team}`}>
+                  <Link href={`/leikur/${f.game.game_id}`} className="trow grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5">
+                    <NflLogo team={team.get(f.team)} size={28} />
+                    <span className="min-w-0">
+                      <span className="block font-semibold truncate">{team.get(f.team)?.name ?? f.team} <span className="muted font-normal text-xs">{f.game.home === f.team ? 'gegn' : 'á útivelli gegn'} {f.opp}</span></span>
+                      <span className="block text-xs muted">Líkanið okkar: {probLabel(f.model)} · {when(f.game.kickoff)}</span>
                     </span>
-                    <span className="block text-xs muted">{when(x.game.kickoff)}</span>
-                  </span>
-                  <span className="text-right"><span className="block num font-bold text-lg leading-none">{dec(x.total, 1)}</span><span className="text-[11px] muted">stig</span></span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="text-xs muted">
-            Heildarstig veðbankanna og hvernig þau skiptast. Okkar eigin spá úr sókn og vörn liðanna skeikaði um {dec(B.totals.test.mae, 1)} stig að jafnaði á {B.test[0]}-{B.test[1]}, lína Vegas um {dec(B.totals.test.maeVegas, 1)}, svo lína Vegas ræður.
-          </p>
-        </section>
+                    <span className="num font-bold text-lg" style={{ color: 'var(--accent)' }}>{probLabel(f.p)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className="grid gap-3 content-start" aria-label="Markahæstu leikirnir">
+            <h2 className="display text-xl font-extrabold inline-flex items-center gap-2"><Sigma size={18} aria-hidden /> Markahæstu leikirnir</h2>
+            <ul className="card divide-y" style={{ borderColor: 'var(--border)' }}>
+              {view.totals.slice(0, 8).map((x) => (
+                <li key={x.game.game_id}>
+                  <Link href={`/leikur/${x.game.game_id}`} className="trow grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5">
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-1.5 font-semibold truncate">
+                        <NflLogo team={team.get(x.game.away)} size={20} /> {x.game.away} <span className="muted font-normal">{dec(x.away, 1)}</span>
+                        <span className="muted font-normal">@</span>
+                        <NflLogo team={team.get(x.game.home)} size={20} /> {x.game.home} <span className="muted font-normal">{dec(x.home, 1)}</span>
+                      </span>
+                      <span className="block text-xs muted">{when(x.game.kickoff)}</span>
+                    </span>
+                    <span className="text-right"><span className="block num font-bold text-lg leading-none">{dec(x.total, 1)}</span><span className="text-[11px] muted">stig</span></span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
+      )}
 
-        <section className="grid gap-3 content-start" aria-label="Sigurstranglegustu">
-          <h2 className="display text-xl font-extrabold inline-flex items-center gap-2"><Trophy size={18} aria-hidden /> Sigurstranglegustu</h2>
-          <ul className="card divide-y" style={{ borderColor: 'var(--border)' }}>
-            {view.favourites.slice(0, 10).map((f) => (
-              <li key={`${f.game.game_id}:${f.team}`}>
-                <Link href={`/leikur/${f.game.game_id}`} className="trow grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5">
-                  <NflLogo team={team.get(f.team)} size={28} />
-                  <span className="min-w-0">
-                    <span className="block font-semibold truncate">{team.get(f.team)?.name ?? f.team} <span className="muted font-normal text-xs">{f.game.home === f.team ? 'gegn' : 'á útivelli gegn'} {f.opp}</span></span>
-                    <span className="block text-xs muted">Líkanið okkar: {probLabel(f.model)} · {when(f.game.kickoff)}</span>
-                  </span>
-                  <span className="num font-bold text-lg" style={{ color: 'var(--accent)' }}>{probLabel(f.p)}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="text-xs muted">Líkur veðbankanna á sigri, álagið dregið frá. Elo-líkanið okkar stendur við hliðina.</p>
-        </section>
-      </div>
+      <details className="card px-4 py-3 text-sm">
+        <summary className="font-semibold cursor-pointer">Hvernig er þetta reiknað?</summary>
+        <div className="grid gap-2 mt-3 muted text-xs max-w-prose leading-relaxed">
+          <p>Hver seðill er sá líklegasti sem nær stuðlinum (mest 15% yfir), mest einn leggur úr hverjum leik. Sigur og yfir/undir eru á stuðlum veðbankanna og með líkum þeirra eftir að álag er dregið frá. Elo-líkanið okkar fékk að velja í prófun á {B.test[0]}-{B.test[1]} og gerði það verr: seðlar þess sögðust ganga upp í {probLabel(B.slipsModelOnly.double.modelP)} tilvika (Double Trouble) en gerðu það í {probLabel(B.slipsModelOnly.double.hitRate)}.</p>
+          <p>Prófað á {B.test[0]}-{B.test[1]}: {view.slips.map((s) => { const p = B.slipsPlayers[s.key as keyof typeof B.slipsPlayers]; return `${s.name} gekk upp í ${probLabel(p.hitRate)} vikna (líkurnar sögðu ${probLabel(p.said)})` }).join(', ')}.</p>
+          <p>Leikmannaleggir (snertimark, jardar) eru með líkum okkar. Við höfum ekki stuðla veðbanka á leikmenn, svo stuðullinn er áætlaður (≈) með álagi eins og veðbankar leggja yfirleitt á. Þeir hækka ekki líkurnar fyrir sama stuðul, svo leikmannaútgáfa hvers seðils er sér, með því sem hún kostar. Snertimarkaseðillinn er á okkar sanngjarna stuðli, án álags.</p>
+          <p>Snertimörk: þeir sem fengu 50-60% skoruðu í {probLabel(B.td.test.buckets[5].scored)} tilvika. Hlaupajardar skeika um {Math.round(B.rush.test.mae)} jarda að jafnaði. Aðeins leikmenn sem spiluðu síðasta leik liðsins; þeir sem eru frá eða ólíklegir eru teknir út. Hleranir eru ekki með: þar gerði spáin ekki betur en að gefa öllum sömu líkur.</p>
+          <p>Heildarstig eru lína veðbankanna: okkar eigin spá skeikaði um {dec(B.totals.test.mae, 1)} stig, lína Vegas um {dec(B.totals.test.maeVegas, 1)}.</p>
+        </div>
+      </details>
 
-      <aside className="card p-4 grid gap-1.5 text-sm" style={{ borderColor: 'var(--border)' }}>
-        <p className="font-semibold">Líkur, ekki loforð</p>
-        <p className="muted text-xs max-w-prose">
-          Þessi síða er til fróðleiks og skemmtunar og er ekki á vegum neins veðbanka. Veðmál eru aðeins fyrir 18 ára og eldri. Leggðu aldrei undir meira en þú
-          mátt missa. Ef spilamennskan er farin að valda vanda getur þú talað við Hjálparsíma Rauða krossins í síma 1717, allan sólarhringinn.
-        </p>
-      </aside>
+      <p className="text-xs muted max-w-prose">
+        Líkur, ekki loforð. Til fróðleiks og skemmtunar, ekki á vegum neins veðbanka. Aðeins fyrir 18 ára og eldri. Ef spilamennskan er farin að valda vanda: Hjálparsími Rauða krossins, 1717, allan sólarhringinn.
+      </p>
     </div>
   )
 }
 
 function SlipCard({ k, name, target, slip, withPlayer, team }: { k: string; name: string; target: number; slip: Slip | null; withPlayer: Slip | null; team: Map<string, NflTeam> }) {
   const Icon = SLIP_ICON[k as keyof typeof SLIP_ICON]
-  const past = BACKTEST.slipsPlayers[k as keyof typeof BACKTEST.slipsPlayers]
-  const pastP = BACKTEST.slipsWithPlayer[k as keyof typeof BACKTEST.slipsWithPlayer]
   const same = !!slip && !!withPlayer && slip.legs.length === withPlayer.legs.length && slip.legs.every((l, i) => l === withPlayer.legs[i])
   return (
     <article className="card p-4 grid gap-3 content-start">
@@ -228,10 +247,6 @@ function SlipCard({ k, name, target, slip, withPlayer, team }: { k: string; name
           <div className="mt-2"><TrackButton name={`${name} með leikmönnum`} odds={Math.round(withPlayer.odds * 100) / 100} fair legs={withPlayer.legs.map(trackLeg)} /></div>
         </details>
       )}
-      <p className="text-[11px] muted">
-        Prófað á {BACKTEST.test[0]}-{BACKTEST.test[1]}: gekk upp {past.hits} af {past.weeks} vikum ({probLabel(past.hitRate)}); líkurnar sögðu {probLabel(past.said)}.
-        Með leikmönnum: {probLabel(pastP.hitRate)}, líkurnar sögðu {probLabel(pastP.said)}.
-      </p>
     </article>
   )
 }
@@ -272,7 +287,7 @@ function trackLeg(l: Leg): BetLeg {
 /** On a phone the top five show and the rest open on demand; from a tablet up, all of them. */
 const PHONE_ROWS = 5
 
-function PlayerList({ icon: Icon, title, unit, picks, fmt, team, note, basis }: { icon: typeof Target; title: string; unit: string; picks: PlayerPick[]; fmt: (v: number) => string; team: Map<string, NflTeam>; note: string; basis: (p: PlayerPick) => BasisText }) {
+function PlayerList({ icon: Icon, title, unit, picks, fmt, team, note, basis }: { icon: typeof Target; title: string; unit: string; picks: PlayerPick[]; fmt: (v: number) => string; team: Map<string, NflTeam>; note?: string; basis: (p: PlayerPick) => BasisText }) {
   const row = (p: PlayerPick, i: number, cls = '') => {
     const [mine, more] = basis(p)
     return (
@@ -307,7 +322,7 @@ function PlayerList({ icon: Icon, title, unit, picks, fmt, team, note, basis }: 
           )}
         </div>
       )}
-      <p className="text-xs muted">{note}</p>
+      {note && <p className="text-xs muted">{note}</p>}
     </section>
   )
 }

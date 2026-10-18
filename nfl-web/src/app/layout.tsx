@@ -20,22 +20,22 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
 }
 
-export const viewport = { themeColor: '#020c1d', viewportFit: 'cover' as const }
+export const viewport = { themeColor: '#ffffff', viewportFit: 'cover' as const }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="is" className="dark">
       <body data-league="nfl" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
-        <header className="relative z-10 border-b" style={{ borderColor: 'var(--border)', background: 'var(--bg)' }}>
+        <header className="relative z-10 border-b" style={{ borderColor: 'var(--border)', background: 'var(--bg)', borderTop: '3px solid var(--accent)' }}>
           <div className="max-w-6xl mx-auto px-4 h-12 md:h-14 flex items-center justify-between gap-3">
-            <Link href="/" className="display font-extrabold tracking-tight text-lg" aria-label={`${SITE_NAME}, forsíða`}>Snertimark<span style={{ color: '#ff1745' }}>.net</span></Link>
+            <Link href="/" className="display font-extrabold tracking-tight text-lg" aria-label={`${SITE_NAME}, forsíða`}>Snertimark<span style={{ color: 'var(--accent)' }}>.net</span></Link>
             <nav className="hidden md:flex items-center gap-4 text-xs">
               <Link href="/um" className="muted">Um síðuna</Link>
               <a href={FOOTBALL_URL} className="muted underline decoration-dotted underline-offset-2">Íslenskur fótbolti</a>
             </nav>
           </div>
         </header>
-        <div className="hidden md:block sticky top-0 z-20 border-b backdrop-blur-md" style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--bg) 82%, transparent)' }}>
+        <div className="hidden md:block sticky top-0 z-20 border-b backdrop-blur-md" style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, #ffffff 92%, transparent)' }}>
           <div className="max-w-6xl mx-auto px-4"><NflSubnav /></div>
         </div>
         <main className="max-w-6xl mx-auto px-4 py-5 md:py-8">

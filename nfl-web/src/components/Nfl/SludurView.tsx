@@ -9,7 +9,7 @@ import { countdown, HEAT_LABEL, tradeTeams, TRADE_DEADLINE_LABEL, type Heat, typ
 import { clock, dayLabel } from '@/lib/nfl/time'
 import type { NflTeam } from '@/lib/nfl/types'
 
-const HEAT_COLOR: Record<Heat, string> = { heitt: '#ff3b30', volgt: '#ff9f0a', kalt: '#5ac8fa' }
+const HEAT_COLOR: Record<Heat, string> = { heitt: '#d6202f', volgt: '#c2610c', kalt: '#1d5fbf' }
 
 function Countdown() {
   // computed after mount: the server's clock and the reader's are not the same minute
