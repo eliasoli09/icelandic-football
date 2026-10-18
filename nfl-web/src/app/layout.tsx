@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { SiteShell } from '@/components/Nfl/SiteShell'
 import { NflSubnav } from '@/components/Nfl/NflSubnav'
 import { MobileDock } from '@/components/Nfl/MobileDock'
-import { FOOTBALL_URL, SITE_NAME, SITE_URL } from '@/lib/site'
+import { FOOTBALL_URL, SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin', 'latin-ext'] })
@@ -14,7 +14,7 @@ const archivo = Archivo({ variable: '--font-archivo', subsets: ['latin', 'latin-
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: `${SITE_NAME} - spár, staðan og greinar`, template: `%s - ${SITE_NAME}` },
+  title: { default: `${SITE_NAME} - ${SITE_TAGLINE}: spár, staðan og greinar`, template: `%s - ${SITE_NAME}` },
   description: 'Leikir vikunnar, spár, staðan, spáleikur og greinar um NFL, á íslensku og íslenskum tíma.',
   openGraph: { siteName: SITE_NAME, locale: 'is_IS', type: 'website' },
   twitter: { card: 'summary_large_image' },
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body data-league="nfl" className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable} antialiased min-h-screen`}>
         <header className="relative z-10 border-b" style={{ borderColor: 'var(--border)', background: 'var(--bg)' }}>
           <div className="max-w-6xl mx-auto px-4 h-12 md:h-14 flex items-center justify-between gap-3">
-            <Link href="/" className="display font-extrabold tracking-tight">{SITE_NAME}</Link>
+            <Link href="/" className="display font-extrabold tracking-tight text-lg" aria-label={`${SITE_NAME}, forsíða`}>Snertimark<span style={{ color: '#ff1745' }}>.net</span></Link>
             <nav className="hidden md:flex items-center gap-4 text-xs">
               <Link href="/um" className="muted">Um síðuna</Link>
               <a href={FOOTBALL_URL} className="muted underline decoration-dotted underline-offset-2">Íslenskur fótbolti</a>
