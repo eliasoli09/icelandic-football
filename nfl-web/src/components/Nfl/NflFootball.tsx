@@ -6,7 +6,7 @@ import { createFootballLeather, footballRadius } from './footballSurface'
 import { createFootballTrails } from './footballTrails'
 
 /** Decorative scene; rendering stops offscreen, in hidden tabs and when paused. */
-export function NflFootball({ paused }: { paused: boolean }) {
+export function NflFootball({ paused = false }: { paused?: boolean }) {
   const host = useRef<HTMLDivElement>(null)
   const pausedRef = useRef(paused)
   useEffect(() => { pausedRef.current = paused }, [paused])

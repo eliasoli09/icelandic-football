@@ -197,7 +197,7 @@ function TeamPanel({ team, abbr, elo, form, qb, qbId, newQb }: { team: NflTeam |
             <span className="inline-flex gap-1">
               {form.last5.map((r, i) => (
                 <span key={i} className="w-5 h-5 rounded text-[10px] font-bold inline-flex items-center justify-center"
-                  style={{ background: r === 'S' ? 'var(--win)' : r === 'T' ? 'var(--loss)' : 'var(--draw)', color: '#0a0d0b' }}>{r}</span>
+                  style={{ background: r === 'S' ? 'var(--win)' : r === 'T' ? 'var(--loss)' : 'var(--draw)', color: '#0a1430' }}>{r}</span>
               ))}
             </span>
           )}

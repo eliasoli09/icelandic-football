@@ -50,15 +50,31 @@
   --accent: #1a6fc0;
   --accent-ink: #ffffff;
 }
-/* NFL corner: its own red, set on the /nfl layout wrapper */
+/* Snertimark.net: one dark blue. Layers are told apart by hairlines and a touch of white, not by more
+   blues; the logo's blue is the accent, red is only for the ball and for what is live. */
 [data-league='nfl'] {
-  --accent: #ef4a4f;
-  --accent-ink: #1c0405;
-  --glow: rgba(239, 74, 79, 0.07);
-}
-:root:not(.dark) [data-league='nfl'] {
-  --accent: #c62828;
+  --bg: #0a1430;
+  --surface: rgb(255 255 255 / 0.035);
+  --surface-solid: #0e1936;
+  --surface-2: rgb(255 255 255 / 0.06);
+  --track: rgb(255 255 255 / 0.08);
+  --border: rgb(150 172 255 / 0.13);
+  --border-strong: rgb(150 172 255 / 0.26);
+  --text: #eef2ff;
+  --text-2: #9aa8c7;
+  --text-3: #6b7899;
+  --accent: #2f6bff;
   --accent-ink: #ffffff;
+  --accent-glow: rgb(47 107 255 / 0.35);
+  --pill: linear-gradient(120deg, #1a8dff, #2f5bff);
+  --bar-1: linear-gradient(90deg, #17a2ff, #2f6bff);
+  --bar-2: linear-gradient(90deg, #6d5cff, #a855f7);
+  --live: #ff2e4d;
+  --ice: #5aa8ff;
+  --win: #34d399;
+  --draw: #6b7899;
+  --loss: #fb7185;
+  --glow: transparent;
 }
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(8px); }
@@ -408,53 +424,51 @@ h1, h2, h3, .display {
 }
 .zone-champ::before { background: var(--win); }
 
-/* Presence-scoped so the NFL atmosphere clears immediately on route changes. */
-body:has([data-league='nfl']) { background: #020c1d; color: #f4f7ff; }
-body:has([data-league='nfl']) > div { --text: #f4f7ff; --text-2: #a9bddf; }
-body:has([data-league='nfl']) header { --bg: #031128; --border: #07598a; --surface: #061930; --text: #f4f7ff; --text-2: #a9bddf; --accent: #ff173e; }
+/* Presence-scoped so the NFL look clears immediately on route changes. */
+body:has([data-league='nfl']) { background: #0a1430; color: #eef2ff; }
 body:has([data-league='nfl']) header > div:first-child { max-width: 1376px; }
 body:has([data-league='nfl']) main { max-width: 1376px; padding-top: 0; }
-body:has([data-league='nfl']) > footer { color: #a9bddf; }
+body:has([data-league='nfl']) .card { box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+body:has([data-league='nfl']) .card-hover:hover { border-color: var(--border-strong); background: var(--surface-2); }
 
 /* ─── Phone navigation: a scoreboard dock at the bottom, and a sheet for the rest ─── */
 .dock {
   position: fixed; inset: auto 0 0 0; z-index: 40;
   display: grid; grid-template-columns: repeat(5, 1fr);
   padding: 0 4px env(safe-area-inset-bottom);
-  background: #020c1d;
-  border-top: 1px solid #0b3a62;
-  box-shadow: 0 -8px 24px #020c1d;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
 }
 .dock-item {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-  min-height: 58px; font-size: 10.5px; font-weight: 600; letter-spacing: .01em; color: #8ea9cf;
+  min-height: 58px; font-size: 10.5px; font-weight: 600; letter-spacing: .01em; color: var(--text-3);
   -webkit-tap-highlight-color: transparent;
 }
 /* the active tab lights up like a stadium scoreboard: a red bar along the top edge */
 .dock-item::before {
   content: ''; position: absolute; top: -1px; left: 22%; right: 22%; height: 3px; border-radius: 0 0 3px 3px;
-  background: #ff1745; box-shadow: 0 0 12px #ff1745aa, 0 0 2px #ff1745; opacity: 0; transform: scaleX(.4);
+  background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); opacity: 0; transform: scaleX(.4);
   transition: opacity .2s ease, transform .25s ease;
 }
-.dock-item[data-on='true'] { color: #f4f7ff; }
+.dock-item[data-on='true'] { color: var(--text); }
 .dock-item[data-on='true']::before { opacity: 1; transform: scaleX(1); }
 .dock-item:active { transform: scale(.96); }
-.dock-live { position: absolute; top: -2px; right: -5px; width: 8px; height: 8px; border-radius: 50%; background: #ff1745; box-shadow: 0 0 0 2px #020c1d; animation: pulse-dot 2s ease-in-out infinite; }
+.dock-live { position: absolute; top: -2px; right: -5px; width: 8px; height: 8px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 2px var(--bg); animation: pulse-dot 2s ease-in-out infinite; }
 .dock-sheet { position: fixed; inset: 0; z-index: 50; }
 .dock-scrim { position: absolute; inset: 0; background: #000a; border: 0; }
 .dock-panel {
   position: absolute; inset: auto 0 0 0; max-height: 82vh; overflow-y: auto;
   padding: 16px 16px calc(20px + env(safe-area-inset-bottom));
-  background: #061930; border-top: 1px solid #16456b; border-radius: 20px 20px 0 0;
-  box-shadow: 0 -20px 60px #000a; animation: sheet-up .22s ease-out;
+  background: var(--surface-solid); border-top: 1px solid var(--border); border-radius: 20px 20px 0 0;
+  box-shadow: 0 -12px 40px #0008; animation: sheet-up .22s ease-out;
 }
 .dock-tile {
   display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 14px;
-  border: 1px solid #16456b; border-radius: 14px; background: #0a2142; font-weight: 600; font-size: 14px;
+  border: 1px solid var(--border); border-radius: 14px; background: var(--surface); font-weight: 600; font-size: 14px;
 }
-.dock-tile[data-on='true'] { border-color: #ff1745; box-shadow: inset 0 0 0 1px #ff174566; }
-.dock-tile svg { color: #08b8ff; }
-.dock-link { display: flex; align-items: center; gap: 10px; min-height: 44px; color: #a9bddf; }
+.dock-tile[data-on='true'] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.dock-tile svg { color: var(--accent); }
+.dock-link { display: flex; align-items: center; gap: 10px; min-height: 44px; color: var(--text-2); }
 @keyframes sheet-up { from { transform: translateY(24px); opacity: .6; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .dock-panel, .dock-live { animation: none; } .dock-item::before { transition: none; } }
 /* these rules sit outside Tailwind's layers, so md:hidden alone cannot hide them */
@@ -463,7 +477,7 @@ body:has([data-league='nfl']) > footer { color: #a9bddf; }
 /* ─── Phones: lighter surfaces and room for the dock ─── */
 @media (max-width: 767px) {
   /* a blur behind every card over the stadium photo paints late while scrolling: solid surfaces instead */
-  .card { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface-solid, #061930); }
+  .card { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface-solid); }
   body:has([data-league='nfl']) main { padding-top: 18px; padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
   .card-hover:hover, .card-3d-hover:hover { transform: none; }
 }
@@ -472,3 +486,38 @@ body:has([data-league='nfl']) > footer { color: #a9bddf; }
 @media (max-width: 639px) {
   main .grid:not([class*=' grid-cols-']):not([class^='grid-cols-']) { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ─── The jumbotron: the round's games along the top, like a stadium screen ─── */
+.jumbo { position: relative; overflow: hidden; border-radius: 12px; }
+.jumbo-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; }
+.jumbo-row::-webkit-scrollbar { display: none; }
+.jumbo-cell {
+  flex: 0 0 auto; min-width: 158px; scroll-snap-align: start;
+  display: grid; gap: 3px; padding: 7px 10px 8px; border-radius: 10px;
+  border: 1px solid var(--border);
+  /* the screen: darker than the page, with a faint LED grid */
+  background-color: rgb(0 0 0 / 0.28);
+  background-image: radial-gradient(rgb(255 255 255 / 0.05) 0.7px, transparent 0.9px);
+  background-size: 3px 3px;
+  transition: border-color .15s, background-color .15s;
+}
+.jumbo-cell:hover { border-color: var(--border-strong); background-color: rgb(0 0 0 / 0.38); }
+.jumbo-cell[data-live] { border-color: rgb(255 46 77 / 0.55); box-shadow: inset 0 2px 0 var(--live); }
+.jumbo-head { min-width: 172px; align-content: center; }
+.jumbo-head[data-live] .jumbo-led { color: var(--live); text-shadow: 0 0 8px rgb(255 46 77 / 0.6); }
+/* LED amber for time and status, white glowing numerals for the score */
+.jumbo-led { color: #ffc24b; text-shadow: 0 0 6px rgb(255 194 75 / 0.45); font-variant-numeric: tabular-nums; }
+.jumbo-ch { color: var(--ice); font-size: 10px; letter-spacing: .06em; }
+.jumbo-score { font-family: var(--font-archivo), sans-serif; font-weight: 800; font-size: 17px; line-height: 1; text-shadow: 0 0 8px rgb(238 242 255 / 0.35); }
+/* NFL Sunday: a slow floodlight sweep, and nothing louder */
+.jumbo[data-sunday]::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgb(120 160 255 / 0.10) 48%, rgb(255 255 255 / 0.06) 50%, transparent 62%);
+  transform: translateX(-100%); animation: jumbo-sweep 9s ease-in-out infinite;
+}
+.jumbo[data-sunday] .jumbo-head { border-color: rgb(47 107 255 / 0.6); }
+@keyframes jumbo-sweep { 0%, 55% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .jumbo[data-sunday]::after { animation: none; display: none; } }
+
+/* live is red on Snertimark.net */
+[data-league='nfl'] .live-dot { background: var(--live); }

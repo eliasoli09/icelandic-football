@@ -14,7 +14,7 @@ export function MarkBadge({ mark }: { mark: Mark | null | undefined }) {
   return (
     <span title={l.long} aria-label={l.long}
       className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold shrink-0"
-      style={{ background: good ? 'var(--win)' : 'var(--loss)', color: '#0a0d0b' }}>
+      style={{ background: good ? 'var(--win)' : 'var(--loss)', color: '#0a1430' }}>
       {l.short}
     </span>
   )
