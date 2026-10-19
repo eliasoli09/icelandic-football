@@ -11,7 +11,7 @@ import { NflLogo } from './NflLogo'
 const one = (x: number) => String(x).replace('.', ',')
 /** "Sýn Sport 2" → "SÝN 2", "RedZone, Sýn Sport 3" → "REDZONE". */
 const channel = (b: Broadcast | undefined) => !b ? null : /redzone/i.test(b.channel) ? 'REDZONE' : b.channel.replace(/sport\s*/i, '').toUpperCase()
-const SHORT: Record<string, string> = { Q1: '1. lh', Q2: '2. lh', Q3: '3. lh', Q4: '4. lh', OT: 'Framl.', HT: 'Hálfleikur', FT: 'Lokið', AOT: 'Lokið (fr.)' }
+const SHORT: Record<string, string> = { Q1: '1. lh', Q2: '2. lh', Q3: '3. lh', Q4: '4. lh', OT: 'Framl.', HT: 'Hálfleikur', BT: 'Leikhlutaskil', FT: 'Lokið', AOT: 'Lokið (fr.)' }
 const sameDay = (iso: string, now: Date) => iso.slice(0, 10) === now.toISOString().slice(0, 10)
 
 /** Scores for the games under way, every so often, while the page is visible. */
@@ -79,7 +79,7 @@ export function Jumbotron({ games, teams, tv, week }: { games: NflGame[]; teams:
           const final = l?.final ?? g.home_score !== null
           const started = !!l && (l.live || l.final)
           const hs = l?.homeScore ?? g.home_score, as = l?.awayScore ?? g.away_score
-          const status = l && started ? (SHORT[l.status] ?? l.statusLabel) + (l.live && l.clock && l.status !== 'HT' ? ` ${l.clock}` : '') : final ? 'Lokið' : `${isSmallHours(g.kickoff) ? 'nótt ' : ''}${clock(g.kickoff)}`
+          const status = l && started ? (SHORT[l.status] ?? l.statusLabel) + (l.live && l.clock && l.status !== 'HT' && l.status !== 'BT' ? ` ${l.clock}` : '') : final ? 'Lokið' : `${isSmallHours(g.kickoff) ? 'nótt ' : ''}${clock(g.kickoff)}`
           const homeLine = g.spread_line !== null && g.spread_line !== 0 ? `${-g.spread_line > 0 ? '+' : ''}${one(-g.spread_line)}` : g.spread_line === 0 ? 'jafnt' : ''
           const rows = [
             { abbr: g.away, score: as, line: g.total_line !== null ? `o${one(g.total_line)}` : '', won: final && as !== null && hs !== null && as > hs },

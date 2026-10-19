@@ -57,7 +57,7 @@ export function parseGames(json: unknown): LiveGame[] {
       homeScore: total(r?.scores?.home), awayScore: total(r?.scores?.away),
       status,
       quarter: QUARTER[status] ?? ended,
-      clock: between ? '00:00' : timer,
+      clock: timer,
       live: LIVE.has(status),
       final: FINAL.has(status),
     })
@@ -162,7 +162,7 @@ export function fractionLeft(quarter: number | null, clock: string | null, statu
   if (FINAL.has(status)) return 0
   if (!quarter) return 0.5
   if (quarter >= 5) return 0.05 // overtime: next score decides, roughly
-  const [m, s] = (clock ?? '7:30').split(':').map(Number)
+  const [m, s] = (clock ?? (status === 'BT' ? '0:00' : '7:30')).split(':').map(Number)
   const inQuarter = Math.min(15 * 60, Math.max(0, m * 60 + s))
   return ((4 - quarter) * 15 * 60 + inQuarter) / 3600
 }
