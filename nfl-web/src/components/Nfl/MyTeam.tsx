@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Heart } from 'lucide-react'
+import { CalendarPlus, Heart } from 'lucide-react'
 import { browserDb, whoAmI, type Me } from '@/lib/leaderboard/store'
 import { probLabel } from '@/lib/nfl/format'
 import type { TeamCard } from '@/lib/nfl/myteam'
@@ -94,6 +94,7 @@ export function MyTeam({ cards, teams }: { cards: TeamCard[]; teams: NflTeam[] }
           </Link>
         )}
       </div>
+      <Link href={`/leikir/sjonvarp?lid=${c.abbr}#dagatal`} className="text-sm inline-flex items-center gap-1.5 underline decoration-dotted underline-offset-2"><CalendarPlus size={14} aria-hidden /> Leikir {c.name} í dagatalið</Link>
       {c.news && <a href={c.news.url} target="_blank" rel="noopener noreferrer" className="text-sm underline decoration-dotted underline-offset-2">{c.news.title_is}</a>}
       <p className="text-[11px] muted">
         {me?.name ? 'Valið vistast á aðganginn þinn og telst með á ' : 'Skráðu þig inn til að teljast með á '}

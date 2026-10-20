@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Tv } from 'lucide-react'
 import { GamesSwitch } from '@/components/Nfl/GamesSwitch'
 import { NflLogo } from '@/components/Nfl/NflLogo'
+import { CalendarBox } from '@/components/Nfl/CalendarBox'
 import { nflBroadcasts, nflCurrentSeason, nflSeasonGames, nflTeams, type Broadcast } from '@/lib/nfl/queries'
 import { clock, dayKey, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import { isPlayed } from '@/lib/nfl/types'
@@ -26,6 +27,7 @@ export default async function TvPage() {
         <h2 className="display text-3xl font-extrabold tracking-tight">Í sjónvarpinu</h2>
         <p className="muted text-sm">NFL-leikir sem eru sýndir í íslensku sjónvarpi, á íslenskum tíma.</p>
       </header>
+      <div id="dagatal" className="scroll-mt-24"><CalendarBox teams={teams} /></div>
       {!listed.length ? <p className="muted">Engir leikir skráðir enn fyrir næstu daga.</p> : [...days].map(([key, list]) => (
         <section key={key} className="grid gap-2">
           <h3 className="text-sm font-semibold muted">{dayLabel(list[0].kickoff)}</h3>

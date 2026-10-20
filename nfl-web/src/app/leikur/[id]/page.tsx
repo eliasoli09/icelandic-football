@@ -14,7 +14,10 @@ import { teamForm, type TeamForm } from '@/lib/nfl/form'
 import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
 import { oddsLabel } from '@/lib/nfl/odds'
 import { devig } from '@/lib/nfl/odds'
-import { nflBroadcasts, nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel, nflInjuries } from '@/lib/nfl/queries'
+import { nflBroadcasts, nflCrowd, nflLiveWp, nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel, nflInjuries } from '@/lib/nfl/queries'
+import { CROWD_MIN, crowdShare } from '@/lib/nfl/crowd'
+import { excitement } from '@/lib/nfl/winChart'
+import { WinChart } from '@/components/Nfl/WinChart'
 import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
 import { ArticleList } from '@/components/Nfl/ArticleList'
 import { nflGameArticles } from '@/lib/nfl/articles/queries'
@@ -42,6 +45,9 @@ export default async function NflGamePage({ params }: Props) {
   const tv = (await nflBroadcasts(game.season).catch(() => ({} as Record<string, never>)))[game.game_id]
   const articles = await nflGameArticles(game.game_id, game.season, game.week).catch(() => [])
   const injuries = isPlayed(game) ? null : await nflInjuries(game.season, game.week).catch(() => null)
+  // after the game: the live chances we kept, if the game was followed live
+  const wp = isPlayed(game) ? (await nflLiveWp([game.game_id]).catch(() => ({} as Record<string, never>)))[game.game_id] ?? [] : []
+  const crowd = crowdShare((await nflCrowd([game.game_id]).catch(() => ({} as Record<string, never>)))[game.game_id])
   const news = await nflNews({ teams: [franchiseOf(game.home), franchiseOf(game.away)], sinceDays: 7, limit: 4 }).catch(() => [])
 
   const played = isPlayed(game)
@@ -120,6 +126,12 @@ export default async function NflGamePage({ params }: Props) {
                   <td className="text-right num">{vegas ? probLabel(vegas.home) : '-'}</td>
                   <td className="text-right num">{spreadLabel(game) ?? '-'}</td>
                 </tr>
+                <tr className="trow">
+                  <td className="font-semibold">Íslendingar</td>
+                  <td className="text-right num">{crowd ? probLabel(1 - crowd.pHome) : '-'}</td>
+                  <td className="text-right num">{crowd ? probLabel(crowd.pHome) : '-'}</td>
+                  <td className="text-right text-xs muted num">{crowd ? `${crowd.n} spár` : ''}</td>
+                </tr>
                 {oddsLabel(game.home_ml) && (
                   <tr className="trow">
                     <td className="font-semibold">Stuðull</td>
@@ -132,7 +144,22 @@ export default async function NflGamePage({ params }: Props) {
             </table>
           </div>
           {game.total_line !== null && <p className="text-xs muted">Heildarstig Vegas: {totalLabel(game.total_line)}{oddsLabel(game.over_odds) && oddsLabel(game.under_odds) ? ` (yfir ${oddsLabel(game.over_odds)}, undir ${oddsLabel(game.under_odds)})` : ''}. Líkanið spáir ekki heildarstigum.</p>}
+          <p className="text-xs muted">
+            Íslendingar: hvað lesendur velja í <Link href="/spa" className="underline decoration-dotted underline-offset-2">Spáleiknum</Link> og könnuninni hér fyrir neðan.
+            {crowd ? '' : ` Birtist þegar ${CROWD_MIN} hafa valið${played ? '' : ' - vertu með'}.`}
+          </p>
           <p className="text-xs muted">Stuðlarnir eru evrópskir (heildarútborgun fyrir hverja krónu). Líkur Vegas eru reiknaðar úr þeim eftir að álag bókarans er dregið frá.</p>
+        </section>
+      )}
+
+      {wp.length > 2 && (
+        <section className="card p-5 grid gap-3">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="display text-lg font-extrabold">Sigurlíkur í leiknum</h2>
+            <span className="text-xs muted num">Spennustig {excitement(wp).toFixed(1).replace('.', ',')}</span>
+          </div>
+          <WinChart points={wp} home={home} away={away} homeAbbr={game.home} awayAbbr={game.away} pre={f?.pHome ?? null} height={140} />
+          <p className="text-xs muted">Okkar líkur eftir stöðunni og tímanum sem var eftir, skráðar á meðan leikurinn var í beinni. Spennustigið er samanlögð sveifla líknanna: hærra þýðir meiri dramatík.</p>
         </section>
       )}
 

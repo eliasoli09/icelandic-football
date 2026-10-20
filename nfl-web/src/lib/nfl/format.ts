@@ -32,7 +32,7 @@ export const probLabel = (p: number) => `${Math.round(p * 100)}%`
 export const modelSpreadLabel = (home: string, away: string, spread: number) =>
   spreadLabel({ home, away, spread_line: Math.round(spread * 2) / 2 })
 
-const luminance = (hex: string) => {
+export const luminance = (hex: string) => {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex)
   if (!m) return 0.5
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16) / 255)

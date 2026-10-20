@@ -1,3 +1,4 @@
+import { MachineCard } from '@/components/Nfl/MachineCard'
 import { PlayoffView } from '@/components/Nfl/PlayoffView'
 import { likelyBracket, todayBracket } from '@/lib/nfl/bracket'
 import { clinchMarks } from '@/lib/nfl/clinch'
@@ -19,17 +20,20 @@ export default async function NflPlayoffPage() {
     const teams = model.teams.filter((t) => names.has(t.abbr))
     const standings = computeStandings(model.games, teams)
     return (
-      <PlayoffView
-        season={season}
-        teams={teams}
-        sim={sim}
-        marks={clinchMarks(model.games, teams)}
-        today={todayBracket(standings, sim, season)}
-        likely={likelyBracket(sim, teams, model.state, season)}
-        runAt={first.run_at}
-        sims={first.sims}
-        sentence={NFL_SIM_SENTENCE}
-      />
+      <div className="grid gap-6">
+        <MachineCard />
+        <PlayoffView
+          season={season}
+          teams={teams}
+          sim={sim}
+          marks={clinchMarks(model.games, teams)}
+          today={todayBracket(standings, sim, season)}
+          likely={likelyBracket(sim, teams, model.state, season)}
+          runAt={first.run_at}
+          sims={first.sims}
+          sentence={NFL_SIM_SENTENCE}
+        />
+      </div>
     )
   } catch {
     return <p className="muted">Gagnagrunnur ekki tengdur enn.</p>

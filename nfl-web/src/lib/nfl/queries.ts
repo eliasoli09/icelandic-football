@@ -244,3 +244,23 @@ export async function nflInjuries(season: number, week: number): Promise<InjuryL
   if (error) throw error
   return { week: w, rows: (data ?? []) as import('./injuries').Injury[] }
 }
+
+/** How many readers chose each side, by game (pick'em and polls); games below five choices before kickoff are left out. */
+export async function nflCrowd(gameIds: string[]): Promise<Record<string, import('./crowd').Crowd>> {
+  if (!gameIds.length) return {}
+  const { data, error } = await db().rpc('rpc_nfl_crowd', { p_games: gameIds })
+  if (error) throw error
+  return Object.fromEntries(((data ?? []) as { game_id: string; home: number; away: number }[]).map((r) => [r.game_id, { home: r.home, away: r.away }]))
+}
+
+/** The stored live win chances of some games, in order, for the charts. */
+export async function nflLiveWp(gameIds: string[]): Promise<Record<string, import('./winChart').WpPoint[]>> {
+  const out: Record<string, import('./winChart').WpPoint[]> = Object.fromEntries(gameIds.map((id) => [id, []]))
+  const { data, error } = await db().from('nfl_live_wp').select('game_id, progress, p_home, home_score, away_score, status').in('game_id', gameIds).order('at').limit(5000)
+  if (error) throw error
+  for (const r of (data ?? []) as (import('./winChart').WpPoint & { game_id: string })[]) {
+    const { game_id, ...p } = r
+    out[game_id]?.push(p)
+  }
+  return out
+}

@@ -11,10 +11,11 @@ import type { Forecast } from '@/lib/nfl/forecast'
 import { clock, dayKey, dayLabel, isSmallHours } from '@/lib/nfl/time'
 import { modelSpreadLabel, probLabel, totalLabel } from '@/lib/nfl/format'
 import { oddsLabel } from '@/lib/nfl/odds'
+import { crowdShare, type Crowd } from '@/lib/nfl/crowd'
 import { weekLabel, weekTypes } from '@/lib/nfl/week'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 
-export function WeekView({ season, games, teams, initialWeek, forecasts, broadcasts = {} }: { season: number; games: NflGame[]; teams: NflTeam[]; initialWeek: number; forecasts: Record<string, Forecast>; broadcasts?: Record<string, Broadcast> }) {
+export function WeekView({ season, games, teams, initialWeek, forecasts, broadcasts = {}, crowd = {} }: { season: number; games: NflGame[]; teams: NflTeam[]; initialWeek: number; forecasts: Record<string, Forecast>; broadcasts?: Record<string, Broadcast>; crowd?: Record<string, Crowd> }) {
   const byAbbr = useMemo(() => new Map(teams.map((t) => [t.abbr, t])), [teams])
   const weeks = useMemo(() => weekTypes(games), [games])
   const [week, setWeek] = useState(initialWeek)
@@ -63,7 +64,7 @@ export function WeekView({ season, games, teams, initialWeek, forecasts, broadca
           <div key={key}>
             <h2 className="text-sm font-semibold muted mb-2">{dayLabel(list[0].kickoff)}</h2>
             <div className="card divide-y" style={{ borderColor: 'var(--border)' }}>
-              {list.map((g) => <GameRow key={g.game_id} g={g} f={forecasts[g.game_id]} home={byAbbr.get(g.home)} away={byAbbr.get(g.away)} tv={broadcasts[g.game_id]} />)}
+              {list.map((g) => <GameRow key={g.game_id} g={g} f={forecasts[g.game_id]} home={byAbbr.get(g.home)} away={byAbbr.get(g.away)} tv={broadcasts[g.game_id]} crowd={crowd[g.game_id]} />)}
             </div>
           </div>
         ))}
@@ -89,9 +90,10 @@ function Side({ team, abbr, score, won, p }: { team: NflTeam | undefined; abbr: 
   )
 }
 
-function GameRow({ g, f, home, away, tv }: { g: NflGame; f: Forecast | undefined; home: NflTeam | undefined; away: NflTeam | undefined; tv?: Broadcast }) {
+function GameRow({ g, f, home, away, tv, crowd }: { g: NflGame; f: Forecast | undefined; home: NflTeam | undefined; away: NflTeam | undefined; tv?: Broadcast; crowd?: Crowd }) {
   const played = isPlayed(g)
   const prices = oddsLabel(g.away_ml) && oddsLabel(g.home_ml) ? `${g.away} ${oddsLabel(g.away_ml)} · ${g.home} ${oddsLabel(g.home_ml)}` : null
+  const c = crowdShare(crowd)
   const fav = f && (f.pHome >= 0.5 ? { abbr: g.home, p: f.pHome } : { abbr: g.away, p: 1 - f.pHome })
   const qbs = f?.newQb ? [f.newQb.away, f.newQb.home].filter((x) => x !== null) : []
   // the lines under the time; on a phone they go in one row under the game instead
@@ -99,6 +101,7 @@ function GameRow({ g, f, home, away, tv }: { g: NflGame; f: Forecast | undefined
     !played && f?.spread != null ? `Líkanið ${modelSpreadLabel(g.home, g.away, f.spread)}` : null,
     !played && prices ? `Stuðlar ${prices}` : null,
     !played && g.total_line !== null ? `Heildarstig ${totalLabel(g.total_line)}` : null,
+    c ? `Íslendingar ${c.pHome >= 0.5 ? `${g.home} ${probLabel(c.pHome)}` : `${g.away} ${probLabel(1 - c.pHome)}`}` : null,
     played && fav ? `líkanið gaf ${fav.abbr} ${probLabel(fav.p)}` : null,
     g.neutral && g.stadium ? g.stadium : null,
   ].filter((x): x is string => !!x)

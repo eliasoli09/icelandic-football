@@ -11,6 +11,7 @@ import { Bets } from './Bets'
 import { Fantasy } from './Fantasy'
 import { useFeeds } from './feeds'
 import { Highlights } from './Highlights'
+import { WinChances } from './WinChances'
 import { Countdown, LiveGames, Pickem, RedZone, ScoringFeed, TvNow, type Ctx } from './Simple'
 import { KINDS, WIDGET_INFO, newWidget, useBoard, type Board, type Widget } from './store'
 
@@ -97,6 +98,7 @@ export function Dashboard({ teams, round, tv, cards }: { teams: NflTeam[]; round
 function Body({ w, ctx, board, update, teams, cards }: { w: Widget; ctx: Ctx; board: Board; update: (f: (b: Board) => Board) => void; teams: NflTeam[]; cards: TeamCard[] }) {
   switch (w.kind) {
     case 'live': return <LiveGames ctx={ctx} />
+    case 'wp': return <WinChances ctx={ctx} />
     case 'redzone': return <RedZone ctx={ctx} />
     case 'feed': return <ScoringFeed ctx={ctx} />
     case 'fantasy': return <Fantasy ctx={ctx} board={board} update={update} />

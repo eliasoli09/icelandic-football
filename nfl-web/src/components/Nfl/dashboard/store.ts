@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { browserDb, whoAmI } from '@/lib/leaderboard/store'
 import type { RosterPlayer, Scoring, TrackedSlip } from '@/lib/nfl/tracker'
 
-export type WidgetKind = 'live' | 'redzone' | 'feed' | 'fantasy' | 'bets' | 'highlights' | 'myteam' | 'tv' | 'pickem' | 'countdown'
+export type WidgetKind = 'live' | 'wp' | 'redzone' | 'feed' | 'fantasy' | 'bets' | 'highlights' | 'myteam' | 'tv' | 'pickem' | 'countdown'
 export interface Widget { id: string; kind: WidgetKind; wide: boolean }
 
 export interface Board {
@@ -18,6 +18,7 @@ export interface Board {
 
 export const WIDGET_INFO: Record<WidgetKind, { title: string; blurb: string }> = {
   live: { title: 'Leikir í beinni', blurb: 'Staða, klukka og sigurlíkur í hverjum leik' },
+  wp: { title: 'Sigurlíkur', blurb: 'Hvernig líkurnar sveiflast í hverjum leik, mest spennandi efst' },
   redzone: { title: 'Rauða svæðið', blurb: 'Ferðir á rauða svæðið og jöfnustu leikirnir undir lokin' },
   feed: { title: 'Stigaveitan', blurb: 'Öll snertimörk og vallarmörk úr öllum leikjum' },
   fantasy: { title: 'Fantasy-liðið mitt', blurb: 'Stigin þín í rauntíma' },
@@ -36,7 +37,7 @@ const now = () => new Date().toISOString()
 
 export const DEFAULT_BOARD = (): Board => ({
   v: 1,
-  widgets: (['live', 'fantasy', 'redzone', 'bets', 'feed', 'highlights', 'tv', 'countdown'] as WidgetKind[]).map((kind) => ({ id: uid(), kind, wide: kind === 'live' || kind === 'highlights' })),
+  widgets: (['live', 'wp', 'fantasy', 'redzone', 'bets', 'feed', 'highlights', 'tv', 'countdown'] as WidgetKind[]).map((kind) => ({ id: uid(), kind, wide: kind === 'live' || kind === 'wp' || kind === 'highlights' })),
   fantasy: { scoring: 'ppr', roster: [] },
   bets: [],
   updated: new Date(0).toISOString(),

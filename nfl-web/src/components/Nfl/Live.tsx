@@ -8,6 +8,9 @@ import { probLabel } from '@/lib/nfl/format'
 import { EVENT_LABEL, playIs, quarterLabel } from '@/lib/nfl/live'
 import type { NflTeam } from '@/lib/nfl/types'
 import { NflLogo } from './NflLogo'
+import { useWp } from './useWp'
+import { WinChart } from './WinChart'
+import { progressOf, type WpPoint } from '@/lib/nfl/winChart'
 import { ProbSplit } from './ProbSplit'
 
 /** Poll our live route as often as the server refreshes, while the tab is visible; null until the first answer. */
@@ -65,9 +68,17 @@ export function LiveStrip({ teams }: { teams: NflTeam[] }) {
 }
 
 /** The game page's live box: score, quarter, clock, live win probability and scoring plays. */
+/** The stored chances with the latest one from the feed on the end, so the chart ends where the score is. */
+function withNow(points: WpPoint[], g: LiveRow): WpPoint[] {
+  if (!g.live || g.pHome === null) return points
+  const now = { progress: progressOf(g.quarter, g.clock, g.status), p_home: g.pHome, home_score: g.homeScore ?? 0, away_score: g.awayScore ?? 0, status: g.status }
+  return now.progress >= (points.at(-1)?.progress ?? 0) ? [...points, now] : points
+}
+
 export function LiveBox({ gameId, home, away }: { gameId: string; home: NflTeam | undefined; away: NflTeam | undefined }) {
   const data = useLive()
   const g = data?.games.find((x) => x.game_id === gameId)
+  const wp = useWp(g ? [gameId] : [], data?.interval)
   if (!g) return null
   return (
     <section className="card p-5 grid gap-4" aria-label="Í beinni">
@@ -92,6 +103,7 @@ export function LiveBox({ gameId, home, away }: { gameId: string; home: NflTeam 
           </div>
         </div>
       )}
+      <WinChart points={withNow(wp[gameId] ?? [], g)} home={home} away={away} homeAbbr={g.home} awayAbbr={g.away} pre={g.pHomePre} />
       {g.events && g.events.length > 0 && (
         <ol className="grid gap-1.5 text-sm border-t pt-3" style={{ borderColor: 'var(--border)' }}>
           {[...g.events].reverse().map((e, i) => (

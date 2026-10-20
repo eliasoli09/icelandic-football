@@ -3,6 +3,8 @@ import { seasonForecasts } from '@/lib/nfl/forecast'
 import { STATUS_LABEL, fractionLeft, liveWinProb, parseEvents, type LiveEvent } from '@/lib/nfl/live'
 import { LIVE_FLOOR, gamesUnderWay, shared, upstream } from '@/lib/nfl/liveFeed'
 import { nflCurrentSeason, nflSeasonModel } from '@/lib/nfl/queries'
+import { db } from '@/lib/db'
+import { wpRows } from '@/lib/nfl/winChart'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,6 +50,12 @@ export async function GET(_req: NextRequest) {
     if (EVENTS()) await Promise.all(games.filter((g) => g.live || g.final).map(async (g) => {
       try { g.events = parseEvents(await upstream(`/games/events?id=${g.apiId}`, key, interval)) } catch { partial = true /* the score still shows */ }
     }))
+    // keep the chance for the win-probability charts; with the CDN in front this runs about once per interval
+    const rows = wpRows(games)
+    if (rows.length && process.env.CRON_SECRET) {
+      const { error } = await db().rpc('rpc_nfl_live_wp_add', { p_secret: process.env.CRON_SECRET, p_rows: rows })
+      if (error) console.error('nfl_live_wp:', error.message)
+    }
     return shared({ enabled: true, interval, games: games.map(({ apiId: _, ...g }) => g) } satisfies LiveReply, partial)
   } catch (e) {
     return shared({ enabled: true, interval, games: [], error: e instanceof Error ? e.message : String(e) } satisfies LiveReply)
