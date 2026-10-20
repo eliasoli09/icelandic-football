@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { defenceScore, groupOf, offenceScore, starWeek, statLine, type StarLine } from '../src/lib/nfl/stars'
+import { defenceScore, enoughForWeek, groupOf, offenceScore, starWeek, statLine, type StarLine } from '../src/lib/nfl/stars'
 
 let n = 0
 const L = (name: string, position: string, x: Partial<StarLine> = {}): StarLine => ({
@@ -46,5 +46,13 @@ describe('starWeek', () => {
   it('tölfræðilína á íslensku', () => {
     expect(statLine(lines[0], 'QB')).toBe('0/0 · 350 sendingajardar · 4 snertim.')
     expect(statLine(lines[7], 'DL')).toBe('3 fellur · 4 tæklingar')
+  })
+})
+
+describe('enoughForWeek', () => {
+  it('takes a round once most of its games are in, not when Thursday opens the next', () => {
+    expect(enoughForWeek(13, 15)).toBe(true)
+    expect(enoughForWeek(1, 16)).toBe(false)
+    expect(enoughForWeek(0, 0)).toBe(false)
   })
 })

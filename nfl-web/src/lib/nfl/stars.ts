@@ -107,3 +107,10 @@ export function statLine(l: StarLine, slot: StarSlot): string {
   }
   return parts.join(' · ')
 }
+
+/**
+ * Enough of a round is in for its team of the week: most of its games have
+ * player lines. The Sunday slate makes it on Monday; Sunday and Monday night
+ * join a day later, so the team settles by midweek.
+ */
+export const enoughForWeek = (gamesWithLines: number, gamesInRound: number) => gamesWithLines > 0 && gamesWithLines >= Math.ceil(gamesInRound * 0.6)

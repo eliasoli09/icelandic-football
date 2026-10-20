@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Star as StarIcon } from 'lucide-react'
 import { PlayersSwitch } from '@/components/Nfl/PlayersSwitch'
 import { PlayerHead } from '@/components/Nfl/PlayerHead'
 import { nflCurrentSeason, nflRoundLines, nflSeasonGames, nflTeams } from '@/lib/nfl/queries'
-import { SLOT_LABEL, starWeek, statLine, type Star } from '@/lib/nfl/stars'
+import { SLOT_LABEL, enoughForWeek, starWeek, statLine, type Star, type StarLine } from '@/lib/nfl/stars'
 import { isPlayed, type NflTeam } from '@/lib/nfl/types'
 import { weekLabel } from '@/lib/nfl/week'
 
@@ -22,15 +22,22 @@ export default async function StarTeamPage({ searchParams }: Props) {
   const [games, teams] = await Promise.all([nflSeasonGames(season), nflTeams()])
   // rounds with at least one game played, oldest first
   const rounds = [...new Set(games.filter(isPlayed).map((g) => g.week))].sort((a, b) => a - b)
-  const done = (wk: number) => games.filter((g) => g.week === wk).every(isPlayed)
+  const inRound = (wk: number) => games.filter((g) => g.week === wk).length
+  const covered = (l: StarLine[]) => new Set(l.map((x) => x.game_id)).size
   const asked = Number((await searchParams).vika)
-  // by default the latest round that is over: a round with one game played is not a week's team
-  let week = rounds.includes(asked) ? asked : [...rounds].reverse().find(done) ?? rounds[rounds.length - 1]
-  let lines = week ? await nflRoundLines(season, week) : []
-  // player stats land a day after the games: show the round before until they do
-  if (!lines.length && !rounds.includes(asked) && rounds.indexOf(week) > 0) { week = rounds[rounds.indexOf(week) - 1]; lines = await nflRoundLines(season, week) }
-  const played = games.filter((g) => g.week === week && isPlayed(g)).length
-  const total = games.filter((g) => g.week === week).length
+  let week: number | undefined
+  let lines: StarLine[] = []
+  if (rounds.includes(asked)) { week = asked; lines = await nflRoundLines(season, week) }
+  else {
+    // by default the newest round with most of its games' player lines in: Monday after the Sunday slate, not when Thursday kicks the next one off
+    for (const r of [...rounds].reverse().slice(0, 3)) {
+      const l = await nflRoundLines(season, r)
+      if (enoughForWeek(covered(l), inRound(r))) { week = r; lines = l; break }
+    }
+    if (week === undefined) { week = rounds[rounds.length - 1]; lines = week ? await nflRoundLines(season, week) : [] }
+  }
+  const total = week ? inRound(week) : 0
+  const counted = covered(lines)
   const w = starWeek(lines)
   const team = new Map(teams.map((t) => [t.abbr, t]))
   const type = games.find((g) => g.week === week)?.game_type ?? 'REG'
@@ -43,7 +50,7 @@ export default async function StarTeamPage({ searchParams }: Props) {
         {i > 0 ? <Link href={`/leikmenn/stjornulid?vika=${rounds[i - 1]}`} className="w-11 h-11 rounded-full border inline-flex items-center justify-center" style={{ borderColor: 'var(--border)' }} aria-label="Fyrri umferð"><ChevronLeft size={18} aria-hidden /></Link> : <span className="w-11" />}
         <div className="text-center">
           <p className="display text-2xl font-extrabold">Stjörnulið: {week ? weekLabel(type, week).toLowerCase() : '-'}</p>
-          <p className="text-xs muted">{played < total ? `${played} af ${total} leikjum umferðarinnar spilaðir` : `Tímabilið ${season}`}</p>
+          <p className="text-xs muted">{counted && counted < total ? `Úr ${counted} af ${total} leikjum - uppfærist þegar tölfræði síðustu leikjanna kemur` : `Tímabilið ${season}`}</p>
         </div>
         {i >= 0 && i < rounds.length - 1 ? <Link href={`/leikmenn/stjornulid?vika=${rounds[i + 1]}`} className="w-11 h-11 rounded-full border inline-flex items-center justify-center" style={{ borderColor: 'var(--border)' }} aria-label="Næsta umferð"><ChevronRight size={18} aria-hidden /></Link> : <span className="w-11" />}
       </div>
