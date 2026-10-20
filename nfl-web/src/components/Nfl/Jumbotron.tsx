@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { LiveReply, LiveRow } from '@/app/api/nfl/live/route'
 import type { Broadcast } from '@/lib/nfl/queries'
+import { oddsLabel } from '@/lib/nfl/odds'
 import { clock, isSmallHours } from '@/lib/nfl/time'
 import type { NflGame, NflTeam } from '@/lib/nfl/types'
 import { NflLogo } from './NflLogo'
 
-const one = (x: number) => String(x).replace('.', ',')
 /** "Sýn Sport 2" → "SÝN 2", "RedZone, Sýn Sport 3" → "REDZONE". */
 const channel = (b: Broadcast | undefined) => !b ? null : /redzone/i.test(b.channel) ? 'REDZONE' : b.channel.replace(/sport\s*/i, '').toUpperCase()
 const SHORT: Record<string, string> = { Q1: '1. lh', Q2: '2. lh', Q3: '3. lh', Q4: '4. lh', OT: 'Framl.', HT: 'Hálfleikur', BT: 'Leikhlutaskil', FT: 'Lokið', AOT: 'Lokið (fr.)' }
@@ -80,10 +80,9 @@ export function Jumbotron({ games, teams, tv, week }: { games: NflGame[]; teams:
           const started = !!l && (l.live || l.final)
           const hs = l?.homeScore ?? g.home_score, as = l?.awayScore ?? g.away_score
           const status = l && started ? (SHORT[l.status] ?? l.statusLabel) + (l.live && l.clock && l.status !== 'HT' && l.status !== 'BT' ? ` ${l.clock}` : '') : final ? 'Lokið' : `${isSmallHours(g.kickoff) ? 'nótt ' : ''}${clock(g.kickoff)}`
-          const homeLine = g.spread_line !== null && g.spread_line !== 0 ? `${-g.spread_line > 0 ? '+' : ''}${one(-g.spread_line)}` : g.spread_line === 0 ? 'jafnt' : ''
           const rows = [
-            { abbr: g.away, score: as, line: g.total_line !== null ? `o${one(g.total_line)}` : '', won: final && as !== null && hs !== null && as > hs },
-            { abbr: g.home, score: hs, line: homeLine, won: final && as !== null && hs !== null && hs > as },
+            { abbr: g.away, score: as, line: oddsLabel(g.away_ml) ?? '', won: final && as !== null && hs !== null && as > hs },
+            { abbr: g.home, score: hs, line: oddsLabel(g.home_ml) ?? '', won: final && as !== null && hs !== null && hs > as },
           ]
           return (
             <Link key={g.game_id} href={`/leikur/${g.game_id}`} className="jumbo-cell" data-live={l?.live || undefined} aria-label={`${g.away} @ ${g.home}`}>

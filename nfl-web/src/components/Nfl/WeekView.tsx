@@ -9,7 +9,8 @@ import type { Broadcast } from '@/lib/nfl/queries'
 import { ProbSplit } from './ProbSplit'
 import type { Forecast } from '@/lib/nfl/forecast'
 import { clock, dayKey, dayLabel, isSmallHours } from '@/lib/nfl/time'
-import { modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
+import { modelSpreadLabel, probLabel, totalLabel } from '@/lib/nfl/format'
+import { oddsLabel } from '@/lib/nfl/odds'
 import { weekLabel, weekTypes } from '@/lib/nfl/week'
 import { isPlayed, type NflGame, type NflTeam } from '@/lib/nfl/types'
 
@@ -90,13 +91,13 @@ function Side({ team, abbr, score, won, p }: { team: NflTeam | undefined; abbr: 
 
 function GameRow({ g, f, home, away, tv }: { g: NflGame; f: Forecast | undefined; home: NflTeam | undefined; away: NflTeam | undefined; tv?: Broadcast }) {
   const played = isPlayed(g)
-  const vegas = spreadLabel(g)
+  const prices = oddsLabel(g.away_ml) && oddsLabel(g.home_ml) ? `${g.away} ${oddsLabel(g.away_ml)} · ${g.home} ${oddsLabel(g.home_ml)}` : null
   const fav = f && (f.pHome >= 0.5 ? { abbr: g.home, p: f.pHome } : { abbr: g.away, p: 1 - f.pHome })
   const qbs = f?.newQb ? [f.newQb.away, f.newQb.home].filter((x) => x !== null) : []
   // the lines under the time; on a phone they go in one row under the game instead
   const details = [
     !played && f?.spread != null ? `Líkanið ${modelSpreadLabel(g.home, g.away, f.spread)}` : null,
-    !played && vegas ? `Vegas ${vegas}` : null,
+    !played && prices ? `Stuðlar ${prices}` : null,
     !played && g.total_line !== null ? `Heildarstig ${totalLabel(g.total_line)}` : null,
     played && fav ? `líkanið gaf ${fav.abbr} ${probLabel(fav.p)}` : null,
     g.neutral && g.stadium ? g.stadium : null,

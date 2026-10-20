@@ -141,3 +141,12 @@ describe('slips with a player pick', () => {
     expect(withPlayer.p).toBeLessThan(bestSlip(games, 2)!.p)
   })
 })
+
+describe('oddsLabel', () => {
+  it('shows the European price with a comma, nothing without a line', async () => {
+    const { oddsLabel } = await import('../src/lib/nfl/odds')
+    expect(oddsLabel(-200)).toBe('1,50')
+    expect(oddsLabel(130)).toBe('2,30')
+    expect(oddsLabel(null)).toBeNull()
+  })
+})

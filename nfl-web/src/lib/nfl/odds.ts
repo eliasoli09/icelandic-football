@@ -9,3 +9,9 @@ export function devig(homeMl: number | null, awayMl: number | null): { home: num
   const a = impliedProb(awayMl)
   return { home: h / (h + a), away: a / (h + a) }
 }
+
+/** A European (decimal) price from an American moneyline. */
+export const decimalOdds = (ml: number) => (ml < 0 ? 1 + 100 / -ml : 1 + ml / 100)
+
+/** "1,65": the decimal price as shown, or null without a line. */
+export const oddsLabel = (ml: number | null | undefined) => (ml == null ? null : decimalOdds(ml).toFixed(2).replace('.', ','))

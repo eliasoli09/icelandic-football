@@ -12,6 +12,7 @@ import { franchiseOf, predictGame } from '@/lib/nfl/elo'
 import { seasonForecasts } from '@/lib/nfl/forecast'
 import { teamForm, type TeamForm } from '@/lib/nfl/form'
 import { eloMove, modelSpreadLabel, probLabel, spreadLabel, totalLabel } from '@/lib/nfl/format'
+import { oddsLabel } from '@/lib/nfl/odds'
 import { devig } from '@/lib/nfl/odds'
 import { nflBroadcasts, nflGame, nflMeetings, nflNews, nflQbByName, nflSeasonModel, nflInjuries } from '@/lib/nfl/queries'
 import { NEWS_NOTE, NewsList } from '@/components/Nfl/NewsList'
@@ -119,11 +120,19 @@ export default async function NflGamePage({ params }: Props) {
                   <td className="text-right num">{vegas ? probLabel(vegas.home) : '-'}</td>
                   <td className="text-right num">{spreadLabel(game) ?? '-'}</td>
                 </tr>
+                {oddsLabel(game.home_ml) && (
+                  <tr className="trow">
+                    <td className="font-semibold">Stuðull</td>
+                    <td className="text-right num">{oddsLabel(game.away_ml) ?? '-'}</td>
+                    <td className="text-right num">{oddsLabel(game.home_ml)}</td>
+                    <td />
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
-          {game.total_line !== null && <p className="text-xs muted">Heildarstig Vegas: {totalLabel(game.total_line)}. Líkanið spáir ekki heildarstigum.</p>}
-          <p className="text-xs muted">Líkur Vegas eru reiknaðar úr stuðlunum (moneyline) eftir að álag bókarans er dregið frá.</p>
+          {game.total_line !== null && <p className="text-xs muted">Heildarstig Vegas: {totalLabel(game.total_line)}{oddsLabel(game.over_odds) && oddsLabel(game.under_odds) ? ` (yfir ${oddsLabel(game.over_odds)}, undir ${oddsLabel(game.under_odds)})` : ''}. Líkanið spáir ekki heildarstigum.</p>}
+          <p className="text-xs muted">Stuðlarnir eru evrópskir (heildarútborgun fyrir hverja krónu). Líkur Vegas eru reiknaðar úr þeim eftir að álag bókarans er dregið frá.</p>
         </section>
       )}
 

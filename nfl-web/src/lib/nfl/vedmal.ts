@@ -1,8 +1,7 @@
-import { devig } from './odds'
+import { decimalOdds, devig } from './odds'
 import type { NflGame } from './types'
 
-/** A European (decimal) price from an American moneyline. */
-export const decimalOdds = (ml: number) => (ml < 0 ? 1 + 100 / -ml : 1 + ml / 100)
+export { decimalOdds }
 
 export type LegKind = 'win' | 'over' | 'under' | 'td' | 'yards'
 export type YardStat = 'pass' | 'rush' | 'rec'
