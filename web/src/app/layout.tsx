@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
 import { Geist, Geist_Mono, Archivo } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { Database } from 'lucide-react'
@@ -7,6 +8,7 @@ import { Nav } from '@/components/Nav'
 import { SwRegister } from '@/components/SwRegister'
 import { LeagueProvider } from '@/components/LeagueContext'
 import { lastIngest, leagueRegistry } from '@/lib/queries'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin', 'latin-ext'] })
@@ -18,7 +20,7 @@ const archivo = Archivo({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://islensk-fotbolti.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: 'Besta spáin - íslensk knattspyrnugreining',
   description:
     'Elo-stig, leikjaspár og líkindahermun fyrir Bestu deild karla. Uppfærist sjálfkrafa eftir hvern leik.',
@@ -69,6 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </footer>
           </LeagueProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
