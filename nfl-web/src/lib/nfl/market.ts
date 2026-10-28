@@ -1,3 +1,4 @@
+import { franchiseOf } from './elo'
 import { offenceScore, type FantasyLine } from './stars'
 import type { InjuryStatus } from './injuries'
 import type { NflGame } from './types'
@@ -32,10 +33,11 @@ export const NFL_MARKET: MarketParams = MARKET_NAIVE
 
 export interface Tally { games: number; total: number }
 
-/** Expected points a game: this season and last (weighted `prev`), pulled towards `prior` by `k` games. */
+/** Expected points a game: this season and last (weighted `prev`), pulled towards `prior` by `k` games; with no weight at all, last season's average (0 if none). */
 export function projection(cur: Tally, prev: Tally, p: PosParams): number {
   const w = cur.games + p.prev * prev.games + p.k
-  return w > 0 ? (cur.total + p.prev * prev.total + p.k * p.prior) / w : 0
+  if (w > 0) return (cur.total + p.prev * prev.total + p.k * p.prior) / w
+  return prev.games > 0 ? prev.total / prev.games : 0
 }
 
 type Sched = Pick<NflGame, 'season' | 'game_type' | 'week' | 'home' | 'away'>
@@ -45,7 +47,8 @@ const OUT_GAMES: Partial<Record<InjuryStatus, number>> = { Out: 1, Doubtful: 1, 
 /** The club's regular-season games after `afterWeek`, less what the player's status keeps him out of. */
 export function gamesLeft(team: string, season: number, afterWeek: number, games: Sched[], status: InjuryStatus | null = null): number {
   if (status === 'Cut') return 0
-  const left = games.filter((g) => g.season === season && g.game_type === 'REG' && g.week > afterWeek && (g.home === team || g.away === team)).length
+  const me = franchiseOf(team)
+  const left = games.filter((g) => g.season === season && g.game_type === 'REG' && g.week > afterWeek && (franchiseOf(g.home) === me || franchiseOf(g.away) === me)).length
   return Math.max(0, left - (status ? OUT_GAMES[status] ?? 0 : 0))
 }
 
@@ -113,8 +116,8 @@ export function marketWeek(x: MarketInput): MarketRow[] {
     repl[pos] = ps.length ? ps[Math.min(REPLACEMENT[pos], ps.length) - 1] : 0
   }
   const rows: MarketRow[] = cands
-    .map((c) => ({ ...c, value: round((c.proj - repl[c.position]) * c.games_left, 1), rank: 0, pos_rank: 0 }))
-    .sort((a, b) => b.value - a.value || b.proj - a.proj || a.player_id.localeCompare(b.player_id))
+    .map((c) => ({ ...c, value: round((c.proj - repl[c.position]) * c.games_left, 1) + 0, rank: 0, pos_rank: 0 }))
+    .sort((a, b) => b.value - a.value || (b.proj - repl[b.position]) - (a.proj - repl[a.position]) || a.player_id.localeCompare(b.player_id))
   const n: Partial<Record<MarketPos, number>> = {}
   rows.forEach((r, i) => { r.rank = i + 1; r.pos_rank = n[r.position] = (n[r.position] ?? 0) + 1 })
   return rows
@@ -133,12 +136,13 @@ export function tradeVerdict(a: number[], b: number[]): TradeVerdict {
 
 export interface Move { player_id: string; rank: number; from: number; change: number }
 
-/** Biggest climbs and drops between two snapshots, among the top `top` now, with at least `minGames` played. */
+/** Biggest climbs and drops between two snapshots, for players in the top `top` in either, with at least `minGames` played; ranks past `top` count as `top + 1`. */
 export function movers(now: Pick<MarketRow, 'player_id' | 'rank' | 'games'>[], before: Pick<MarketRow, 'player_id' | 'rank'>[], n = 5, top = 300, minGames = 0): { up: Move[]; down: Move[] } {
   const was = new Map(before.map((r) => [r.player_id, r.rank]))
+  const c = (r: number) => Math.min(r, top + 1)
   const moves = now
-    .filter((r) => r.rank <= top && r.games >= minGames && was.has(r.player_id))
-    .map((r) => ({ player_id: r.player_id, rank: r.rank, from: was.get(r.player_id)!, change: was.get(r.player_id)! - r.rank }))
+    .filter((r) => r.games >= minGames && was.has(r.player_id) && (r.rank <= top || was.get(r.player_id)! <= top))
+    .map((r) => ({ player_id: r.player_id, rank: r.rank, from: was.get(r.player_id)!, change: c(was.get(r.player_id)!) - c(r.rank) }))
   return {
     up: moves.filter((m) => m.change > 0).sort((a, b) => b.change - a.change || a.rank - b.rank).slice(0, n),
     down: moves.filter((m) => m.change < 0).sort((a, b) => a.change - b.change || a.rank - b.rank).slice(0, n),

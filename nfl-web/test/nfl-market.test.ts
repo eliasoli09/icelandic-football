@@ -14,6 +14,9 @@ describe('spá í leik', () => {
     expect(projection({ games: 2, total: 30 }, { games: 10, total: 100 }, MARKET_NAIVE.WR)).toBe(15)
     expect(projection({ games: 0, total: 0 }, { games: 0, total: 0 }, MARKET_NAIVE.WR)).toBe(0)
   })
+  it('án leikja í ár og með naive stillingar: meðaltal síðasta tímabils', () => {
+    expect(projection({ games: 0, total: 0 }, { games: 10, total: 100 }, MARKET_NAIVE.WR)).toBe(10)
+  })
 })
 
 describe('leikir eftir', () => {
@@ -26,6 +29,20 @@ describe('leikir eftir', () => {
     expect(gamesLeft('KC', 2026, 1, games, 'Questionable')).toBe(3)
     expect(gamesLeft('KC', 2026, 1, games, 'IR')).toBe(0)
     expect(gamesLeft('KC', 2026, 1, games, 'Cut')).toBe(0)
+  })
+  it('PUP og Reserve taka fjóra leiki', () => {
+    expect(gamesLeft('KC', 2026, 1, games, 'PUP')).toBe(0)
+    expect(gamesLeft('KC', 2026, 1, games, 'Reserve')).toBe(0)
+    expect(gamesLeft('KC', 2026, 0, games, 'PUP')).toBe(0)
+    expect(gamesLeft('KC', 2026, 0, [...games, G(6, 'KC', 'NE'), G(7, 'KC', 'NYJ'), G(8, 'KC', 'MIA')], 'Reserve')).toBe(3)
+  })
+  it('leikir úr öðru tímabili teljast ekki', () => {
+    expect(gamesLeft('KC', 2026, 1, [...games, { season: 2025, game_type: 'REG', week: 9, home: 'KC', away: 'NE' }])).toBe(3)
+  })
+  it('gömul skammstöfun á sama félagi', () => {
+    const g = [G(2, 'LA', 'SEA'), G(3, 'OAK', 'LA')]
+    expect(gamesLeft('LAR', 2026, 1, g)).toBe(2)
+    expect(gamesLeft('LV', 2026, 1, g)).toBe(1)
   })
 })
 
@@ -44,9 +61,38 @@ describe('markaðurinn í einni umferð', () => {
     const rows = marketWeek(base)
     // fewer than 36 WRs: the last one listed is the replacement (C, 10); the only RB is its own replacement
     expect(rows.map((r) => [r.player_id, r.value, r.rank, r.pos_rank])).toEqual([
-      ['A', 20, 1, 1], ['B', 10, 2, 2], ['D', 0, 3, 1], ['C', 0, 4, 3],
+      ['A', 20, 1, 1], ['B', 10, 2, 2], ['C', 0, 3, 3], ['D', 0, 4, 1],
     ])
     expect(rows[0]).toMatchObject({ position: 'WR', team: 'T1', games: 1, proj: 20, games_left: 2 })
+  })
+  it('þegar enginn á leiki eftir raðast eftir spá umfram varamann, ekki hrárri spá', () => {
+    const g = [G(1, 'T1', 'T2'), G(1, 'T3', 'T4')]
+    const ps: MarketPlayer[] = [
+      { player_id: 'Q1', position: 'QB', team: 'T1' }, { player_id: 'Q2', position: 'QB', team: 'T2' },
+      { player_id: 'W1', position: 'WR', team: 'T3' }, { player_id: 'W2', position: 'WR', team: 'T4' },
+    ]
+    // QB replacement is Q2 (15.0 vs 15.1), WR replacement is W2 (2): W1 is 8 over, Q1 only 0.1 over, both replacements tie on 0 (id order)
+    const ls = [line('Q1', 1, 'T1', 151), line('Q2', 1, 'T2', 150), line('W1', 1, 'T3', 100), line('W2', 1, 'T4', 20)]
+    const rows = marketWeek({ ...base, games: g, players: ps, lines: ls })
+    expect(rows.map((r) => r.player_id)).toEqual(['W1', 'Q1', 'Q2', 'W2'])
+    expect(rows.every((r) => r.games_left === 0 && Object.is(r.value, 0))).toBe(true)
+  })
+  it('varamaður er sá tólfti í QB: gildi 0, sá þrettándi neikvæður', () => {
+    const g = [G(1, 'T1', 'T2'), G(2, 'T1', 'T2')]
+    const ps: MarketPlayer[] = Array.from({ length: 13 }, (_, i) => ({ player_id: `Q${i + 1}`, position: 'QB', team: 'T1' }))
+    const ls = ps.map((p, i) => line(p.player_id, 1, 'T1', (13 - i) * 10))
+    const rows = marketWeek({ ...base, games: g, players: ps, lines: ls })
+    expect(rows.find((r) => r.player_id === 'Q12')!.value).toBe(0)
+    expect(rows.find((r) => r.player_id === 'Q13')!.value).toBeLessThan(0)
+    expect(rows.find((r) => r.player_id === 'Q11')!.value).toBeGreaterThan(0)
+  })
+  it('varamaður er sá 36. í WR', () => {
+    const g = [G(1, 'T1', 'T2'), G(2, 'T1', 'T2')]
+    const ps: MarketPlayer[] = Array.from({ length: 37 }, (_, i) => ({ player_id: `W${i + 1}`, position: 'WR', team: 'T1' }))
+    const ls = ps.map((p, i) => line(p.player_id, 1, 'T1', (40 - i) * 10))
+    const rows = marketWeek({ ...base, games: g, players: ps, lines: ls })
+    expect(rows.find((r) => r.player_id === 'W36')!.value).toBe(0)
+    expect(rows.find((r) => r.player_id === 'W37')!.value).toBeLessThan(0)
   })
   it('meiddur leikmaður á færri leiki eftir', () => {
     const rows = marketWeek({ ...base, injuries: new Map([['A', 'Out' as const]]) })
@@ -61,6 +107,10 @@ describe('markaðurinn í einni umferð', () => {
 describe('skiptireiknir', () => {
   it('sanngjarnt innan 10%', () => expect(tradeVerdict([50], [46])).toEqual({ a: 50, b: 46, fair: true, winner: null, margin: 4 }))
   it('neikvætt verðmæti telst 0', () => expect(tradeVerdict([50], [30, -5])).toEqual({ a: 50, b: 30, fair: false, winner: 'a', margin: 20 }))
+  it('mörkin: 50 á móti 45 er sanngjarnt, 50 á móti 44.9 ekki', () => {
+    expect(tradeVerdict([50], [45]).fair).toBe(true)
+    expect(tradeVerdict([50], [44.9])).toMatchObject({ fair: false, winner: 'a' })
+  })
   it('tómt er sanngjarnt', () => expect(tradeVerdict([], []).fair).toBe(true))
 })
 
@@ -71,6 +121,13 @@ describe('hreyfingar', () => {
     const m = movers(now, before)
     expect(m.up).toEqual([{ player_id: 'p1', rank: 1, from: 3, change: 2 }])
     expect(m.down.map((x) => x.player_id)).toEqual(['p2', 'p3'])
+  })
+  it('utan topp 300 telst bara sem topp 300 + 1', () => {
+    const n = [{ player_id: 'a', rank: 290, games: 5 }, { player_id: 'b', rank: 320, games: 5 }, { player_id: 'c', rank: 350, games: 5 }]
+    const b = [{ player_id: 'a', rank: 700 }, { player_id: 'b', rank: 40 }, { player_id: 'c', rank: 400 }]
+    const m = movers(n, b)
+    expect(m.up).toEqual([{ player_id: 'a', rank: 290, from: 700, change: 11 }])
+    expect(m.down).toEqual([{ player_id: 'b', rank: 320, from: 40, change: -261 }])
   })
   it('lágmarksfjöldi leikja', () => expect(movers(now, before, 5, 300, 3).down.map((x) => x.player_id)).toEqual(['p2']))
 })
