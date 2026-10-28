@@ -177,15 +177,33 @@ export function tradeVerdict(a: number[], b: number[]): TradeVerdict {
   return { a: sa, b: sb, fair, winner: fair ? null : sa > sb ? 'a' : 'b', margin }
 }
 
-export interface Move { player_id: string; rank: number; from: number; change: number }
+/** The page shows ranks up to this; anything lower counts as `MARKET_TOP + 1` in changes and charts. */
+export const MARKET_TOP = 300
 
-/** Biggest climbs and drops between two snapshots, for players in the top `top` in either, with at least `minGames` played; ranks past `top` count as `top + 1`. */
-export function movers(now: Pick<MarketRow, 'player_id' | 'rank' | 'games'>[], before: Pick<MarketRow, 'player_id' | 'rank'>[], n = 5, top = 300, minGames = 0): { up: Move[]; down: Move[] } {
+/**
+ * `rank` is the real rank now, `from` the real rank before; `from` is null only
+ * for season movers (`absentAsOutside`) of a player with no row in the first
+ * round, who counts as coming from outside the top (`MARKET_TOP + 1`). The page
+ * labels a null `from`, and any rank past `MARKET_TOP`, "utan topp 300".
+ * `change` is places gained, with ranks clamped to `top + 1`.
+ */
+export interface Move { player_id: string; rank: number; from: number | null; change: number }
+
+/**
+ * Biggest climbs and drops between two snapshots, for players in the top `top` in either, with at least `minGames` played; ranks past `top` count as `top + 1`.
+ * With `absentAsOutside`, a player missing from `before` counts as rank `top + 1` there (from null) instead of being left out.
+ */
+export function movers(now: Pick<MarketRow, 'player_id' | 'rank' | 'games'>[], before: Pick<MarketRow, 'player_id' | 'rank'>[], n = 5, top = MARKET_TOP, minGames = 0, opts: { absentAsOutside?: boolean } = {}): { up: Move[]; down: Move[] } {
   const was = new Map(before.map((r) => [r.player_id, r.rank]))
   const c = (r: number) => Math.min(r, top + 1)
-  const moves = now
-    .filter((r) => r.games >= minGames && was.has(r.player_id) && (r.rank <= top || was.get(r.player_id)! <= top))
-    .map((r) => ({ player_id: r.player_id, rank: r.rank, from: was.get(r.player_id)!, change: c(was.get(r.player_id)!) - c(r.rank) }))
+  const moves: Move[] = []
+  for (const r of now) {
+    if (r.games < minGames) continue
+    const from = was.get(r.player_id) ?? null
+    if (from === null && !opts.absentAsOutside) continue
+    if (r.rank > top && (from === null || from > top)) continue
+    moves.push({ player_id: r.player_id, rank: r.rank, from, change: c(from ?? top + 1) - c(r.rank) })
+  }
   return {
     up: moves.filter((m) => m.change > 0).sort((a, b) => b.change - a.change || a.rank - b.rank).slice(0, n),
     down: moves.filter((m) => m.change < 0).sort((a, b) => a.change - b.change || a.rank - b.rank).slice(0, n),

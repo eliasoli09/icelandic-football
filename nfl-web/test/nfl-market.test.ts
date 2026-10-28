@@ -130,6 +130,14 @@ describe('hreyfingar', () => {
     expect(m.down).toEqual([{ player_id: 'b', rank: 320, from: 40, change: -261 }])
   })
   it('lágmarksfjöldi leikja', () => expect(movers(now, before, 5, 300, 3).down.map((x) => x.player_id)).toEqual(['p2']))
+  it('absentAsOutside: vantar í fyrri röðinni telst utan topp 300 (from null)', () => {
+    const n = [{ player_id: 'a', rank: 40, games: 5 }, { player_id: 'b', rank: 400, games: 5 }, { player_id: 'c', rank: 10, games: 2 }]
+    const b = [{ player_id: 'x', rank: 1 }]
+    expect(movers(n, b).up).toEqual([])
+    const m = movers(n, b, 10, 300, 3, { absentAsOutside: true })
+    expect(m.up).toEqual([{ player_id: 'a', rank: 40, from: null, change: 261 }])
+    expect(m.down).toEqual([])
+  })
 })
 
 describe('umferðir sem eru skrifaðar', () => {
