@@ -36,8 +36,11 @@ export const groupOf = (position: string | null) => (position ? GROUP[position.t
 
 const round1 = (x: number) => Math.round(x * 10) / 10
 
+/** The fields fantasy points are made of. */
+export type FantasyLine = Pick<StarLine, 'passing_yards' | 'passing_tds' | 'interceptions' | 'rushing_yards' | 'rushing_tds' | 'receptions' | 'receiving_yards' | 'receiving_tds' | 'fumbles_lost'>
+
 /** Fantasy-style points (half a point a catch): yards, touchdowns, minus turnovers. */
-export function offenceScore(l: StarLine): number {
+export function offenceScore(l: FantasyLine): number {
   return round1(l.passing_yards / 25 + 4 * l.passing_tds - 2 * l.interceptions
     + l.rushing_yards / 10 + 6 * l.rushing_tds
     + 0.5 * l.receptions + l.receiving_yards / 10 + 6 * l.receiving_tds - 2 * l.fumbles_lost)

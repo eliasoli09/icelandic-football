@@ -55,3 +55,11 @@ export function pairedDiff(a: number[], b: number[]): { mean: number; lo: number
   const half = (1.96 * sd) / Math.sqrt(d.length)
   return { mean, lo: mean - half, hi: mean + half }
 }
+
+/** Pick the candidate with the lowest score. Same guard as `tune`: the window must end before the test seasons. */
+export function tuneBy<T>(candidates: T[], run: (c: T) => number, to: number, testFrom = TEST_FROM): { best: T; logLoss: number } {
+  if (to >= testFrom) throw new Error(`Stillingar má aðeins velja á tímabilum fyrir ${testFrom}, ekki til ${to}`)
+  let best = { best: candidates[0], logLoss: Infinity }
+  for (const c of candidates) { const l = run(c); if (l < best.logLoss) best = { best: c, logLoss: l } }
+  return best
+}

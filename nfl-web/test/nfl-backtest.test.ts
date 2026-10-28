@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { score, tune, TEST_FROM } from '../src/lib/nfl/backtest'
+import { score, tune, tuneBy, TEST_FROM } from '../src/lib/nfl/backtest'
 
 describe('score', () => {
   it('log loss, Brier, hittni og forgjafarskekkja', () => {
@@ -21,5 +21,14 @@ describe('tune', () => {
     expect(() => tune([], 2002, TEST_FROM)).toThrow(/2015/)
     expect(() => tune([], 2010, 2020, 2020)).toThrow(/2020/)
     expect(() => tune([], 2010, 2019, 2020, { K: [20], HFA: [48], R: [0.3], BYE: [0] })).not.toThrow()
+  })
+})
+
+describe('tuneBy', () => {
+  it('velur lægsta', () => {
+    expect(tuneBy([3, 1, 2], (x) => x, 2014, 2015)).toEqual({ best: 1, logLoss: 1 })
+  })
+  it('neitar að velja á prófunarárum', () => {
+    expect(() => tuneBy([1], (x) => x, 2015, 2015)).toThrow()
   })
 })
