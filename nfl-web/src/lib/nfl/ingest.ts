@@ -3,6 +3,7 @@ import { parseGames, parseTeams } from './csv'
 import { runElo, type EloRow, type EloState } from './elo'
 import { simulateSeason } from './sim'
 import { ingestInjuries, ingestPlayers } from './playerIngest'
+import { ingestMarket } from './marketIngest'
 import { fetchNews, summarizeNews } from './newsIngest'
 import { draftArticles, type ArticleRun } from './articles/ingest'
 import { isPlayed, type NflGame, type NflTeam } from './types'
@@ -22,6 +23,7 @@ export interface NflIngestResult {
   sim: { sims: number; ms: number } | { error: string }
   players: { players: number; weeks: number } | { error: string }
   injuries: { week: number | null; rows: number } | { error: string }
+  market: { weeks: number[]; rows: number } | { error: string }
   news: { found: number; added: number; failed: string[]; summaries: unknown } | { error: string }
   articles: ArticleRun | { error: string }
 }
@@ -88,6 +90,8 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
   // player stats are a separate feed: a failure there leaves the rest untouched
   const players = await ingestPlayers([season]).then(({ players, weeks }) => ({ players, weeks })).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
   const injuries = await ingestInjuries(season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+  // Markaðurinn reads the player lines and injuries written just above; a failure leaves the rest untouched
+  const market = await ingestMarket(season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
   // news last: a slow feed or summariser must not hold up anything above
   const clubs = teams.filter((t) => t.franchise === t.abbr)
   const news = await fetchNews(clubs)
@@ -106,6 +110,7 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
     sim,
     players,
     injuries,
+    market,
     news,
     articles,
   }

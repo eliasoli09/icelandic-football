@@ -1,7 +1,9 @@
 import { db } from '../db'
 import { stateFromRows, type EloRow, type EloState } from './elo'
 import type { SimTeam } from './sim'
+import type { MarketLine, MarketPlayer, MarketRow, Tally } from './market'
 import { STATS, type NflPlayer, type PlayerWeek, type SeasonTotal } from './players'
+import { offenceScore, type FantasyLine } from './stars'
 import type { NflGame, NflTeam } from './types'
 import { STAT_FIELDS } from './vedmalView'
 
@@ -261,6 +263,75 @@ export async function nflLiveWp(gameIds: string[]): Promise<Record<string, impor
   for (const r of (data ?? []) as (import('./winChart').WpPoint & { game_id: string })[]) {
     const { game_id, ...p } = r
     out[game_id]?.push(p)
+  }
+  return out
+}
+
+const FANTASY_COLS = 'passing_yards, passing_tds, interceptions, rushing_yards, rushing_tds, receptions, receiving_yards, receiving_tds, fumbles_lost'
+const FANTASY_FIELDS = FANTASY_COLS.split(', ')
+/** Every fantasy field as a number (sums from the season view can come back as strings). */
+const fantasyNumbers = <T extends Record<string, unknown>>(r: T): T =>
+  ({ ...r, ...Object.fromEntries(FANTASY_FIELDS.map((k) => [k, Number(r[k])])) })
+
+export interface MarketInputs {
+  lines: MarketLine[]
+  prev: Map<string, Tally>
+  players: (MarketPlayer & { name: string; headshot: string | null })[]
+}
+
+/** This season's regular-season lines, last season's totals in fantasy points, and every QB/RB/WR/TE on the register, for Markaðurinn; paged. */
+export async function nflMarketInputs(season: number): Promise<MarketInputs> {
+  const lines: MarketLine[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_player_weeks').select(`player_id, week, team, game_id, ${FANTASY_COLS}`)
+      .eq('season', season).eq('season_type', 'REG').order('player_id').order('week').range(from, from + 999)
+    if (error) throw error
+    lines.push(...((data ?? []) as unknown as MarketLine[]).map(fantasyNumbers))
+    if (!data || data.length < 1000) break
+  }
+  const prev = new Map<string, Tally>()
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_player_season').select(`player_id, games, ${FANTASY_COLS}`)
+      .eq('season', season - 1).eq('season_type', 'REG').in('position', ['QB', 'RB', 'WR', 'TE']).order('player_id').range(from, from + 999)
+    if (error) throw error
+    for (const r of (data ?? []) as unknown as (FantasyLine & { player_id: string; games: number })[]) {
+      prev.set(r.player_id, { games: Number(r.games), total: offenceScore(fantasyNumbers(r)) })
+    }
+    if (!data || data.length < 1000) break
+  }
+  const players: MarketInputs['players'] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_players').select('player_id, name, position, team, headshot')
+      .in('position', ['QB', 'RB', 'WR', 'TE']).order('player_id').range(from, from + 999)
+    if (error) throw error
+    players.push(...((data ?? []) as MarketInputs['players']))
+    if (!data || data.length < 1000) break
+  }
+  return { lines, prev, players }
+}
+
+/** Rounds of `season` already in nfl_market (one rank-1 row per round, at most 18). */
+export async function nflMarketWeeks(season: number): Promise<number[]> {
+  const { data, error } = await db().from('nfl_market').select('week').eq('season', season).eq('rank', 1).order('week').range(0, 99)
+  if (error) throw error
+  return (data ?? []).map((r) => r.week as number)
+}
+
+export interface StoredMarketRow extends MarketRow { week: number; name: string; headshot: string | null }
+
+/** Every snapshot of the season, oldest round first, with names; paged (several thousand rows). */
+export async function nflMarket(season: number): Promise<StoredMarketRow[]> {
+  const out: StoredMarketRow[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_market')
+      .select('week, player_id, position, team, games, proj, games_left, value, rank, pos_rank, nfl_players(name, headshot)')
+      .eq('season', season).order('week').order('rank').range(from, from + 999)
+    if (error) throw error
+    for (const r of (data ?? []) as unknown as (Omit<StoredMarketRow, 'name' | 'headshot'> & { nfl_players: { name: string; headshot: string | null } | null })[]) {
+      const { nfl_players: p, ...rest } = r
+      out.push({ ...rest, proj: Number(rest.proj), value: Number(rest.value), name: p?.name ?? 'Óþekktur', headshot: p?.headshot ?? null })
+    }
+    if (!data || data.length < 1000) break
   }
   return out
 }
