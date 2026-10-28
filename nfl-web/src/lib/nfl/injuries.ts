@@ -38,32 +38,34 @@ function rosterStatus(status: string, code: string): InjuryStatus | null {
  * The latest week of the season in the injury report, merged with that week's
  * roster reserve list. A player on both keeps the report's line, which names
  * the injury. A week with no report yet (before the first one) uses the roster's latest week.
+ * With `week`, the newest week up to it instead, as if read on that day (Markaðurinn's history).
  */
-export function parseInjuries(reportCsv: string, rosterCsv: string, season: number): InjuryWeek | null {
+export function parseInjuries(reportCsv: string, rosterCsv: string, season: number, week = Infinity): InjuryWeek | null {
   const report = table(reportCsv, ['season', 'game_type', 'team', 'week', 'gsis_id', 'position', 'full_name', 'report_primary_injury', 'report_secondary_injury', 'report_status', 'practice_status'])
     .filter((r) => Number(r.season) === season && r.gsis_id)
   const roster = table(rosterCsv, ['season', 'team', 'position', 'status', 'full_name', 'gsis_id', 'week', 'game_type', 'status_description_abbr'])
     .filter((r) => Number(r.season) === season && r.gsis_id)
-  const weeks = (report.length ? report : roster).map((r) => Number(r.week))
+  const upTo = (rows: Record<string, string>[]) => rows.map((r) => Number(r.week)).filter((w) => w <= week)
+  const weeks = upTo(report).length ? upTo(report) : upTo(roster)
   if (!weeks.length) return null
-  const week = Math.max(...weeks)
+  const at = Math.max(...weeks)
   const out = new Map<string, Injury>()
   let gameType = 'REG'
   for (const r of roster) {
-    if (Number(r.week) !== week) continue
+    if (Number(r.week) !== at) continue
     gameType = r.game_type || gameType
     const status = rosterStatus(r.status, r.status_description_abbr)
     if (status) out.set(r.gsis_id, { team: r.team, player_id: r.gsis_id, name: r.full_name, position: r.position || null, status, injury: null, practice: null, source: 'roster' })
   }
   for (const r of report) {
-    if (Number(r.week) !== week) continue
+    if (Number(r.week) !== at) continue
     gameType = r.game_type || gameType
     const status = REPORT[r.report_status]
     if (!status) continue
     const injury = [r.report_primary_injury, r.report_secondary_injury].filter(Boolean).join(', ') || null
     out.set(r.gsis_id, { team: r.team, player_id: r.gsis_id, name: r.full_name, position: r.position || null, status, injury, practice: r.practice_status || null, source: 'report' })
   }
-  return { season, week, game_type: gameType, rows: [...out.values()] }
+  return { season, week: at, game_type: gameType, rows: [...out.values()] }
 }
 
 const BODY: Record<string, string> = {

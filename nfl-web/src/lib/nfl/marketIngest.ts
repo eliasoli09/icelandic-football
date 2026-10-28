@@ -1,39 +1,48 @@
 import { db } from '../db'
 import { availability } from './injuries'
-import { marketRounds, marketWeek, NFL_MARKET } from './market'
-import { nflInjuries, nflMarketInputs, nflMarketWeeks, nflSeasonGames } from './queries'
-import { enoughForWeek } from './stars'
-import { isPlayed } from './types'
+import { completeRounds, marketRounds, marketWeek, NFL_MARKET } from './market'
+import { nflInjuries, nflMarketInputs, nflMarketWeeks, nflSeasonGames, type InjuryList } from './queries'
 
 const SECRET = () => process.env.CRON_SECRET!
 
+export interface MarketIngestOpts {
+  /** Rewrite every completed round, not only the missing, partial and newest ones. */
+  all?: boolean
+  /**
+   * The injury list as it stood for a round: the newest week on file up to
+   * `week`. Defaults to nfl_injury (the cron); the backfill passes nflverse's
+   * history, since nfl_injury only keeps the weeks the cron has seen.
+   */
+  injuries?: (week: number) => Promise<InjuryList>
+}
+
 /**
  * Write a snapshot for every completed regular-season round that has none yet,
- * and the newest completed round again so it picks up the latest injury report
- * (every completed round with `all`). A round is complete when all its games
- * are played and most of them have player lines (nflverse can lag a day).
+ * every completed round still missing some player lines, and the newest
+ * completed round again so it picks up the latest injury report (every
+ * completed round with `all`). See `completeRounds` for when a round counts.
  */
-export async function ingestMarket(season: number, opts: { all?: boolean } = {}): Promise<{ weeks: number[]; rows: number }> {
+export async function ingestMarket(season: number, opts: MarketIngestOpts = {}): Promise<{ weeks: number[]; rows: number }> {
+  const injuries = opts.injuries ?? ((w: number) => nflInjuries(season, w))
   const games = await nflSeasonGames(season)
-  const reg = games.filter((g) => g.game_type === 'REG')
   const inputs = await nflMarketInputs(season)
-  const lineGames = (w: number) => new Set(inputs.lines.filter((l) => l.week === w).map((l) => l.game_id)).size
-  const complete = [...new Set(reg.map((g) => g.week))].sort((a, b) => a - b).filter((w) => {
-    const wk = reg.filter((g) => g.week === w)
-    return wk.every(isPlayed) && enoughForWeek(lineGames(w), wk.length)
-  })
-  const todo = marketRounds(complete, opts.all ? [] : await nflMarketWeeks(season), opts.all)
+  const byWeek = new Map<number, Set<string>>()
+  for (const l of inputs.lines) byWeek.set(l.week, (byWeek.get(l.week) ?? new Set()).add(l.game_id))
+  const { complete, partial } = completeRounds(games.filter((g) => g.game_type === 'REG'), new Map([...byWeek].map(([w, s]) => [w, s.size])))
+  const todo = marketRounds(complete, opts.all ? [] : await nflMarketWeeks(season), { all: opts.all, partial })
+  const written: number[] = []
   let rows = 0
   for (const week of todo) {
     // the next round's report is what keeps a player out of the games still to come
-    const inj = await nflInjuries(season, week + 1)
+    const inj = await injuries(week + 1)
     const rowsOut = marketWeek({
       season, week, lines: inputs.lines, prev: inputs.prev, players: inputs.players, games,
       injuries: availability(inj.rows, inj.week, week + 1), params: NFL_MARKET,
     })
     const { data, error } = await db().rpc('rpc_replace_nfl_market', { p_secret: SECRET(), p_season: season, p_week: week, p_rows: rowsOut })
-    if (error) throw new Error(`rpc_replace_nfl_market ${week}: ${error.message}`)
+    if (error) throw new Error(`rpc_replace_nfl_market ${week}: ${error.message} (written before it: ${written.length ? written.join(', ') : 'none'}, ${rows} rows)`)
+    written.push(week)
     rows += Number(data)
   }
-  return { weeks: todo, rows }
+  return { weeks: written, rows }
 }

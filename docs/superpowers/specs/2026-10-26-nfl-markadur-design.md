@@ -50,10 +50,17 @@ liðs (`nfl_players.team` ekki tómt).
   inn í einni færslu).
 - **`lib/nfl/market.ts`:** hrein föll, `marketWeek(weeks, players, games, injuries,
   season, week, params)` → raðir. Engin gagnagrunnsköll, svo þau eru prófanleg.
-- **Daglegi cron-inn** reiknar nýjustu umferð sem er alveg búin, og aðeins ef hún er ekki
-  þegar til. Bilun þar fellir ekki restina af cron-inum (eins og leikmenn).
-- **`scripts/ingest-nfl-market.mts --season 2026`** fyllir allar umferðir tímabilsins
-  hingað til, svo línuritið hefur sögu frá fyrsta degi.
+- **Daglegi cron-inn** skrifar hverja lokna umferð sem vantar, og reiknar auk þess
+  nýjustu loknu umferðina aftur á hverjum degi, og hverja lokna umferð þar sem einhvern
+  leik vantar enn línur. Þannig ná nýjar meiðslaskýrslur og síðbúin tölfræði inn þar til
+  næsta umferð klárast. Umferð telst lokin þegar allir leikir hennar eru spilaðir og
+  minnst 60% þeirra hafa línur. Bilun þar fellir ekki restina af cron-inum (eins og
+  leikmenn).
+- **`scripts/ingest-nfl-market.mts 2026 [--all]`** (tímabilið án flaggs) gerir það sama
+  og cron-inn. Með `--all` er hver lokin umferð skrifuð upp á nýtt, og meiðslalisti
+  hverrar umferðar tekinn úr sögu nflverse (`injuries_2026.csv` og
+  `roster_weekly_2026.csv`), því `nfl_injury` geymir aðeins þær vikur sem cron-inn hefur
+  séð. Taflan `nfl_injury` er látin ósnert. Svona hefur línuritið sögu frá fyrsta degi.
 - **`scripts/nfl-market-backtest.mts`:** mælingin hér að ofan.
 
 ## Síðan

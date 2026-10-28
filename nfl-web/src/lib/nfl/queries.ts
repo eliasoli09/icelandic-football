@@ -236,15 +236,21 @@ export async function nflVedmalData(season: number): Promise<VedmalData> {
 
 export interface InjuryList { week: number | null; rows: import('./injuries').Injury[] }
 
-/** The newest injury week on file up to `week`, every listed player in it. */
+/** The newest injury week on file up to `week`, every listed player in it; paged. */
 export async function nflInjuries(season: number, week: number): Promise<InjuryList> {
   const { data: last, error: e1 } = await db().from('nfl_injury').select('week').eq('season', season).lte('week', week).order('week', { ascending: false }).limit(1)
   if (e1) throw e1
   const w = last?.[0]?.week as number | undefined
   if (w === undefined) return { week: null, rows: [] }
-  const { data, error } = await db().from('nfl_injury').select('team, player_id, name, position, status, injury, practice, source').eq('season', season).eq('week', w).range(0, 1999)
-  if (error) throw error
-  return { week: w, rows: (data ?? []) as import('./injuries').Injury[] }
+  const rows: import('./injuries').Injury[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db().from('nfl_injury').select('team, player_id, name, position, status, injury, practice, source')
+      .eq('season', season).eq('week', w).order('player_id').range(from, from + 999)
+    if (error) throw error
+    rows.push(...((data ?? []) as import('./injuries').Injury[]))
+    if (!data || data.length < 1000) break
+  }
+  return { week: w, rows }
 }
 
 /** How many readers chose each side, by game (pick'em and polls); games below five choices before kickoff are left out. */
@@ -325,7 +331,7 @@ export async function nflMarket(season: number): Promise<StoredMarketRow[]> {
   for (let from = 0; ; from += 1000) {
     const { data, error } = await db().from('nfl_market')
       .select('week, player_id, position, team, games, proj, games_left, value, rank, pos_rank, nfl_players(name, headshot)')
-      .eq('season', season).order('week').order('rank').range(from, from + 999)
+      .eq('season', season).order('week').order('rank').order('player_id').range(from, from + 999)
     if (error) throw error
     for (const r of (data ?? []) as unknown as (Omit<StoredMarketRow, 'name' | 'headshot'> & { nfl_players: { name: string; headshot: string | null } | null })[]) {
       const { nfl_players: p, ...rest } = r

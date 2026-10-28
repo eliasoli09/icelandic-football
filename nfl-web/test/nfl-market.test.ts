@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { gamesLeft, MARKET_NAIVE, marketRounds, marketWeek, movers, projection, tradeVerdict, type MarketLine, type MarketPlayer } from '../src/lib/nfl/market'
+import { completeRounds, gamesLeft, MARKET_NAIVE, marketRounds, marketWeek, movers, projection, tradeVerdict, type MarketLine, type MarketPlayer } from '../src/lib/nfl/market'
 
 const Z = { passing_yards: 0, passing_tds: 0, interceptions: 0, rushing_yards: 0, rushing_tds: 0, receptions: 0, receiving_yards: 0, receiving_tds: 0, fumbles_lost: 0 }
 // receiving yards / 10 = points, so 200 yards is 20 points
@@ -141,9 +141,29 @@ describe('umferðir sem eru skrifaðar', () => {
   })
   it('engin lokin umferð: ekkert', () => {
     expect(marketRounds([], [])).toEqual([])
-    expect(marketRounds([], [], true)).toEqual([])
+    expect(marketRounds([], [], { all: true })).toEqual([])
   })
   it('all skrifar allar loknar umferðir', () => {
-    expect(marketRounds([3, 1, 2], [1, 2, 3], true)).toEqual([1, 2, 3])
+    expect(marketRounds([3, 1, 2], [1, 2, 3], { all: true })).toEqual([1, 2, 3])
+  })
+  it('umferð með leiki án lína er endurreiknuð þar til línurnar koma', () => {
+    expect(marketRounds([1, 2, 3, 4], [1, 2, 3, 4], { partial: [2] })).toEqual([2, 4])
+    // a partial round that is no longer complete is not written
+    expect(marketRounds([1, 2, 3], [1, 2, 3], { partial: [5] })).toEqual([3])
+  })
+})
+
+describe('loknar umferðir', () => {
+  const g = (week: number, played = true) => ({ week, home_score: played ? 20 : null, away_score: played ? 17 : null })
+  const five = (week: number, played = 5) => Array.from({ length: 5 }, (_, i) => g(week, i < played))
+  it('umferð með óspilaðan leik er ekki lokin', () => {
+    expect(completeRounds([...five(1), ...five(2, 4)], new Map([[1, 5], [2, 4]]))).toEqual({ complete: [1], partial: [] })
+  })
+  it('umferð þar sem færri en 60% leikja hafa línur er ekki lokin; annars hálfköruð', () => {
+    // 3 of 5 = 60% is enough, 2 of 5 is not
+    expect(completeRounds([...five(1), ...five(2), ...five(3)], new Map([[1, 5], [2, 3], [3, 2]]))).toEqual({ complete: [1, 2], partial: [2] })
+  })
+  it('umferð getur klárast á undan þeirri á undan (frestaður leikur)', () => {
+    expect(completeRounds([...five(3), ...five(1), ...five(2, 4)], new Map([[1, 5], [2, 4], [3, 5]]))).toEqual({ complete: [1, 3], partial: [] })
   })
 })

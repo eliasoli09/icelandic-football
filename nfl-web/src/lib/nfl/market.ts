@@ -1,7 +1,7 @@
 import { franchiseOf } from './elo'
-import { offenceScore, type FantasyLine } from './stars'
+import { enoughForWeek, offenceScore, type FantasyLine } from './stars'
 import type { InjuryStatus } from './injuries'
-import type { NflGame } from './types'
+import { isPlayed, type NflGame } from './types'
 
 /**
  * Markaðurinn: what every fantasy offence player is worth, from our own stats.
@@ -134,16 +134,36 @@ export function marketWeek(x: MarketInput): MarketRow[] {
 }
 
 /**
- * Rounds to write: every completed round with no snapshot, plus the newest
- * completed round again (its injury report keeps changing until the next
- * round is done); with `all`, every completed round. Oldest first.
+ * Regular-season rounds whose games are all played and most of which have
+ * player lines (nflverse can lag a day); `partial` are those among them where
+ * some played game still has no lines. `lineGames` is games with lines by week.
  */
-export function marketRounds(complete: number[], have: Iterable<number>, all = false): number[] {
+export function completeRounds(reg: Pick<NflGame, 'week' | 'home_score' | 'away_score'>[], lineGames: Map<number, number>): { complete: number[]; partial: number[] } {
+  const complete: number[] = []
+  const partial: number[] = []
+  for (const w of [...new Set(reg.map((g) => g.week))].sort((a, b) => a - b)) {
+    const wk = reg.filter((g) => g.week === w)
+    const lined = lineGames.get(w) ?? 0
+    if (!wk.every(isPlayed) || !enoughForWeek(lined, wk.length)) continue
+    complete.push(w)
+    if (lined < wk.length) partial.push(w)
+  }
+  return { complete, partial }
+}
+
+/**
+ * Rounds to write: every completed round with no snapshot, every completed
+ * round still missing some lines, and the newest completed round again (its
+ * injury report keeps changing until the next round is done); with `all`,
+ * every completed round. Oldest first.
+ */
+export function marketRounds(complete: number[], have: Iterable<number>, opts: { all?: boolean; partial?: Iterable<number> } = {}): number[] {
   const done = [...new Set(complete)].sort((a, b) => a - b)
-  if (all) return done
+  if (opts.all) return done
   const got = new Set(have)
+  const partial = new Set(opts.partial ?? [])
   const latest = done.at(-1)
-  return done.filter((w) => !got.has(w) || w === latest)
+  return done.filter((w) => !got.has(w) || partial.has(w) || w === latest)
 }
 
 export interface TradeVerdict { a: number; b: number; fair: boolean; winner: 'a' | 'b' | null; margin: number }

@@ -37,6 +37,22 @@ describe('parseInjuries', () => {
     expect(by.has('00-7')).toBe(false)
     expect(by.get('00-4')).toMatchObject({ status: 'Out', injury: 'Concussion', source: 'report' })
   })
+  it('takes a named week, or the newest week before it', () => {
+    const w5 = parseInjuries(report, roster, 2026, 5)!
+    const by5 = new Map(w5.rows.map((r) => [r.player_id, r]))
+    expect(w5.week).toBe(5)
+    expect(by5.get('00-1')).toMatchObject({ status: 'Out', source: 'report' })
+    expect(by5.get('00-9')).toMatchObject({ status: 'IR', source: 'roster' })
+    expect(by5.has('00-2')).toBe(false)
+    expect(by5.has('00-5')).toBe(false)
+    expect(parseInjuries(report, roster, 2026, 8)!.week).toBe(6)
+    expect(parseInjuries(report, roster, 2026, 4)).toBeNull()
+  })
+  it('falls back to the roster when the report has no week up to the one named', () => {
+    const early = parseInjuries(report, [ROSTER_HEAD, '2026,KC,WR,RES,Early Ir,00-10,3,REG,R01'].join('\n'), 2026, 4)!
+    expect(early.week).toBe(3)
+    expect(early.rows.map((r) => r.player_id)).toEqual(['00-10'])
+  })
 })
 
 describe('labels', () => {
