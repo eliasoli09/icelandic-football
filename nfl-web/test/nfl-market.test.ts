@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { gamesLeft, MARKET_NAIVE, marketWeek, movers, projection, tradeVerdict, type MarketLine, type MarketPlayer } from '../src/lib/nfl/market'
+import { gamesLeft, MARKET_NAIVE, marketRounds, marketWeek, movers, projection, tradeVerdict, type MarketLine, type MarketPlayer } from '../src/lib/nfl/market'
 
 const Z = { passing_yards: 0, passing_tds: 0, interceptions: 0, rushing_yards: 0, rushing_tds: 0, receptions: 0, receiving_yards: 0, receiving_tds: 0, fumbles_lost: 0 }
 // receiving yards / 10 = points, so 200 yards is 20 points
@@ -130,4 +130,20 @@ describe('hreyfingar', () => {
     expect(m.down).toEqual([{ player_id: 'b', rank: 320, from: 40, change: -261 }])
   })
   it('lágmarksfjöldi leikja', () => expect(movers(now, before, 5, 300, 3).down.map((x) => x.player_id)).toEqual(['p2']))
+})
+
+describe('umferðir sem eru skrifaðar', () => {
+  it('vantar 5 og 6, nýjasta 7 alltaf endurreiknuð', () => {
+    expect(marketRounds([1, 2, 3, 4, 5, 6, 7], [1, 2, 3, 4, 7])).toEqual([5, 6, 7])
+  })
+  it('ekkert vantar: bara nýjasta umferðin', () => {
+    expect(marketRounds([1, 2, 3, 4, 5, 6, 7], [1, 2, 3, 4, 5, 6, 7])).toEqual([7])
+  })
+  it('engin lokin umferð: ekkert', () => {
+    expect(marketRounds([], [])).toEqual([])
+    expect(marketRounds([], [], true)).toEqual([])
+  })
+  it('all skrifar allar loknar umferðir', () => {
+    expect(marketRounds([3, 1, 2], [1, 2, 3], true)).toEqual([1, 2, 3])
+  })
 })

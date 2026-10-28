@@ -133,6 +133,19 @@ export function marketWeek(x: MarketInput): MarketRow[] {
   return rows
 }
 
+/**
+ * Rounds to write: every completed round with no snapshot, plus the newest
+ * completed round again (its injury report keeps changing until the next
+ * round is done); with `all`, every completed round. Oldest first.
+ */
+export function marketRounds(complete: number[], have: Iterable<number>, all = false): number[] {
+  const done = [...new Set(complete)].sort((a, b) => a - b)
+  if (all) return done
+  const got = new Set(have)
+  const latest = done.at(-1)
+  return done.filter((w) => !got.has(w) || w === latest)
+}
+
 export interface TradeVerdict { a: number; b: number; fair: boolean; winner: 'a' | 'b' | null; margin: number }
 
 /** Sum each side (a player below replacement adds nothing); fair within 10% of the bigger side. */

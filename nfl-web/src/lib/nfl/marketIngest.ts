@@ -1,6 +1,6 @@
 import { db } from '../db'
 import { availability } from './injuries'
-import { marketWeek, NFL_MARKET } from './market'
+import { marketRounds, marketWeek, NFL_MARKET } from './market'
 import { nflInjuries, nflMarketInputs, nflMarketWeeks, nflSeasonGames } from './queries'
 import { enoughForWeek } from './stars'
 import { isPlayed } from './types'
@@ -8,8 +8,9 @@ import { isPlayed } from './types'
 const SECRET = () => process.env.CRON_SECRET!
 
 /**
- * Write a snapshot for every completed regular-season round that has none yet
- * (or every completed round with `all`). A round is complete when all its games
+ * Write a snapshot for every completed regular-season round that has none yet,
+ * and the newest completed round again so it picks up the latest injury report
+ * (every completed round with `all`). A round is complete when all its games
  * are played and most of them have player lines (nflverse can lag a day).
  */
 export async function ingestMarket(season: number, opts: { all?: boolean } = {}): Promise<{ weeks: number[]; rows: number }> {
@@ -21,8 +22,7 @@ export async function ingestMarket(season: number, opts: { all?: boolean } = {})
     const wk = reg.filter((g) => g.week === w)
     return wk.every(isPlayed) && enoughForWeek(lineGames(w), wk.length)
   })
-  const have = new Set(opts.all ? [] : await nflMarketWeeks(season))
-  const todo = complete.filter((w) => !have.has(w))
+  const todo = marketRounds(complete, opts.all ? [] : await nflMarketWeeks(season), opts.all)
   let rows = 0
   for (const week of todo) {
     // the next round's report is what keeps a player out of the games still to come
