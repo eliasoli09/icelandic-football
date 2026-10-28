@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildMarketView, forClient } from '../src/lib/nfl/marketView'
+import { buildMarketView, forClient, rankTicks } from '../src/lib/nfl/marketView'
 import type { StoredMarketRow } from '../src/lib/nfl/queries'
 
 const R = (week: number, player_id: string, rank: number, games = week): StoredMarketRow => ({
@@ -97,5 +97,16 @@ describe('fyrir vafrann', () => {
   })
   it('ein umferð: enginn nýr', () => {
     expect(forClient(buildMarketView([R(1, 'a', 1)])).board[0].isNew).toBeUndefined()
+  })
+})
+
+describe('ásinn', () => {
+  it('allt bilið: #1, #100, #200, 300+', () => expect(rankTicks(301)).toEqual([1, 100, 200, 301]))
+  it('minni bil byrja alltaf á #1', () => {
+    expect(rankTicks(1)).toEqual([1])
+    expect(rankTicks(3)).toEqual([1, 2, 3])
+    expect(rankTicks(12)).toEqual([1, 5, 10])
+    expect(rankTicks(87)).toEqual([1, 25, 50, 75])
+    expect(rankTicks(250)).toEqual([1, 100, 200])
   })
 })

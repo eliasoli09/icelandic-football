@@ -55,6 +55,7 @@ export function eloMove(change: number): { text: string; dir: 'up' | 'down' | 'f
 
 /** Fantasy points to one decimal, Icelandic style: 1.234,5 and −12,3 (by hand, Gildrur 30). */
 export function pointsLabel(x: number): string {
+  if (!Number.isFinite(x)) return '-'
   const [int, frac] = Math.abs(x).toFixed(1).split('.')
   const s = `${int.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${frac}`
   return x < 0 && s !== '0,0' ? `−${s}` : s

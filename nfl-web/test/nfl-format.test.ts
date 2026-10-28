@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { spreadLabel, totalLabel, pctLabel, diffLabel, REASON_LABEL } from '../src/lib/nfl/format'
+import { spreadLabel, totalLabel, pctLabel, diffLabel, pointsLabel, REASON_LABEL } from '../src/lib/nfl/format'
 
 describe('NFL-snið', () => {
   it('forgjöf: jákvætt spread_line þýðir að heimaliðið er sigurstranglegra', () => {
@@ -44,5 +44,20 @@ describe('eloMove', () => {
     expect(eloMove(-0.3)).toEqual({ text: '0', dir: 'flat' })
     expect(eloMove(17.6)).toEqual({ text: '▲ 18', dir: 'up' })
     expect(eloMove(-38.2)).toEqual({ text: '▼ 38', dir: 'down' })
+  })
+})
+
+describe('pointsLabel', () => {
+  it('einn aukastafur, komma, punktur fyrir þúsundir, mínus', () => {
+    expect(pointsLabel(0)).toBe('0,0')
+    expect(pointsLabel(-0)).toBe('0,0')
+    expect(pointsLabel(-0.04)).toBe('0,0')
+    expect(pointsLabel(999.95)).toBe('1.000,0')
+    expect(pointsLabel(1234.56)).toBe('1.234,6')
+    expect(pointsLabel(-1234.56)).toBe('−1.234,6')
+  })
+  it('ekki tala', () => {
+    expect(pointsLabel(NaN)).toBe('-')
+    expect(pointsLabel(Infinity)).toBe('-')
   })
 })

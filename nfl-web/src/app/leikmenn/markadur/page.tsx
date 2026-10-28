@@ -13,7 +13,7 @@ export const metadata = {
 export default async function MarketPage() {
   const season = await nflCurrentSeason().catch(() => null)
   if (!season) return <p className="muted">Engir leikir fundust.</p>
-  const [rows, teams] = await Promise.all([nflMarket(season).catch(() => []), nflTeams().catch(() => [])])
+  const [rows, teams] = await Promise.all([nflMarket(season).catch((e) => { console.error('Markaðurinn: nflMarket brást', e); return [] }), nflTeams().catch(() => [])])
   // shaped on the server: the browser gets the newest board, ranks per round and the movers, never the raw rows
   const view = forClient(buildMarketView(rows))
   const last = view.weeks[view.weeks.length - 1]
@@ -23,7 +23,7 @@ export default async function MarketPage() {
       <header className="grid gap-1">
         <h1 className="display text-3xl font-extrabold">Markaðurinn</h1>
         <p className="muted text-sm">
-          Hvað hver sóknarmaður er virði í fantasy (hálft stig fyrir grip, 12 liða deild).{last ? ` Staðan eftir umferð ${last} ${season}.` : ''}
+          Hvað hver sóknarmaður er virði í fantasy (hálft stig fyrir grip, 12 liða deild).{last ? ` Staðan eftir ${last}. umferð tímabilsins ${season}.` : ''}
         </p>
       </header>
       {view.board.length

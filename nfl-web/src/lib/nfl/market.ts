@@ -125,9 +125,12 @@ export function marketWeek(x: MarketInput): MarketRow[] {
     const ps = cands.filter((c) => c.position === pos).map((c) => c.proj).sort((a, b) => b - a)
     repl[pos] = ps.length ? ps[Math.min(REPLACEMENT[pos], ps.length) - 1] : 0
   }
+  // a player with no games left (Cut, IR for the rest) is worth 0 but goes below every player who can still
+  // play, even one below replacement: otherwise he sits around #90 for a round and makes the movers noise
   const rows: MarketRow[] = cands
     .map((c) => ({ ...c, value: round((c.proj - repl[c.position]) * c.games_left, 1) + 0, rank: 0, pos_rank: 0 }))
-    .sort((a, b) => b.value - a.value || (b.proj - repl[b.position]) - (a.proj - repl[a.position]) || a.player_id.localeCompare(b.player_id))
+    .sort((a, b) => Number(b.games_left > 0) - Number(a.games_left > 0) || b.value - a.value
+      || (b.proj - repl[b.position]) - (a.proj - repl[a.position]) || a.player_id.localeCompare(b.player_id))
   const n: Partial<Record<MarketPos, number>> = {}
   rows.forEach((r, i) => { r.rank = i + 1; r.pos_rank = n[r.position] = (n[r.position] ?? 0) + 1 })
   return rows

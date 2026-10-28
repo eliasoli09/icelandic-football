@@ -90,3 +90,16 @@ export function forClient(v: MarketView): ClientMarket {
   })
   return { weeks: v.weeks, board, ranks, week: v.week, season: v.season }
 }
+
+/**
+ * Y-axis ticks for a rank chart running from #1 down to `max` (at most MARKET_TOP + 1):
+ * #1 always, then round steps; the full range is #1, #100, #200, 300+.
+ */
+export function rankTicks(max: number): number[] {
+  const top = Math.min(Math.max(Math.ceil(max), 1), TOP + 1)
+  if (top === TOP + 1) return [1, 100, 200, TOP + 1]
+  const step = [1, 2, 5, 10, 20, 25, 50, 100].find((s) => top / s <= 4) ?? 100
+  const out = [1]
+  for (let t = step; t <= top; t += step) if (t > 1) out.push(t)
+  return out
+}

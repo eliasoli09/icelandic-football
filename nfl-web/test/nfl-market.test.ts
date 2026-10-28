@@ -94,6 +94,17 @@ describe('markaðurinn í einni umferð', () => {
     expect(rows.find((r) => r.player_id === 'W36')!.value).toBe(0)
     expect(rows.find((r) => r.player_id === 'W37')!.value).toBeLessThan(0)
   })
+  it('leikmaður án leikja eftir raðast neðar en heill leikmaður undir varamannsstigum', () => {
+    // 13 QBs: Q13 is below replacement (negative); Q1 has the best projection but is Cut (0 games left, value 0)
+    const g = [G(1, 'T1', 'T2'), G(2, 'T1', 'T2')]
+    const ps: MarketPlayer[] = Array.from({ length: 13 }, (_, i) => ({ player_id: `Q${i + 1}`, position: 'QB', team: 'T1' }))
+    const ls = ps.map((p, i) => line(p.player_id, 1, 'T1', (13 - i) * 10))
+    const rows = marketWeek({ ...base, games: g, players: ps, lines: ls, injuries: new Map([['Q1', 'Cut' as const]]) })
+    const q1 = rows.find((r) => r.player_id === 'Q1')!, q13 = rows.find((r) => r.player_id === 'Q13')!
+    expect(q13.value).toBeLessThan(0)
+    expect(q1).toMatchObject({ games_left: 0, value: 0, rank: 13, pos_rank: 13 })
+    expect(q13.rank).toBe(12)
+  })
   it('meiddur leikmaður á færri leiki eftir', () => {
     const rows = marketWeek({ ...base, injuries: new Map([['A', 'Out' as const]]) })
     expect(rows.find((r) => r.player_id === 'A')).toMatchObject({ games_left: 1, value: 10 })

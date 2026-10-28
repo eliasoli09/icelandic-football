@@ -19,9 +19,9 @@ function Side({ label, total, ids, setIds, taken, board, byId }: {
   const hits = needle.length < 2 ? [] : board.filter((r) => !taken.includes(r.player_id) && fold(r.name).includes(needle)).slice(0, 6)
   return (
     <div className="grid gap-2 content-start">
-      <label htmlFor={inputId} className="font-bold flex items-baseline justify-between gap-2">
-        <span>{label}</span><span className="tabular-nums">{pointsLabel(total)}</span>
-      </label>
+      <div className="font-bold flex items-baseline justify-between gap-2">
+        <label htmlFor={inputId}>{label}</label><span className="tabular-nums">{pointsLabel(total)}</span>
+      </div>
       {ids.map((id) => {
         const r = byId.get(id)
         return (
@@ -60,11 +60,9 @@ export function TradeCalculator({ board }: { board: ClientRow[] }) {
         <Side label="Þú lætur" total={v.a} ids={give} setIds={setGive} taken={taken} board={board} byId={byId} />
         <Side label="Þú færð" total={v.b} ids={get} setIds={setGet} taken={taken} board={board} byId={byId} />
       </div>
-      {give.length > 0 && get.length > 0 && (
-        <p className="font-bold" aria-live="polite">
-          {v.fair ? 'Sanngjörn skipti' : v.winner === 'b' ? `Þú vinnur skiptin um ${pointsLabel(v.margin)} stig` : `Hinn vinnur skiptin um ${pointsLabel(v.margin)} stig`}
-        </p>
-      )}
+      <p className="font-bold min-h-[1.5rem]" aria-live="polite">
+        {give.length > 0 && get.length > 0 && (v.fair ? 'Sanngjörn skipti' : v.winner === 'b' ? `Þú vinnur skiptin um ${pointsLabel(v.margin)} stig` : `Hinn vinnur skiptin um ${pointsLabel(v.margin)} stig`)}
+      </p>
       <p className="text-xs muted">Verðmæti er spáð fantasy-stig umfram varamann það sem eftir er tímabilsins. Leikmaður undir varamannsstigum telst 0. Sanngjarnt er innan 10% af stærri hliðinni.</p>
     </section>
   )
