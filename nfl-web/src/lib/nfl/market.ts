@@ -28,8 +28,11 @@ export type MarketParams = Record<MarketPos, PosParams>
 const NAIVE: PosParams = { prev: 0, k: 0, prior: 0 }
 /** Points a game so far this season, nothing else. */
 export const MARKET_NAIVE: MarketParams = { QB: NAIVE, RB: NAIVE, WR: NAIVE, TE: NAIVE }
-/** Chosen by scripts/nfl-market-backtest.mts (Task 3 replaces this line with its output). */
-export const NFL_MARKET: MarketParams = MARKET_NAIVE
+/**
+ * Chosen by scripts/nfl-market-backtest.mts on 2016-2021, tested on 2022-2025:
+ * MAE 2.308 against 2.595, difference -0.2583 [-0.3264, -0.1902] over 1,895 player-seasons.
+ */
+export const NFL_MARKET: MarketParams = {QB: {prev: 0.5, k: 3, prior: 12}, RB: {prev: 0.25, k: 1, prior: 4}, WR: {prev: 0.25, k: 1, prior: 2}, TE: {prev: 0.25, k: 2, prior: 2}}
 
 export interface Tally { games: number; total: number }
 
