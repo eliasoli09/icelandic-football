@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildMarketView } from '../src/lib/nfl/marketView'
+import { buildMarketView, forClient } from '../src/lib/nfl/marketView'
 import type { StoredMarketRow } from '../src/lib/nfl/queries'
 
 const R = (week: number, player_id: string, rank: number, games = week): StoredMarketRow => ({
@@ -71,5 +71,31 @@ describe('jaðartilvik', () => {
     const v = buildMarketView([R(1, 'a', 4), R(3, 'a', 2), R(1, 'b', 1), R(2, 'b', 1), R(3, 'b', 1)])
     expect(v.series.a).toEqual([[1, 4], [3, 2]])
     expect(v.board.find((r) => r.player_id === 'a')!.change).toBeNull()
+  })
+})
+
+describe('fyrir vafrann', () => {
+  it('sæti í röð umferða með götum, tölur á 1 aukastaf, nýr aðeins í fyrsta sinn', () => {
+    const rows = [R(1, 'a', 4), R(3, 'a', 2), R(1, 'b', 1), R(2, 'b', 1), R(3, 'b', 1), R(3, 'n', 3)]
+    rows[1].value = 12.345
+    rows[1].proj = 7.06
+    const c = forClient(buildMarketView(rows))
+    expect(c.weeks).toEqual([1, 2, 3])
+    expect(c.ranks.a).toEqual([4, null, 2])
+    const a = c.board.find((r) => r.player_id === 'a')!
+    expect([a.value, a.proj, a.change, a.isNew]).toEqual([12.3, 7.1, null, undefined])
+    expect(c.board.find((r) => r.player_id === 'n')!.isNew).toBe(true)
+    expect(c.board[0]).not.toHaveProperty('week')
+    expect(c.board[0]).not.toHaveProperty('games')
+  })
+  it('engin mynd fyrir utan topp 300', () => {
+    const rows = [R(1, 'x', 320), R(1, 'y', 10)]
+    rows[0].headshot = 'h1'
+    rows[1].headshot = 'h2'
+    const c = forClient(buildMarketView(rows))
+    expect(c.board.map((r) => r.headshot)).toEqual(['h2', null])
+  })
+  it('ein umferð: enginn nýr', () => {
+    expect(forClient(buildMarketView([R(1, 'a', 1)])).board[0].isNew).toBeUndefined()
   })
 })
