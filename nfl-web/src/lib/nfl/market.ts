@@ -88,6 +88,12 @@ export interface MarketInput {
   games: Sched[]
   injuries: Map<string, InjuryStatus>
   params: MarketParams
+  /**
+   * This is the newest completed round: a player whose register club is another franchise
+   * than the one he last played for (traded, signed elsewhere) is priced with the new club's
+   * games. Older rounds keep the club he played for then, since the register only knows today.
+   */
+  newest?: boolean
 }
 
 const round = (x: number, d: number) => Math.round(x * 10 ** d) / 10 ** d
@@ -113,7 +119,7 @@ export function marketWeek(x: MarketInput): MarketRow[] {
     const c = cur.get(p.player_id)
     const pv = x.prev.get(p.player_id) ?? { games: 0, total: 0 }
     if (!c && pv.games === 0) continue
-    const team = c?.team ?? p.team
+    const team = c && !(x.newest && franchiseOf(p.team) !== franchiseOf(c.team)) ? c.team : p.team
     cands.push({
       player_id: p.player_id, position: p.position, team, games: c?.games ?? 0,
       proj: round(projection(c ?? { games: 0, total: 0 }, pv, x.params[p.position]), 2),

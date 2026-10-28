@@ -105,6 +105,22 @@ describe('markaðurinn í einni umferð', () => {
     expect(q1).toMatchObject({ games_left: 0, value: 0, rank: 13, pos_rank: 13 })
     expect(q13.rank).toBe(12)
   })
+  it('skipt um lið: nýjasta umferðin notar félagið á skrá, eldri umferðir síðasta félag sem hann spilaði með', () => {
+    // A played week 1 for T1 but is now on T2's register; T2 has 2 games after week 1, T1 1 more (week 2 vs T3, week 3 vs T4)
+    const g = [G(1, 'T1', 'T2'), G(2, 'T1', 'T3'), G(2, 'T2', 'T4'), G(3, 'T2', 'T3')]
+    const ps: MarketPlayer[] = [{ player_id: 'A', position: 'WR', team: 'T2' }, { player_id: 'B', position: 'WR', team: 'T3' }]
+    const ls = [line('A', 1, 'T1', 200), line('B', 1, 'T3', 100)]
+    const old = marketWeek({ ...base, games: g, players: ps, lines: ls })
+    const now = marketWeek({ ...base, games: g, players: ps, lines: ls, newest: true })
+    expect(old.find((r) => r.player_id === 'A')).toMatchObject({ team: 'T1', games_left: 1 })
+    expect(now.find((r) => r.player_id === 'A')).toMatchObject({ team: 'T2', games_left: 2 })
+  })
+  it('sama félag undir gamalli skammstöfun telst ekki skipti', () => {
+    const g = [G(1, 'OAK', 'T2'), G(2, 'LV', 'T2')]
+    const ps: MarketPlayer[] = [{ player_id: 'A', position: 'WR', team: 'LV' }]
+    const rows = marketWeek({ ...base, games: g, players: ps, lines: [line('A', 1, 'OAK', 200)], newest: true })
+    expect(rows[0].team).toBe('OAK')
+  })
   it('meiddur leikmaður á færri leiki eftir', () => {
     const rows = marketWeek({ ...base, injuries: new Map([['A', 'Out' as const]]) })
     expect(rows.find((r) => r.player_id === 'A')).toMatchObject({ games_left: 1, value: 10 })

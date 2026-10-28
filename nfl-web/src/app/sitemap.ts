@@ -5,7 +5,7 @@ import { SITE_URL } from '@/lib/site'
 
 export const revalidate = 3600
 
-const PAGES = ['', '/stjornbord', '/leikir', '/leikir/sjonvarp', '/spar', '/stada', '/styrkleiki', '/urslitakeppni', '/umspilsvelin', '/sludur', '/leikmenn', '/leikmenn/stjornulid', '/leikmenn/meidsli', '/verdlaun', '/frettir', '/spa', '/vedmal', '/greinar', '/adaendur', '/um']
+const PAGES = ['', '/stjornbord', '/leikir', '/leikir/sjonvarp', '/spar', '/stada', '/styrkleiki', '/urslitakeppni', '/umspilsvelin', '/sludur', '/leikmenn', '/leikmenn/stjornulid', '/leikmenn/meidsli', '/leikmenn/markadur', '/verdlaun', '/frettir', '/spa', '/vedmal', '/greinar', '/adaendur', '/um']
 
 /** Fixed pages, every published article and this season's games. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

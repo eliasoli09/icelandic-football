@@ -27,6 +27,8 @@ export const STATUS_ORDER: InjuryStatus[] = ['Out', 'Doubtful', 'Questionable', 
 export const isUnavailable = (s: InjuryStatus) => s !== 'Questionable'
 
 const REPORT: Record<string, InjuryStatus> = { Out: 'Out', Doubtful: 'Doubtful', Questionable: 'Questionable' }
+/** Weekly roster statuses that mean the player is with a club (active, inactive, reserve, practice squad); RET, EXE and the trade codes do not. */
+const ON_ROSTER = new Set(['ACT', 'INA', 'RES', 'DEV'])
 /** Weekly roster reserve codes: R01 injured reserve, R48 IR designated to return, R04 physically unable to perform. */
 function rosterStatus(status: string, code: string): InjuryStatus | null {
   if (status === 'CUT') return 'Cut'
@@ -51,8 +53,11 @@ export function parseInjuries(reportCsv: string, rosterCsv: string, season: numb
   const at = Math.max(...weeks)
   const out = new Map<string, Injury>()
   let gameType = 'REG'
+  // cut and signed again (or to the practice squad, or moved to reserve) the same week: the cut no longer holds
+  const onRoster = new Set(roster.filter((r) => Number(r.week) === at && ON_ROSTER.has(r.status)).map((r) => r.gsis_id))
   for (const r of roster) {
     if (Number(r.week) !== at) continue
+    if (r.status === 'CUT' && onRoster.has(r.gsis_id)) continue
     gameType = r.game_type || gameType
     const status = rosterStatus(r.status, r.status_description_abbr)
     if (status) out.set(r.gsis_id, { team: r.team, player_id: r.gsis_id, name: r.full_name, position: r.position || null, status, injury: null, practice: null, source: 'roster' })

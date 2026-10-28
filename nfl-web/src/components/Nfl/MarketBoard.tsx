@@ -13,13 +13,13 @@ const FILTERS = ['Allir', 'QB', 'RB', 'WR', 'TE'] as const
 const SHOW = 25
 
 /** Places gained since the round before; nothing to compare with is "-", a first appearance "nýr". */
-export function Change({ n, isNew }: { n: number | null; isNew?: boolean }) {
+function Change({ n, isNew }: { n: number | null; isNew?: boolean }) {
   if (n === null) return <span className="text-xs muted">{isNew ? 'nýr' : '-'}</span>
   if (n === 0) return <span className="text-xs muted">-</span>
   return <span className="text-xs font-semibold tabular-nums whitespace-nowrap" style={{ color: n > 0 ? 'var(--good, #3fb950)' : 'var(--bad, #f85149)' }}>{n > 0 ? '▲' : '▼'} {Math.abs(n)}</span>
 }
 
-/** The newest round, #1-#300, filtered by position; + puts a player on the chart. */
+/** The newest round, #1 to #MARKET_TOP, filtered by position; + puts a player on the chart. */
 export function MarketBoard({ board, chosen, full, onToggle, teams }: {
   board: ClientRow[]; chosen: string[]; full: boolean; onToggle: (id: string) => void; teams: Map<string, Pick<NflTeam, 'color' | 'color2'>>
 }) {
@@ -29,7 +29,7 @@ export function MarketBoard({ board, chosen, full, onToggle, teams }: {
   return (
     <section className="card p-4 grid gap-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h2 className="display text-lg font-extrabold">Topp 300</h2>
+        <h2 className="display text-lg font-extrabold">Topp {MARKET_TOP}</h2>
         <div className="inline-flex rounded-full border p-1 text-xs" style={{ borderColor: 'var(--border)' }}>
           {FILTERS.map((x) => (
             <button key={x} onClick={() => setF(x)} aria-pressed={f === x} className="rounded-full px-3 min-h-[32px] font-semibold"

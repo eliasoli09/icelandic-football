@@ -37,6 +37,24 @@ describe('parseInjuries', () => {
     expect(by.has('00-7')).toBe(false)
     expect(by.get('00-4')).toMatchObject({ status: 'Out', injury: 'Concussion', source: 'report' })
   })
+  it('látinn fara og endursaminn sömu vikuna: Cut-línan gildir ekki', () => {
+    const r = [ROSTER_HEAD,
+      '2026,KC,WR,CUT,Back Again,00-10,6,REG,W03',
+      '2026,KC,WR,ACT,Back Again,00-10,6,REG,A01',
+      '2026,KC,RB,CUT,Practice Squad,00-11,6,REG,W03',
+      '2026,KC,RB,DEV,Practice Squad,00-11,6,REG,P01',
+      '2026,KC,TE,CUT,To Ir,00-12,6,REG,W03',
+      '2026,LV,TE,RES,To Ir,00-12,6,REG,R01',
+      '2026,KC,QB,CUT,Gone,00-13,6,REG,W03',
+      '2026,KC,QB,RET,Gone,00-13,6,REG,W03',
+    ].join('\n')
+    const by6 = new Map(parseInjuries(REPORT_HEAD, r, 2026)!.rows.map((x) => [x.player_id, x]))
+    expect(by6.has('00-10')).toBe(false)
+    expect(by6.has('00-11')).toBe(false)
+    expect(by6.get('00-12')).toMatchObject({ status: 'IR', team: 'LV' })
+    // retired is not on a roster: the cut stands
+    expect(by6.get('00-13')?.status).toBe('Cut')
+  })
   it('takes a named week, or the newest week before it', () => {
     const w5 = parseInjuries(report, roster, 2026, 5)!
     const by5 = new Map(w5.rows.map((r) => [r.player_id, r]))

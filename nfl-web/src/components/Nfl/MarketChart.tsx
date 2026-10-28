@@ -12,7 +12,8 @@ const SPAN: Record<Range, number> = { '1V': 2, '1M': 5, ALLT: Infinity }
 /** The first line in a colour is solid; each later one in the same colour gets the next dash. */
 const DASHES = [undefined, '6 4', '2 3', '10 3', '1 2', '12 3 2 3']
 
-export const rankLabel = (r: number) => (r > MARKET_TOP ? 'utan topp 300' : `#${r}`)
+export const OUTSIDE = `utan topp ${MARKET_TOP}`
+export const rankLabel = (r: number) => (r > MARKET_TOP ? OUTSIDE : `#${r}`)
 
 export interface LineStyle { color: string; dash: string | undefined }
 type Teams = Map<string, Pick<NflTeam, 'color' | 'color2'>>
@@ -69,7 +70,7 @@ export function MarketChart({ weeks, ranks, players, styles, range }: {
           <CartesianGrid stroke="var(--border)" vertical={false} />
           <XAxis dataKey="week" tick={{ fill: 'var(--text-2)', fontSize: 11 }} stroke="var(--border)" tickFormatter={(w) => `V${w}`} />
           <YAxis reversed domain={[1, Math.max(max, 2)]} ticks={ticks} interval={0} tick={{ fill: 'var(--text-2)', fontSize: 11 }} stroke="var(--border)"
-            allowDecimals={false} tickFormatter={(r: number) => (r > MARKET_TOP ? '300+' : `#${r}`)} />
+            allowDecimals={false} tickFormatter={(r: number) => (r > MARKET_TOP ? `${MARKET_TOP}+` : `#${r}`)} />
           <Tooltip contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, fontSize: 12 }}
             labelFormatter={(w) => `Eftir umferð ${w}`}
             formatter={(v, id) => [rankLabel(Number(v)), players.find((p) => p.player_id === id)?.name ?? String(id)]} />

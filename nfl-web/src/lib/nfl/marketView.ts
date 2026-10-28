@@ -2,7 +2,7 @@ import { MARKET_TOP, movers, type Move } from './market'
 import type { StoredMarketRow } from './queries'
 
 export type BoardRow = StoredMarketRow & { change: number | null }
-export interface MarketView {
+export interface MarketViewModel {
   weeks: number[]
   /**
    * ALL players of the newest round by rank (not just #1-#300: the trade calculator and the
@@ -24,8 +24,10 @@ export interface MarketView {
 }
 
 const TOP = MARKET_TOP
+/** Games played this season for the movers since the first round. */
+export const SEASON_MIN_GAMES = 3
 
-export function buildMarketView(rows: StoredMarketRow[]): MarketView {
+export function buildMarketView(rows: StoredMarketRow[]): MarketViewModel {
   const weeks = [...new Set(rows.map((r) => r.week))].sort((a, b) => a - b)
   const at = (w: number | undefined) => rows.filter((r) => r.week === w)
   const last = at(weeks[weeks.length - 1])
@@ -39,7 +41,7 @@ export function buildMarketView(rows: StoredMarketRow[]): MarketView {
   return {
     weeks, board, series,
     week: weeks.length > 1 ? movers(last, before, 5, TOP) : { up: [], down: [] },
-    season: weeks.length > 1 ? movers(last, first, 10, TOP, 3, { absentAsOutside: true }) : { up: [], down: [] },
+    season: weeks.length > 1 ? movers(last, first, 10, TOP, SEASON_MIN_GAMES, { absentAsOutside: true }) : { up: [], down: [] },
   }
 }
 
@@ -72,7 +74,7 @@ export interface ClientMarket {
 const r1 = (x: number) => Math.round(x * 10) / 10
 
 /** Shrink the view for the browser: by season end the raw rows are ~13k, this is a small part of that. */
-export function forClient(v: MarketView): ClientMarket {
+export function forClient(v: MarketViewModel): ClientMarket {
   const at = new Map(v.weeks.map((w, i) => [w, i]))
   const ranks: Record<string, (number | null)[]> = {}
   for (const [id, pts] of Object.entries(v.series)) {

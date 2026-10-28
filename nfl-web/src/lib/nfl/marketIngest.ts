@@ -33,12 +33,13 @@ export async function ingestMarket(season: number, opts: MarketIngestOpts = {}):
   const todo = marketRounds(complete, opts.all ? [] : await nflMarketWeeks(season), { all: opts.all })
   const written: number[] = []
   let rows = 0
+  const newest = Math.max(...complete)
   for (const week of todo) {
     // the next round's report is what keeps a player out of the games still to come
     const inj = await injuries(week + 1)
     const rowsOut = marketWeek({
       season, week, lines: inputs.lines, prev: inputs.prev, players: inputs.players, games,
-      injuries: availability(inj.rows, inj.week, week + 1), params: NFL_MARKET,
+      injuries: availability(inj.rows, inj.week, week + 1), params: NFL_MARKET, newest: week === newest,
     })
     const { data, error } = await db().rpc('rpc_replace_nfl_market', { p_secret: SECRET(), p_season: season, p_week: week, p_rows: rowsOut })
     if (error) throw new Error(`rpc_replace_nfl_market ${week}: ${error.message} (written before it: ${written.length ? written.join(', ') : 'none'}, ${rows} rows)`)

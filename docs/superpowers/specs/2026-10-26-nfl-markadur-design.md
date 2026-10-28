@@ -16,15 +16,22 @@ Fyrir hvern sóknarmann (QB, RB, WR, TE) eftir hverja lokna umferð:
    spá = meðaltal þessa tímabils og síðasta tímabils (vegið með `prev`), dregið að
    `prior` stöðunnar um `k` leiki. Sama form og `statProjection` í `vedmal.ts`, án
    mótherja- og liðsþáttar.
-2. **Leikir eftir:** deildarleikir liðsins sem eru eftir. Ef leikmaðurinn er Out, IR,
-   PUP, Reserve eða Cut á `nfl_injury` í nýjustu viku er næsti leikur dreginn frá
-   (Out). Fyrir IR, PUP og Reserve eru 4 leikir dregnir frá.
+2. **Leikir eftir:** deildarleikir liðsins sem eru eftir. Ef leikmaðurinn er Out eða
+   Doubtful á `nfl_injury` í nýjustu viku er næsti leikur dreginn frá (-1; Doubtful
+   telst eins og Out). Fyrir IR, PUP og Reserve eru 4 leikir dregnir frá. Cut þýðir
+   0 leikir eftir. Cut-lína gildir ekki ef leikmaðurinn er á lista liðs sömu vikuna
+   (látinn fara og endursaminn, eða færður á æfingahóp eða varalista).
+   - Liðið er félagið sem hann spilaði síðast með. Í nýjustu loknu umferðinni gildir
+     félagið á skrá (`nfl_players.team`) ef það er annað félag (skipt eða samið
+     annars staðar); eldri umferðir halda félaginu sem hann spilaði með þá.
 3. **Varamannsstig stöðunnar** (12 liða deild): spáin í leik hjá QB nr. 12, RB nr. 30,
    WR nr. 36 og TE nr. 12 (raðað eftir spá).
 4. **Verðmæti** = (spá − varamannsstig) × leikir eftir, í fantasy-stigum. Það getur
    verið neikvætt.
 5. **Sæti** = röð eftir verðmæti meðal allra sóknarmanna (#1 dýrastur). Sæti í stöðu
-   (RB3) líka.
+   (RB3) líka. Leikmenn með 0 leiki eftir (verðmæti 0) raðast aftast, á eftir öllum sem
+   eiga leik eftir, líka þeim sem eru undir varamannsstigum (neikvætt verðmæti). Annars
+   lentu þeir um #91 í eina umferð og fylltu Kaupa núna / Selja núna af suði.
 
 Leikmaður birtist ef hann hefur spilað leik á tímabilinu eða í fyrra og er á lista
 liðs (`nfl_players.team` ekki tómt).
@@ -34,12 +41,16 @@ liðs (`nfl_players.team` ekki tómt).
   leikjum sem leikmaðurinn spilaði.
 - **Úrtak:** eftir umferðir 3-14, leikmenn með a.m.k. 1 leik á tímabilinu og a.m.k.
   3 leiki eftir.
-- **Samanburður:** spáin gegn "meðaltal tímabilsins til þessa", MAE, parað 95% bil á
-  hvern leikmann og umferð.
+- **Samanburður:** spáin gegn "meðaltal tímabilsins til þessa", MAE, parað 95% bil.
+  Bilið er klasað eftir leikmannatímabili: fyrst meðalmunur hvers leikmanns á tímabili,
+  svo bilið yfir þá (sami leikmaður í 12 umferðir er ekki 12 óháð sýni).
 - **Val og prófun:** `prev`, `k` og `prior` í hverri stöðu valin á 2016-2021 og prófuð
   einu sinni á 2022-2025. Ekkert er valið á prófunarárunum (gildra 33).
 - **Úrskurður:** ef allt bilið er undir 0 fer spáin á síðuna. Annars er notað
   meðaltal til þessa (k = 0, prev = 0) og síðan segir það.
+- **Niðurstaða (28. okt):** heildarbilið var -0,258 [-0,326, -0,190] (MAE 2,308 á móti
+  2,595), svo reglan stóðst og spáin fór á síðuna. QB eitt og sér var ekki marktækt,
+  -0,275 [-0,709, 0,159], en reglan, ákveðin fyrirfram, var heildarbilið.
 - Niðurstaðan fer í hvelfinguna (`NFL/Markaðurinn.md`) og stillingarnar í kóðann
   (`NFL_MARKET`).
 

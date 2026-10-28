@@ -79,7 +79,7 @@ export function MarketView({ view, teams }: { view: ClientMarket; teams: Pick<Nf
             </button>
           ))}
         </div>
-        <p className="text-xs muted rounded px-1 -mx-1 transition-colors" style={flash ? { background: 'var(--accent)', color: 'var(--accent-ink)' } : undefined}>{full ? 'Hámark 6 leikmenn á línuritinu.' : 'Bættu við með + í töflunni eða smelltu á nafn í listunum, allt að 6 leikmenn.'}</p>
+        <p className="text-xs muted rounded px-1 -mx-1 transition-colors" style={flash ? { background: 'var(--accent)', color: 'var(--accent-ink)' } : undefined}>{full ? `Hámark ${MAX} leikmenn á línuritinu.` : `Bættu við með + í töflunni eða smelltu á nafn í listunum, allt að ${MAX} leikmenn.`}</p>
       </section>
       <MarketMovers week={view.week} season={view.season} first={view.weeks[0]} board={view.board} onPick={pick} />
       <MarketBoard board={view.board} chosen={chosen} full={full} onToggle={toggle} teams={byAbbr} />
