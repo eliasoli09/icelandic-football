@@ -1,7 +1,7 @@
 /**
  * Fill Markaðurinn for a season - the same code the NFL cron runs.
  * Usage: cd nfl-web && npx tsx scripts/ingest-nfl-market.mts [season] [--all]
- *   --all  rewrite every completed round, not only the missing, partial and newest ones,
+ *   --all  rewrite every completed round, not only the missing ones and the newest,
  *          with each round's injury list taken from nflverse's history (nfl_injury only
  *          keeps the weeks the cron has seen, and is left untouched)
  */

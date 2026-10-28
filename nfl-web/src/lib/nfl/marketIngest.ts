@@ -6,8 +6,10 @@ import { nflInjuries, nflMarketInputs, nflMarketWeeks, nflSeasonGames, type Inju
 const SECRET = () => process.env.CRON_SECRET!
 
 export interface MarketIngestOpts {
-  /** Rewrite every completed round, not only the missing, partial and newest ones. */
+  /** Rewrite every completed round, not only the missing ones and the newest. */
   all?: boolean
+  /** When a round with some lines missing counts as done (see `completeRounds`); defaults to now. */
+  now?: Date
   /**
    * The injury list as it stood for a round: the newest week on file up to
    * `week`. Defaults to nfl_injury (the cron); the backfill passes nflverse's
@@ -18,9 +20,8 @@ export interface MarketIngestOpts {
 
 /**
  * Write a snapshot for every completed regular-season round that has none yet,
- * every completed round still missing some player lines, and the newest
- * completed round again so it picks up the latest injury report (every
- * completed round with `all`). See `completeRounds` for when a round counts.
+ * and the newest completed round again so it picks up the latest injury report
+ * (every completed round with `all`). See `completeRounds` for when a round counts.
  */
 export async function ingestMarket(season: number, opts: MarketIngestOpts = {}): Promise<{ weeks: number[]; rows: number }> {
   const injuries = opts.injuries ?? ((w: number) => nflInjuries(season, w))
@@ -28,8 +29,8 @@ export async function ingestMarket(season: number, opts: MarketIngestOpts = {}):
   const inputs = await nflMarketInputs(season)
   const byWeek = new Map<number, Set<string>>()
   for (const l of inputs.lines) byWeek.set(l.week, (byWeek.get(l.week) ?? new Set()).add(l.game_id))
-  const { complete, partial } = completeRounds(games.filter((g) => g.game_type === 'REG'), new Map([...byWeek].map(([w, s]) => [w, s.size])))
-  const todo = marketRounds(complete, opts.all ? [] : await nflMarketWeeks(season), { all: opts.all, partial })
+  const complete = completeRounds(games.filter((g) => g.game_type === 'REG'), new Map([...byWeek].map(([w, s]) => [w, s.size])), opts.now ?? new Date())
+  const todo = marketRounds(complete, opts.all ? [] : await nflMarketWeeks(season), { all: opts.all })
   const written: number[] = []
   let rows = 0
   for (const week of todo) {

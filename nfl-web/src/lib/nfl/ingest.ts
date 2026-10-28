@@ -91,7 +91,7 @@ export async function ingestNfl(opts: { all?: boolean; now?: Date } = {}): Promi
   const players = await ingestPlayers([season]).then(({ players, weeks }) => ({ players, weeks })).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
   const injuries = await ingestInjuries(season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
   // Markaðurinn reads the player lines and injuries written just above; a failure leaves the rest untouched
-  const market = await ingestMarket(season).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
+  const market = await ingestMarket(season, { now: opts.now ?? new Date() }).catch((e) => ({ error: e instanceof Error ? e.message : String(e) }))
   // news last: a slow feed or summariser must not hold up anything above
   const clubs = teams.filter((t) => t.franchise === t.abbr)
   const news = await fetchNews(clubs)

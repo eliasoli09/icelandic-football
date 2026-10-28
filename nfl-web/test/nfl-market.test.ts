@@ -146,24 +146,31 @@ describe('umferðir sem eru skrifaðar', () => {
   it('all skrifar allar loknar umferðir', () => {
     expect(marketRounds([3, 1, 2], [1, 2, 3], { all: true })).toEqual([1, 2, 3])
   })
-  it('umferð með leiki án lína er endurreiknuð þar til línurnar koma', () => {
-    expect(marketRounds([1, 2, 3, 4], [1, 2, 3, 4], { partial: [2] })).toEqual([2, 4])
-    // a partial round that is no longer complete is not written
-    expect(marketRounds([1, 2, 3], [1, 2, 3], { partial: [5] })).toEqual([3])
-  })
 })
 
 describe('loknar umferðir', () => {
-  const g = (week: number, played = true) => ({ week, home_score: played ? 20 : null, away_score: played ? 17 : null })
-  const five = (week: number, played = 5) => Array.from({ length: 5 }, (_, i) => g(week, i < played))
-  it('umferð með óspilaðan leik er ekki lokin', () => {
-    expect(completeRounds([...five(1), ...five(2, 4)], new Map([[1, 5], [2, 4]]))).toEqual({ complete: [1], partial: [] })
+  const now = new Date('2026-10-28T12:00:00Z')
+  const daysAgo = (d: number) => new Date(now.getTime() - d * 86_400_000).toISOString()
+  /** `n` games in round `week`, the last kicking off `ago` days before now, the first `played` of them played. */
+  const round = (week: number, n: number, ago: number, played = n) =>
+    Array.from({ length: n }, (_, i) => ({ week, kickoff: daysAgo(ago + (n - 1 - i) / 24), home_score: i < played ? 20 : null, away_score: i < played ? 17 : null }))
+  it('allar línur komnar: lokin', () => {
+    expect(completeRounds(round(7, 14, 1), new Map([[7, 14]]), now)).toEqual([7])
   })
-  it('umferð þar sem færri en 60% leikja hafa línur er ekki lokin; annars hálfköruð', () => {
-    // 3 of 5 = 60% is enough, 2 of 5 is not
-    expect(completeRounds([...five(1), ...five(2), ...five(3)], new Map([[1, 5], [2, 3], [3, 2]]))).toEqual({ complete: [1, 2], partial: [2] })
+  it('13 af 14 með línur og síðasti leikur í gær: ekki lokin', () => {
+    expect(completeRounds(round(7, 14, 1), new Map([[7, 13]]), now)).toEqual([])
+  })
+  it('13 af 14 með línur og síðasti leikur fyrir 4 dögum: lokin', () => {
+    expect(completeRounds(round(7, 14, 4), new Map([[7, 13]]), now)).toEqual([7])
+  })
+  it('helmingur með línur fyrir 4 dögum: ekki lokin', () => {
+    expect(completeRounds(round(7, 14, 4), new Map([[7, 7]]), now)).toEqual([])
+  })
+  it('umferð með óspilaðan leik er ekki lokin', () => {
+    expect(completeRounds(round(7, 14, 4, 13), new Map([[7, 13]]), now)).toEqual([])
   })
   it('umferð getur klárast á undan þeirri á undan (frestaður leikur)', () => {
-    expect(completeRounds([...five(3), ...five(1), ...five(2, 4)], new Map([[1, 5], [2, 4], [3, 5]]))).toEqual({ complete: [1, 3], partial: [] })
+    const games = [...round(3, 5, 9), ...round(1, 5, 23), ...round(2, 5, 16, 4)]
+    expect(completeRounds(games, new Map([[1, 5], [2, 4], [3, 5]]), now)).toEqual([1, 3])
   })
 })

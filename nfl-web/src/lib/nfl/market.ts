@@ -133,37 +133,37 @@ export function marketWeek(x: MarketInput): MarketRow[] {
   return rows
 }
 
+/** Days after a round's last kickoff when 60% of its games with lines is enough (nflverse may never fill the rest). */
+export const LINES_GRACE_DAYS = 3
+
 /**
- * Regular-season rounds whose games are all played and most of which have
- * player lines (nflverse can lag a day); `partial` are those among them where
- * some played game still has no lines. `lineGames` is games with lines by week.
+ * Regular-season rounds that are done: every game played and every game with
+ * player lines, or, LINES_GRACE_DAYS after the round's last kickoff, at least
+ * 60% of them with lines. `lineGames` is games with lines by week.
  */
-export function completeRounds(reg: Pick<NflGame, 'week' | 'home_score' | 'away_score'>[], lineGames: Map<number, number>): { complete: number[]; partial: number[] } {
-  const complete: number[] = []
-  const partial: number[] = []
+export function completeRounds(reg: Pick<NflGame, 'week' | 'kickoff' | 'home_score' | 'away_score'>[], lineGames: Map<number, number>, now: Date): number[] {
+  const out: number[] = []
   for (const w of [...new Set(reg.map((g) => g.week))].sort((a, b) => a - b)) {
     const wk = reg.filter((g) => g.week === w)
+    if (!wk.every(isPlayed)) continue
     const lined = lineGames.get(w) ?? 0
-    if (!wk.every(isPlayed) || !enoughForWeek(lined, wk.length)) continue
-    complete.push(w)
-    if (lined < wk.length) partial.push(w)
+    const last = Math.max(...wk.map((g) => new Date(g.kickoff).getTime()))
+    if (lined >= wk.length || (enoughForWeek(lined, wk.length) && now.getTime() - last > LINES_GRACE_DAYS * 86_400_000)) out.push(w)
   }
-  return { complete, partial }
+  return out
 }
 
 /**
- * Rounds to write: every completed round with no snapshot, every completed
- * round still missing some lines, and the newest completed round again (its
- * injury report keeps changing until the next round is done); with `all`,
- * every completed round. Oldest first.
+ * Rounds to write: every completed round with no snapshot, and the newest
+ * completed round again (its injury report keeps changing until the next
+ * round is done); with `all`, every completed round. Oldest first.
  */
-export function marketRounds(complete: number[], have: Iterable<number>, opts: { all?: boolean; partial?: Iterable<number> } = {}): number[] {
+export function marketRounds(complete: number[], have: Iterable<number>, opts: { all?: boolean } = {}): number[] {
   const done = [...new Set(complete)].sort((a, b) => a - b)
   if (opts.all) return done
   const got = new Set(have)
-  const partial = new Set(opts.partial ?? [])
   const latest = done.at(-1)
-  return done.filter((w) => !got.has(w) || partial.has(w) || w === latest)
+  return done.filter((w) => !got.has(w) || w === latest)
 }
 
 export interface TradeVerdict { a: number; b: number; fair: boolean; winner: 'a' | 'b' | null; margin: number }
