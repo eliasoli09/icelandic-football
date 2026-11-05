@@ -71,7 +71,7 @@ export async function GET(
           <div style={{ display: 'flex', justifyContent: 'center', gap: 30, flexWrap: 'wrap', background: 'rgba(255,255,255,0.06)', borderRadius: 14, padding: '14px 24px' }}>
             {goals.slice(0, 6).map((g: { player_name: string; minute: number; side: string; type: string; event_id: number }) => (
               <div key={`${g.event_id}-${g.player_name}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 23 }}>
-                <div style={{ display: 'flex', color: g.side === 'home' ? displayColor(home) : displayColor(away) }}>⚽</div>
+                <div style={{ display: 'flex', color: (g.side === 'home') !== (g.type === 'owngoal') ? displayColor(home) : displayColor(away) }}>⚽</div>
                 <div style={{ display: 'flex' }}>{`${g.player_name} ${g.minute}'${g.type === 'owngoal' ? ' (sj.)' : g.type === 'penalty' ? ' (v.)' : ''}`}</div>
               </div>
             ))}

@@ -53,3 +53,33 @@ describe('validateEvents', () => {
     expect(warnings.length).toBeGreaterThan(0)
   })
 })
+
+// Fixture: Fram 1-2 KR, 10 Oct 2026. Since Oct 2026 KSÍ pads the minute with
+// whitespace (`> 8 <span>’`), which the old regex read as minute 0, and marks
+// an own goal with a red ball (`text-red-other`) in the BENEFITING team's column.
+describe('parseEvents on the Oct 2026 markup', () => {
+  const events = parseEvents(
+    readFileSync(join(__dirname, 'fixtures', 'match_7100156.html'), 'utf8'),
+  )
+  const goals = events.filter((e) => ['goal', 'penalty', 'owngoal'].includes(e.type))
+
+  it('reads every minute (no event at minute 0)', () => {
+    expect(events.length).toBeGreaterThan(10)
+    expect(events.filter((e) => e.minute === 0)).toHaveLength(0)
+    expect(goals.map((e) => e.minute)).toEqual([8, 20, 57])
+  })
+
+  it('stores stoppage time (90 ’ 5) as minute 90', () => {
+    expect(events.some((e) => e.minute === 90)).toBe(true)
+    expect(Math.max(...events.map((e) => e.minute))).toBe(90)
+  })
+
+  it('stores the own goal on the scorer side, so the score still adds up', () => {
+    expect(goals[0]).toMatchObject({
+      type: 'owngoal',
+      playerName: 'Kennie Knak Chopart',
+      side: 'home',
+    })
+    expect(validateEvents(events, { homeGoals: 1, awayGoals: 2 })).toHaveLength(0)
+  })
+})

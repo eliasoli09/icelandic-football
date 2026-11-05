@@ -20,7 +20,12 @@ const unescape = (s: string) =>
  * Side: `l:justify-self-end` = home column, `l:justify-self-start` = away.
  * Type by icon: football svg path → goal, yellow/red colored rects → cards,
  * arrows svg → substitution (two player links: first shown = coming on).
- * Minute: last `N<span ...>’` occurrence before the block.
+ * Own goal: the football svg carries `text-red-other` (red ball) and sits in
+ * the column of the team that BENEFITS; we store it on the scorer's own side,
+ * which is what goalsFor() and playerElo expect.
+ * Minute: last `N<span ...>’` occurrence before the block. Since Oct 2026 KSÍ
+ * pads it with whitespace (`> 48 <span`); stoppage time shows as `90 ’ 1`
+ * and is stored as 90 (or 45).
  */
 export function parseEvents(html: string): MatchEvent[] {
   const events: MatchEvent[] = []
@@ -40,7 +45,7 @@ export function parseEvents(html: string): MatchEvent[] {
       ? 'home'
       : 'away'
 
-    const minuteMatches = [...before.matchAll(/>(\d+)<span[^>]*>’<\/span>/g)]
+    const minuteMatches = [...before.matchAll(/>\s*(\d+)\s*<span[^>]*>’<\/span>/g)]
     const minute = minuteMatches.length
       ? Number(minuteMatches[minuteMatches.length - 1][1])
       : 0
@@ -51,7 +56,8 @@ export function parseEvents(html: string): MatchEvent[] {
     if (players.length === 0) continue
 
     const text = block.replace(/<[^>]+>/g, ' ')
-    const isOwnGoal = /sjálfsmark/i.test(text)
+    const iconClass = block.match(/<svg[^>]*class="([^"]*)"/)?.[1] ?? ''
+    const isOwnGoal = iconClass.includes('text-red-other') || /sjálfsmark/i.test(text)
     const isPenalty = /víti/i.test(text)
 
     if (block.includes(YELLOW)) {
@@ -62,8 +68,12 @@ export function parseEvents(html: string): MatchEvent[] {
       events.push(ev(eventId, minute, 'sub_in', players[0], side))
       if (players[1]) events.push(ev(eventId, minute, 'sub_out', players[1], side))
     } else if (block.includes(GOAL_PATH)) {
-      const type = isOwnGoal ? 'owngoal' : isPenalty ? 'penalty' : 'goal'
-      events.push(ev(eventId, minute, type, players[0], side))
+      if (isOwnGoal) {
+        const scorerSide = side === 'home' ? 'away' : 'home'
+        events.push(ev(eventId, minute, 'owngoal', players[0], scorerSide))
+      } else {
+        events.push(ev(eventId, minute, isPenalty ? 'penalty' : 'goal', players[0], side))
+      }
     }
   }
   return events

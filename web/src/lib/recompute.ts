@@ -78,17 +78,25 @@ export async function ingestSeason(season = CURRENT_SEASON) {
   if (exErr) throw exErr
   const known = new Map(existing.map((m) => [m.id, m.status]))
 
-  const withEvents = await fetchAll<{ match_id: number }>(
+  const withEvents = await fetchAll<{ match_id: number; minute: number; type: string }>(
     'match_events',
-    'match_id',
+    'match_id, minute, type',
   )
   const hasEvents = new Set(withEvents.map((e) => e.match_id))
+  // A goal at minute 0 means the scrape missed the minute (KSÍ markup change,
+  // Oct 2026). Those matches are fetched again and their events replaced.
+  const staleEvents = new Set(
+    withEvents
+      .filter((e) => e.minute === 0 && ['goal', 'penalty', 'owngoal'].includes(e.type))
+      .map((e) => e.match_id),
+  )
 
   for (const t of TOURNAMENTS_2026) {
     const cards = await fetchTournamentMatches(t.id, season)
     const rows = []
     const playerRows = new Map<number, string>()
     const eventRows: Record<string, unknown>[] = []
+    const fetchedEventIds: number[] = []
     for (const c of cards) {
       const homeId = await ensureTeam(c.home, ids)
       const awayId = await ensureTeam(c.away, ids)
@@ -112,14 +120,22 @@ export async function ingestSeason(season = CURRENT_SEASON) {
         if (prev === undefined) newMatches++
       }
 
-      if (c.status === 'played' && c.ksiId !== null && !hasEvents.has(c.ksiId)) {
+      if (
+        c.status === 'played' &&
+        c.ksiId !== null &&
+        (!hasEvents.has(c.ksiId) || staleEvents.has(c.ksiId))
+      ) {
         try {
           const events = await fetchMatchEvents(c.ksiId)
           const evWarnings = validateEvents(events, {
             homeGoals: c.homeGoals!,
             awayGoals: c.awayGoals!,
           })
+          if (events.some((e) => e.minute === 0 && ['goal', 'penalty', 'owngoal'].includes(e.type)))
+            evWarnings.push('goal at minute 0 - KSÍ markup changed again?')
           warnings.push(...evWarnings.map((w) => `match ${c.ksiId}: ${w}`))
+          // never wipe stored events with an empty scrape
+          if (events.length) fetchedEventIds.push(c.ksiId)
           for (const e of events) {
             eventRows.push({
               event_id: e.eventId,
@@ -153,9 +169,12 @@ export async function ingestSeason(season = CURRENT_SEASON) {
       })
       if (error) throw error
     }
-    if (eventRows.length) {
-      const { error } = await db().rpc('rpc_upsert_events', {
+    if (fetchedEventIds.length) {
+      // replace, not upsert: a re-read must be able to fix minutes and drop
+      // events KSÍ re-created under a new id
+      const { error } = await db().rpc('rpc_replace_events', {
         p_secret: SECRET(),
+        p_match_ids: fetchedEventIds,
         p_rows: eventRows,
       })
       if (error) throw error
