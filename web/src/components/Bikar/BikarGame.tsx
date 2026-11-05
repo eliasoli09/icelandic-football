@@ -11,6 +11,7 @@ import type { CupPlayer, CupSide, Line } from '@/lib/bikar/types'
 import { SaveResult } from '@/components/Leaderboard/SaveResult'
 import { KEY } from '@/lib/leaderboard/rank'
 import styles from './Bikar.module.css'
+import { shareUrl } from '@/lib/shareLink'
 
 type Stage = 'setup' | 'draft' | 'ready' | 'cup'
 /** 'saga': draft from the greatest sides; 'nutid': draft today's players against former champions */
@@ -76,7 +77,7 @@ export function BikarGame() {
 
   const share = async () => {
     if (!draft) return
-    const body = shareText(results, draft.formation, teamRating(draft), `${location.origin}/bikar`, mode === 'nutid' ? 'Núverandi leikmenn gegn gömlu meisturunum' : null)
+    const body = shareText(results, draft.formation, teamRating(draft), shareUrl('/bikar', 'bikar'), mode === 'nutid' ? 'Núverandi leikmenn gegn gömlu meisturunum' : null)
     if (navigator.share) { try { await navigator.share({ text: body }) } catch { /* cancelled */ } return }
     try { await navigator.clipboard.writeText(body); setCopied(true) } catch { /* blocked */ }
   }

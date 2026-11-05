@@ -12,6 +12,7 @@ import type { Side, XiMatch, XiPlayer } from '@/lib/xi/types'
 import { StarBall } from '../Topp10/TenaballScene'
 import { Shirt } from './Shirt'
 import styles from './Xi.module.css'
+import { shareUrl } from '@/lib/shareLink'
 
 const MONTHS = ['janúar', 'febrúar', 'mars', 'apríl', 'maí', 'júní', 'júlí', 'ágúst', 'september', 'október', 'nóvember', 'desember']
 const dateLabel = (iso: string) => { const [y, m, d] = iso.split('-').map(Number); return `${d}. ${MONTHS[m - 1]} ${y}` }
@@ -91,7 +92,7 @@ export function XiGame() {
   }
 
   const share = async () => {
-    const body = shareText(match, state, side, number, `${location.origin}/byrjunarlid`)
+    const body = shareText(match, state, side, number, shareUrl('/byrjunarlid', 'byrjunarlid'))
     if (navigator.share) { try { await navigator.share({ text: body }) } catch { /* cancelled */ } return }
     try { await navigator.clipboard.writeText(body); setCopied(true) } catch { /* blocked */ }
   }

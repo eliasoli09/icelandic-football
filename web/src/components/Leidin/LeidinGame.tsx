@@ -16,6 +16,7 @@ import type { LeidQuestion, Tier } from '@/lib/leidin/types'
 import { RoadScene } from './scene'
 import { sfx, setMuted } from './sfx'
 import styles from './Leidin.module.css'
+import { shareUrl } from '@/lib/shareLink'
 
 const pixel = Pixelify_Sans({ subsets: ['latin', 'latin-ext'], weight: ['400', '500', '600', '700'], variable: '--font-pixel' })
 const caps = Silkscreen({ subsets: ['latin', 'latin-ext'], weight: ['400', '700'], variable: '--font-caps' })
@@ -24,7 +25,7 @@ type Phase = 'title' | 'intro' | 'answer' | 'reveal' | 'end'
 type Mode = { kind: 'daily' } | { kind: 'archive'; day: number } | { kind: 'practice'; day: number }
 
 const INTRO_MS = 2600
-const URL = 'https://islensk-fotbolti.vercel.app/leidin'
+const URL = shareUrl('/leidin', 'leidin')
 
 const read = (key: string) => { try { return localStorage.getItem(key) } catch { return null } }
 const write = (key: string, value: string) => { try { localStorage.setItem(key, value) } catch { /* private mode */ } }

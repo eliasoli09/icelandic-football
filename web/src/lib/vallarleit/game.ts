@@ -3,6 +3,7 @@ import clubsData from './clubs.json'
 import { LEAGUES, type LeagueDef } from './leagues'
 import { distanceM, heat } from './geo'
 import type { VClub } from './types'
+import { shareUrl } from '../shareLink'
 
 export const CLUBS = clubsData as VClub[]
 export const BY_ID = new Map(CLUBS.map((c) => [c.id, c]))
@@ -18,7 +19,7 @@ export const LEVELS: { key: Level; label: string; blurb: string }[] = [
 
 /** 13 Oct 2026, the first Vallarleit */
 export const LAUNCH_DAY = 20739
-export const URL = 'https://islensk-fotbolti.vercel.app/vallarleit'
+export const URL = shareUrl('/vallarleit', 'vallarleit')
 
 /**
  * The big five's clubs, best known first. Fame is the number of Wikipedia
@@ -187,7 +188,7 @@ export function shareText(game: Game): string {
   const best = Math.min(...list.filter((g) => !g.correct).map((g) => g.m), Infinity)
   const line = won(game)
     ? `Fann völlinn í ${game.guesses.length}. ágiskun`
-    : `Gafst upp eftir ${game.guesses.length} ágiskanir${Number.isFinite(best) ? `, næst ${Math.round(best / 1000)} km` : ''}`
+    : `Gafst upp eftir ${game.guesses.length} ${game.guesses.length === 1 ? 'ágiskun' : 'ágiskanir'}${Number.isFinite(best) ? `, næst ${Math.round(best / 1000)} km` : ''}`
   const squares = list.map(square)
   const rows: string[] = []
   for (let i = 0; i < squares.length; i += 8) rows.push(squares.slice(i, i + 8).join(''))

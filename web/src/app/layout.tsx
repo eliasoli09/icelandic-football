@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   title: 'Besta spáin - íslensk knattspyrnugreining',
   description:
     'Elo-stig, leikjaspár og líkindahermun fyrir Bestu deild karla. Uppfærist sjálfkrafa eftir hvern leik.',
+  twitter: { card: 'summary_large_image' },
   manifest: '/manifest.webmanifest',
   appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'Seðlavaktin' },
   icons: { apple: '/icons/apple-touch-icon.png' },

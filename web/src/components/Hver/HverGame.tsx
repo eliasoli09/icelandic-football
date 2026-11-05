@@ -11,6 +11,7 @@ import type { CareerRow, WhoPlayer } from '@/lib/hver/types'
 import { SaveResult } from '@/components/Leaderboard/SaveResult'
 import { KEY } from '@/lib/leaderboard/rank'
 import styles from './Hver.module.css'
+import { shareUrl } from '@/lib/shareLink'
 
 const MONTHS = ['janúar', 'febrúar', 'mars', 'apríl', 'maí', 'júní', 'júlí', 'ágúst', 'september', 'október', 'nóvember', 'desember']
 const DAY = 86_400_000
@@ -116,7 +117,7 @@ export function HverGame() {
   }
   const share = async () => {
     const label = LEVELS.find((l) => l.id === level)!.label
-    const body = shareText(player, state, day, label, `${location.origin}/hver`)
+    const body = shareText(player, state, day, label, shareUrl('/hver', 'hver'))
     if (navigator.share) { try { await navigator.share({ text: body }) } catch { /* cancelled */ } return }
     try { await navigator.clipboard.writeText(body); setCopied(true) } catch { /* blocked */ }
   }

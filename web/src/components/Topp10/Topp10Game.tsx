@@ -16,6 +16,7 @@ import { normalise } from '@/lib/topp10/normalise'
 import { TenaballScene } from './TenaballScene'
 import { RotatingStarBall } from './RotatingStarBall'
 import styles from './Tenaball.module.css'
+import { shareUrl } from '@/lib/shareLink'
 
 type Visual = Feedback & { event: number }
 type Mode = 'daily' | 'free'
@@ -185,7 +186,7 @@ export function Topp10Game() {
   const levelLabel = LEVELS.find(l => l.id === level)!.label
   const lives = livesFor(question)
   const share = async () => {
-    const body = shareText(question, current.current, mode === 'daily' ? dateLabel : null, `${location.origin}/topp10`)
+    const body = shareText(question, current.current, mode === 'daily' ? dateLabel : null, shareUrl('/topp10', 'tenaball'))
     if (navigator.share) { try { await navigator.share({ text: body }) } catch { /* cancelled */ } return }
     try { await navigator.clipboard.writeText(body); setCopied(true) } catch { /* clipboard blocked */ }
   }

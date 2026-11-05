@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { SITE_URL } from './site'
 
 export const OG_SIZE = { width: 1200, height: 630 }
 
@@ -55,7 +56,7 @@ export function Frame({
         <div style={{ display: 'flex', fontSize: 34 }}>⚽</div>
         <div style={{ display: 'flex', fontSize: 30, fontWeight: 700 }}>Besta spáin</div>
         <div style={{ display: 'flex', flex: 1 }} />
-        <div style={{ display: 'flex', fontSize: 22, color: C.muted }}>islensk-fotbolti.vercel.app</div>
+        <div style={{ display: 'flex', fontSize: 22, color: C.muted }}>{new URL(SITE_URL).host}</div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
         {children}
@@ -88,5 +89,32 @@ export function Bar({ pHome, pDraw, pAway }: { pHome: number; pDraw: number; pAw
         <div style={{ display: 'flex' }}>Útisigur</div>
       </div>
     </div>
+  )
+}
+
+/** The share-square colours, so a card looks like the result people paste. */
+export const SQ = {
+  black: '#2a3142',
+  white: '#e8ecf4',
+  green: '#22c58b',
+  blue: '#4d8dff',
+  purple: '#a66cff',
+  yellow: '#f5c542',
+  orange: '#f59a42',
+  red: '#f0605b',
+}
+
+/** Link-preview card for a game page: name, one line, and a row of result squares. */
+export function GameCard({ title, tagline, squares, footer = 'Ný þraut á hverjum degi · ókeypis, beint í vafranum' }: { title: string; tagline: string; squares: string[]; footer?: string }) {
+  return (
+    <Frame footer={footer}>
+      <div style={{ display: 'flex', fontSize: 76, fontWeight: 700, lineHeight: 1.05, letterSpacing: -1 }}>{title}</div>
+      <div style={{ display: 'flex', fontSize: 34, color: C.muted, marginTop: 18, maxWidth: 1000 }}>{tagline}</div>
+      <div style={{ display: 'flex', gap: 14, marginTop: 44 }}>
+        {squares.map((c, i) => (
+          <div key={i} style={{ display: 'flex', width: 64, height: 64, borderRadius: 12, background: c }} />
+        ))}
+      </div>
+    </Frame>
   )
 }
