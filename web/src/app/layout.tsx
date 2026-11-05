@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes'
 import { Database } from 'lucide-react'
 import { Nav } from '@/components/Nav'
 import { SwRegister } from '@/components/SwRegister'
+import { UtmLogger } from '@/components/UtmLogger'
 import { LeagueProvider } from '@/components/LeagueContext'
 import { lastIngest, leagueRegistry } from '@/lib/queries'
 import { SITE_URL } from '@/lib/site'
@@ -72,6 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </LeagueProvider>
         </ThemeProvider>
         <Analytics />
+        <UtmLogger />
       </body>
     </html>
   )

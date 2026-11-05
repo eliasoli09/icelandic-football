@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Geist, Geist_Mono, Archivo } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { UtmLogger } from '@/components/UtmLogger'
 import { SiteShell } from '@/components/Nfl/SiteShell'
 import { NflSubnav } from '@/components/Nfl/NflSubnav'
 import { MobileDock } from '@/components/Nfl/MobileDock'
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <MobileDock />
         <Analytics />
+        <UtmLogger />
       </body>
     </html>
   )
