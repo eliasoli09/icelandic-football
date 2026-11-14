@@ -114,6 +114,22 @@ export async function nflPlayerSeasons(season: number, type: 'REG' | 'POST' = 'R
   }
 }
 
+/** Earlier regular seasons for the given players, for the comeback award; chunked and in parallel. */
+export async function nflPastSeasons(ids: string[], before: number): Promise<PlayerSeasonRow[]> {
+  const chunks: string[][] = []
+  for (let i = 0; i < ids.length; i += 150) chunks.push(ids.slice(i, i + 150))
+  const load = async (chunk: string[]) => {
+    const out: PlayerSeasonRow[] = []
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await db().from('nfl_player_season').select('*').in('player_id', chunk).eq('season_type', 'REG').lt('season', before).order('player_id').order('season').range(from, from + 999)
+      if (error) throw error
+      out.push(...(data ?? []).map(toSeason))
+      if (!data || data.length < 1000) return out
+    }
+  }
+  return (await Promise.all(chunks.map(load))).flat()
+}
+
 export async function nflPlayer(id: string): Promise<NflPlayer | null> {
   const { data, error } = await db().from('nfl_players').select('*').eq('player_id', id).maybeSingle()
   if (error) throw error

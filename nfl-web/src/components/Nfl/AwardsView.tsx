@@ -18,9 +18,27 @@ export interface AwardPanel {
   mainLabel: string
   history: AwardWinner[]
   test: { hit: number; base: number }
+  /** Share of past seasons where the winner was among the candidates; the odds already include it. */
+  coverage: number
 }
 
 const pct = (x: number) => `${Math.round(x * 100)}%`
+
+/** How much to trust an award's odds, from its 2015-2025 test: top pick vs. simply backing the leader. */
+function trust(t: { hit: number; base: number }): 'sterkt' | 'miðlungs' | 'veikt' {
+  if (t.hit >= 0.3 && t.hit >= t.base * 1.5) return 'sterkt'
+  if (t.hit > t.base) return 'miðlungs'
+  return 'veikt'
+}
+const TRUST_TEXT = {
+  sterkt: 'Líkanið er hér mun betra en að veðja á þann sem leiðir.',
+  miðlungs: 'Líkanið er aðeins betra en að veðja á þann sem leiðir, svo líkurnar eru gróf mynd.',
+  veikt: 'Líkanið er ekki betra en að veðja á þann sem leiðir, svo líkurnar eru veik spá og ber að taka með fyrirvara.',
+}
+function oddsNote(p: AwardPanel) {
+  const lead = p.mainLabel ? `, en sá sem leiddi í ${p.mainLabel} aðeins í ${pct(p.test.base)}` : `, en sá sem leiddi aðeins í ${pct(p.test.base)}`
+  return `Líkur úr líkani sem var prófað á tímabilunum 2015-2025: efsti maður þess vann í ${pct(p.test.hit)} tilvika${p.mainLabel ? lead : ''}. ${TRUST_TEXT[trust(p.test)]} Sigurvegarinn var í hópi frambjóðenda í ${pct(p.coverage)} tilvika, og líkurnar taka tillit til þess.`
+}
 
 export function AwardsView({ season, week, firstWeek, panels, teams }: { season: number; week: number; firstWeek: number; panels: AwardPanel[]; teams: NflTeam[] }) {
   const byAbbr = useMemo(() => new Map(teams.map((t) => [t.abbr, t])), [teams])
@@ -59,7 +77,7 @@ export function AwardsView({ season, week, firstWeek, panels, teams }: { season:
         <div>
           <h2 className="display text-xl font-extrabold">{AWARD_LABEL[award]} <span className="muted text-base font-semibold">({award})</span></h2>
           <p className="text-xs muted mt-1">
-            {panel.mode === 'odds' && `Líkur úr líkani sem var prófað á tímabilunum 2015-2025: efsti maður þess vann í ${pct(panel.test.hit)} tilvika, en sá sem leiddi í aðaltölunni aðeins í ${pct(panel.test.base)}.`}
+            {panel.mode === 'odds' && oddsNote(panel)}
             {panel.mode === 'leaders' && `Hér eru engar líkur. Líkan sem við prófuðum á 2015-2025 var ekki marktækt betra en að veðja á þann sem leiðir í ${panel.mainLabel}, svo listinn er einfaldlega raðaður eftir henni.`}
             {panel.mode === 'history' && 'Endurkoma ársins ræðst af sögu leikmanns, meiðslum eða slöku ári, frekar en tölfræði tímabilsins. Líkanið okkar fann sigurvegarann of sjaldan til að sýna líkur, svo hér er aðeins sagan.'}
           </p>
@@ -94,6 +112,14 @@ export function AwardsView({ season, week, firstWeek, panels, teams }: { season:
                       {panel.mode === 'odds' && <td className="text-right num font-semibold" style={{ color: 'var(--accent)' }}>{probCell(r.p ?? 0, false)}</td>}
                     </tr>
                   ))}
+                  {panel.mode === 'odds' && (
+                    <tr className="trow">
+                      <td />
+                      <td className="muted py-1.5">Aðrir leikmenn</td>
+                      {panel.race[0].stats.map(([l]) => <td key={l} />)}
+                      <td className="text-right num muted">{probCell(Math.max(0, 1 - panel.race.reduce((t, r) => t + (r.p ?? 0), 0)), false)}</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

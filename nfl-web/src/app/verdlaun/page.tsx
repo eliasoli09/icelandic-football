@@ -1,8 +1,10 @@
 import awardsJson from '@/lib/nfl/data/nfl-awards.json'
 import { AwardsView, type AwardPanel, type RaceRow } from '@/components/Nfl/AwardsView'
 import { AWARDS, type Award, type AwardWinner } from '@/lib/nfl/awards'
-import { FIRST_RACE_WEEK, MODEL_TEST, RACE_MODE, raceOdds } from '@/lib/nfl/awardView'
-import { nflCurrentSeason, nflPlayerSeasons, nflSeasonGames, nflTeams, type PlayerSeasonRow } from '@/lib/nfl/queries'
+import { defScore } from '@/lib/nfl/awardRace'
+import type { PastSeason } from '@/lib/nfl/awardRace'
+import { FIRST_RACE_WEEK, MODEL_COVERAGE, MODEL_TEST, RACE_MODE, raceOdds } from '@/lib/nfl/awardView'
+import { nflCurrentSeason, nflPastSeasons, nflPlayerSeasons, nflSeasonGames, nflTeams, type PlayerSeasonRow } from '@/lib/nfl/queries'
 import { isPlayed } from '@/lib/nfl/types'
 
 export const revalidate = 300
@@ -12,11 +14,11 @@ const half = (v: number) => String(v).replace('.', ',')
 const epa = (v: number) => v.toFixed(1).replace('.', ',').replace('-', '−')
 const KEY: Record<Award, { main: (r: PlayerSeasonRow) => number; mainLabel: string; stats: [string, (r: PlayerSeasonRow) => string][] }> = {
   MVP: { main: (r) => r.passing_epa, mainLabel: 'sendinga-EPA', stats: [['EPA', (r) => epa(r.passing_epa)], ['SM', (r) => String(r.passing_tds + r.rushing_tds)], ['Jardar', (r) => String(r.passing_yards)]] },
-  OPOY: { main: (r) => r.rushing_yards + r.receiving_yards, mainLabel: 'hlaupa- og gripjördum', stats: [['Jardar', (r) => String(r.rushing_yards + r.receiving_yards)], ['SM', (r) => String(r.rushing_tds + r.receiving_tds)], ['EPA', (r) => epa(r.rushing_epa + r.receiving_epa)]] },
+  OPOY: { main: (r) => r.rushing_yards + r.receiving_yards, mainLabel: 'hlaupa- og gripjördum', stats: [['Jardar', (r) => String(r.rushing_yards + r.receiving_yards + r.passing_yards)], ['SM', (r) => String(r.passing_tds + r.rushing_tds + r.receiving_tds)], ['EPA', (r) => epa(r.passing_epa + r.rushing_epa + r.receiving_epa)]] },
   DPOY: { main: (r) => r.def_sacks, mainLabel: 'fellum', stats: [['Fellur', (r) => half(r.def_sacks)], ['Hler.', (r) => String(r.def_interceptions)], ['TFT', (r) => half(r.tackles_for_loss)], ['ÞB', (r) => String(r.forced_fumbles)]] },
   OROY: { main: (r) => r.rushing_yards + r.receiving_yards, mainLabel: 'hlaupa- og gripjördum', stats: [['Jardar', (r) => String(r.rushing_yards + r.receiving_yards + r.passing_yards)], ['SM', (r) => String(r.passing_tds + r.rushing_tds + r.receiving_tds)], ['EPA', (r) => epa(r.passing_epa + r.rushing_epa + r.receiving_epa)]] },
   DROY: { main: (r) => r.def_sacks, mainLabel: 'fellum', stats: [['Fellur', (r) => half(r.def_sacks)], ['Tækl.', (r) => String(r.tackles_solo + r.tackle_assists)], ['Hler.', (r) => String(r.def_interceptions)]] },
-  CPOY: { main: () => 0, mainLabel: '', stats: [] },
+  CPOY: { main: () => 0, mainLabel: '', stats: [['Leikir', (r) => String(r.games)], ['EPA', (r) => epa(r.passing_epa + r.rushing_epa + r.receiving_epa)], ['Fellur', (r) => half(r.def_sacks)]] },
 }
 
 export default async function NflAwardsPage() {
@@ -35,6 +37,10 @@ export default async function NflAwardsPage() {
     }
     const team = new Map([...rec].map(([t, x]) => [t, { games: x.n, pct: x.w / x.n }]))
     const byId = new Map(rows.map((r) => [r.player_id, r]))
+    // the comeback award reads each player's earlier seasons (best year, last year's games)
+    const pastRows = RACE_MODE.CPOY === 'odds' && week >= FIRST_RACE_WEEK ? await nflPastSeasons(rows.filter((r) => r.position !== null && r.games > 0).map((r) => r.player_id), season) : []
+    const past = new Map<string, PastSeason[]>()
+    for (const r of pastRows) past.set(r.player_id, [...(past.get(r.player_id) ?? []), { season: r.season, games: r.games, off: r.passing_epa + r.rushing_epa + r.receiving_epa, def: defScore(r) }])
     const toRow = (r: PlayerSeasonRow, award: Award, p?: number): RaceRow => ({
       player_id: r.player_id, name: r.name, team: r.team, headshot: r.headshot, position: r.position, p, stats: KEY[award].stats.map(([l, f]) => [l, f(r)]),
     })
@@ -42,12 +48,12 @@ export default async function NflAwardsPage() {
     const panels = AWARDS.map((award): AwardPanel => {
       const mode = RACE_MODE[award]
       let race: RaceRow[] = []
-      if (mode === 'odds') race = raceOdds(award, season, week, seasonWeeks, rows, team).slice(0, 10).map((o) => toRow(byId.get(o.player_id)!, award, o.p))
+      if (mode === 'odds') race = raceOdds(award, season, week, seasonWeeks, rows, team, past).slice(0, 10).map((o) => toRow(byId.get(o.player_id)!, award, o.p))
       if (mode === 'leaders') {
         const pool = rows.filter((r) => (award === 'DPOY' ? r.def_sacks > 0 : true))
         race = pool.sort((a, b) => KEY[award].main(b) - KEY[award].main(a)).slice(0, 10).map((r) => toRow(r, award))
       }
-      return { award, mode, race, mainLabel: KEY[award].mainLabel, history: history.filter((h) => h.award === award), test: MODEL_TEST[award] }
+      return { award, mode, race, mainLabel: KEY[award].mainLabel, history: history.filter((h) => h.award === award), test: MODEL_TEST[award], coverage: MODEL_COVERAGE[award] }
     })
     return <AwardsView season={season} week={week} firstWeek={FIRST_RACE_WEEK} panels={panels} teams={teams.filter((t) => t.franchise === t.abbr)} />
   } catch {

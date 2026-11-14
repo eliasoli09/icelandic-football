@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'fs'
 import { join } from 'path'
-import { raceOdds, RACE_MODE, type SeasonRow } from '../src/lib/nfl/awardView'
+import { raceOdds, RACE_MODE, MODEL_COVERAGE, type SeasonRow } from '../src/lib/nfl/awardView'
 import { parsePlayerWeeks, parsePlayers, seasonTotals } from '../src/lib/nfl/players'
 
 const fx = (f: string) => readFileSync(join(__dirname, 'fixtures', f), 'utf-8')
@@ -16,13 +16,19 @@ describe('raceOdds', () => {
   it('nýliðakapphlaup: aðeins nýliðar, líkur summast í 1', () => {
     const odds = raceOdds('OROY', 2025, 10, 18, rows, team)
     expect(odds.length).toBeGreaterThan(0)
-    expect(odds.reduce((t, x) => t + x.p, 0)).toBeCloseTo(1, 9)
+    expect(odds.reduce((t, x) => t + x.p, 0)).toBeCloseTo(MODEL_COVERAGE.OROY, 9)
     expect(odds.every((x) => info.get(x.player_id)!.rookie_season === 2025)).toBe(true)
   })
   it('ekkert fyrir viku 4', () => {
     expect(raceOdds('OROY', 2025, 3, 18, rows, team)).toEqual([])
   })
-  it('aðeins nýliðaverðlaunin sýna líkur', () => {
-    expect(Object.entries(RACE_MODE).filter(([, m]) => m === 'odds').map(([a]) => a).sort()).toEqual(['DROY', 'OROY'])
+  it('öll einstaklingsverðlaun sýna líkur', () => {
+    expect(Object.entries(RACE_MODE).filter(([, m]) => m === 'odds').map(([a]) => a).sort()).toEqual(['CPOY', 'DPOY', 'DROY', 'MVP', 'OPOY', 'OROY'])
+  })
+  it('líkur eru aldrei yfir 1 og samtalan ekki yfir sigurvegarahlutfallinu', () => {
+    for (const a of ['MVP', 'OPOY', 'DPOY', 'OROY', 'DROY'] as const) {
+      const odds = raceOdds(a, 2025, 10, 18, rows, team)
+      expect(odds.reduce((t, x) => t + x.p, 0)).toBeLessThanOrEqual(MODEL_COVERAGE[a] + 1e-9)
+    }
   })
 })

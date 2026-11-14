@@ -93,12 +93,12 @@ for (const award of AWARDS) {
     const groups = train.filter((s) => s.winners.length).map((s) => ({ x: s.cands.map((c: any) => st.apply(c.x)), winners: s.winners }))
     return { st, w: race.fitLogit(groups, l2) }
   }
-  const score = (m: any, test: Snap[]) => test.map((s) => {
-    const p = s.cands.length ? race.logitProbs(s.cands.map((c: any) => m.st.apply(c.x)), m.w) : []
+  const score = (m: any, test: Snap[], scale = 1) => test.map((s) => {
+    const p = s.cands.length ? race.logitProbs(s.cands.map((c: any) => m.st.apply(c.x)), m.w.map((v: number) => v * scale)) : []
     const pw = s.winners.reduce((t: number, i: number) => t + p[i], 0)
     const top = p.length ? p.indexOf(Math.max(...p)) : -1
     const lead = s.cands.length ? s.cands.reduce((b: number, c: any, i: number) => (c.main > s.cands[b].main ? i : b), 0) : -1
-    return { week: s.week, last: s.last, ll: -Math.log(Math.max(pw, 1e-3)), hit: s.winners.includes(top), base: s.winners.includes(lead), covered: s.winners.length > 0 }
+    return { week: s.week, last: s.last, p, win: s.winners, ll: -Math.log(Math.max(pw, 1e-3)), hit: s.winners.includes(top), base: s.winners.includes(lead), covered: s.winners.length > 0 }
   })
   // choose the penalty on validation seasons only
   let best = { l2: 0, ll: Infinity }
@@ -107,14 +107,30 @@ for (const award of AWARDS) {
     const ll = r.reduce((t, x) => t + x.ll, 0) / r.length
     if (ll < best.ll) best = { l2, ll }
   }
-  const test = score(fit(inRange(FIRST, VALID_TO), best.l2), inRange(VALID_TO + 1, LAST))
+  // odds are shown as percentages, so also choose a scale on the weights (a temperature) on validation seasons
+  // and measure how often the winner is in the pool at all (the shown odds are multiplied by that)
+  const covOf = (xs: any[]) => xs.filter((x) => x.covered).length / xs.length
+  const mTune = fit(inRange(FIRST, TUNE_TO), best.l2)
+  let bestScale = { scale: 1, ll: Infinity }
+  for (const scale of [0.25, 0.4, 0.55, 0.7, 0.85, 1, 1.2]) {
+    const r = score(mTune, inRange(TUNE_TO + 1, VALID_TO), scale)
+    const ll = r.filter((x) => x.covered).reduce((t, x) => t + x.ll, 0) / r.filter((x) => x.covered).length
+    if (ll < bestScale.ll) bestScale = { scale, ll }
+  }
+  const test = score(fit(inRange(FIRST, VALID_TO), best.l2), inRange(VALID_TO + 1, LAST), bestScale.scale)
+  const coverage = covOf(test)
+  // calibration of the shown odds (model share x coverage) on the test seasons: predicted vs how often it won
+  const buckets = [0, 0.02, 0.05, 0.1, 0.2, 0.35, 0.5, 1.0001].map((lo, i, a) => ({ lo, hi: a[i + 1], n: 0, p: 0, won: 0 })).slice(0, -1)
+  for (const x of test) x.p.forEach((pi: number, i: number) => { const q = pi * coverage; const b = buckets.find((k) => q >= k.lo && q < k.hi)!; b.n++; b.p += q; if (x.win.includes(i)) b.won++ })
+  console.log(`  kvarði ${bestScale.scale}, sigurvegari í hópnum ${(100 * coverage).toFixed(0)}%; kvörðun (sýndar líkur → raunhlutfall):`)
+  for (const b of buckets) if (b.n) console.log(`    ${(100 * b.lo).toFixed(0).padStart(3)}-${(100 * Math.min(b.hi, 1)).toFixed(0).padEnd(3)}%  n=${String(b.n).padEnd(5)} spáð ${(100 * b.p / b.n).toFixed(1)}%  raun ${(100 * b.won / b.n).toFixed(1)}%`)
   const at = (pred: (x: any) => boolean) => { const xs = test.filter(pred); return { n: xs.length, hit: xs.filter((x) => x.hit).length / xs.length, base: xs.filter((x) => x.base).length / xs.length, ll: xs.reduce((t, x) => t + x.ll, 0) / xs.length } }
   const byWeek = { 'vika 6': at((x) => x.week === 6), 'vika 10': at((x) => x.week === 10), 'vika 14': at((x) => x.week === 14), 'lok': at((x) => x.last) }
   const all = at(() => true)
   const passed = all.hit > all.base
   report[award] = { l2: best.l2, coverage: test.filter((x) => x.covered).length / test.length, byWeek, all, passed }
   const prod = fit(inRange(FIRST, LAST), best.l2)
-  models[award] = { l2: best.l2, mean: prod.st.mean, sd: prod.st.sd, w: prod.w, passed, test: { hit: all.hit, base: all.base, byWeek } }
+  models[award] = { l2: best.l2, scale: bestScale.scale, coverage, mean: prod.st.mean, sd: prod.st.sd, w: prod.w.map((v: number) => v * bestScale.scale), passed, test: { hit: all.hit, base: all.base, byWeek } }
 
   console.log(`\n${award}  (L2 ${best.l2}, sigurvegari í hópnum ${(100 * report[award].coverage).toFixed(0)}%)  ${passed ? 'STENST' : 'STENST EKKI'}`)
   for (const [k, v] of Object.entries(byWeek) as any) console.log(`  ${k.padEnd(8)} efsti vann: líkan ${(100 * v.hit).toFixed(0)}%  viðmið ${(100 * v.base).toFixed(0)}%  log loss ${v.ll.toFixed(3)}  (${v.n})`)
